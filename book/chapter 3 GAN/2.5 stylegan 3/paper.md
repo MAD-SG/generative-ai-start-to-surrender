@@ -222,7 +222,7 @@ In the spatial domain, the 2D "Jinc" filter is:
 $$
 h(x, y) = 2 \frac{J_1(2\pi r)}{r}, \quad r = \sqrt{x^2 + y^2}.
 $$
-At \(r = 0\), \(h(0, 0) = 1\).
+At $r = 0$, $h(0, 0) = 1$.
 ---
 ### Fourier Transform
 The frequency response is:
@@ -231,9 +231,9 @@ H(\rho) = 2\pi \int_0^\infty h(r) r J_0(2\pi \rho r) \, dr,
 $$
 
 where:
-- \(\rho = \sqrt{u^2 + v^2}\),
-- \(J_0\) is the zero-order Bessel function.
-Substitute \(h(r)\):
+- $\rho = \sqrt{u^2 + v^2}$,
+- $J_0$ is the zero-order Bessel function.
+Substitute $h(r)$:
 $$
 H(\rho) = 4\pi \int_0^\infty J_1(2\pi r) J_0(2\pi \rho r) \, dr.
 $$
@@ -310,7 +310,7 @@ descriminator 不发生变化
 **generator**
 **目标**： 设计等变性神经网络
 用PSNR值衡量。值越高表示等变形越强。
-### EQ-T 公式
+## EQ-T 公式
 $$
 \text{EQ-T} = 10 \cdot \log_{10} \left( \frac{I_{\text{max}}^2}{\mathbb{E}_{\mathbf{w} \sim \mathcal{W}, x \sim \mathcal{X}^2, p \sim \mathcal{V}, c \sim \mathcal{C}} \left[ \left( g(t_x[z_0]; \mathbf{w})_c(p) - t_x[g(z_0; \mathbf{w})]_c(p) \right)^2 \right]} \right)
 $$
@@ -326,20 +326,122 @@ $$
 - $z_0$: 输入噪声或潜在变量。
 从这个公式可以看到, 在旋转和平移是作用在 初始输入 $z_0$ 上的，而不是latent code $w$.
 
-**Fourier 特征和基线简化（configs B - D**
-* 用 Fourier 特征替换 StyleGAN2 中的学习输入常数，便于精确连续变换输入，改善了 FID 并能计算等变性指标，但初始架构离等变性仍远。
-    输入为，其中频率和相位都是可以进行平移和旋转操作。
-    $$x=\sin(2\pi(f⋅x+\alpha))$$
-    这个和原始信号的傅里叶频谱没有关系，类似于positional embedding.
+##  Fourier 特征
+用 Fourier 特征替换 StyleGAN2 中的学习输入常数，便于精确连续变换输入，改善了 FID 并能计算等变性指标，但初始架构离等变性仍远。
+    SynthesisInput Forward 计算流程数学公式
+    输入定义和符号说明
+    假设：
+    - $ \mathbf{w} \in \mathbb{R}^{B \times d} $：输入样式向量，来自潜在空间的映射网络。
+    - $ \mathbf{f} \in \mathbb{R}^{C \times 2} $：可训练的频率向量。
+    - $ \mathbf{p} \in \mathbb{R}^C $：可训练的相位向量。
+    - $ \mathbf{A} \in \mathbb{R}^{C \times C} $：可训练的线性映射权重。
+    - $ \mathbf{T} \in \mathbb{R}^{3 \times 3} $：用户定义的变换矩阵。
+    - $ H, W $：输出特征图的空间尺寸。
+    - $ \text{bandwidth} $ 和 $ \text{sampling\_rate} $：频率范围和采样率。
+    初始化频率和相位
+    频率归一化
+    对于每个通道的频率向量 $ \mathbf{f}_i \in \mathbb{R}^2 $，进行归一化：
+    $$
+    \mathbf{f}_i' = \frac{\mathbf{f}_i}{\|\mathbf{f}_i\|^2} \cdot \|\mathbf{f}_i\|^{0.25} \cdot \text{bandwidth}, \quad \forall i \in [1, C]
+    $$
+    其中：
+    - $ \|\mathbf{f}_i\|^2 = \mathbf{f}_i \cdot \mathbf{f}_i $ 是频率向量的平方范数。
+    随机初始化相位
+    相位 $ \mathbf{p}_i $ 初始化为均匀分布：
+    $$
+    \mathbf{p}_i \sim \text{Uniform}(-0.5, 0.5), \quad \forall i \in [1, C]
+    $$
+    样式向量到变换参数
+    从样式向量 $ \mathbf{w} $ 映射到变换参数 $ \mathbf{t} $：
+    $$
+    \mathbf{t} = \text{Affine}(\mathbf{w}), \quad \mathbf{t} = [r_c, r_s, t_x, t_y] \in \mathbb{R}^{B \times 4}
+    $$
+    归一化旋转参数
+    对旋转参数进行归一化：
+    $$
+    r_c' = \frac{r_c}{\sqrt{r_c^2 + r_s^2}}, \quad r_s' = \frac{r_s}{\sqrt{r_c^2 + r_s^2}}
+    $$
+    构造变换矩阵
+    构造旋转矩阵和平移矩阵：
+    $$
+    \mathbf{M}_r =
+    \begin{bmatrix}
+    r_c' & -r_s' & 0 \\
+    r_s' & r_c' & 0 \\
+    0 & 0 & 1
+    \end{bmatrix}, \quad
+    \mathbf{M}_t =
+    \begin{bmatrix}
+    1 & 0 & -t_x \\
+    0 & 1 & -t_y \\
+    0 & 0 & 1
+    \end{bmatrix}
+    $$
+    用户定义的变换矩阵 $ \mathbf{T}_\text{user} $ 和上述矩阵组合得到最终的变换矩阵：
+    $$
+    \mathbf{T} = \mathbf{M}_r \mathbf{M}_t \mathbf{T}_\text{user}
+    $$
+    频率和相位的变换
+    将变换矩阵应用于频率和相位：
+    ### 3.1 频率变换
+    $$
+    \mathbf{f}_i'' = \mathbf{f}_i' \cdot \mathbf{T}_{1:2, 1:2}, \quad \forall i \in [1, C]
+    $$
+    相位变换
+    $$
+    \mathbf{p}_i'' = \mathbf{p}_i + \mathbf{f}_i' \cdot \mathbf{T}_{1:2, 2:3}, \quad \forall i \in [1, C]
+    $$
+    频率幅值调整
+    为了抑制超出频率范围的分量，调整幅值：
+    $$
+    \mathbf{a}_i = \max\left(0, 1 - \frac{\|\mathbf{f}_i''\| - \text{bandwidth}}{\frac{\text{sampling\_rate}}{2} - \text{bandwidth}}\right), \quad \forall i \in [1, C]
+    $$
+    构造傅里叶特征
+    采样网格
+    定义采样网格 $ \mathbf{G} \in \mathbb{R}^{H \times W \times 2} $：
+    $$
+    \mathbf{G}[h, w] = \left(\frac{w}{W} - 0.5, \frac{h}{H} - 0.5\right), \quad \forall h \in [0, H], w \in [0, W]
+    $$
+    傅里叶特征计算
+    通过频率和相位生成傅里叶特征：
+    $$
+    \mathbf{x}_\text{fourier}[b, h, w, c] = \sin\left(2 \pi (\mathbf{G}[h, w] \cdot \mathbf{f}_c'' + \mathbf{p}_c'')\right) \cdot \mathbf{a}_c
+    $$
+    应用线性映射
+    使用可训练的线性权重 $ \mathbf{A} $ 对傅里叶特征进行通道映射：
+    $$
+    \mathbf{x}_\text{out}[b, c, h, w] = \sum_{c'=1}^C \mathbf{x}_\text{fourier}[b, h, w, c'] \cdot \frac{\mathbf{A}_{c, c'}}{\sqrt{C}}
+    $$
+    最终公式总结
+    完整的 `SynthesisInput` forward 计算流程：
+    $$
+    \mathbf{x}_\text{out}[b, c, h, w] = \sum_{c'=1}^C \left[ \sin\left(2 \pi (\mathbf{G}[h, w] \cdot \mathbf{f}_{c'}'' + \mathbf{p}_{c'}'')\right) \cdot \mathbf{a}_{c'} \right] \cdot \frac{\mathbf{A}_{c, c'}}{\sqrt{C}}
+    $$
+    其中：
+    - $ \mathbf{f}_c'' $ 和 $ \mathbf{p}_c'' $ 是经过样式变换后的频率和相位。
+    - $ \mathbf{a}_c $ 是幅值调整因子。
+    - $ \mathbf{A} $ 是通道映射的权重。
+    物理意义
+    1. 通过频率 $ \mathbf{f} $ 和相位 $ \mathbf{p} $ 生成傅里叶特征，构建空间位置和样式相关的初始特征。
+    2. 线性映射 $ \mathbf{A} $ 学习不同频率和相位的组合关系，为生成器提供任务相关的特征。
+平移不会改变信号的频率分量（振幅不变），但会引入与平移量成比例的相位偏移。
+旋转会同时改变空间域和频域信号的方向，但频率的幅度不变
 
 
-* 移除逐像素噪声输入，虽对 FID 近乎无影响，但单独考虑时未提升等变性指标。
-* 简化设置，包括减少映射网络深度、禁用混合正则化和路径长度正则化、消除输出跳跃连接，并通过跟踪像素和特征图的指数移动平均进行归一化，使 FID 回到原始 StyleGAN2 水平且略微提升了平移等变性。
+##  移除逐像素噪声输入
+虽对 FID 近乎无影响，但单独考虑时未提升等变性指标。
+## 简化设置
+包括减少映射网络深度、禁用混合正则化和路径长度正则化、消除输出跳跃连接，并通过跟踪像素和特征图的指数移动平均进行归一化，使 FID 回到原始 StyleGAN2 水平且略微提升了平移等变性。
 
-**基于连续解释的逐步重新设计**
-* 边界和上采样（config E）：通过在目标画布周围保持固定边界扩展特征图近似无限空间，用窗口化 sinc 滤波器（）替代双线性上采样滤波器，提升了平移等变性，但 FID 有所下降。
-* 滤波非线性（config F）：按照理论对非线性函数进行滤波处理，用自定义 CUDA 内核实现高效的上采样 - 非线性 - 下采样操作，进一步提高了平移等变性（EQ - T）。
-* 非临界采样（config G）：采用非临界采样降低截止频率抑制混叠，改善平移等变性且使 FID 低于原始 StyleGAN2，同时根据新的采样方式调整了确定特征图数量的启发式方法。
-* 变换 Fourier 特征（config H）：引入学习仿射层变换输入 Fourier 特征，使特征方向可基于变化，略微改善了 FID。
-* 灵活层规格（config T）：灵活设置每层滤波器参数，改善了平移等变性并消除剩余伪影，使网络结构更灵活，且固定层数在不同输出分辨率下表现稳定。
-* 旋转等变性（config R）：将所有层的卷积换为卷积并补偿容量，用径向对称 jinc 基滤波器替换 sinc 基下采样滤波器，实现旋转等变性且不损害 FID，同时采用高斯模糊技巧防止训练初期崩溃。
+## 边界和上采样（config E）
+通过在目标画布周围保持固定边界扩展特征图近似无限空间，用窗口化 sinc 滤波器（）替代双线性上采样滤波器，提升了平移等变性，但 FID 有所下降。
+## 滤波非线性（config F）
+按照理论对非线性函数进行滤波处理，用自定义 CUDA 内核实现高效的上采样 - 非线性 - 下采样操作，进一步提高了平移等变性（EQ - T）。
+## 非临界采样（config G）
+采用非临界采样降低截止频率抑制混叠，改善平移等变性且使 FID 低于原始 StyleGAN2，同时根据新的采样方式调整了确定特征图数量的启发式方法。
+## 变换 Fourier 特征（config H）
+引入学习仿射层变换输入 Fourier 特征，使特征方向可基于变化，略微改善了 FID。
+## 灵活层规格（config T）
+灵活设置每层滤波器参数，改善了平移等变性并消除剩余伪影，使网络结构更灵活，且固定层数在不同输出分辨率下表现稳定。
+## 旋转等变性（config R）
+将所有层的卷积换为卷积并补偿容量，用径向对称 jinc 基滤波器替换 sinc 基下采样滤波器，实现旋转等变性且不损害 FID，同时采用高斯模糊技巧防止训练初期崩溃。

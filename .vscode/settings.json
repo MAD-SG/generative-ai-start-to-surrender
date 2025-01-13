@@ -7,5 +7,6 @@
         "statusBarItem.hoverBackground": "#0000004D",
         "statusBarItem.remoteBackground": "#ffec49",
         "statusBarItem.remoteForeground": "#000"
-    }
+    },
+    "python.languageServer": "None"
 }
