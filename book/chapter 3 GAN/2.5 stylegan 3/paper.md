@@ -41,10 +41,60 @@ Aliasing（混叠） 是一个信号处理领域的基本问题，指的是当�
 **应用前景：**
 这些改进为生成模型在视频和动画等动态任务中的应用奠定了基础，使生成效果更加自然和连贯。
 
-# Introduction
-![alt text](../../../docs/images/image-2.png)
 
-![](https://nvlabs-fi-cdn.nvidia.com/_web/stylegan3/videos/video_9_slice_visualization.mp4)
+# Introduction
+引言部分明确了现有 GAN 中混叠问题的危害，分析了其原因，并提出了通过改进信号处理和生成器架构来解决这一问题的研究目标和贡献
+
+1. 问题背景
+近年来，GAN 的图像生成质量有了显著提升（如 StyleGAN2 等），广泛应用于图像编辑、域迁移和视频生成等领域。
+尽管生成器具有层次化的卷积结构，但生成过程对绝对像素坐标的依赖会导致 “纹理粘连”（texture sticking） 问题，即细节固定在像素坐标上而非自然附着在物体表面。
+2. 问题分析
+纹理粘连现象：
+生成细节（如纹理、毛发）在对象移动时未能正确随物体表面移动，破坏了视觉一致性，特别是在视频和动画生成中。
+问题根源：
+混叠是导致这一现象的核心原因。混叠源于不当的信号处理，如：
+   - 不理想的上采样滤波器（如双线性插值）。
+   - 激活函数（如 ReLU）带来的高频分量。
+   - 网络边界填充（padding）等操作导致绝对像素坐标泄露。
+   - 混叠的放大机制：
+网络会主动利用这些混叠信息，通过多个尺度的结合放大它们，从而建立依赖绝对屏幕坐标的纹理模式。
+3. 论文目标
+设计一个生成器架构，能够：
+完全消除混叠问题，确保生成过程不依赖绝对像素坐标。
+实现 平移和旋转等变性（translation and rotation equivariance），使生成的图像细节能够自然随物体变化。
+保持与现有 GAN（如 StyleGAN2）相当的图像质量。
+4. 主要贡献
+提出一种基于 连续信号解释（continuous signal interpretation） 的方法，重新设计 StyleGAN2 的生成器架构。
+发现当前上采样滤波器在抑制混叠方面不够有效，需要更高质量的滤波器（如超过 100dB 的衰减能力）。
+提出了一些普适的小型架构改动，既能有效抑制混叠，又能保证生成器的等变性。
+新的生成器在图像质量指标（如 FID）上与 StyleGAN2 持平，但解决了纹理粘连问题，更适合用于视频和动画生成。
+
+* **Texture sticking** 问题举例说明
+左侧（Central 和 Averaged）：
+StyleGAN2：
+现象：即使生成了一个图像的多个版本（通过对潜在空间的细微扰动），图像的细节（如猫的毛发或纹理）依然固定在绝对的像素坐标上。
+结果：当对不同版本进行平均时，细节会呈现出非自然的锐化（sharpness），因为纹理没有随物体移动。
+Ours（改进后的模型）：
+现象：图像的细节不再固定于像素坐标，而是自然地跟随物体表面的变化。
+结果：平均后的图像更平滑，符合预期。
+右侧（Latent Interpolation）：
+StyleGAN2：
+现象：在潜在空间中进行插值生成时，(当生成内容进行水平的traslation时) 头发等细节没有跟随人脸的位置变化，而是像“粘在”固定的像素上，导致生成的动画中头发呈现水平条纹（streaks）。
+Ours（改进后的模型）：
+现象：头发的细节会随人物的位置自然移动，生成更连贯的动态效果。
+结果：解决了纹理粘连问题，头发看起来更像真实物体的一部分。
+视屏中更加明显。
+![alt text](../../../docs/images/image-2.png)
+<iframe width="560" height="315"
+        src="https://nvlabs-fi-cdn.nvidia.com/_web/stylegan3/videos/video_9_slice_visualization.mp4"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+</iframe>
+
+# 通过连续信号的解释实现生成器的集合等变性(平移和旋转)
+将网络中的特征图视为连续信号，而不是离散像素，从而严格遵循信号处理理论（如 Nyquist 定理）
+
 
 # 根据连续信号解释的等变形
 
