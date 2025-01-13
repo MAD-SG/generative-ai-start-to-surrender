@@ -365,18 +365,19 @@ $$
 构造旋转矩阵和平移矩阵：
 $$
 \mathbf{M}_r =
-\begin{bmatrix}
+\begin{pmatrix}
 r_c' & -r_s' & 0 \\
 r_s' & r_c' & 0 \\
 0 & 0 & 1
-\end{bmatrix}, \quad
+\end{pmatrix}, \quad
 \mathbf{M}_t =
-\begin{bmatrix}
+\begin{pmatrix}
 1 & 0 & -t_x \\
 0 & 1 & -t_y \\
 0 & 0 & 1
-\end{bmatrix}
+\end{pmatrix}
 $$
+
 用户定义的变换矩阵$\mathbf{T}_\text{user}$和上述矩阵组合得到最终的变换矩阵：
 $$
 \mathbf{T} = \mathbf{M}_r \mathbf{M}_t \mathbf{T}_\text{user}
