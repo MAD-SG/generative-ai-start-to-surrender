@@ -45,3 +45,11 @@ Aliasing（混叠） 是一个信号处理领域的基本问题，指的是当�
 ![alt text](../../../docs/images/image-2.png)
 
 ![](https://nvlabs-fi-cdn.nvidia.com/_web/stylegan3/videos/video_9_slice_visualization.mp4)
+
+# 根据连续信号解释的等变形
+
+* 采样定理
+```According to the Nyquist–Shannon sampling theorem [51 ], a regularly sampled signal can represent
+any continuous signal containing frequencies between zero and half of the sampling rate
+```
+翻译为插值频率是连续信号的两倍时，可以完全重建原始信号
