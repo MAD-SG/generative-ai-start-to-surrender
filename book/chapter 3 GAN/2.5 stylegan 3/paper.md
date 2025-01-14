@@ -136,8 +136,8 @@ suppose$\alpha(x，y) = \text{sinc}(\frac{x}{T})\text{sinc}(\frac{y}{T})$
 
 **连续和离散的网络操作表达**
 $$
-f(z) = \phi_{s'} \ast \mathbf{F}(\Pi_s \odot z),\quad\quad
-\mathbf{F}(Z) = \Pi_{s'} \odot f(\phi_s \ast Z),
+f(z) = \phi_{s'} \ast \text{F}(\Pi_s \odot z),\quad\quad
+\text{F}(Z) = \Pi_{s'} \odot f(\phi_s \ast Z),
 $$
 其中$\odot$表示点乘，$s$and$s'$表示输入的采样频率和输出的采样频率
 有些操作会改变采样频率 比如上采样 下采样
@@ -153,19 +153,19 @@ $$f\cdot t = t\cdot f$$
 Consider a standard convolution with a discrete kernel$K$. We can interpret$K$as living in the same grid as the input feature map, with sampling rate$s$. The discrete-domain operation is simply:
 
 $$
-\mathbf{F}_{\text{conv}}(Z) = K \ast Z,
+\text{F}_{\text{conv}}(Z) = K \ast Z,
 $$
 
 and we obtain the corresponding continuous operation:
 
 $$
-\mathbf{f}_{\text{conv}}(z) = \varphi_s \ast \left( K \ast \left( \Pi_s \odot z \right) \right) = K \ast \left( \varphi_s \ast \left( \Pi_s \odot z \right) \right) = K \ast z
+\text{f}_{\text{conv}}(z) = \varphi_s \ast \left( K \ast \left( \Pi_s \odot z \right) \right) = K \ast \left( \varphi_s \ast \left( \Pi_s \odot z \right) \right) = K \ast z
 $$
 这一步用到了卷积是可以交换的。
 
 同时 根据卷积的频域等于频域的乘积
 $$
-\mathbf{F}_{\text{conv}}(K\ast Z)(e^{jw}) =\mathbf{F}_{\text{conv}}(Z)(e^{jw}) \ast\mathbf{F}_{\text{conv}}(K)(e^{jw})
+\text{F}_{\text{conv}}(K\ast Z)(e^{jw}) =\text{F}_{\text{conv}}(Z)(e^{jw}) \ast\text{F}_{\text{conv}}(K)(e^{jw})
 $$
 也就是对应频率的系数等于原始信号的频率乘以卷积的频率系数。
 因此带宽只会变小，不会变大。
@@ -201,7 +201,7 @@ $$
 假设下采样倍数为$s' = s/n$,$s$为原始采样频率，那么
 $$
 \begin{aligned}
-\mathbf{F}_{down} (Z)& = \mathrm{III}_{s'} \odot \left[  \psi_{s'} \ast \left( \phi_{s} \ast Z \right) \right]\\
+\text{F}_{down} (Z)& = \mathrm{III}_{s'} \odot \left[  \psi_{s'} \ast \left( \phi_{s} \ast Z \right) \right]\\
 & = \frac{1}{s^2} \mathrm{III}_{s'} \odot \left[  \psi_{s'} \ast \psi_{s} \ast Z \right]\\
 & = \frac{s'^2}{s^2} \mathrm{III}_{s'} \odot \left[  \phi_{s'} \ast Z \right]
 \end{aligned}
@@ -312,16 +312,16 @@ descriminator 不发生变化
 用PSNR值衡量。值越高表示等变形越强。
 ## EQ-T 公式
 $$
-\text{EQ-T} = 10 \cdot \log_{10} \left( \frac{I_{\text{max}}^2}{\mathbb{E}_{\mathbf{w} \sim \mathcal{W}, x \sim \mathcal{X}^2, p \sim \mathcal{V}, c \sim \mathcal{C}} \left[ \left( g(t_x[z_0]; \mathbf{w})_c(p) - t_x[g(z_0; \mathbf{w})]_c(p) \right)^2 \right]} \right)
+\text{EQ-T} = 10 \cdot \log_{10} \left( \frac{I_{\text{max}}^2}{\mathbb{E}_{\text{w} \sim \mathcal{W}, x \sim \mathcal{X}^2, p \sim \mathcal{V}, c \sim \mathcal{C}} \left[ \left( g(t_x[z_0]; \text{w})_c(p) - t_x[g(z_0; \text{w})]_c(p) \right)^2 \right]} \right)
 $$
 #### 说明
 -$I_{\text{max}}$: 图像像素的最大可能值（如 255）。
 -$\mathbb{E}$: 表示期望值。
--$\mathbf{w} \sim \mathcal{W}$: 权重从分布$\mathcal{W}$中采样。
+-$\text{w} \sim \mathcal{W}$: 权重从分布$\mathcal{W}$中采样。
 -$x \sim \mathcal{X}^2$: 输入从分布$\mathcal{X}^2$中采样。
 -$p \sim \mathcal{V}$: 像素坐标从空间分布$\mathcal{V}$中采样。
 -$c \sim \mathcal{C}$: 通道$c$从通道分布$\mathcal{C}$中采样。
--$g(\cdot; \mathbf{w})$: 表示图像操作或模型生成函数。
+-$g(\cdot; \text{w})$: 表示图像操作或模型生成函数。
 -$t_x$: 几何变换（如平移、旋转、缩放等）。
 -$z_0$: 输入噪声或潜在变量。
 从这个公式可以看到, 在旋转和平移是作用在 初始输入$z_0$上的，而不是latent code$w$.
@@ -331,30 +331,30 @@ $$
 SynthesisInput Forward 计算流程数学公式
 输入定义和符号说明
 假设：
--$\mathbf{w} \in \mathbb{R}^{B \times d}$：输入样式向量，来自潜在空间的映射网络。
--$\mathbf{f} \in \mathbb{R}^{C \times 2}$：可训练的频率向量。
--$\mathbf{p} \in \mathbb{R}^C$：可训练的相位向量。
--$\mathbf{A} \in \mathbb{R}^{C \times C}$：可训练的线性映射权重。
--$\mathbf{T} \in \mathbb{R}^{3 \times 3}$：用户定义的变换矩阵。
+-$\text{w} \in \mathbb{R}^{B \times d}$：输入样式向量，来自潜在空间的映射网络。
+-$\text{f} \in \mathbb{R}^{C \times 2}$：可训练的频率向量。
+-$\text{p} \in \mathbb{R}^C$：可训练的相位向量。
+-$\text{A} \in \mathbb{R}^{C \times C}$：可训练的线性映射权重。
+-$\text{T} \in \mathbb{R}^{3 \times 3}$：用户定义的变换矩阵。
 -$H, W$：输出特征图的空间尺寸。
 -$\text{bandwidth}$和$\text{sampling\_rate}$：频率范围和采样率。
 初始化频率和相位
 频率归一化
-对于每个通道的频率向量$\mathbf{f}_i \in \mathbb{R}^2$，进行归一化：
+对于每个通道的频率向量$\text{f}_i \in \mathbb{R}^2$，进行归一化：
 $$
-\mathbf{f}_i' = \frac{\mathbf{f}_i}{\|\mathbf{f}_i\|^2} \cdot \|\mathbf{f}_i\|^{0.25} \cdot \text{bandwidth}, \quad \forall i \in [1, C]
+\text{f}_i' = \frac{\text{f}_i}{\|\text{f}_i\|^2} \cdot \|\text{f}_i\|^{0.25} \cdot \text{bandwidth}, \quad \forall i \in [1, C]
 $$
 其中：
--$\|\mathbf{f}_i\|^2 = \mathbf{f}_i \cdot \mathbf{f}_i$是频率向量的平方范数。
+-$\|\text{f}_i\|^2 = \text{f}_i \cdot \text{f}_i$是频率向量的平方范数。
 随机初始化相位
-相位$\mathbf{p}_i$初始化为均匀分布：
+相位$\text{p}_i$初始化为均匀分布：
 $$
-\mathbf{p}_i \sim \text{Uniform}(-0.5, 0.5), \quad \forall i \in [1, C]
+\text{p}_i \sim \text{Uniform}(-0.5, 0.5), \quad \forall i \in [1, C]
 $$
 样式向量到变换参数
-从样式向量$\mathbf{w}$映射到变换参数$\mathbf{t}$：
+从样式向量$\text{w}$映射到变换参数$\text{t}$：
 $$
-\mathbf{t} = \text{Affine}(\mathbf{w}), \quad \mathbf{t} = [r_c, r_s, t_x, t_y] \in \mathbb{R}^{B \times 4}
+\text{t} = \text{Affine}(\text{w}), \quad \text{t} = [r_c, r_s, t_x, t_y] \in \mathbb{R}^{B \times 4}
 $$
 归一化旋转参数
 对旋转参数进行归一化：
@@ -364,12 +364,12 @@ $$
 构造变换矩阵
 构造旋转矩阵和平移矩阵：
 $$
-\mathbf{M}_r=\begin{bmatrix}
+\text{M}_r=\begin{bmatrix}
 r_c'&-r_s'&0;\\
 r_s'&r_c'&0;\\
 0&0&1;
 \end{bmatrix},
-\mathbf{M}_t=\begin{bmatrix}
+\text{M}_t=\begin{bmatrix}
 1&0&-t_x;\\
 0&1&-t_y;\\
 0&0&1;\end{bmatrix}$$
@@ -382,45 +382,45 @@ $$
 将变换矩阵应用于频率和相位：
 ### 3.1 频率变换
 $$
-\mathbf{f}_i'' = \mathbf{f}_i' \cdot \mathbf{T}_{1:2, 1:2}, \quad \forall i \in [1, C]
+\text{f}_i'' = \text{f}_i' \cdot \text{T}_{1:2, 1:2}, \quad \forall i \in [1, C]
 $$
 相位变换
 $$
-\mathbf{p}_i'' = \mathbf{p}_i + \mathbf{f}_i' \cdot \mathbf{T}_{1:2, 2:3}, \quad \forall i \in [1, C]
+\text{p}_i'' = \text{p}_i + \text{f}_i' \cdot \text{T}_{1:2, 2:3}, \quad \forall i \in [1, C]
 $$
 频率幅值调整
 为了抑制超出频率范围的分量，调整幅值：
 $$
-\mathbf{a}_i = \max\left(0, 1 - \frac{\|\mathbf{f}_i''\| - \text{bandwidth}}{\frac{\text{sampling\_rate}}{2} - \text{bandwidth}}\right), \quad \forall i \in [1, C]
+\text{a}_i = \max\left(0, 1 - \frac{\|\text{f}_i''\| - \text{bandwidth}}{\frac{\text{sampling\_rate}}{2} - \text{bandwidth}}\right), \quad \forall i \in [1, C]
 $$
 构造傅里叶特征
 采样网格
-定义采样网格$\mathbf{G} \in \mathbb{R}^{H \times W \times 2}$：
+定义采样网格$\text{G} \in \mathbb{R}^{H \times W \times 2}$：
 $$
-\mathbf{G}[h, w] = \left(\frac{w}{W} - 0.5, \frac{h}{H} - 0.5\right), \quad \forall h \in [0, H], w \in [0, W]
+\text{G}[h, w] = \left(\frac{w}{W} - 0.5, \frac{h}{H} - 0.5\right), \quad \forall h \in [0, H], w \in [0, W]
 $$
 傅里叶特征计算
 通过频率和相位生成傅里叶特征：
 $$
-\mathbf{x}_\text{fourier}[b, h, w, c] = \sin\left(2 \pi (\mathbf{G}[h, w] \cdot \mathbf{f}_c'' + \mathbf{p}_c'')\right) \cdot \mathbf{a}_c
+\text{x}_\text{fourier}[b, h, w, c] = \sin\left(2 \pi (\text{G}[h, w] \cdot \text{f}_c'' + \text{p}_c'')\right) \cdot \text{a}_c
 $$
 应用线性映射
-使用可训练的线性权重$\mathbf{A}$对傅里叶特征进行通道映射：
+使用可训练的线性权重$\text{A}$对傅里叶特征进行通道映射：
 $$
-\mathbf{x}_\text{out}[b, c, h, w] = \sum_{c'=1}^C \mathbf{x}_\text{fourier}[b, h, w, c'] \cdot \frac{\mathbf{A}_{c, c'}}{\sqrt{C}}
+\text{x}_\text{out}[b, c, h, w] = \sum_{c'=1}^C \text{x}_\text{fourier}[b, h, w, c'] \cdot \frac{\text{A}_{c, c'}}{\sqrt{C}}
 $$
 最终公式总结
 完整的 `SynthesisInput` forward 计算流程：
 $$
-\mathbf{x}_\text{out}[b, c, h, w] = \sum_{c'=1}^C \left[ \sin\left(2 \pi (\mathbf{G}[h, w] \cdot \mathbf{f}_{c'}'' + \mathbf{p}_{c'}'')\right) \cdot \mathbf{a}_{c'} \right] \cdot \frac{\mathbf{A}_{c, c'}}{\sqrt{C}}
+\text{x}_\text{out}[b, c, h, w] = \sum_{c'=1}^C \left[ \sin\left(2 \pi (\text{G}[h, w] \cdot \text{f}_{c'}'' + \text{p}_{c'}'')\right) \cdot \text{a}_{c'} \right] \cdot \frac{\text{A}_{c, c'}}{\sqrt{C}}
 $$
 其中：
--$\mathbf{f}_c''$和$\mathbf{p}_c''$是经过样式变换后的频率和相位。
--$\mathbf{a}_c$是幅值调整因子。
--$\mathbf{A}$是通道映射的权重。
+-$\text{f}_c''$和$\text{p}_c''$是经过样式变换后的频率和相位。
+-$\text{a}_c$是幅值调整因子。
+-$\text{A}$是通道映射的权重。
 物理意义
-1. 通过频率$\mathbf{f}$和相位$\mathbf{p}$生成傅里叶特征，构建空间位置和样式相关的初始特征。
-2. 线性映射$\mathbf{A}$学习不同频率和相位的组合关系，为生成器提供任务相关的特征。
+1. 通过频率$\text{f}$和相位$\text{p}$生成傅里叶特征，构建空间位置和样式相关的初始特征。
+2. 线性映射$\text{A}$学习不同频率和相位的组合关系，为生成器提供任务相关的特征。
 平移不会改变信号的频率分量（振幅不变），但会引入与平移量成比例的相位偏移。
 旋转会同时改变空间域和频域信号的方向，但频率的幅度不变
 
