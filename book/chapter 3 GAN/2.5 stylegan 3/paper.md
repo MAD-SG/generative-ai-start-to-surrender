@@ -200,9 +200,11 @@ $$
 
 假设下采样倍数为$s' = s/n$,$s$为原始采样频率，那么
 $$
-F_{down} (Z) = \mathrm{III}_{s'} \odot \left[  \psi_{s'} \ast \left( \phi_{s} \ast Z \right) \right]\\
- = \frac{1}{s^2} \mathrm{III}_{s'} \odot \left[  \psi_{s'} \ast \psi_{s} \ast Z \right]\\
- = \frac{s'^2}{s^2} \mathrm{III}_{s'} \odot \left[  \phi_{s'} \ast Z \right]
+\begin{aligned}
+F_{down} (Z)& = \mathrm{III}_{s'} \odot \left[  \psi_{s'} \ast \left( \phi_{s} \ast Z \right) \right]\\
+& = \frac{1}{s^2} \mathrm{III}_{s'} \odot \left[  \psi_{s'} \ast \psi_{s} \ast Z \right]\\
+& = \frac{s'^2}{s^2} \mathrm{III}_{s'} \odot \left[  \phi_{s'} \ast Z \right]
+\end{aligned}
 $$
 
 两个低通滤波的卷积任然是一个低通滤波.带宽为最小的带宽。
@@ -440,3 +442,188 @@ $$
 灵活设置每层滤波器参数，改善了平移等变性并消除剩余伪影，使网络结构更灵活，且固定层数在不同输出分辨率下表现稳定。
 ## 旋转等变性（config R）
 将所有层的卷积换为卷积并补偿容量，用径向对称 jinc 基滤波器替换 sinc 基下采样滤波器，实现旋转等变性且不损害 FID，同时采用高斯模糊技巧防止训练初期崩溃。
+
+
+# 代码解读
+## modulated_conv2d
+```
+def modulated_conv2d(
+    x,                  # Input tensor: [batch_size, in_channels, in_height, in_width]
+    w,                  # Weight tensor: [out_channels, in_channels, kernel_height, kernel_width]
+    s,                  # Style tensor: [batch_size, in_channels]
+    demodulate  = True, # Apply weight demodulation?
+    padding     = 0,    # Padding: int or [padH, padW]
+    input_gain  = None, # Optional scale factors for the input channels: [], [in_channels], or [batch_size, in_channels]
+):
+    with misc.suppress_tracer_warnings(): # this value will be treated as a constant
+        batch_size = int(x.shape[0])
+    out_channels, in_channels, kh, kw = w.shape
+    misc.assert_shape(w, [out_channels, in_channels, kh, kw]) # [OIkk]
+    misc.assert_shape(x, [batch_size, in_channels, None, None]) # [NIHW]
+    misc.assert_shape(s, [batch_size, in_channels]) # [NI]
+
+    # Pre-normalize inputs.
+    if demodulate:
+        w = w * w.square().mean([1,2,3], keepdim=True).rsqrt()
+        s = s * s.square().mean().rsqrt()
+
+    # Modulate weights.
+    w = w.unsqueeze(0) # [NOIkk] # 增加batch维度
+    w = w * s.unsqueeze(1).unsqueeze(3).unsqueeze(4) # [NOIkk]
+
+    # Demodulate weights.
+    if demodulate:
+        dcoefs = (w.square().sum(dim=[2,3,4]) + 1e-8).rsqrt() # [NO]
+        w = w * dcoefs.unsqueeze(2).unsqueeze(3).unsqueeze(4) # [NOIkk]
+
+    # Apply input scaling.
+    if input_gain is not None:
+        input_gain = input_gain.expand(batch_size, in_channels) # [NI]
+        w = w * input_gain.unsqueeze(1).unsqueeze(3).unsqueeze(4) # [NOIkk]
+
+    # Execute as one fused op using grouped convolution.
+    x = x.reshape(1, -1, *x.shape[2:])
+    w = w.reshape(-1, in_channels, kh, kw)
+    x = conv2d_gradfix.conv2d(input=x, weight=w.to(x.dtype), padding=padding, groups=batch_size)
+    x = x.reshape(batch_size, -1, *x.shape[2:])
+    return x
+```
+
+### 最终数学表达式
+
+经过以上步骤，最终输出 \( y \) 的数学表达为：
+
+$$
+y_{b,o,h',w'} = \sum_{i,k_h,k_w} \left[ x_{b,i,h+k_h,w+k_w} \cdot \left( w_{o,i,k_h,k_w} \cdot s_{b,i} \cdot d_{\text{coef},o} \cdot \text{input\_gain}_{b,i} \right) \right]
+$$
+
+其中：
+- $ b $: 批量索引。
+- $ o, i $: 输出通道和输入通道索引。
+- $ h', w'$: 输出特征图的位置。
+- $ k_h, k_w $: 卷积核的空间维度索引。
+### 直观意义
+
+1. 样式 $ s $ 动态地调节权重，调整每个卷积核的权重。同一个batch里不同的不同的样本style是独立的。体现了生成式模型中特征的个性化调整。
+2. 归一化和去归一化过程避免了数值不稳定性。权重归一化作用在i,k,h 维度上，也就是不同的卷积核上做normalize，具有相同的范数。对style 的归一化作用在所有的维度上。也就是整个s 归一化之后的范数为1.
+3. 分组卷积高效地实现了每个样本独立的权重调制计算。
+
+## SynthesisLayer
+
+```
+# Track input magnitude.
+if update_emas:
+    with torch.autograd.profiler.record_function('update_magnitude_ema'):
+        magnitude_cur = x.detach().to(torch.float32).square().mean()
+        self.magnitude_ema.copy_(magnitude_cur.lerp(self.magnitude_ema, self.magnitude_ema_beta))
+input_gain = self.magnitude_ema.rsqrt()
+
+# Execute affine layer.
+styles = self.affine(w)
+if self.is_torgb:
+    weight_gain = 1 / np.sqrt(self.in_channels * (self.conv_kernel ** 2))
+    styles = styles * weight_gain
+
+# Execute modulated conv2d.
+dtype = torch.float16 if (self.use_fp16 and not force_fp32 and x.device.type == 'cuda') else torch.float32
+x = modulated_conv2d(x=x.to(dtype), w=self.weight, s=styles,
+    padding=self.conv_kernel-1, demodulate=(not self.is_torgb), input_gain=input_gain)
+```
+### 数学公式
+
+1. **当前输入幅值的平方均值**：
+   $$
+   \text{magnitude\_cur} = \frac{1}{N} \sum_i x_i^2
+   $$
+   其中：
+   - \( x \): 输入特征。
+   - \( N \): 输入特征中元素的总数。
+
+2. **EMA 更新**：
+   $$
+   \text{magnitude\_ema} = \beta \cdot \text{magnitude\_ema} + (1 - \beta) \cdot \text{magnitude\_cur}
+   $$
+   其中：
+   - $ \beta$: EMA 的平滑系数 ($ 0 < \beta < 1 $)。
+   - $ \text{magnitude\_cur} $: 当前输入幅值的平方均值。
+   - $ \text{magnitude\_ema} $: 历史平滑的输入幅值。
+
+3. **输入增益**：
+   $$
+   \text{input\_gain} = \frac{1}{\sqrt{\text{magnitude\_ema}}}
+   $$
+
+---
+
+### 公式的直观意义
+
+- **动态归一化**：通过 $\text{input\_gain}$ 调整输入特征的幅值，确保其在训练过程中保持适当范围。
+- **平滑更新**：EMA 提供了一种平滑的历史幅值估计，避免训练中的剧烈波动。
+- **数值稳定性**：限制输入特征幅值的过大或过小，确保训练中的梯度稳定。
+    input_gain 会作用在之后的卷积上，作用相当于对X做了一个归一化。可以称之为滑动平均归一化。目前所有的归一化都不改变mean。
+
+### filtered_lrelu
+```
+x = filtered_lrelu.filtered_lrelu(x=x, fu=self.up_filter, fd=self.down_filter, b=self.bias.to(x.dtype),
+            up=self.up_factor, down=self.down_factor, padding=self.padding, gain=gain, slope=slope, clamp=self.conv_clamp)
+```
+https://github.com/NVlabs/stylegan3/blob/main/torch_utils/ops/filtered_lrelu.py
+作者把上采样下采样和激活函数重新写了一个cuda kernel。太过于工程化，先跳过这部分。
+
+
+### SynthesisLayer.design_lowpass_filter
+```
+    @staticmethod
+    def design_lowpass_filter(numtaps, cutoff, width, fs, radial=False):
+        assert numtaps >= 1
+
+        # Identity filter.
+        if numtaps == 1:
+            return None
+
+        # Separable Kaiser low-pass filter.
+        if not radial:
+            f = scipy.signal.firwin(numtaps=numtaps, cutoff=cutoff, width=width, fs=fs)
+            return torch.as_tensor(f, dtype=torch.float32)
+
+        # Radially symmetric jinc-based filter.
+        x = (np.arange(numtaps) - (numtaps - 1) / 2) / fs
+        r = np.hypot(*np.meshgrid(x, x))
+        f = scipy.special.j1(2 * cutoff * (np.pi * r)) / (np.pi * r)
+        beta = scipy.signal.kaiser_beta(scipy.signal.kaiser_atten(numtaps, width / (fs / 2)))
+        w = np.kaiser(numtaps, beta)
+        f *= np.outer(w, w)
+        f /= np.sum(f)
+        return torch.as_tensor(f, dtype=torch.float32)
+```
+### 滤波器的作用域与设计过程
+
+#### **作用域**
+这些滤波器 **作用在时间域**，它们通过时间域卷积操作处理输入信号或图像。卷积公式为：
+$$
+y[n] = \sum_{k} x[k] \cdot h[n-k]
+$$
+其中：
+- $x[k]$: 输入信号。
+- $h[k]$: 滤波器的时间域权重（脉冲响应）。
+- $y[n]$: 滤波后的输出信号。
+#### **设计过程**
+尽管滤波器作用在时间域，其设计过程通常基于频域的要求，比如：
+- **截止频率** ($\text{cutoff}$)：指定滤波器允许通过的频率范围。
+- **过渡带宽** ($\text{width}$)：控制滤波器从通带到阻带的过渡区域的宽度。
+- **频域形状**：滤波器的设计目标是实现某种理想频率响应（如低通、高通或带通）。
+#### **频域与时间域的关系**
+根据傅里叶变换理论，时间域与频域是一对互补的表示：
+- 滤波器的 **时间域权重（脉冲响应）** 决定其频域响应。
+- 滤波器的 **频域设计目标**（如截止频率、过渡带宽）通过设计过程映射为时间域权重。
+### 代码中的滤波器设计
+1. **Kaiser 滤波器**：
+   - 使用 `scipy.signal.firwin` 基于频域要求生成时间域滤波器权重。
+   - 窗函数法通过调整 Kaiser 窗口的形状实现频率响应的优化。
+2. **Jinc 滤波器**：
+   - 基于径向对称的 Jinc 函数设计，其核心思想源自频域特性。
+   - 通过叠加 Kaiser 窗口进一步调整频域特性并生成时间域滤波器权重。
+### 总结
+- **作用域**：滤波器作用在时间域，使用卷积操作处理输入信号或图像。
+- **设计过程**：基于频域要求（如截止频率、带宽）设计时间域滤波器权重。
+- **实际应用**：在时间域中通过卷积实现对信号或图像频率成分的控制。
