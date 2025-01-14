@@ -378,9 +378,9 @@ r_s' & r_c' & 0 \\
 \end{pmatrix}
 $$
 
-用户定义的变换矩阵$\mathbf{T}_\text{user}$和上述矩阵组合得到最终的变换矩阵：
+用户定义的变换矩阵$T_\text{user}$和上述矩阵组合得到最终的变换矩阵：
 $$
-\mathbf{T} = \mathbf{M}_r \mathbf{M}_t \mathbf{T}_\text{user}
+T = M_r M_t T_\text{user}
 $$
 频率和相位的变换
 将变换矩阵应用于频率和相位：
