@@ -364,19 +364,15 @@ $$
 构造变换矩阵
 构造旋转矩阵和平移矩阵：
 $$
-\mathbf{M}_r =
-\begin{bmatrix}
-r_c' & -r_s' & 0; \\\
-r_s' & r_c' & 0; \\\
-0 & 0 & 1;
-\end{bmatrix}, \quad
-\mathbf{M}_t =
-\begin{bmatrix}
-1 & 0 & -t_x; \\\
-0 & 1 & -t_y; \\\
-0 & 0 & 1;
-\end{bmatrix}
-$$
+\mathbf{M}_r=\begin{bmatrix}
+r_c'&-r_s'&0;\\
+r_s'&r_c'&0;\\
+0&0&1;
+\end{bmatrix},
+\mathbf{M}_t=\begin{bmatrix}
+1&0&-t_x;\\
+0&1&-t_y;\\
+0&0&1;\end{bmatrix}$$
 
 用户定义的变换矩阵$T_\text{user}$和上述矩阵组合得到最终的变换矩阵：
 $$
