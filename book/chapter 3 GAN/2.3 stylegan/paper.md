@@ -163,16 +163,16 @@ if self.training and w_moving_decay < 1:
 ```
 
 - **目的** :
-  - 在训练阶段，计算 $w$ 的均值并进行移动平均更新，得到样式空间的中心点 $w\_avg$。
+  - 在训练阶段，计算 $w$ 的均值并进行移动平均更新，得到样式空间的中心点 $w_{avg}$。
 
-  - $w\_avg$ 用于后续的截断操作（truncation trick），以控制生成内容的多样性和平衡性。
+  - $w_{avg}$ 用于后续的截断操作（truncation trick），以控制生成内容的多样性和平衡性。
 
 - **过程** :
   - 计算当前批次的样式向量平均值 $\text{batch\_w\_avg}$。
 
   - 使用指数移动平均 (EMA) 更新全局样式均值 $w\_avg$:
     $$
-    w\_avg \gets w\_avg \cdot \text{decay} + \text{batch\_w\_avg} \cdot (1 - \text{decay})
+    w_{avg} \gets w_{avg} \cdot \text{decay} + \text{batch-w-avg} \cdot (1 - \text{decay})
     $$
 
 
@@ -225,7 +225,7 @@ if w.ndim == 2:
 - **过程** :
   - 使用样式空间的中心点 $w\_avg$ 和截断因子 $\psi$ 对样式向量 $w$ 进行缩放：
     $$
-    w'_i = w\_avg + \psi \cdot (w_i - w\_avg), \quad \text{for layers } i < \text{trunc\_layers}
+    w'_i = w_{avg} + \psi \cdot (w_i - w_{avg}), \quad \text{for layers } i < \text{trunclayers}
     $$
   - 截断操作可以减小样式空间中样式向量的偏离程度，从而生成更稳定的图像。
 - **输出** :
@@ -235,16 +235,17 @@ if w.ndim == 2:
     **为什么是缩放？**
     截断操作的公式为：
     $$
-    wp = w\_avg + (wp - w\_avg) \cdot \text{trunc\_psi}
+    wp = w_{avg} + (wp - w_{avg}) \cdot \text{trunc-psi}
     $$
     观察公式可以看出：
-    1. 样式向量 $$wp$$ 被重新调整到一个以 $w\_avg$ 为中心的范围内。
+    1. 样式向量 $wp$ 被重新调整到一个以 $w_{avg}$ 为中心的范围内。
 
-    2. $\text{trunc\_psi}$ 是一个缩放因子，决定了 $wp$ 偏离 $w\_avg$ 的程度。
+    2. $\text{trunc-psi}$ 是一个缩放因子，决定了 $wp$ 偏离 $w_{avg}$ 的程度。
+
     **物理意义** ：
-    - 如果 $\text{trunc\_psi} < 1$，样式向量的偏离被缩小，生成的图像更接近于全局样式的“平均值”。
+    - 如果 $\text{trunc-psi} < 1$，样式向量的偏离被缩小，生成的图像更接近于全局样式的“平均值”。
 
-    - 如果 $$\text{trunc\_psi} > 1$$，样式向量的偏离被放大，生成的图像会更极端，更偏离平均风格。
+    - 如果 $$\text{trunc-psi} > 1$$，样式向量的偏离被放大，生成的图像会更极端，更偏离平均风格。
 
     **传统截断 (Clipping)** 在传统的“截断”概念中，我们会将某些超出指定范围的值 **直接限制**  在这个范围内，例如：$
     x = \max(\min(x, \text{upper\_bound}), \text{lower\_bound})
