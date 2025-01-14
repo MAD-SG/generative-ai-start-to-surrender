@@ -366,15 +366,15 @@ $$
 $$
 \mathbf{M}_r =
 \begin{pmatrix}
-r_c' & -r_s' & 0 \\
-r_s' & r_c' & 0 \\
-0 & 0 & 1
+r_c' & -r_s' & 0; \\\
+r_s' & r_c' & 0; \\\
+0 & 0 & 1;
 \end{pmatrix}, \quad
 \mathbf{M}_t =
 \begin{pmatrix}
-1 & 0 & -t_x \\
-0 & 1 & -t_y \\
-0 & 0 & 1
+1 & 0 & -t_x; \\\
+0 & 1 & -t_y; \\\
+0 & 0 & 1;
 \end{pmatrix}
 $$
 
