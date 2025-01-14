@@ -10,13 +10,16 @@
 2. [Variational Autoencoders (VAE)](book/chapter%202%20VAE)
 
 3. [Generative Adversarial Networks (GAN)](book/chapter%203%20GAN)
+   - [PGGAN](book/chapter%203%20GAN/2.2%20pggan/paper.md)
    - [StyleGAN](book/chapter%203%20GAN/2.3%20stylegan/paper.md)
-   - [StyleGAN 3](book/chapter%203%20GAN/2.5%20stylegan%203/paper.md)
+   - [StyleGAN2](book/chapter%203%20GAN/2.4%20stylegan2/paper.md)
+   - [StyleGAN3](book/chapter%203%20GAN/2.5%20stylegan%203/paper.md)
+
 ## BUGS
 ### MARKDOWN
    1. bmatrix cannot be rendered
-   2. Use extenstion "MathJax 3 Plugin for Github" to render equation![alt text](docs/images/image-12.png)
-   3. cannot reander \mathbf
+   2. Use extension "MathJax 3 Plugin for Github" to render equation![alt text](docs/images/image-12.png)
+   3. cannot render \mathbf
 
 ## License
 
