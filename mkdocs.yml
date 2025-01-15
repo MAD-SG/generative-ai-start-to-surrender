@@ -12,7 +12,7 @@ nav:
       - StyleGAN3: "book/chapter 3 GAN/2.5 stylegan 3/paper.md"
 
 theme:
-  name: material
+  name: mkdocs
 
 plugins:
   - search

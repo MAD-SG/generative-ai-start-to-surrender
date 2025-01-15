@@ -8,6 +8,7 @@
 ## Steps
 
 1. **Install MkDocs**:
+
    ```bash
    pip install mkdocs
    pip install mkdocs-material
@@ -16,6 +17,7 @@
    ```
 
 2. **Initialize MkDocs Project**:
+
    ```bash
    mkdocs new my-project
    cd my-project
@@ -28,12 +30,14 @@
    - Edit `mkdocs.yml` to define the site's navigation.
 
 5. **Build and Serve Locally**:
+
    ```bash
    mkdocs build
    mkdocs serve
    ```
 
 6. **Deploy to GitHub Pages**:
+
    ```bash
    mkdocs gh-deploy
    ```

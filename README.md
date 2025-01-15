@@ -15,19 +15,40 @@
    - [StyleGAN2](book/chapter%203%20GAN/2.4%20stylegan2/paper.md)
    - [StyleGAN3](book/chapter%203%20GAN/2.5%20stylegan%203/paper.md)
 
+## Contribution
+
+### 使用Markdownlint
+
+Markdownlint 是一个对 Markdown 进行规范检查的扩展，除了给出 lint 提示外，也支持自动修复部分问题（比如空行、列表缩进等）。
+打开 VS Code 设置后，可根据需要启用自动修复选项：
+
+```json
+{
+   ...
+   "editor.codeActionsOnSave": {
+      "source.fixAll.markdownlint": true
+   }
+}
+```
+
 ## BUGS
+
 ### MARKDOWN
+
    1. bmatrix cannot be rendered
    2. Use extension "MathJax 3 Plugin for Github" to render equation![alt text](docs/images/image-12.png)
    3. cannot render \mathbf
+
    4. $$ $$ 需要换行。在 Markdown 中，单个换行符（按下 Enter）通常不会被视为换行，而是被解析为一个空格，除非渲染器明确支持换行。
+
    行间公式保持下面的格式
-   ```
+
+   ```markdown
    text...
 
    $$...$$
-   ```
 
+   ```
 
 ## License
 
