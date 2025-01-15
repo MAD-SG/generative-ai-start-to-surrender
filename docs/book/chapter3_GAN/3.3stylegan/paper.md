@@ -58,6 +58,7 @@
      x = x \times (\text{style\_split}[:, 0] + 1) + \text{style\_split}[:, 1]
     $$
 
+
    - **目的**: 显式调整特征图方差和均值，表示图片风格。
 
 4. **截断技巧 (Truncation Trick)**:
@@ -144,6 +145,7 @@ w = mapping_results['w']
 
     $$w = f(z) $$
 
+
     其中 $f$ 是映射网络，输出 $w$ 的形状为 $[B, w\_dim]$，  通常 $w\_dim = 512$。
 - **输出** :
   - $w$: 样式向量，作为后续生成过程中的特征控制参数。
@@ -171,6 +173,7 @@ if self.training and w_moving_decay < 1:
     $$
     w_{avg} \gets w_{avg} \cdot \text{decay} + \text{batch-w-avg} \cdot (1 - \text{decay})
     $$
+
 
 #### 3. 样式混合 (Style Mixing)
 
@@ -223,6 +226,7 @@ if w.ndim == 2:
     w'_i = w_{avg} + \psi \cdot (w_i - w_{avg}), \quad \text{for layers } i < \text{trunclayers}
     $$
 
+
   - 截断操作可以减小样式空间中样式向量的偏离程度，从而生成更稳定的图像。
 - **输出** :
   - $wp$: 每一层的样式向量，形状为 $[B, \text{num\_layers}, w\_dim]$。
@@ -234,6 +238,7 @@ if w.ndim == 2:
     $$
     wp = w_{avg} + (wp - w_{avg}) \cdot \text{trunc-psi}
     $$
+
 
     观察公式可以看出：
     1. 样式向量 $wp$ 被重新调整到一个以 $w_{avg}$ 为中心的范围内。
@@ -508,7 +513,7 @@ x, style = f"self.layer{2k}"(x, wp[:, 2 * block_idx],randomize_noise)
 
 1. 上采样和卷积。只在每一个分辨率的第一层进行上采样。使用的上采样是
 
-    ```
+    ```python
     return F.interpolate(x, scale_factor=self.scale_factor, mode='nearest')
     ```
 
