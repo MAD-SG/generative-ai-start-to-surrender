@@ -1,0 +1,1780 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../1.1%20terminology/">
+      
+      
+        <link rel="next" href="../1.3%20signal%20processing/">
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.49">
+    
+    
+      
+        <title>Fourier Transform - Generative AI: From Start to Surrender</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.6f8fc17f.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#1" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Generative AI: From Start to Surrender" class="md-header__button md-logo" aria-label="Generative AI: From Start to Surrender" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Generative AI: From Start to Surrender
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Fourier Transform
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Generative AI: From Start to Surrender" class="md-nav__button md-logo" aria-label="Generative AI: From Start to Surrender" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Generative AI: From Start to Surrender
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            Introduction
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1.1%20terminology/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Terms
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Fourier Transform
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Fourier Transform
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#11" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.1 傅里叶变换和逆变换公式
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.1 傅里叶变换和逆变换公式">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#111-continuous-fourier-transform" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.1.1 连续傅里叶变换 (Continuous Fourier Transform)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#112-inverse-continuous-fourier-transform" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.1.2 连续傅里叶逆变换 (Inverse Continuous Fourier Transform)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#113-discrete-fourier-transform-dft" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.1.3 离散傅里叶变换 (Discrete Fourier Transform, DFT)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#114-inverse-discrete-fourier-transform-idft" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.1.4 离散傅里叶逆变换 (Inverse Discrete Fourier Transform, IDFT)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.2 公式中的关键点
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.2 公式中的关键点">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#121" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.2.1 正负号区别：
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#122-vs" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.2.2 连续 vs 离散：
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#123" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.2.3 归一化系数：
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.3 示例
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.3 示例">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#131" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.3.1 连续信号示例
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#132" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.3.2 离散信号示例
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.4 离散信号做傅里叶变换的例子
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.4 离散信号做傅里叶变换的例子">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#141" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.4.1 离散信号
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#142-dft" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.4.2 DFT 公式
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#143" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.4.3 计算步骤
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#144-k-0" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.4.4 k = 0
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#145-k-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.4.5 k = 1
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#146-k-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.4.6 k = 2
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#147-k-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.4.7 k = 3
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.5 结果汇总
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#16" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.6 解释
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#17" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.7 可视化频谱
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#18" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.8 傅里叶变换后的系数代表的性质
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.8 傅里叶变换后的系数代表的性质">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#181-magnitude" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.8.1 幅值（Magnitude）
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#182-phase" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.8.2 相位（Phase）
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#183-dc-component" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.8.3 直流分量（DC Component）
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#184" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.8.4 频率分量
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#185" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.8.5 能量和功率
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#186" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.8.6 对称性
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#187" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.8.7 频域分辨率
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#19" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.9 总结
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#110" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.10 角频率与频率
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.10 角频率与频率">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1101-frequency" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.10.1 频率（Frequency）
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1102-angular-frequency" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.10.2 角频率（Angular Frequency）
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1103" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.10.3 频率与角频率的区别与联系
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1104" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.10.4 正弦波中的使用
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1105" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.10.5 示例对比
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1106" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.10.6 信号频谱图
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1107" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.10.7 总结
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1.3%20signal%20processing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Signal Processing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    GANs
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            GANs
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter%203%20GAN/2.2%20pggan/paper/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PGGAN
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter%203%20GAN/2.3%20stylegan/paper/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    StyleGAN
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter%203%20GAN/2.4%20stylegan2/paper/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    StyleGAN2
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter%203%20GAN/2.5%20stylegan%203/paper/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    StyleGAN3
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#11" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.1 傅里叶变换和逆变换公式
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.1 傅里叶变换和逆变换公式">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#111-continuous-fourier-transform" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.1.1 连续傅里叶变换 (Continuous Fourier Transform)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#112-inverse-continuous-fourier-transform" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.1.2 连续傅里叶逆变换 (Inverse Continuous Fourier Transform)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#113-discrete-fourier-transform-dft" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.1.3 离散傅里叶变换 (Discrete Fourier Transform, DFT)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#114-inverse-discrete-fourier-transform-idft" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.1.4 离散傅里叶逆变换 (Inverse Discrete Fourier Transform, IDFT)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.2 公式中的关键点
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.2 公式中的关键点">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#121" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.2.1 正负号区别：
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#122-vs" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.2.2 连续 vs 离散：
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#123" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.2.3 归一化系数：
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.3 示例
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.3 示例">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#131" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.3.1 连续信号示例
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#132" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.3.2 离散信号示例
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.4 离散信号做傅里叶变换的例子
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.4 离散信号做傅里叶变换的例子">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#141" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.4.1 离散信号
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#142-dft" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.4.2 DFT 公式
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#143" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.4.3 计算步骤
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#144-k-0" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.4.4 k = 0
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#145-k-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.4.5 k = 1
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#146-k-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.4.6 k = 2
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#147-k-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.4.7 k = 3
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.5 结果汇总
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#16" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.6 解释
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#17" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.7 可视化频谱
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#18" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.8 傅里叶变换后的系数代表的性质
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.8 傅里叶变换后的系数代表的性质">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#181-magnitude" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.8.1 幅值（Magnitude）
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#182-phase" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.8.2 相位（Phase）
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#183-dc-component" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.8.3 直流分量（DC Component）
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#184" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.8.4 频率分量
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#185" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.8.5 能量和功率
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#186" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.8.6 对称性
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#187" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.8.7 频域分辨率
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#19" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.9 总结
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#110" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.10 角频率与频率
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.10 角频率与频率">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1101-frequency" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.10.1 频率（Frequency）
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1102-angular-frequency" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.10.2 角频率（Angular Frequency）
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1103" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.10.3 频率与角频率的区别与联系
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1104" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.10.4 正弦波中的使用
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1105" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.10.5 示例对比
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1106" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.10.6 信号频谱图
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1107" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.10.7 总结
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="1">1. 傅里叶变化</h1>
+<h2 id="11">1.1 傅里叶变换和逆变换公式</h2>
+<h3 id="111-continuous-fourier-transform">1.1.1 连续傅里叶变换 (Continuous Fourier Transform)</h3>
+<ul>
+<li><strong>公式</strong>：
+  <span class="arithmatex">\(X(f) = \int_{-\infty}^{\infty} x(t) e^{-j 2\pi f t} \, dt\)</span></li>
+</ul>
+<p>其中：
+  - <span class="arithmatex">\(x(t)\)</span>：时域信号。
+  - <span class="arithmatex">\(X(f)\)</span>：频域信号（频谱）。
+  - <span class="arithmatex">\(f\)</span>：频率，单位为赫兹 (Hz)。</p>
+<h3 id="112-inverse-continuous-fourier-transform">1.1.2 连续傅里叶逆变换 (Inverse Continuous Fourier Transform)</h3>
+<ul>
+<li><strong>公式</strong>：
+  <span class="arithmatex">\(x(t) = \int_{-\infty}^{\infty} X(f) e^{j 2\pi f t} \, df\)</span></li>
+</ul>
+<p>其中：
+  - <span class="arithmatex">\(X(f)\)</span>：频域信号。
+  - <span class="arithmatex">\(x(t)\)</span>：重建回来的时域信号。</p>
+<h3 id="113-discrete-fourier-transform-dft">1.1.3 离散傅里叶变换 (Discrete Fourier Transform, DFT)</h3>
+<p>对于离散信号 <span class="arithmatex">\(x[n]\)</span>：
+- <strong>公式</strong>：
+  <span class="arithmatex">\(X[k] = \sum_{n=0}^{N-1} x[n] e^{-j \frac{2\pi}{N} kn}, \quad k = 0, 1, 2, \dots, N-1\)</span></p>
+<p>其中：
+  - <span class="arithmatex">\(x[n]\)</span>：时域离散信号。
+  - <span class="arithmatex">\(X[k]\)</span>：频域离散信号。</p>
+<h3 id="114-inverse-discrete-fourier-transform-idft">1.1.4 离散傅里叶逆变换 (Inverse Discrete Fourier Transform, IDFT)</h3>
+<ul>
+<li><strong>公式</strong>：
+  <span class="arithmatex">\(x[n] = \frac{1}{N} \sum_{k=0}^{N-1} X[k] e^{j \frac{2\pi}{N} kn}, \quad n = 0, 1, 2, \dots, N-1\)</span></li>
+</ul>
+<p>其中：
+  - <span class="arithmatex">\(X[k]\)</span>：频域离散信号。
+  - <span class="arithmatex">\(x[n]\)</span>：重建回来的时域信号。</p>
+<h2 id="12">1.2 公式中的关键点</h2>
+<h3 id="121">1.2.1 正负号区别：</h3>
+<ul>
+<li>傅里叶变换中，指数部分为 <span class="arithmatex">\(e^{-j 2\pi f t}\)</span>（正弦和余弦分量）。</li>
+<li>逆变换中，指数部分为 <span class="arithmatex">\(e^{j 2\pi f t}\)</span>（相位相反）。</li>
+</ul>
+<h3 id="122-vs">1.2.2 连续 vs 离散：</h3>
+<ul>
+<li>连续变换涉及积分（时域到频域，或频域到时域）。</li>
+<li>离散变换涉及求和（用于离散信号处理）。</li>
+</ul>
+<h3 id="123">1.2.3 归一化系数：</h3>
+<ul>
+<li>对于连续傅里叶变换，不需要显式归一化系数。</li>
+<li>对于离散傅里叶逆变换，需要除以信号长度 <span class="arithmatex">\(N\)</span>。</li>
+</ul>
+<h2 id="13">1.3 示例</h2>
+<h3 id="131">1.3.1 连续信号示例</h3>
+<p>时域信号：<span class="arithmatex">\(x(t) = \cos(2\pi f_0 t)\)</span></p>
+<ul>
+<li>
+<p>傅里叶变换：
+  <span class="arithmatex">\(X(f) = \frac{1}{2}[\delta(f - f_0) + \delta(f + f_0)]\)</span></p>
+</li>
+<li>
+<p>逆变换：
+  <span class="arithmatex">\(x(t) = \int_{-\infty}^\infty \left[\frac{1}{2}\delta(f - f_0) + \frac{1}{2}\delta(f + f_0)\right] e^{j 2\pi f t} \, df\)</span>
+  得到 <span class="arithmatex">\(x(t) = \cos(2\pi f_0 t)\)</span>。</p>
+</li>
+</ul>
+<h3 id="132">1.3.2 离散信号示例</h3>
+<p>时域信号：<span class="arithmatex">\(x[n] = [1, 2, 3, 4]\)</span></p>
+<ul>
+<li>
+<p>傅里叶变换：
+  使用离散傅里叶变换公式计算 <span class="arithmatex">\(X[k]\)</span>。</p>
+</li>
+<li>
+<p>逆变换：
+  使用逆变换公式计算 <span class="arithmatex">\(x[n]\)</span>，重建信号。</p>
+</li>
+</ul>
+<h2 id="14">1.4 离散信号做傅里叶变换的例子</h2>
+<h3 id="141">1.4.1 离散信号</h3>
+<p>假设一个长度为 <span class="arithmatex">\(N=4\)</span> 的离散信号：</p>
+<div class="arithmatex">\[
+x[n] = [1, 2, 3, 4], \quad n = 0, 1, 2, 3
+\]</div>
+<p>我们用离散傅里叶变换 (DFT) 的公式计算其频域信号 <span class="arithmatex">\(X[k]\)</span>。</p>
+<h3 id="142-dft">1.4.2 DFT 公式</h3>
+<div class="arithmatex">\[
+X[k] = \sum_{n=0}^{N-1} x[n] e^{-j \frac{2\pi}{N} kn}, \quad k = 0, 1, \dots, N-1
+\]</div>
+<h3 id="143">1.4.3 计算步骤</h3>
+<ol>
+<li>
+<p><strong>信号长度 <span class="arithmatex">\(N=4\)</span></strong>，频率索引 <span class="arithmatex">\(k = 0, 1, 2, 3\)</span>。</p>
+</li>
+<li>
+<p><strong>指数项</strong>：<span class="arithmatex">\(e^{-j \frac{2\pi}{N} kn} = e^{-j \frac{\pi}{2} kn}\)</span>。</p>
+</li>
+<li>
+<p>分别计算 <span class="arithmatex">\(k = 0, 1, 2, 3\)</span> 时的 <span class="arithmatex">\(X[k]\)</span>：</p>
+</li>
+</ol>
+<h3 id="144-k-0">1.4.4 k = 0</h3>
+<div class="arithmatex">\[
+X[0] = \sum_{n=0}^{3} x[n] e^{-j \frac{2\pi}{4} \cdot 0 \cdot n}
+= x[0] + x[1] + x[2] + x[3]
+= 1 + 2 + 3 + 4 = 10
+\]</div>
+<h3 id="145-k-1">1.4.5 k = 1</h3>
+<div class="arithmatex">\[
+X[1] = \sum_{n=0}^{3} x[n] e^{-j \frac{\pi}{2} n}
+= x[0] + x[1] e^{-j \frac{\pi}{2}} + x[2] e^{-j \pi} + x[3] e^{-j \frac{3\pi}{2}}
+\]</div>
+<p>计算每一项:</p>
+<ul>
+<li><span class="arithmatex">\(x[0] = 1\)</span></li>
+<li><span class="arithmatex">\(x[1] e^{-j \frac{\pi}{2}} = 2 \cdot (-j) = -2j\)</span></li>
+<li><span class="arithmatex">\(x[2] e^{-j \pi} = 3 \cdot (-1) = -3\)</span></li>
+<li><span class="arithmatex">\(x[3] e^{-j \frac{3\pi}{2}} = 4 \cdot j = 4j\)</span></li>
+</ul>
+<p>相加：</p>
+<div class="arithmatex">\[
+X[1] = 1 - 2\cdot j - 3 + 4\cdot j = -2 + 2\cdot j
+\]</div>
+<h3 id="146-k-2">1.4.6 k = 2</h3>
+<div class="arithmatex">\[
+X[2] = \sum_{n=0}^{3} x[n] e^{-j \pi n}
+= x[0] + x[1] e^{-j \pi} + x[2] e^{-j 2\pi} + x[3] e^{-j 3\pi}
+\]</div>
+<p>计算每一项：</p>
+<ul>
+<li><span class="arithmatex">\(x[0] = 1\)</span></li>
+<li><span class="arithmatex">\(x[1] e^{-j \pi} = 2 \cdot (-1) = -2\)</span></li>
+<li><span class="arithmatex">\(x[2] e^{-j 2\pi} = 3 \cdot 1 = 3\)</span></li>
+<li><span class="arithmatex">\(x[3] e^{-j 3\pi} = 4 \cdot (-1) = -4\)</span></li>
+</ul>
+<p>相加：</p>
+<div class="arithmatex">\[
+X[2] = 1 - 2 + 3 - 4 = -2
+\]</div>
+<h3 id="147-k-3">1.4.7 k = 3</h3>
+<div class="arithmatex">\[
+X[3] = \sum_{n=0}^{3} x[n] e^{-j \frac{3\pi}{2} n}
+= x[0] + x[1] e^{-j \frac{3\pi}{2}} + x[2] e^{-j 3\pi} + x[3] e^{-j \frac{9\pi}{2}}
+\]</div>
+<p>计算每一项：</p>
+<ul>
+<li><span class="arithmatex">\(x[0] = 1\)</span></li>
+<li><span class="arithmatex">\(x[1] e^{-j \frac{3\pi}{2}} = 2 \cdot j = 2j\)</span></li>
+<li><span class="arithmatex">\(x[2] e^{-j 3\pi} = 3 \cdot (-1) = -3\)</span></li>
+<li><span class="arithmatex">\(x[3] e^{-j \frac{9\pi}{2}} = 4 \cdot (-j) = -4j\)</span></li>
+</ul>
+<p>相加:</p>
+<div class="arithmatex">\[
+X[3] = 1 + 2j - 3 - 4j = -2 - 2j
+\]</div>
+<h2 id="15">1.5 结果汇总</h2>
+<p>频域信号 <span class="arithmatex">\(X[k]\)</span> 为：</p>
+<div class="arithmatex">\[
+X[k] = [10, -2 + 2j, -2, -2 - 2j]
+\]</div>
+<h2 id="16">1.6 解释</h2>
+<ol>
+<li><strong><span class="arithmatex">\(X[0] = 10\)</span></strong>：直流分量，表示信号的平均值。</li>
+<li><strong>其余 <span class="arithmatex">\(X[k]\)</span></strong>：表示信号的其他频率分量，包括振幅和相位。</li>
+</ol>
+<h2 id="17">1.7 可视化频谱</h2>
+<ol>
+<li>幅值 <span class="arithmatex">\(|X[k]|\)</span>：</li>
+</ol>
+<p>$$
+   |X[0]| = 10, \quad |X[1]| = \sqrt{(-2)^2 + 2^2} = \sqrt{8}, \quad |X[2]| = 2, \quad |X[3]| = \sqrt{8}
+   $$</p>
+<ol>
+<li>相位 <span class="arithmatex">\(\text{arg}(X[k])\)</span>：</li>
+</ol>
+<p>$$
+   \text{arg}(X[1]) = \arctan\left(\frac{2}{-2}\right) = \frac{3\pi}{4}, \quad \text{arg}(X[3]) = \arctan\left(\frac{-2}{-2}\right) = -\frac{3\pi}{4}
+   $$</p>
+<h2 id="18">1.8 傅里叶变换后的系数代表的性质</h2>
+<h3 id="181-magnitude">1.8.1 幅值（Magnitude）</h3>
+<p>幅值 <span class="arithmatex">\(|X(f)|\)</span> 或 <span class="arithmatex">\(|X[k]|\)</span> 表示信号在某个频率上的<strong>强度</strong>或<strong>能量分布</strong>。</p>
+<ul>
+<li>较大的幅值意味着信号在该频率上具有较强的成分。</li>
+<li>较小的幅值意味着该频率上的成分较弱，甚至可以忽略。</li>
+</ul>
+<p><strong>示例</strong>：
+- 如果信号主要是一个频率为 <span class="arithmatex">\(f_0\)</span> 的正弦波，其频谱在 <span class="arithmatex">\(f = f_0\)</span> 和 <span class="arithmatex">\(f = -f_0\)</span> 处有峰值。
+- 多个频率成分的信号在对应频率位置会出现多个峰值。</p>
+<h3 id="182-phase">1.8.2 相位（Phase）</h3>
+<p>相位 <span class="arithmatex">\(\text{arg}(X(f))\)</span> 或 <span class="arithmatex">\(\text{arg}(X[k])\)</span> 表示信号在对应频率上的<strong>相位偏移</strong>。</p>
+<ul>
+<li>相位决定了该频率成分的正弦波（或余弦波）在时间上的偏移。</li>
+<li>改变相位会改变信号的时域表现，但不会影响其能量。</li>
+</ul>
+<p><strong>示例</strong>：
+- 如果信号的相位为零，频率成分与时间轴对齐。
+- 非零相位表示该频率成分的时间偏移量。</p>
+<h3 id="183-dc-component">1.8.3 直流分量（DC Component）</h3>
+<p>当频率 <span class="arithmatex">\(f = 0\)</span> 或 <span class="arithmatex">\(k = 0\)</span> 时的系数 <span class="arithmatex">\(X(0)\)</span> 或 <span class="arithmatex">\(X[0]\)</span> 表示信号的<strong>平均值</strong>，称为<strong>直流分量</strong>。</p>
+<ul>
+<li>如果信号的平均值为零（例如纯交流信号），直流分量为零。</li>
+<li>如果信号有非零平均值，则 <span class="arithmatex">\(X[0]\)</span> 对应该值。</li>
+</ul>
+<h3 id="184">1.8.4 频率分量</h3>
+<p>每个傅里叶系数 <span class="arithmatex">\(X(f)\)</span> 或 <span class="arithmatex">\(X[k]\)</span> 对应于信号在某个特定频率上的贡献。</p>
+<ul>
+<li><strong>连续傅里叶变换</strong>中的 <span class="arithmatex">\(X(f)\)</span>：对应连续频率 <span class="arithmatex">\(f\)</span>。</li>
+<li><strong>离散傅里叶变换</strong>中的 <span class="arithmatex">\(X[k]\)</span>：对应离散频率 <span class="arithmatex">\(k \cdot f_s / N\)</span>，其中 <span class="arithmatex">\(f_s\)</span> 是采样频率，<span class="arithmatex">\(N\)</span> 是信号长度。</li>
+</ul>
+<h3 id="185">1.8.5 能量和功率</h3>
+<p>通过帕塞瓦尔定理，傅里叶变换的系数可以用来计算信号的总能量或功率：</p>
+<ul>
+<li><strong>连续信号</strong>的能量：</li>
+</ul>
+<p>$$
+  E = \int_{-\infty}^\infty |x(t)|^2 dt = \int_{-\infty}^\infty |X(f)|^2 df
+  $$</p>
+<ul>
+<li><strong>离散信号</strong>的能量：</li>
+</ul>
+<p>$$
+  E = \sum_{n=0}^{N-1} |x[n]|^2 = \frac{1}{N} \sum_{k=0}^{N-1} |X[k]|^2
+  $$</p>
+<h3 id="186">1.8.6 对称性</h3>
+<p>如果信号是<strong>实值信号</strong>（例如音频信号）：
+- 频谱关于零频对称：</p>
+<p>$$
+  X(-f) = \overline{X(f)} \quad \text{（共轭对称）}
+  $$</p>
+<p>对于离散信号：</p>
+<p>$$
+  X[N-k] = \overline{X[k]}
+  $$</p>
+<p>如果信号是<strong>偶函数</strong>或<strong>奇函数</strong>，频谱也会表现出对称性或反对称性。</p>
+<h3 id="187">1.8.7 频域分辨率</h3>
+<p>傅里叶系数的数量和间隔取决于信号的采样率和长度：
+- 信号长度越长，频域分辨率越高（频率间隔越小）。
+- 如果信号是周期信号，其频谱会表现为离散的峰值。</p>
+<h2 id="19">1.9 总结</h2>
+<p>傅里叶变换后的系数主要描述信号的以下性质：
+1. <strong>频率成分的强度</strong>（幅值）。
+2. <strong>频率成分的时间偏移</strong>（相位）。
+3. <strong>信号的直流分量</strong>（零频分量）。
+4. <strong>信号的频率分布和能量分布</strong>。</p>
+<p>这些性质共同定义了信号在频域中的表现，是信号分析和处理的基础。</p>
+<h2 id="110">1.10 角频率与频率</h2>
+<h3 id="1101-frequency">1.10.1 频率（Frequency）</h3>
+<ul>
+<li><strong>定义</strong>：频率表示信号每秒完成振荡的次数，通常用符号 <span class="arithmatex">\(f\)</span> 表示。</li>
+<li><strong>单位</strong>：赫兹 (Hz)，即每秒振荡的周期数。</li>
+<li><strong>公式</strong>：</li>
+</ul>
+<p>$$
+  f = \frac{1}{T}
+  $$</p>
+<p>其中 <span class="arithmatex">\(T\)</span> 是信号的周期，表示完成一次完整振荡所需的时间。</p>
+<p><strong>示例</strong>：
+- 一个信号每秒振荡 50 次，其频率为 <span class="arithmatex">\(f = 50 \, \text{Hz}\)</span>。
+- 电网交流电的频率通常为 <span class="arithmatex">\(50 \, \text{Hz}\)</span> 或 <span class="arithmatex">\(60 \, \text{Hz}\)</span>。</p>
+<h3 id="1102-angular-frequency">1.10.2 角频率（Angular Frequency）</h3>
+<ul>
+<li><strong>定义</strong>：角频率表示信号每秒转过的弧度数，通常用符号 <span class="arithmatex">\(\omega\)</span> 表示。</li>
+<li><strong>单位</strong>：弧度每秒 (rad/s)。</li>
+<li><strong>公式</strong>：</li>
+</ul>
+<p>$$
+  \omega = 2\pi f
+  $$</p>
+<p>其中 <span class="arithmatex">\(2\pi\)</span> 表示一个完整的圆（对应信号完成一个周期）。</p>
+<p><strong>角频率的物理意义</strong>：
+- 一个周期内，信号的相位变化为 <span class="arithmatex">\(2\pi\)</span> 弧度（对应完整的一个波形）。
+- 角频率是频率的另一种表示方式，更适合描述正弦波中的振荡特性。</p>
+<h3 id="1103">1.10.3 频率与角频率的区别与联系</h3>
+<ul>
+<li><strong>频率 <span class="arithmatex">\(f\)</span></strong> 描述的是信号在单位时间内的周期数（次/秒）。</li>
+<li><strong>角频率 <span class="arithmatex">\(\omega\)</span></strong> 描述的是信号在单位时间内的相位变化量（弧度/秒）。</li>
+<li>它们之间的关系为：</li>
+</ul>
+<p>$$
+  \omega = 2\pi f \quad \text{或} \quad f = \frac{\omega}{2\pi}
+  $$</p>
+<h3 id="1104">1.10.4 正弦波中的使用</h3>
+<p>在正弦波中：
+- <strong>使用角频率的表达</strong>：</p>
+<p>$$
+  x(t) = A \cos(\omega t + \phi)
+  $$</p>
+<p>其中：
+  - <span class="arithmatex">\(\omega\)</span> 是角频率（弧度/秒）。
+  - <span class="arithmatex">\(A\)</span> 是振幅。
+  - <span class="arithmatex">\(\phi\)</span> 是初始相位。</p>
+<ul>
+<li><strong>使用频率的表达</strong>：</li>
+</ul>
+<p>$$
+  x(t) = A \cos(2\pi f t + \phi)
+  $$</p>
+<p><strong>注意</strong>：
+- 角频率在正弦信号的数学分析中更为常用。
+- 频率用于描述信号的周期性和计数特性。</p>
+<h3 id="1105">1.10.5 示例对比</h3>
+<p>假设一个信号的频率为 <span class="arithmatex">\(f = 10 \, \text{Hz}\)</span>：
+- <strong>周期</strong>：</p>
+<p>$$
+  T = \frac{1}{f} = \frac{1}{10} = 0.1 \, \text{秒}
+  $$</p>
+<ul>
+<li><strong>角频率</strong>：</li>
+</ul>
+<p>$$
+  \omega = 2\pi f = 2\pi \cdot 10 \approx 62.8 \, \text{rad/s}
+  $$</p>
+<p>这意味着每秒完成 10 个周期，同时每秒相位变化约为 <span class="arithmatex">\(62.8 \, \text{弧度}\)</span>。</p>
+<h3 id="1106">1.10.6 信号频谱图</h3>
+<p><a href="https://zhuanlan.zhihu.com/p/161678102">点击链接查看信号频谱介绍</a>
+<img alt="alt text" src="../../../images/image-3.png" />
+纵轴表示幅度，横轴表示角评率，忽略了相位信息。</p>
+<h3 id="1107">1.10.7 总结</h3>
+<table>
+<thead>
+<tr>
+<th><strong>特性</strong></th>
+<th><strong>频率 <span class="arithmatex">\(f\)</span></strong></th>
+<th><strong>角频率 <span class="arithmatex">\(\omega\)</span></strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>单位</td>
+<td>赫兹 (Hz)</td>
+<td>弧度每秒 (rad/s)</td>
+</tr>
+<tr>
+<td>描述</td>
+<td>每秒的周期数</td>
+<td>每秒的相位变化量</td>
+</tr>
+<tr>
+<td>关系</td>
+<td><span class="arithmatex">\(f = \frac{\omega}{2\pi}\)</span></td>
+<td><span class="arithmatex">\(\omega = 2\pi f\)</span></td>
+</tr>
+<tr>
+<td>应用场景</td>
+<td>周期性信号的描述</td>
+<td>正弦波和动态系统的数学表达</td>
+</tr>
+</tbody>
+</table>
+<h1 id="2">2. 周期信号和非周期信号的频谱</h1>
+<h2 id="21">2.1 周期信号与非周期信号的频谱</h2>
+<h3 id="211">2.1.1 基本概念</h3>
+<ul>
+<li><strong>周期信号</strong>的频谱是<strong>离散的</strong>，由基频及其整数倍（谐波）组成。
+  周期信号可以用傅里叶级数表示为：</li>
+</ul>
+<p>$$
+  x(t) = \sum_{n=-\infty}^\infty c_n e^{j 2\pi n f_0 t}
+  $$</p>
+<p>其中 <span class="arithmatex">\(f_0 = 1/T\)</span> 是基频，<span class="arithmatex">\(c_n\)</span> 是傅里叶系数。</p>
+<ul>
+<li><strong>非周期信号</strong>的频谱是<strong>连续的</strong>，不能仅用基频及其整数倍的频率来表示。
+  非周期信号通常通过傅里叶变换得到频谱：</li>
+</ul>
+<p>$$
+  X(f) = \int_{-\infty}^\infty x(t) e^{-j 2\pi f t} dt
+  $$</p>
+<p>它在整个频率轴上是连续分布的。</p>
+<h2 id="22">2.2 信号重建分析</h2>
+<h3 id="221">2.2.1 完全重建</h3>
+<ul>
+<li><strong>周期信号</strong>可以完全用基频及其整数倍的频率分量来表示。</li>
+<li><strong>非周期信号</strong>则<strong>不能完全重建</strong>，因为它的频谱是连续的，频率成分不局限于离散点。</li>
+</ul>
+<h3 id="222">2.2.2 近似重建</h3>
+<p>尽管非周期信号无法完全用离散频率成分来重建，但可以用有限个离散频率成分来<strong>近似重建</strong>，即：</p>
+<div class="arithmatex">\[
+x(t) \approx \sum_{n=-N}^N c_n e^{j 2\pi n f_0 t}
+\]</div>
+<p>当选取的频率点（<span class="arithmatex">\(N\)</span> 较大）足够多时，可以近似模拟信号的主要特性，但这种方法有以下限制：
+- 模拟的结果是有限精度的。
+- 对高频分量较丰富的信号，近似需要更多的频率点。</p>
+<h2 id="23">2.3 示例分析</h2>
+<h3 id="231">2.3.1 周期信号示例</h3>
+<p>设 <span class="arithmatex">\(x(t) = \cos(2\pi f_0 t)\)</span> 是一个周期信号，其频谱为：</p>
+<div class="arithmatex">\[
+X(f) = \frac{1}{2}[\delta(f - f_0) + \delta(f + f_0)]
+\]</div>
+<p>显然可以用基频 <span class="arithmatex">\(f_0\)</span> 的离散频率分量表示，无需额外频率。</p>
+<h3 id="232">2.3.2 非周期信号示例（矩形脉冲）</h3>
+<p>设 <span class="arithmatex">\(x(t)\)</span> 是一个宽度为 <span class="arithmatex">\(T\)</span> 的矩形脉冲：</p>
+<div class="arithmatex">\[
+x(t) =
+\begin{cases}
+1, &amp; -T/2 \leq t \leq T/2 \\
+0, &amp; \text{其他}
+\end{cases}
+\]</div>
+<p>其频谱为：</p>
+<div class="arithmatex">\[
+X(f) = T \cdot \text{sinc}(fT)
+\]</div>
+<p><span class="arithmatex">\(\text{sinc}(fT)\)</span> 是一个连续函数，覆盖所有频率，不能完全用离散频率表示。但如果只取若干主要频率分量，可以近似重建。</p>
+<h3 id="233">2.3.3 带噪信号示例</h3>
+<p>对于非周期且带噪声的信号，其频谱可能分布在一个较宽的频率范围内，用离散频率分量只能部分近似重建，且高频部分的误差可能较大。</p>
+<h2 id="24">2.4 常见的频谱逼近方法</h2>
+<p>对于非周期信号，如果希望用离散频率表示，可以考虑以下方法：</p>
+<h3 id="241-dft">2.4.1 离散傅里叶变换 (DFT)</h3>
+<ul>
+<li>将连续信号采样为离散信号，并用有限频率点的频谱表示。</li>
+<li>结果是信号的频谱在有限频率点上的离散近似。</li>
+</ul>
+<h3 id="242">2.4.2 窗口化处理</h3>
+<ul>
+<li>非周期信号可以通过时间窗口截断，使其近似为有限时长的周期信号。</li>
+<li>截断后的信号频谱会接近于离散频率分量，但会引入频谱泄露。</li>
+</ul>
+<h3 id="243">2.4.3 带宽限制</h3>
+<ul>
+<li>对非周期信号施加低通滤波器，去掉高频分量。</li>
+<li>带宽限制后，信号频谱能更好地用有限离散频率模拟。</li>
+</ul>
+<h2 id="25">2.5 总结</h2>
+<ul>
+<li><strong>完全重建</strong>：只有周期信号能完全用基频及其整数倍频率表示。</li>
+<li><strong>近似重建</strong>：非周期信号可以用有限个离散频率分量进行近似，但无法完全重建。</li>
+<li>对于非周期信号，用离散频率表示的精度取决于：</li>
+<li>频率分量的数量。</li>
+<li>信号的频谱带宽。</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../../..", "features": [], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.88dd0f4e.min.js"></script>
+      
+        <script src="../../../javascripts/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
