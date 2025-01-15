@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Debugging: Output pre-commit trigger
-echo "Pre-commit hook triggered."
-
 # Find all modified markdown files in the commit
 FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.md$')
 
@@ -18,25 +15,31 @@ for file in $FILES; do
   if [ -f "$file" ]; then
     echo "Processing file: $file"
 
-    # Add empty lines before and after $$ if missing
+    # Ensure $$ block-level formulas are surrounded by blank lines
     awk '
       BEGIN { changed = 0 }
-      /^\$\$/ {
-        if (NR > 1 && prev != "") {
-          print ""
-          changed = 1
+      {
+        if ($0 ~ /^\$\$/) {
+          if (prev != "") {
+            print ""
+            changed = 1
+          }
+          print $0
+          getline next_line
+          print $0
+          if (next_line != "") {
+            print ""
+            changed = 1
+          }
         }
-      }
-      { print }
-      /^\$\$/ {
-        getline next
-        if (next != "") {
-          print ""
-          changed = 1
-        }
-        print next
+        print
       }
       { prev = $0 }
+      END {
+        if (changed) {
+          print "Updated $$ formatting in " FILENAME > "/dev/stderr"
+        }
+      }
     ' "$file" > "${file}.tmp" && mv "${file}.tmp" "$file"
 
     # Re-add the updated file to the commit
