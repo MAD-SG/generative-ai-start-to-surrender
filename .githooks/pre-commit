@@ -1,24 +1,26 @@
 #!/bin/bash
 
-# Find all modified markdown files in the commit
-FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.md$')
+# 临时把 IFS 设为换行符，避免因为空格导致一次性读到多个“文件名”
+IFS=$'\n'
+# 将所有命中的 MD 文件保存到数组 FILES 中
+FILES=( $(git diff --cached --name-only --diff-filter=ACM | grep -E '\.md$') )
+# 恢复默认 IFS
+IFS=$' \t\n'
 
-if [ -z "$FILES" ]; then
+# 如果数组长度为0，说明没有需要处理的 markdown 文件
+if [ ${#FILES[@]} -eq 0 ]; then
   echo "No markdown files to process."
   exit 0
 fi
 
-echo "Processing markdown files: $FILES"
+echo "Processing markdown files:"
 
-# 逐行读取文件名，避免因空格而拆分
-echo "$MARKDOWN_FILES" | while IFS= read -r file; do
-  # file 可能含有空格，这里一定要用双引号引用
+# 逐个处理
+for file in "${FILES[@]}"; do
   echo "Running add_blank_lines.sh on: $file"
-  ./scripts/add_blank_lines.sh "$file"
-done
+  ./scripts/add_blank_lines.sh "$file"   # 用引号包裹，防止空格拆分
 
-# 重新添加到暂存区（这里也建议使用逐行处理，以防万一）
-echo "$MARKDOWN_FILES" | while IFS= read -r file; do
+  # 处理完后将其重新添加到索引
   git add "$file"
 done
 
