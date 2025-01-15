@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Debugging: Output pre-commit trigger
+echo "Pre-commit hook triggered."
+
 # Find all modified markdown files in the commit
 FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.md$')
 
@@ -8,11 +11,12 @@ if [ -z "$FILES" ]; then
   exit 0
 fi
 
+echo "Markdown files to process: $FILES"
+
 # Process each markdown file
 for file in $FILES; do
   if [ -f "$file" ]; then
-    # Backup the file (optional, for safety)
-    cp "$file" "${file}.bak"
+    echo "Processing file: $file"
 
     # Add empty lines before and after $$ if missing
     awk '
@@ -33,10 +37,9 @@ for file in $FILES; do
         print next
       }
       { prev = $0 }
-      END { if (changed) print "Updated $$ formatting in " FILENAME > "/dev/stderr" }
     ' "$file" > "${file}.tmp" && mv "${file}.tmp" "$file"
 
-    # Add the updated file back to the commit
+    # Re-add the updated file to the commit
     git add "$file"
   fi
 done
