@@ -1,0 +1,44 @@
+#!/bin/bash
+
+# Find all modified markdown files in the commit
+FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.md$')
+
+if [ -z "$FILES" ]; then
+  echo "No markdown files to process."
+  exit 0
+fi
+
+# Process each markdown file
+for file in $FILES; do
+  if [ -f "$file" ]; then
+    # Backup the file (optional, for safety)
+    cp "$file" "${file}.bak"
+
+    # Add empty lines before and after $$ if missing
+    awk '
+      BEGIN { changed = 0 }
+      /^\$\$/ {
+        if (NR > 1 && prev != "") {
+          print ""
+          changed = 1
+        }
+      }
+      { print }
+      /^\$\$/ {
+        getline next
+        if (next != "") {
+          print ""
+          changed = 1
+        }
+        print next
+      }
+      { prev = $0 }
+      END { if (changed) print "Updated $$ formatting in " FILENAME > "/dev/stderr" }
+    ' "$file" > "${file}.tmp" && mv "${file}.tmp" "$file"
+
+    # Add the updated file back to the commit
+    git add "$file"
+  fi
+done
+
+exit 0
