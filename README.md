@@ -1,19 +1,18 @@
 # Generative AI: From Start to Surrender
 
-## Table of Contents
+## Explore the Documentation Online :book:
 
-1. [Introduction](book/chapter%201%20Introduction)
-   - [Terms](book/chapter%201%20Introduction/1.1%20terminology.md)
-   - [Signal Processing](book/chapter%201%20Introduction/1.3%20signal%20processing.md)
-   - [Fourier Transform](book/chapter%201%20Introduction/1.2%20fourier%20transform.md)
+Discover the full documentation for "Generative AI: From Start to Surrender" online. Dive into detailed guides and resources to enhance your understanding of generative AI technologies.
 
-2. [Variational Autoencoders (VAE)](book/chapter%202%20VAE)
+[![Read Online](https://img.shields.io/badge/Read-Online-blue?style=for-the-badge)](https://mad-sg.github.io/generative-ai-start-to-surrender/)
 
-3. [Generative Adversarial Networks (GAN)](book/chapter%203%20GAN)
-   - [PGGAN](book/chapter%203%20GAN/2.2%20pggan/paper.md)
-   - [StyleGAN](book/chapter%203%20GAN/2.3%20stylegan/paper.md)
-   - [StyleGAN2](book/chapter%203%20GAN/2.4%20stylegan2/paper.md)
-   - [StyleGAN3](book/chapter%203%20GAN/2.5%20stylegan%203/paper.md)
+## Contributor :busts_in_silhouette:
+
+We are grateful for the contributions from our community. Here are some of our key contributors:
+
+- [![GitHub](https://img.shields.io/badge/GitHub-Qian%20Lilong-lightgrey?logo=github&style=social)](https://github.com/tsiendragon)
+
+Your contributions help make this project better. Thank you for your support!
 
 ## Contribution
 
@@ -41,12 +40,14 @@ Markdownlint 是一个对 Markdown 进行规范检查的扩展，除了给出 li
 
    4. $$ $$ 需要换行。在 Markdown 中，单个换行符（按下 Enter）通常不会被视为换行，而是被解析为一个空格，除非渲染器明确支持换行。
 
+
    行间公式保持下面的格式
 
    ```markdown
    text...
 
    $$...$$
+
 
    ```
 
