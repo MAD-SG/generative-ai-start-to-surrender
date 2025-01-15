@@ -2,6 +2,7 @@
 [Paper Link](https://arxiv.org/abs/1812.04948)
 ![alt text](../../../images/image-14.png)
 
+
 ## 核心创新
 
 1. **基于风格的生成器架构**
@@ -9,6 +10,7 @@
    - 将传统的输入层替换为常量输入
    - 通过AdaIN层将潜在编码注入到不同的层级
    - 实现了对不同尺度特征的精确控制
+
 
 2. **中间潜在空间W**
    - 引入映射网络F将潜在空间Z映射到中间潜在空间W
@@ -50,9 +52,11 @@
 3. **风格调制 (Style Modulation)**:
    - **过程**: 每个特征图通道使用风格向量调制。
    - **方程**:
+
     $$
      x = x \times (\text{style\_split}[:, 0] + 1) + \text{style\_split}[:, 1]
     $$
+
    - **目的**: 显式调整特征图方差和均值，表示图片风格。
 
 4. **截断技巧 (Truncation Trick)**:
@@ -129,7 +133,9 @@ w = mapping_results['w']
   - $\text{label}$: 条件生成的标签，可选，用于控制生成内容。
 - **过程** :
   - 使用一个多层感知机 (MLP) 将潜在向量 $z$ 映射到样式空间 $w$：
+
     $$w = f(z) $$
+
     其中 $f$ 是映射网络，输出 $w$ 的形状为 $[B, w\_dim]$，  通常 $w\_dim = 512$。
 - **输出** :
   - $w$: 样式向量，作为后续生成过程中的特征控制参数。
@@ -153,9 +159,11 @@ if self.training and w_moving_decay < 1:
   - 计算当前批次的样式向量平均值 $\text{batch\_w\_avg}$。
 
   - 使用指数移动平均 (EMA) 更新全局样式均值 $w\_avg$:
+
     $$
     w_{avg} \gets w_{avg} \cdot \text{decay} + \text{batch-w-avg} \cdot (1 - \text{decay})
     $$
+
 
 
 #### 3. 样式混合 (Style Mixing)
@@ -201,9 +209,11 @@ if w.ndim == 2:
 
 - **过程** :
   - 使用样式空间的中心点 $w\_avg$ 和截断因子 $\psi$ 对样式向量 $w$ 进行缩放：
+
     $$
     w'_i = w_{avg} + \psi \cdot (w_i - w_{avg}), \quad \text{for layers } i < \text{trunclayers}
     $$
+
   - 截断操作可以减小样式空间中样式向量的偏离程度，从而生成更稳定的图像。
 - **输出** :
   - $wp$: 每一层的样式向量，形状为 $[B, \text{num\_layers}, w\_dim]$。
@@ -211,9 +221,11 @@ if w.ndim == 2:
 
     **为什么是缩放？**
     截断操作的公式为：
+
     $$
     wp = w_{avg} + (wp - w_{avg}) \cdot \text{trunc-psi}
     $$
+
     观察公式可以看出：
     1. 样式向量 $wp$ 被重新调整到一个以 $w_{avg}$ 为中心的范围内。
 

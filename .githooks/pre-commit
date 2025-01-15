@@ -17,7 +17,7 @@ echo "Processing markdown files:"
 
 # 逐个处理
 for file in "${FILES[@]}"; do
-  echo "Running add_blank_lines.sh on: $file"
+  echo "process format of $$ for math formula on: $file"
   ./scripts/add_blank_lines.sh "$file"   # 用引号包裹，防止空格拆分
 
   # 处理完后将其重新添加到索引

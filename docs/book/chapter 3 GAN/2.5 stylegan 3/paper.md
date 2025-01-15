@@ -1,6 +1,7 @@
 # [stylegan3](https://proceedings.neurips.cc/paper/2021/file/076ccd93ad68be51f23707988e934906-Paper.pdf)
 **Author**: Tero Karras
 **Institution**: NVIDIA
+
 # Terms
 
 Aliasing（混叠） 是一个信号处理领域的基本问题，指的是当信号在采样过程中采样率不足时，高频信号的特性会被错误地映射到低频部分，从而导致失真或不正确的结果。这种现象同样适用于图像处理和深度学习中的生成网络。
@@ -104,22 +105,28 @@ any continuous signal containing frequencies between zero and half of the sampli
 假设连续信号为$z(x)$,离散信号为$Z(x)$, 采样频率为$s$, 采样间隔则为$T=\frac{1}{s}$.$\cdot$表示乘积, 卷积表示$\ast$.
 二维狄拉克梳妆函数为$III(x,y)=\sum_{m=-\infty}^{\infty}\sum_{n=-\infty}^{\infty}\delta(x-mT)\delta(y-nT)$
 根据插值公式
+
 $$
 Z(x,y)=z(x,y)\cdot\left(\text{III}(x,y)\right)\newline
 = z(x,y)\cdot\left(\sum_{m=-\infty}^{\infty}\sum_{n=-\infty}^{\infty}\delta(x-mT)\delta(y-nT)\right)\newline
 = \sum_{m=-\infty}^{\infty}\sum_{n=-\infty}^{\infty}z(mT,nT)\delta(x-mT)\delta(y-nT)\newline
 $$
 
+
 论文中对采样点向右进行了$\frac{T}{2}$的偏移，这样的话
+
 $$Z(x,y) = \left(\sum_{m=-\infty}^{\infty}\sum_{n=-\infty}^{\infty}
 z\left((m+\frac{1}{2})T,(n+\frac{1}{2})T\right)\delta(x-(m+\frac{1}{2})T)\delta(y-(n+\frac{1}{2})T)\right)\newline
 $$
+
 从离散信号恢复为连续信号， 根据插值公式
+
 $$
 z(x,y) = \left(\sum_{m=-\infty}^{\infty}\sum_{n=-\infty}^{\infty}Z(mT,nT)\text{sinc}(\frac{x - mT}{T})\text{sinc}(\frac{y - nT}{T})\right)\newline
  = \left(\sum_{m=-\infty}^{\infty}\sum_{n=-\infty}^{\infty}Z(mT,nT)\alpha(x - mT,y - nT)\right)\newline
  = (Z\ast \alpha)(x,y)
 $$
+
 suppose$\alpha(x，y) = \text{sinc}(\frac{x}{T})\text{sinc}(\frac{y}{T})$
 
 假设限定空间画布为[0,1]x[0,1]， 以$s=\frac{1}{T}$频率进行采样时，偏移$\frac{1}{2}T$采样会生成总共$s^2$个采样点.
@@ -130,16 +137,20 @@ suppose$\alpha(x，y) = \text{sinc}(\frac{x}{T})\text{sinc}(\frac{y}{T})$
 这就是为什么需要扩充采样空间的原因。在实际情况下，对于给定区域不需要扩充太大，因为sinc 呈现了一个随距离衰减的趋势。论文在实现的时候会先对特征图做一个扩充，也就是这个原理。
 
 **连续和离散的网络操作表达**
+
 $$
 f(z) = \phi_{s'} \ast \text{F}(\Pi_s \odot z),\quad\quad
 \text{F}(Z) = \Pi_{s'} \odot f(\phi_s \ast Z),
 $$
+
 其中$\odot$表示点乘，$s$and$s'$表示输入的采样频率和输出的采样频率
 有些操作会改变采样频率 比如上采样 下采样
 ## Equivariant network layers
 
 translation equivariance transformation
+
 $$f\cdot t = t\cdot f$$
+
 假设输出的采样频率为$s'$， 那么根据采样定理，需要满足$f$作用之后的信号频率不操作$s'/2$，也就$f$不产生超过$s'/2$的高频信号。
 
 ###  convolution layer
@@ -151,17 +162,21 @@ $$
 \text{F}_{\text{conv}}(Z) = K \ast Z,
 $$
 
+
 and we obtain the corresponding continuous operation:
 
 $$
 \text{f}_{\text{conv}}(z) = \varphi_s \ast \left( K \ast \left( \Pi_s \odot z \right) \right) = K \ast \left( \varphi_s \ast \left( \Pi_s \odot z \right) \right) = K \ast z
 $$
+
 这一步用到了卷积是可以交换的。
 
 同时 根据卷积的频域等于频域的乘积
+
 $$
 \text{F}_{\text{conv}}(K\ast Z)(e^{jw}) =\text{F}_{\text{conv}}(Z)(e^{jw}) \ast\text{F}_{\text{conv}}(K)(e^{jw})
 $$
+
 也就是对应频率的系数等于原始信号的频率乘以卷积的频率系数。
 因此带宽只会变小，不会变大。
 这就使得卷积操作天然满足采样定理的要求。
@@ -179,10 +194,13 @@ $X(e^{j\omega})$在频域中“缩放”后的主瓣部分相对应，也就是�
 **下采样**
 
 下采样频域公式离散形式
+
 $$y[m] = x[m\,M], \quad
 Y(e^{j\Omega}) = \frac{1}{M}\sum_{k=0}^{M-1} X\!\Bigl(e^{\,j\,\tfrac{\Omega + 2\pi k}{M}}\Bigr).$$
 
+
 连续形式
+
 $$
 Y_{\mathrm{sample}}(\omega)
 \;=\;
@@ -191,9 +209,11 @@ Y_{\mathrm{sample}}(\omega)
 X\!\Bigl(\omega - 2\pi\,\tfrac{k}{M\,T}\Bigr).
 $$
 
+
 为了消除混叠现象，需要过滤掉高频信号(f/2以上的, f是原始信号频率)再进行下采样。
 
 假设下采样倍数为$s' = s/n$,$s$为原始采样频率，那么
+
 $$
 \begin{aligned}
 F_{down} (Z)& = \mathrm{III}_{s'} \odot \left[  \psi_{s'} \ast \left( \phi_{s} \ast Z \right) \right]\\
@@ -201,6 +221,7 @@ F_{down} (Z)& = \mathrm{III}_{s'} \odot \left[  \psi_{s'} \ast \left( \phi_{s} \
 & = \frac{s'^2}{s^2} \mathrm{III}_{s'} \odot \left[  \phi_{s'} \ast Z \right]
 \end{aligned}
 $$
+
 
 两个低通滤波的卷积任然是一个低通滤波.带宽为最小的带宽。
 $\left( \phi_{s} \ast Z \right)$是原始采样信号经过低通滤波，去除离散采用导致的高频信号。
@@ -214,25 +235,32 @@ $\left( \phi_{s} \ast Z \right)$是原始采样信号经过低通滤波，去除
 
 ##### Spatial Domain Definition
 In the spatial domain, the 2D "Jinc" filter is:
+
 $$
 h(x, y) = 2 \frac{J_1(2\pi r)}{r}, \quad r = \sqrt{x^2 + y^2}.
 $$
+
 At$r = 0$,$h(0, 0) = 1$.
 ---
 ### Fourier Transform
 The frequency response is:
+
 $$
 H(\rho) = 2\pi \int_0^\infty h(r) r J_0(2\pi \rho r) \, dr,
 $$
+
 
 where:
 -$\rho = \sqrt{u^2 + v^2}$,
 -$J_0$is the zero-order Bessel function.
 Substitute$h(r)$:
+
 $$
 H(\rho) = 4\pi \int_0^\infty J_1(2\pi r) J_0(2\pi \rho r) \, dr.
 $$
+
 Using Bessel orthogonality:
+
 $$
 H(\rho) =
 \begin{cases}
@@ -240,6 +268,7 @@ H(\rho) =
 0, & \rho > 1.
 \end{cases}
 $$
+
 根据傅里叶变换理论，可知空间的旋转对应着频域的旋转，频域的旋转对应空间的旋转。即旋转等变性。
 如果一个操作在空间上满足旋转不变性，就需要在频域上满足旋转不变性。频域上更容易理解。因此我们只要考虑频域就行。频域满足旋转不变性首先就需要频域是径向对称的，这也是为什么需要一个径向对称理想滤波器(2D Jinc filter)的原因。当然进一步严格实现选择不变性需要下采样是作用在极坐标空间下。
 
@@ -250,17 +279,21 @@ pointwise操作天然满足 几何等变性。下面考虑带宽的条件。
 举一个具体的例子，例如$x^2$,
 - 原始信号
     设一个信号的傅里叶展开为：
+
    $$
     x(t) = \sum_{k} a_k e^{j 2\pi f_k t},
    $$
+
     其中：
     -$a_k$：信号的傅里叶系数。
     -$f_k$：信号的频率分量。
 - 非线性操作后的频谱**
     假设对信号进行非线性操作$f(x(t))$，如平方操作$x^2(t)$，则结果为：
+
    $$
     f(x(t)) \sim \sum_{k,l} g(a_k, a_l) e^{j 2\pi (f_k + f_l)t},
    $$
+
     其中：
     -$g(a_k, a_l)$：非线性操作产生的系数。
     -$f_k + f_l$：新产生的频率分量。
@@ -268,9 +301,11 @@ pointwise操作天然满足 几何等变性。下面考虑带宽的条件。
 **那要怎么实现非线性操作的带宽限制**
 
 非线性操作后，结合理想低通滤波器$\psi_s$，连续表示为：
+
 $$
 f_\sigma(z) = \psi_s * \sigma(z),
 $$
+
 其中：
 -$\psi_s$是理想低通滤波器。
 -$\sigma(z)$是非线性操作后的信号。
@@ -278,9 +313,11 @@ $$
 
 #### 离散形式
 对应的离散版本表示为：
+
 $$
 F_\sigma(Z) = s^2 \cdot \Pi_s \odot (\phi_s * \sigma(\phi_s * Z)),
 $$
+
 其中：
 -$s^2$是比例因子。
 -$\Pi_s$表示降采样操作。
@@ -306,9 +343,11 @@ descriminator 不发生变化
 **目标**： 设计等变性神经网络
 用PSNR值衡量。值越高表示等变形越强。
 ## EQ-T 公式
+
 $$
 \text{EQ-T} = 10 \cdot \log_{10} \left( \frac{I_{\text{max}}^2}{\mathbb{E}_{\text{w} \sim \mathcal{W}, x \sim \mathcal{X}^2, p \sim \mathcal{V}, c \sim \mathcal{C}} \left[ \left( g(t_x[z_0]; \text{w})_c(p) - t_x[g(z_0; \text{w})]_c(p) \right)^2 \right]} \right)
 $$
+
 #### 说明
 -$I_{\text{max}}$: 图像像素的最大可能值（如 255）。
 -$\mathbb{E}$: 表示期望值。
@@ -336,28 +375,37 @@ SynthesisInput Forward 计算流程数学公式
 初始化频率和相位
 频率归一化
 对于每个通道的频率向量$\text{f}_i \in \mathbb{R}^2$，进行归一化：
+
 $$
 \text{f}_i' = \frac{\text{f}_i}{\|\text{f}_i\|^2} \cdot \|\text{f}_i\|^{0.25} \cdot \text{bandwidth}, \quad \forall i \in [1, C]
 $$
+
 其中：
 -$\|\text{f}_i\|^2 = \text{f}_i \cdot \text{f}_i$是频率向量的平方范数。
 随机初始化相位
 相位$\text{p}_i$初始化为均匀分布：
+
 $$
 \text{p}_i \sim \text{Uniform}(-0.5, 0.5), \quad \forall i \in [1, C]
 $$
+
 样式向量到变换参数
 从样式向量$\text{w}$映射到变换参数$\text{t}$：
+
 $$
 \text{t} = \text{Affine}(\text{w}), \quad \text{t} = [r_c, r_s, t_x, t_y] \in \mathbb{R}^{B \times 4}
 $$
+
 归一化旋转参数
 对旋转参数进行归一化：
+
 $$
 r_c' = \frac{r_c}{\sqrt{r_c^2 + r_s^2}}, \quad r_s' = \frac{r_s}{\sqrt{r_c^2 + r_s^2}}
 $$
+
 构造变换矩阵
 构造旋转矩阵和平移矩阵：
+
 $$
 \text{M}_r=\begin{bmatrix}
 r_c'&-r_s'&0;\\
@@ -369,46 +417,63 @@ r_s'&r_c'&0;\\
 0&1&-t_y;\\
 0&0&1;\end{bmatrix}$$
 
+
 用户定义的变换矩阵$T_\text{user}$和上述矩阵组合得到最终的变换矩阵：
+
 $$
 T = M_r M_t T_\text{user}
 $$
+
 频率和相位的变换
 将变换矩阵应用于频率和相位：
 ### 3.1 频率变换
+
 $$
 \text{f}_i'' = \text{f}_i' \cdot \text{T}_{1:2, 1:2}, \quad \forall i \in [1, C]
 $$
+
 相位变换
+
 $$
 \text{p}_i'' = \text{p}_i + \text{f}_i' \cdot \text{T}_{1:2, 2:3}, \quad \forall i \in [1, C]
 $$
+
 频率幅值调整
 为了抑制超出频率范围的分量，调整幅值：
+
 $$
 \text{a}_i = \max\left(0, 1 - \frac{\|\text{f}_i''\| - \text{bandwidth}}{\frac{\text{sampling\_rate}}{2} - \text{bandwidth}}\right), \quad \forall i \in [1, C]
 $$
+
 构造傅里叶特征
 采样网格
 定义采样网格$\text{G} \in \mathbb{R}^{H \times W \times 2}$：
+
 $$
 \text{G}[h, w] = \left(\frac{w}{W} - 0.5, \frac{h}{H} - 0.5\right), \quad \forall h \in [0, H], w \in [0, W]
 $$
+
 傅里叶特征计算
 通过频率和相位生成傅里叶特征：
+
 $$
 \text{x}_\text{fourier}[b, h, w, c] = \sin\left(2 \pi (\text{G}[h, w] \cdot \text{f}_c'' + \text{p}_c'')\right) \cdot \text{a}_c
 $$
+
 应用线性映射
 使用可训练的线性权重$\text{A}$对傅里叶特征进行通道映射：
+
 $$
 \text{x}_\text{out}[b, c, h, w] = \sum_{c'=1}^C \text{x}_\text{fourier}[b, h, w, c'] \cdot \frac{\text{A}_{c, c'}}{\sqrt{C}}
 $$
+
 最终公式总结
 完整的 `SynthesisInput` forward 计算流程：
+
 $$
 \text{x}_\text{out}[b, c, h, w] = \sum_{c'=1}^C \left[ \sin\left(2 \pi (\text{G}[h, w] \cdot \text{f}_{c'}'' + \text{p}_{c'}'')\right) \cdot \text{a}_{c'} \right] \cdot \frac{\text{A}_{c, c'}}{\sqrt{C}}
 $$
+
 其中：
 -$\text{f}_c''$和$\text{p}_c''$是经过样式变换后的频率和相位。
 -$\text{a}_c$是幅值调整因子。
@@ -492,6 +557,7 @@ $$
 y_{b,o,h',w'} = \sum_{i,k_h,k_w} \left[ x_{b,i,h+k_h,w+k_w} \cdot \left( w_{o,i,k_h,k_w} \cdot s_{b,i} \cdot d_{\text{coef},o} \cdot \text{input\_gain}_{b,i} \right) \right]
 $$
 
+
 其中：
 - $ b $: 批量索引。
 - $ o, i $: 输出通道和输入通道索引。
@@ -527,26 +593,32 @@ x = modulated_conv2d(x=x.to(dtype), w=self.weight, s=styles,
 ### 数学公式
 
 1. **当前输入幅值的平方均值**：
+
    $$
    \text{magnitude\_cur} = \frac{1}{N} \sum_i x_i^2
    $$
+
    其中：
    - \( x \): 输入特征。
    - \( N \): 输入特征中元素的总数。
 
 2. **EMA 更新**：
+
    $$
    \text{magnitude\_ema} = \beta \cdot \text{magnitude\_ema} + (1 - \beta) \cdot \text{magnitude\_cur}
    $$
+
    其中：
    - $ \beta$: EMA 的平滑系数 ($ 0 < \beta < 1 $)。
    - $ \text{magnitude\_cur} $: 当前输入幅值的平方均值。
    - $ \text{magnitude\_ema} $: 历史平滑的输入幅值。
 
 3. **输入增益**：
+
    $$
    \text{input\_gain} = \frac{1}{\sqrt{\text{magnitude\_ema}}}
    $$
+
 
 ---
 
@@ -595,9 +667,11 @@ https://github.com/NVlabs/stylegan3/blob/main/torch_utils/ops/filtered_lrelu.py
 
 #### **作用域**
 这些滤波器 **作用在时间域**，它们通过时间域卷积操作处理输入信号或图像。卷积公式为：
+
 $$
 y[n] = \sum_{k} x[k] \cdot h[n-k]
 $$
+
 其中：
 - $x[k]$: 输入信号。
 - $h[k]$: 滤波器的时间域权重（脉冲响应）。
