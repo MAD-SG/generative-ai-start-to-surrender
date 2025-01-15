@@ -10,13 +10,16 @@ fi
 
 echo "Processing markdown files: $FILES"
 
-# Call the add_blank_lines.sh script for each file
-for file in $FILES; do
-  echo "Running add_blank_lines.sh on $file"
+# 逐行读取文件名，避免因空格而拆分
+echo "$MARKDOWN_FILES" | while IFS= read -r file; do
+  # file 可能含有空格，这里一定要用双引号引用
+  echo "Running add_blank_lines.sh on: $file"
   ./scripts/add_blank_lines.sh "$file"
 done
 
-# Re-add the updated files to the commit
-git add $FILES
+# 重新添加到暂存区（这里也建议使用逐行处理，以防万一）
+echo "$MARKDOWN_FILES" | while IFS= read -r file; do
+  git add "$file"
+done
 
 exit 0

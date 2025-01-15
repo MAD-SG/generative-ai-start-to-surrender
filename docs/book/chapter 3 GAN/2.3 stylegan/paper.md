@@ -1,6 +1,7 @@
 # StyleGAN: A Style-Based Generator Architecture for Generative Adversarial Networks
 [Paper Link](https://arxiv.org/abs/1812.04948)
 ![alt text](../../../images/image-14.png)
+
 ## 核心创新
 
 1. **基于风格的生成器架构**
