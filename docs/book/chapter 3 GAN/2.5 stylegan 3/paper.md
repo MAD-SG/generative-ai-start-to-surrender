@@ -84,7 +84,8 @@ Ours（改进后的模型）：
 现象：头发的细节会随人物的位置自然移动，生成更连贯的动态效果。
 结果：解决了纹理粘连问题，头发看起来更像真实物体的一部分。
 视屏中更加明显。
-![alt text](../../../docs/images/image-2.png)
+![alt text](../../../images/image-2.png)
+
 <iframe width="560" height="315"
         src="https://nvlabs-fi-cdn.nvidia.com/_web/stylegan3/videos/video_9_slice_visualization.mp4"
         frameborder="0"
@@ -104,7 +105,7 @@ any continuous signal containing frequencies between zero and half of the sampli
 ```
 翻译为:插值频率是连续信号的两倍时，可以完全重建原始信号
 需要注意的是 这里假设原始信号是一个带限信号，也就信号的频率被限制在一个空间内。
-![alt text](../../../docs/images/image-8.png)
+![alt text](../../../images/image-8.png)
 ## 连续型号和离散型号的关系
 假设连续信号为$z(x)$,离散信号为$Z(x)$, 采样频率为$s$, 采样间隔则为$T=\frac{1}{s}$.$\cdot$表示乘积, 卷积表示$\ast$.
 二维狄拉克梳妆函数为$III(x,y)=\sum_{m=-\infty}^{\infty}\sum_{n=-\infty}^{\infty}\delta(x-mT)\delta(y-nT)$
@@ -130,7 +131,7 @@ suppose$\alpha(x，y) = \text{sinc}(\frac{x}{T})\text{sinc}(\frac{y}{T})$
 假设限定空间画布为[0,1]x[0,1]， 以$s=\frac{1}{T}$频率进行采样时，偏移$\frac{1}{2}T$采样会生成总共$s^2$个采样点.
 根据插值公式，如果要完全恢复原始信号，则需要[0,1]x[0,1] 之外的信号。
 为什么呢？
-![alt text](../../../docs/images/image-9.png)
+![alt text](../../../images/image-9.png)
 上面是sinc 函数的图形。对于x,y 这个位置, 恢复这一点的信息需要附近区域的采样值，且距离x,y 越远，对于恢复信息的贡献越小。
 这就是为什么需要扩充采样空间的原因。在实际情况下，对于给定区域不需要扩充太大，因为sinc 呈现了一个随距离衰减的趋势。论文在实现的时候会先对特征图做一个扩充，也就是这个原理。
 
@@ -172,7 +173,7 @@ $$
 这就使得卷积操作天然满足采样定理的要求。
 
 卷积对应的频域示意图
-![alt text](../../../docs/images/image-10.png)
+![alt text](../../../images/image-10.png)
 ###  upsample and downsample
 
 **上采样**
@@ -250,7 +251,7 @@ $$
 
 **非线性激活函数**
 pointwise操作天然满足 几何等变性。下面考虑带宽的条件。
-![alt text](../../../docs/images/image-11.png)
+![alt text](../../../images/image-11.png)
 
 举一个具体的例子，例如$x^2$,
 - 原始信号

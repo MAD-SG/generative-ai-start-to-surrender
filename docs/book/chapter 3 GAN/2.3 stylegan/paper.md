@@ -1,11 +1,11 @@
 # StyleGAN: A Style-Based Generator Architecture for Generative Adversarial Networks
 
 [Paper Link](https://arxiv.org/abs/1812.04948)
-![alt text](../../../docs/images/image-14.png)
+![alt text](../../../images/image-14.png)
 ## 核心创新
 
 1. **基于风格的生成器架构**
-![alt text](../../../docs/images/image-13.png)
+![alt text](../../../images/image-13.png)
    - 将传统的输入层替换为常量输入
    - 通过AdaIN层将潜在编码注入到不同的层级
    - 实现了对不同尺度特征的精确控制
@@ -486,7 +486,7 @@ elif self.noise_type == 'channel':
 ```
 self.activate = nn.LeakyReLU(negative_slope=0.2, inplace=True)
 ```
-![alt text](../../../docs/images/image-15.png)
+![alt text](../../../images/image-15.png)
 LeakyReLU 的好处主要体现在以下几个方面：
 * 防止神经元死亡：负值区域的斜率使得神经元不会完全失活。
 * 改善梯度流动：减少梯度消失问题，支持更深层网络的训练。
@@ -495,7 +495,7 @@ LeakyReLU 的好处主要体现在以下几个方面：
 * 通用性：在图像生成任务和深度学习网络中表现优异，成为许多模型的默认选择。
 
 5. instance normalization
-![alt text](../../../docs/images/image-16.png)
+![alt text](../../../images/image-16.png)
 标准instance normalization。 使得每个样本的每个通道的featuremap的均值为0， 方差为1.
 6. 风格化
 ```

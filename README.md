@@ -20,6 +20,14 @@
    1. bmatrix cannot be rendered
    2. Use extension "MathJax 3 Plugin for Github" to render equation![alt text](docs/images/image-12.png)
    3. cannot render \mathbf
+   4. $$ $$ 需要换行。在 Markdown 中，单个换行符（按下 Enter）通常不会被视为换行，而是被解析为一个空格，除非渲染器明确支持换行。
+   行间公式保持下面的格式
+   ```
+   text...
+
+   $$...$$
+   ```
+
 
 ## License
 
