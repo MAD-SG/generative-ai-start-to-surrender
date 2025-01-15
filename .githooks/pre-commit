@@ -8,43 +8,15 @@ if [ -z "$FILES" ]; then
   exit 0
 fi
 
-echo "Markdown files to process: $FILES"
+echo "Processing markdown files: $FILES"
 
-# Process each markdown file
+# Call the add_blank_lines.sh script for each file
 for file in $FILES; do
-  if [ -f "$file" ]; then
-    echo "Processing file: $file"
-
-    # Ensure $$ block-level formulas are surrounded by blank lines
-    awk '
-      BEGIN { changed = 0 }
-      {
-        if ($0 ~ /^\$\$/) {
-          if (prev != "") {
-            print ""
-            changed = 1
-          }
-          print $0
-          getline next_line
-          print $0
-          if (next_line != "") {
-            print ""
-            changed = 1
-          }
-        }
-        print
-      }
-      { prev = $0 }
-      END {
-        if (changed) {
-          print "Updated $$ formatting in " FILENAME > "/dev/stderr"
-        }
-      }
-    ' "$file" > "${file}.tmp" && mv "${file}.tmp" "$file"
-
-    # Re-add the updated file to the commit
-    git add "$file"
-  fi
+  echo "Running add_blank_lines.sh on $file"
+  ./scripts/add_blank_lines.sh "$file"
 done
+
+# Re-add the updated files to the commit
+git add $FILES
 
 exit 0
