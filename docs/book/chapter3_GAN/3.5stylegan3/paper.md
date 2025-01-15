@@ -1,4 +1,5 @@
 # [stylegan3](https://proceedings.neurips.cc/paper/2021/file/076ccd93ad68be51f23707988e934906-Paper.pdf)
+
 **Author**: Tero Karras
 **Institution**: NVIDIA
 
@@ -15,8 +16,8 @@ Aliasing（混叠） 是一个信号处理领域的基本问题，指的是当�
 
 在音频信号中，采样不足会导致原本的高音变成不相关的低音。
 在图像处理中，缩小图像而没有正确低通滤波时会导致边缘或纹理出现波纹或锯齿状伪影。
-## Aliasing
 
+## Aliasing
 
 # 摘要
 
@@ -36,8 +37,8 @@ Aliasing（混叠） 是一个信号处理领域的基本问题，指的是当�
 **应用前景：**
 这些改进为生成模型在视频和动画等动态任务中的应用奠定了基础，使生成效果更加自然和连贯。
 
-
 # Introduction
+
 引言部分明确了现有 GAN 中混叠问题的危害，分析了其原因，并提出了通过改进信号处理和生成器架构来解决这一问题的研究目标和贡献
 
 1. 问题背景
@@ -64,7 +65,7 @@ Aliasing（混叠） 是一个信号处理领域的基本问题，指的是当�
 提出了一些普适的小型架构改动，既能有效抑制混叠，又能保证生成器的等变性。
 新的生成器在图像质量指标（如 FID）上与 StyleGAN2 持平，但解决了纹理粘连问题，更适合用于视频和动画生成。
 
-* **Texture sticking** 问题举例说明
+- **Texture sticking** 问题举例说明
 左侧（Central 和 Averaged）：
 StyleGAN2：
 现象：即使生成了一个图像的多个版本（通过对潜在空间的细微扰动），图像的细节（如猫的毛发或纹理）依然固定在绝对的像素坐标上。
@@ -89,14 +90,14 @@ Ours（改进后的模型）：
 </iframe>
 
 # 通过连续信号的解释实现生成器的集合等变性(平移和旋转)
-将网络中的特征图视为连续信号，而不是离散像素，从而严格遵循信号处理理论（如 Nyquist 定理）
 
+将网络中的特征图视为连续信号，而不是离散像素，从而严格遵循信号处理理论（如 Nyquist 定理）
 
 # 根据连续信号解释的等变形
 
-* 采样定理
+- 采样定理
 
-```
+```markdown
 According to the Nyquist–Shannon sampling theorem [51 ], a regularly sampled signal can represent
 any continuous signal containing frequencies between zero and half of the sampling rate
 ```
@@ -104,7 +105,9 @@ any continuous signal containing frequencies between zero and half of the sampli
 翻译为:插值频率是连续信号的两倍时，可以完全重建原始信号
 需要注意的是 这里假设原始信号是一个带限信号，也就信号的频率被限制在一个空间内。
 ![alt text](../../../images/image-8.png)
+
 ## 连续型号和离散型号的关系
+
 假设连续信号为$z(x)$,离散信号为$Z(x)$, 采样频率为$s$, 采样间隔则为$T=\frac{1}{s}$.$\cdot$表示乘积, 卷积表示$\ast$.
 二维狄拉克梳妆函数为$III(x,y)=\sum_{m=-\infty}^{\infty}\sum_{n=-\infty}^{\infty}\delta(x-mT)\delta(y-nT)$
 根据插值公式
@@ -115,14 +118,11 @@ Z(x,y)=z(x,y)\cdot\left(\text{III}(x,y)\right)\newline
 = \sum_{m=-\infty}^{\infty}\sum_{n=-\infty}^{\infty}z(mT,nT)\delta(x-mT)\delta(y-nT)\newline
 $$
 
-
-
 论文中对采样点向右进行了$\frac{T}{2}$的偏移，这样的话
 
 $$Z(x,y) = \left(\sum_{m=-\infty}^{\infty}\sum_{n=-\infty}^{\infty}
 z\left((m+\frac{1}{2})T,(n+\frac{1}{2})T\right)\delta(x-(m+\frac{1}{2})T)\delta(y-(n+\frac{1}{2})T)\right)\newline
 $$
-
 
 从离散信号恢复为连续信号， 根据插值公式
 
@@ -131,7 +131,6 @@ z(x,y) = \left(\sum_{m=-\infty}^{\infty}\sum_{n=-\infty}^{\infty}Z(mT,nT)\text{s
  = \left(\sum_{m=-\infty}^{\infty}\sum_{n=-\infty}^{\infty}Z(mT,nT)\alpha(x - mT,y - nT)\right)\newline
  = (Z\ast \alpha)(x,y)
 $$
-
 
 suppose$\alpha(x，y) = \text{sinc}(\frac{x}{T})\text{sinc}(\frac{y}{T})$
 
@@ -149,19 +148,19 @@ f(z) = \phi_{s'} \ast \text{F}(\Pi_s \odot z),\quad\quad
 \text{F}(Z) = \Pi_{s'} \odot f(\phi_s \ast Z),
 $$
 
-
 其中$\odot$表示点乘，$s$and$s'$表示输入的采样频率和输出的采样频率
 有些操作会改变采样频率 比如上采样 下采样
+
 ## Equivariant network layers
 
 translation equivariance transformation
 
 $$f\cdot t = t\cdot f$$
 
-
 假设输出的采样频率为$s'$， 那么根据采样定理，需要满足$f$作用之后的信号频率不操作$s'/2$，也就$f$不产生超过$s'/2$的高频信号。
 
-###  convolution layer
+### convolution layer
+
 ### Convolution
 
 Consider a standard convolution with a discrete kernel$K$. We can interpret$K$as living in the same grid as the input feature map, with sampling rate$s$. The discrete-domain operation is simply:
@@ -170,14 +169,11 @@ $$
 \text{F}_{\text{conv}}(Z) = K \ast Z,
 $$
 
-
-
 and we obtain the corresponding continuous operation:
 
 $$
 \text{f}_{\text{conv}}(z) = \varphi_s \ast \left( K \ast \left( \Pi_s \odot z \right) \right) = K \ast \left( \varphi_s \ast \left( \Pi_s \odot z \right) \right) = K \ast z
 $$
-
 
 这一步用到了卷积是可以交换的。
 
@@ -187,14 +183,14 @@ $$
 \text{F}_{\text{conv}}(K\ast Z)(e^{jw}) =\text{F}_{\text{conv}}(Z)(e^{jw}) \ast\text{F}_{\text{conv}}(K)(e^{jw})
 $$
 
-
 也就是对应频率的系数等于原始信号的频率乘以卷积的频率系数。
 因此带宽只会变小，不会变大。
 这就使得卷积操作天然满足采样定理的要求。
 
 卷积对应的频域示意图
 ![alt text](../../../images/image-10.png)
-###  upsample and downsample
+
+### upsample and downsample
 
 **上采样**
 上采样增加了信号的采样率。这里假设是理想上采样，也就是“插0” + 理想低通滤波
@@ -209,8 +205,6 @@ $X(e^{j\omega})$在频域中“缩放”后的主瓣部分相对应，也就是�
 $$y[m] = x[m\,M], \quad
 Y(e^{j\Omega}) = \frac{1}{M}\sum_{k=0}^{M-1} X\!\Bigl(e^{\,j\,\tfrac{\Omega + 2\pi k}{M}}\Bigr).$$
 
-
-
 连续形式
 
 $$
@@ -220,8 +214,6 @@ Y_{\mathrm{sample}}(\omega)
 \sum_{k=-\infty}^{\infty}
 X\!\Bigl(\omega - 2\pi\,\tfrac{k}{M\,T}\Bigr).
 $$
-
-
 
 为了消除混叠现象，需要过滤掉高频信号(f/2以上的, f是原始信号频率)再进行下采样。
 
@@ -234,8 +226,6 @@ F_{down} (Z)& = \mathrm{III}_{s'} \odot \left[  \psi_{s'} \ast \left( \phi_{s} \
 & = \frac{s'^2}{s^2} \mathrm{III}_{s'} \odot \left[  \phi_{s'} \ast Z \right]
 \end{aligned}
 $$
-
-
 
 两个低通滤波的卷积任然是一个低通滤波.带宽为最小的带宽。
 $\left( \phi_{s} \ast Z \right)$是原始采样信号经过低通滤波，去除离散采用导致的高频信号。
@@ -254,7 +244,6 @@ $$
 h(x, y) = 2 \frac{J_1(2\pi r)}{r}, \quad r = \sqrt{x^2 + y^2}.
 $$
 
-
 At$r = 0$,$h(0, 0) = 1$.
 ---
 ### Fourier Transform
@@ -263,8 +252,6 @@ The frequency response is:
 $$
 H(\rho) = 2\pi \int_0^\infty h(r) r J_0(2\pi \rho r) \, dr,
 $$
-
-
 
 where:
 -$\rho = \sqrt{u^2 + v^2}$,
@@ -275,7 +262,6 @@ $$
 H(\rho) = 4\pi \int_0^\infty J_1(2\pi r) J_0(2\pi \rho r) \, dr.
 $$
 
-
 Using Bessel orthogonality:
 
 $$
@@ -285,7 +271,6 @@ H(\rho) =
 0, & \rho > 1.
 \end{cases}
 $$
-
 
 根据傅里叶变换理论，可知空间的旋转对应着频域的旋转，频域的旋转对应空间的旋转。即旋转等变性。
 如果一个操作在空间上满足旋转不变性，就需要在频域上满足旋转不变性。频域上更容易理解。因此我们只要考虑频域就行。频域满足旋转不变性首先就需要频域是径向对称的，这也是为什么需要一个径向对称理想滤波器(2D Jinc filter)的原因。当然进一步严格实现选择不变性需要下采样是作用在极坐标空间下。
@@ -302,7 +287,6 @@ pointwise操作天然满足 几何等变性。下面考虑带宽的条件。
     x(t) = \sum_{k} a_k e^{j 2\pi f_k t},
    $$
 
-
     其中：
     -$a_k$：信号的傅里叶系数。
     -$f_k$：信号的频率分量。
@@ -312,7 +296,6 @@ pointwise操作天然满足 几何等变性。下面考虑带宽的条件。
    $$
     f(x(t)) \sim \sum_{k,l} g(a_k, a_l) e^{j 2\pi (f_k + f_l)t},
    $$
-
 
     其中：
     -$g(a_k, a_l)$：非线性操作产生的系数。
@@ -326,7 +309,6 @@ $$
 f_\sigma(z) = \psi_s * \sigma(z),
 $$
 
-
 其中：
 -$\psi_s$是理想低通滤波器。
 -$\sigma(z)$是非线性操作后的信号。
@@ -336,9 +318,8 @@ $$
 对应的离散版本表示为：
 
 $$
-F_\sigma(Z) = s^2 \cdot \Pi_s \odot (\phi_s * \sigma(\phi_s * Z)),
+F_\sigma(Z) = s^2 \cdot \Pi_s \odot (\phi_s _\sigma(\phi_s_ Z)),
 $$
-
 
 其中：
 -$s^2$是比例因子。
@@ -351,7 +332,6 @@ $$
 
 理想低通滤波器的无限支持：理想低通滤波器的频域是一个矩形函数，其时域响应是一个无限长的 sinc 函数。在离散域中，这种无限支持无法直接实现，只能通过截断近似，但这会引入其他误差（如振铃效应）。
 非线性操作会引入高频分量，离散域中容易产生频谱混叠。
-
 
 因此作者的想法是用上采样模拟连续空间，先上采样，再做非线性操作，再下采样。当然，要满足旋转不变性，则需要下采样应用 2D Jinc filter。
 
@@ -369,7 +349,6 @@ descriminator 不发生变化
 $$
 \text{EQ-T} = 10 \cdot \log_{10} \left( \frac{I_{\text{max}}^2}{\mathbb{E}_{\text{w} \sim \mathcal{W}, x \sim \mathcal{X}^2, p \sim \mathcal{V}, c \sim \mathcal{C}} \left[ \left( g(t_x[z_0]; \text{w})_c(p) - t_x[g(z_0; \text{w})]_c(p) \right)^2 \right]} \right)
 $$
-
 
 #### 说明
 -$I_{\text{max}}$: 图像像素的最大可能值（如 255）。
@@ -403,7 +382,6 @@ $$
 \text{f}_i' = \frac{\text{f}_i}{\|\text{f}_i\|^2} \cdot \|\text{f}_i\|^{0.25} \cdot \text{bandwidth}, \quad \forall i \in [1, C]
 $$
 
-
 其中：
 -$\|\text{f}_i\|^2 = \text{f}_i \cdot \text{f}_i$是频率向量的平方范数。
 随机初始化相位
@@ -413,7 +391,6 @@ $$
 \text{p}_i \sim \text{Uniform}(-0.5, 0.5), \quad \forall i \in [1, C]
 $$
 
-
 样式向量到变换参数
 从样式向量$\text{w}$映射到变换参数$\text{t}$：
 
@@ -421,14 +398,12 @@ $$
 \text{t} = \text{Affine}(\text{w}), \quad \text{t} = [r_c, r_s, t_x, t_y] \in \mathbb{R}^{B \times 4}
 $$
 
-
 归一化旋转参数
 对旋转参数进行归一化：
 
 $$
 r_c' = \frac{r_c}{\sqrt{r_c^2 + r_s^2}}, \quad r_s' = \frac{r_s}{\sqrt{r_c^2 + r_s^2}}
 $$
-
 
 构造变换矩阵
 构造旋转矩阵和平移矩阵：
@@ -444,23 +419,20 @@ r_s'&r_c'&0;\\
 0&1&-t_y;\\
 0&0&1;\end{bmatrix}$$
 
-
-
 用户定义的变换矩阵$T_\text{user}$和上述矩阵组合得到最终的变换矩阵：
 
 $$
 T = M_r M_t T_\text{user}
 $$
 
-
 频率和相位的变换
 将变换矩阵应用于频率和相位：
+
 ### 3.1 频率变换
 
 $$
 \text{f}_i'' = \text{f}_i' \cdot \text{T}_{1:2, 1:2}, \quad \forall i \in [1, C]
 $$
-
 
 相位变换
 
@@ -468,14 +440,12 @@ $$
 \text{p}_i'' = \text{p}_i + \text{f}_i' \cdot \text{T}_{1:2, 2:3}, \quad \forall i \in [1, C]
 $$
 
-
 频率幅值调整
 为了抑制超出频率范围的分量，调整幅值：
 
 $$
 \text{a}_i = \max\left(0, 1 - \frac{\|\text{f}_i''\| - \text{bandwidth}}{\frac{\text{sampling\_rate}}{2} - \text{bandwidth}}\right), \quad \forall i \in [1, C]
 $$
-
 
 构造傅里叶特征
 采样网格
@@ -485,14 +455,12 @@ $$
 \text{G}[h, w] = \left(\frac{w}{W} - 0.5, \frac{h}{H} - 0.5\right), \quad \forall h \in [0, H], w \in [0, W]
 $$
 
-
 傅里叶特征计算
 通过频率和相位生成傅里叶特征：
 
 $$
 \text{x}_\text{fourier}[b, h, w, c] = \sin\left(2 \pi (\text{G}[h, w] \cdot \text{f}_c'' + \text{p}_c'')\right) \cdot \text{a}_c
 $$
-
 
 应用线性映射
 使用可训练的线性权重$\text{A}$对傅里叶特征进行通道映射：
@@ -501,7 +469,6 @@ $$
 \text{x}_\text{out}[b, c, h, w] = \sum_{c'=1}^C \text{x}_\text{fourier}[b, h, w, c'] \cdot \frac{\text{A}_{c, c'}}{\sqrt{C}}
 $$
 
-
 最终公式总结
 完整的 `SynthesisInput` forward 计算流程：
 
@@ -509,39 +476,53 @@ $$
 \text{x}_\text{out}[b, c, h, w] = \sum_{c'=1}^C \left[ \sin\left(2 \pi (\text{G}[h, w] \cdot \text{f}_{c'}'' + \text{p}_{c'}'')\right) \cdot \text{a}_{c'} \right] \cdot \frac{\text{A}_{c, c'}}{\sqrt{C}}
 $$
 
-
 其中：
 -$\text{f}_c''$和$\text{p}_c''$是经过样式变换后的频率和相位。
 -$\text{a}_c$是幅值调整因子。
 -$\text{A}$是通道映射的权重。
 物理意义
+
 1. 通过频率$\text{f}$和相位$\text{p}$生成傅里叶特征，构建空间位置和样式相关的初始特征。
 2. 线性映射$\text{A}$学习不同频率和相位的组合关系，为生成器提供任务相关的特征。
 平移不会改变信号的频率分量（振幅不变），但会引入与平移量成比例的相位偏移。
 旋转会同时改变空间域和频域信号的方向，但频率的幅度不变
 
+## 移除逐像素噪声输入
 
-##  移除逐像素噪声输入
 虽对 FID 近乎无影响，但单独考虑时未提升等变性指标。
+
 ## 简化设置
+
 包括减少映射网络深度、禁用混合正则化和路径长度正则化、消除输出跳跃连接，并通过跟踪像素和特征图的指数移动平均进行归一化，使 FID 回到原始 StyleGAN2 水平且略微提升了平移等变性。
 
 ## 边界和上采样（config E）
+
 通过在目标画布周围保持固定边界扩展特征图近似无限空间，用窗口化 sinc 滤波器（）替代双线性上采样滤波器，提升了平移等变性，但 FID 有所下降。
+
 ## 滤波非线性（config F）
+
 按照理论对非线性函数进行滤波处理，用自定义 CUDA 内核实现高效的上采样 - 非线性 - 下采样操作，进一步提高了平移等变性（EQ - T）。
+
 ## 非临界采样（config G）
+
 采用非临界采样降低截止频率抑制混叠，改善平移等变性且使 FID 低于原始 StyleGAN2，同时根据新的采样方式调整了确定特征图数量的启发式方法。
+
 ## 变换 Fourier 特征（config H）
+
 引入学习仿射层变换输入 Fourier 特征，使特征方向可基于变化，略微改善了 FID。
+
 ## 灵活层规格（config T）
+
 灵活设置每层滤波器参数，改善了平移等变性并消除剩余伪影，使网络结构更灵活，且固定层数在不同输出分辨率下表现稳定。
+
 ## 旋转等变性（config R）
+
 将所有层的卷积换为卷积并补偿容量，用径向对称 jinc 基滤波器替换 sinc 基下采样滤波器，实现旋转等变性且不损害 FID，同时采用高斯模糊技巧防止训练初期崩溃。
 
-
 # 代码解读
+
 ## modulated_conv2d
+
 ```
 def modulated_conv2d(
     x,                  # Input tensor: [batch_size, in_channels, in_height, in_width]
@@ -593,13 +574,13 @@ $$
 y_{b,o,h',w'} = \sum_{i,k_h,k_w} \left[ x_{b,i,h+k_h,w+k_w} \cdot \left( w_{o,i,k_h,k_w} \cdot s_{b,i} \cdot d_{\text{coef},o} \cdot \text{input\_gain}_{b,i} \right) \right]
 $$
 
-
-
 其中：
+
 - $ b $: 批量索引。
 - $ o, i $: 输出通道和输入通道索引。
 - $ h', w'$: 输出特征图的位置。
 - $ k_h, k_w $: 卷积核的空间维度索引。
+
 ### 直观意义
 
 1. 样式 $ s $ 动态地调节权重，调整每个卷积核的权重。同一个batch里不同的不同的样本style是独立的。体现了生成式模型中特征的个性化调整。
@@ -627,6 +608,7 @@ dtype = torch.float16 if (self.use_fp16 and not force_fp32 and x.device.type == 
 x = modulated_conv2d(x=x.to(dtype), w=self.weight, s=styles,
     padding=self.conv_kernel-1, demodulate=(not self.is_torgb), input_gain=input_gain)
 ```
+
 ### 数学公式
 
 1. **当前输入幅值的平方均值**：
@@ -634,7 +616,6 @@ x = modulated_conv2d(x=x.to(dtype), w=self.weight, s=styles,
    $$
    \text{magnitude\_cur} = \frac{1}{N} \sum_i x_i^2
    $$
-
 
    其中：
    - \( x \): 输入特征。
@@ -645,7 +626,6 @@ x = modulated_conv2d(x=x.to(dtype), w=self.weight, s=styles,
    $$
    \text{magnitude\_ema} = \beta \cdot \text{magnitude\_ema} + (1 - \beta) \cdot \text{magnitude\_cur}
    $$
-
 
    其中：
    - $ \beta$: EMA 的平滑系数 ($ 0 < \beta < 1 $)。
@@ -658,8 +638,6 @@ x = modulated_conv2d(x=x.to(dtype), w=self.weight, s=styles,
    \text{input\_gain} = \frac{1}{\sqrt{\text{magnitude\_ema}}}
    $$
 
-
-
 ---
 
 ### 公式的直观意义
@@ -670,15 +648,17 @@ x = modulated_conv2d(x=x.to(dtype), w=self.weight, s=styles,
     input_gain 会作用在之后的卷积上，作用相当于对X做了一个归一化。可以称之为滑动平均归一化。目前所有的归一化都不改变mean。
 
 ### filtered_lrelu
+
 ```
 x = filtered_lrelu.filtered_lrelu(x=x, fu=self.up_filter, fd=self.down_filter, b=self.bias.to(x.dtype),
             up=self.up_factor, down=self.down_factor, padding=self.padding, gain=gain, slope=slope, clamp=self.conv_clamp)
 ```
-https://github.com/NVlabs/stylegan3/blob/main/torch_utils/ops/filtered_lrelu.py
+
+<https://github.com/NVlabs/stylegan3/blob/main/torch_utils/ops/filtered_lrelu.py>
 作者把上采样下采样和激活函数重新写了一个cuda kernel。太过于工程化，先跳过这部分。
 
-
 ### SynthesisLayer.design_lowpass_filter
+
 ```
     @staticmethod
     def design_lowpass_filter(numtaps, cutoff, width, fs, radial=False):
@@ -703,37 +683,49 @@ https://github.com/NVlabs/stylegan3/blob/main/torch_utils/ops/filtered_lrelu.py
         f /= np.sum(f)
         return torch.as_tensor(f, dtype=torch.float32)
 ```
+
 ### 滤波器的作用域与设计过程
 
 #### **作用域**
+
 这些滤波器 **作用在时间域**，它们通过时间域卷积操作处理输入信号或图像。卷积公式为：
 
 $$
 y[n] = \sum_{k} x[k] \cdot h[n-k]
 $$
 
-
 其中：
+
 - $x[k]$: 输入信号。
 - $h[k]$: 滤波器的时间域权重（脉冲响应）。
 - $y[n]$: 滤波后的输出信号。
+
 #### **设计过程**
+
 尽管滤波器作用在时间域，其设计过程通常基于频域的要求，比如：
+
 - **截止频率** ($\text{cutoff}$)：指定滤波器允许通过的频率范围。
 - **过渡带宽** ($\text{width}$)：控制滤波器从通带到阻带的过渡区域的宽度。
 - **频域形状**：滤波器的设计目标是实现某种理想频率响应（如低通、高通或带通）。
+
 #### **频域与时间域的关系**
+
 根据傅里叶变换理论，时间域与频域是一对互补的表示：
+
 - 滤波器的 **时间域权重（脉冲响应）** 决定其频域响应。
 - 滤波器的 **频域设计目标**（如截止频率、过渡带宽）通过设计过程映射为时间域权重。
+
 ### 代码中的滤波器设计
+
 1. **Kaiser 滤波器**：
    - 使用 `scipy.signal.firwin` 基于频域要求生成时间域滤波器权重。
    - 窗函数法通过调整 Kaiser 窗口的形状实现频率响应的优化。
 2. **Jinc 滤波器**：
    - 基于径向对称的 Jinc 函数设计，其核心思想源自频域特性。
    - 通过叠加 Kaiser 窗口进一步调整频域特性并生成时间域滤波器权重。
+
 ### 总结
+
 - **作用域**：滤波器作用在时间域，使用卷积操作处理输入信号或图像。
 - **设计过程**：基于频域要求（如截止频率、带宽）设计时间域滤波器权重。
 - **实际应用**：在时间域中通过卷积实现对信号或图像频率成分的控制。

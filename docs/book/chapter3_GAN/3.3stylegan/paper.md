@@ -1,7 +1,7 @@
 # StyleGAN: A Style-Based Generator Architecture for Generative Adversarial Networks
+
 [Paper Link](https://arxiv.org/abs/1812.04948)
 ![alt text](../../../images/image-14.png)
-
 
 ## 核心创新
 
@@ -11,7 +11,6 @@
    - 通过AdaIN层将潜在编码注入到不同的层级
    - 实现了对不同尺度特征的精确控制
 
-
 2. **中间潜在空间W**
    - 引入映射网络F将潜在空间Z映射到中间潜在空间W
    - W空间具有更好的解耦特性
@@ -20,9 +19,11 @@
 3. **自适应实例归一化(AdaIN)**
    - 通过风格向量调制每个通道的均值和方差
    - 实现了对特定特征的精确控制
+
    ```python
    x = x * (style_split[:, 0] + 1) + style_split[:, 1]
    ```
+
    - 每个channel的feature map显式调节方差和均值，这两个统计量表示图片的风格
 
 ## 技术细节
@@ -68,7 +69,9 @@
    - **目的**: 为特征图添加随机变化，增强细节多样性。
 
 ## 代码解读
+
 ### 1. Generator
+
 ```
 
     def forward(self,
@@ -122,15 +125,20 @@
 
         return {**mapping_results, **synthesis_results}
 ```
+
 generator 分成几个步骤
+
 #### 1. 映射网络 (Mapping Network)
+
 ```
 mapping_results = self.mapping(z, label) # label 是用于条件生成的标签
 w = mapping_results['w']
 ```
+
 **输入** :
-  - $z$: 潜在向量，通常是从标准正态分布中采样，形状为 $[B, z\_dim]$
-  - $\text{label}$: 条件生成的标签，可选，用于控制生成内容。
+
+- $z$: 潜在向量，通常是从标准正态分布中采样，形状为 $[B, z\_dim]$
+- $\text{label}$: 条件生成的标签，可选，用于控制生成内容。
 - **过程** :
   - 使用一个多层感知机 (MLP) 将潜在向量 $z$ 映射到样式空间 $w$：
 
@@ -164,9 +172,8 @@ if self.training and w_moving_decay < 1:
     w_{avg} \gets w_{avg} \cdot \text{decay} + \text{batch-w-avg} \cdot (1 - \text{decay})
     $$
 
-
-
 #### 3. 样式混合 (Style Mixing)
+
 ```python
 if self.training and style_mixing_prob > 0:
     new_z = torch.randn_like(z)
@@ -190,6 +197,7 @@ if self.training and style_mixing_prob > 0:
 ```python
 wp = self.truncation(w, trunc_psi, trunc_layers)
 ```
+
 在self.truncation里面 会先对$w$进行复制，复制后的shape 为 $[B, \text{num\_layers}, w\_dim]$，
 每一层的样式向量都是相同的。
 然后再进行截断操作.
@@ -204,6 +212,7 @@ if w.ndim == 2:
         assert w.shape[1] == self.w_space_dim * self.num_layers
         wp = w.view(-1, self.num_layers, self.w_space_dim)
 ```
+
 - **目的** :
   - 控制生成内容的多样性与稳定性。
 
@@ -232,9 +241,9 @@ if w.ndim == 2:
     2. $\text{trunc-psi}$ 是一个缩放因子，决定了 $wp$ 偏离 $w_{avg}$ 的程度。
 
     **物理意义** ：
-    - 如果 $\text{trunc-psi} < 1$，样式向量的偏离被缩小，生成的图像更接近于全局样式的“平均值”。
+  - 如果 $\text{trunc-psi} < 1$，样式向量的偏离被缩小，生成的图像更接近于全局样式的“平均值”。
 
-    - 如果 $\text{trunc-psi} > 1$，样式向量的偏离被放大，生成的图像会更极端，更偏离平均风格。
+  - 如果 $\text{trunc-psi} > 1$，样式向量的偏离被放大，生成的图像会更极端，更偏离平均风格。
 
     **传统截断 (Clipping)** 在传统的“截断”概念中，我们会将某些超出指定范围的值 **直接限制**  在这个范围内，例如：$
     x = \max(\min(x, \text{upper\_bound}), \text{lower\_bound})
@@ -242,39 +251,44 @@ if w.ndim == 2:
 
     leGAN 的这个实现中：
 
-    - 过缩放操作调整样式向量的幅度。
+  - 过缩放操作调整样式向量的幅度。
 
-    - 这种方式不会完全去除多样性，而是控制多样性的幅度。
+  - 这种方式不会完全去除多样性，而是控制多样性的幅度。
     因此，StyleGAN 的“截断技巧”实际上是一种动态的 **样式向量缩放操作** 。
 
     **为什么称为截断？**
     尽管操作本质是缩放，但被称为截断可能有以下原因：
 
     1. **结果上的类似性** ：
-    - 缩放操作和传统截断在减少生成样式的多样性上有相似效果。
+  - 缩放操作和传统截断在减少生成样式的多样性上有相似效果。
 
-    - 当 $\text{trunc\_psi}$ 接近 0 时，样式向量趋近 $w\_avg$，此时的行为类似于将所有样式向量“截断”到一个狭窄的范围。
+  - 当 $\text{trunc\_psi}$ 接近 0 时，样式向量趋近 $w\_avg$，此时的行为类似于将所有样式向量“截断”到一个狭窄的范围。
 
     2. **术语沿袭** ：
-    - 在 GAN 社区，"truncation trick" 是一个广泛使用的术语，尽管具体实现可能会有所不同。
+  - 在 GAN 社区，"truncation trick" 是一个广泛使用的术语，尽管具体实现可能会有所不同。
 
 **总结**
+
 1. **StyleGAN 的操作是缩放** ：
-  - 它根据 $w\_avg$ 动态调整样式向量 $wp$ 的幅度，而不是简单地对其值进行裁剪(缩放)。
+
+- 它根据 $w\_avg$ 动态调整样式向量 $wp$ 的幅度，而不是简单地对其值进行裁剪(缩放)。
 
 2. **称为截断的原因** ：
-  - 结果上类似传统截断，能有效减少生成样式的多样性。
 
-  - 术语延续了 GAN 社区的习惯用法。
+- 结果上类似传统截断，能有效减少生成样式的多样性。
+
+- 术语延续了 GAN 社区的习惯用法。
 
 3. **本质** ：
-  - 它是 **样式向量的幅度缩放** ，调控生成图像的多样性与稳定性之间的权衡。
 
+- 它是 **样式向量的幅度缩放** ，调控生成图像的多样性与稳定性之间的权衡。
 
 #### 5. 图像生成
+
 ```python
 synthesis_results = self.synthesis(wp, lod, randomize_noise)
 ```
+
 - **输入** :
   - $wp$: 分层样式向量。
   - $\text{lod}$: 分辨率级别（Level of Detail），用于控制生成图像的细节层次。
@@ -284,11 +298,13 @@ synthesis_results = self.synthesis(wp, lod, randomize_noise)
 
   - $\text{lod}$ 可以调整生成图像的分辨率，支持逐步增加细节（渐进式生成）。
 - *输出* :
-    - 生成的图像及其相关特征。
+  - 生成的图像及其相关特征。
 
 ### 2. synthesis network
+
 synthesis network 定义在class SynthesisModule 里面，是一个生成器的主要部分，负责生成图像的过程。
 它的参数意义
+
 ```
 resolution (默认1024): 生成图像的最终输出分辨率。例如设置为1024时，最终生成1024x1024像素的图像。
 init_resolution (默认4): 生成器的初始特征图分辨率。StyleGAN从这个低分辨率(通常是4或8)开始，然后通过一系列上采样层逐步增加分辨率直到达到目标分辨率。
@@ -302,7 +318,9 @@ noise_type (默认'spatial'): 控制添加到每一层的随机噪声的类型�
 fmaps_base (默认16<<10): 基础特征图数量，用于控制网络各层的通道数。默认值是16384。
 fmaps_max (默认512): 限制网络中任何层的最大特征图数量，防止网络变得过大。
 ```
+
 forward 步骤
+
 ```
     def forward(self, wp, lod=None, randomize_noise=False):
         # wp 代表经过映射网络处理后的风格向量（style vector）。
@@ -358,7 +376,9 @@ forward 步骤
         results['image'] = self.final_activate(image)
         return results
 ```
+
 lod 表示 level of details.表示分辨率。
+
 ```
         # Compute level-of-details.
         phase, subphase = divmod(runner.seen_img, self.lod_duration)
@@ -370,6 +390,7 @@ lod 表示 level of details.表示分辨率。
         resolution = self.init_res * (2 ** int(np.ceil(self.init_lod - lod)))
         return lod, resolution
 ```
+
 lod 详细计算过程。假设
 其中，init_res 是初始分辨率（通常是4或8）。
 举例说明：
@@ -384,8 +405,11 @@ lod 详细计算过程。假设
 synthesis 网络的每一个分辨率层都有两个卷积层。初始分辨率的第一个卷积层有所区别。
 
 #### 第一个分辨率层
+
 ##### layer0
+
 layer0 的网络定义为
+
 ```
 self.layer0 =ConvBlock(
     in_channels=self.get_nf(res),
@@ -396,16 +420,22 @@ self.layer0 =ConvBlock(
     use_wscale=self.use_wscale,
     noise_type=self.noise_type)
 ```
+
 输入为
+
 ```
 x, style = self.layer0(None, wp[:, 0], randomize_noise)
 ```
+
 第一个分辨率只有一个convblock，将原始的输入4x4x512 转化为 4x4x512
+
 #### 第k个分辨率层
+
 次后的每个分辨率层包含两个convblock
 第一个convblock 增加了上采样的操作。其余的一样。
 最后一个分辨率只有一个convblock，将512x512x32 转化为 1024x1024x16
 分辨率增加一倍，output channel 减半，保持卷积整体的参数量每一层一致。
+
 ```
 self.layer{2k-1} =  ConvBlock(
     in_channels=self.get_nf(res // 2),
@@ -430,16 +460,21 @@ self.layer{2k} =ConvBlock(
 )
 
 ```
+
 输入
+
 ```
 x, style = f"self.layer{2k-11}"(x, wp[:, 2 * block_idx - 1], randomize_noise)
 x, style = f"self.layer{2k}"(x, wp[:, 2 * block_idx],randomize_noise)
 ```
+
 每个convblock 的输入都包含上一层的输入,本层的风格向量，以及是否需要添加噪声。
 
 每一个分辨率的第一个卷积层和第二个卷积层区别在于第二个会加入上采样。
+
 ### 3. ConvBlock
-```
+
+```python
     def forward(self, x, w, randomize_noise=False):
         if self.position != 'const_init':
             x = self.upsample(x)
@@ -468,18 +503,23 @@ x, style = f"self.layer{2k}"(x, wp[:, 2 * block_idx],randomize_noise)
         x, style = self.style(x, w)
         return x, style
 ```
+
 具体步骤
+
 1. 上采样和卷积。只在每一个分辨率的第一层进行上采样。使用的上采样是
+
     ```
     return F.interpolate(x, scale_factor=self.scale_factor, mode='nearest')
     ```
+
     卷积的过程中会利用可学习的一个$w_{scale}$对卷积的权重进行缩放。这个想法来自于
-    [progressive growing of gan](book/chapter%203%20GAN/2.2%20pggan/paper.md)中。
+    [progressive growing of gan](../3.2pggan/paper.md)中。
 
     其中，如果是init 输入 只会将可以学习的init在batch 维度进行复制
 2. 增加bias
 可学习的一个bias。这个应该不重要。
 3. 增加噪声
+
 ```
 if randomize_noise:
     if self.noise_type == 'spatial':
@@ -493,23 +533,28 @@ if self.noise_type == 'spatial':
 elif self.noise_type == 'channel':
     x = x + noise * self.weight.view(1, 1, self.res, self.res)
 ```
+
 噪音的增加有两种法案。一个是增加在空间上，一个是增加在channel 上。
 4. 非线性激活函数
+
 ```
 self.activate = nn.LeakyReLU(negative_slope=0.2, inplace=True)
 ```
+
 ![alt text](../../../images/image-15.png)
 LeakyReLU 的好处主要体现在以下几个方面：
-* 防止神经元死亡：负值区域的斜率使得神经元不会完全失活。
-* 改善梯度流动：减少梯度消失问题，支持更深层网络的训练。
-* 适应数据分布：捕捉负值区域的信息，更好地处理具有负值特征的数据。
-* 训练稳定性：提升训练过程的稳定性和收敛性。
-* 通用性：在图像生成任务和深度学习网络中表现优异，成为许多模型的默认选择。
+
+- 防止神经元死亡：负值区域的斜率使得神经元不会完全失活。
+- 改善梯度流动：减少梯度消失问题，支持更深层网络的训练。
+- 适应数据分布：捕捉负值区域的信息，更好地处理具有负值特征的数据。
+- 训练稳定性：提升训练过程的稳定性和收敛性。
+- 通用性：在图像生成任务和深度学习网络中表现优异，成为许多模型的默认选择。
 
 5. instance normalization
 ![alt text](../../../images/image-16.png)
 标准instance normalization。 使得每个样本的每个通道的featuremap的均值为0， 方差为1.
 6. 风格化
+
 ```
 def forward(self, x, w):
     style = self.forward_style(w)
@@ -517,11 +562,13 @@ def forward(self, x, w):
     x = x * (style_split[:, 0] + 1) + style_split[:, 1]
     return x, style
 ```
+
 对featuremap的每一层利用学习到的风格向量进行风格调制。具体来说style_split 每个channel 包含一个学习到的标准差和均值
+
 ```
 x = x * (style_split[:, 0] + 1) + style_split[:, 1]
 ```
-意味最每一个channel 的feature map显式得调节方差和标准差。一般得，featuremap的方差和均值表示图片的风格。
 
+意味最每一个channel 的feature map显式得调节方差和标准差。一般得，featuremap的方差和均值表示图片的风格。
 
 ```
