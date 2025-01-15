@@ -34,20 +34,32 @@
                 <div id="navbar-collapse" class="navbar-collapse collapse">
                         <!-- Main navigation -->
                         <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="../../../.." class="nav-link">Book</a>
+                            </li>
                             <li class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Introduction</a>
                                 <ul class="dropdown-menu">
                                     
 <li>
-    <a href="../../../chapter%201%20Introduction/1.1%20terminology/" class="dropdown-item">Terms</a>
+    <a href="../../../chapter1_Introduction/1.1terminology/" class="dropdown-item">Terms</a>
 </li>
                                     
 <li>
-    <a href="../../../chapter%201%20Introduction/1.2%20fourier%20transform/" class="dropdown-item">Fourier Transform</a>
+    <a href="../../../chapter1_Introduction/1.2fourier_transform/" class="dropdown-item">Fourier Transform</a>
 </li>
                                     
 <li>
-    <a href="../../../chapter%201%20Introduction/1.3%20signal%20processing/" class="dropdown-item">Signal Processing</a>
+    <a href="../../../chapter1_Introduction/1.3signal_processing/" class="dropdown-item">Signal Processing</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">VAE</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../../chapter2_VAE/2.1introduction/" class="dropdown-item">VAE Introduction</a>
 </li>
                                 </ul>
                             </li>
@@ -56,7 +68,7 @@
                                 <ul class="dropdown-menu">
                                     
 <li>
-    <a href="../../2.2%20pggan/paper/" class="dropdown-item">PGGAN</a>
+    <a href="../../3.2pggan/paper/" class="dropdown-item">PGGAN</a>
 </li>
                                     
 <li>
@@ -64,11 +76,11 @@
 </li>
                                     
 <li>
-    <a href="../../2.4%20stylegan2/paper/" class="dropdown-item">StyleGAN2</a>
+    <a href="../../3.4stylegan2/paper/" class="dropdown-item">StyleGAN2</a>
 </li>
                                     
 <li>
-    <a href="../../2.5%20stylegan%203/paper/" class="dropdown-item">StyleGAN3</a>
+    <a href="../../3.5stylegan3/paper/" class="dropdown-item">StyleGAN3</a>
 </li>
                                 </ul>
                             </li>
@@ -81,12 +93,12 @@
                             </a>
                         </li>
                             <li class="nav-item">
-                                <a rel="prev" href="../../2.2%20pggan/paper/" class="nav-link">
+                                <a rel="prev" href="../../3.2pggan/paper/" class="nav-link">
                                     <i class="fa fa-arrow-left"></i> Previous
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a rel="next" href="../../2.4%20stylegan2/paper/" class="nav-link">
+                                <a rel="next" href="../../3.4stylegan2/paper/" class="nav-link">
                                     Next <i class="fa fa-arrow-right"></i>
                                 </a>
                             </li>
@@ -153,11 +165,13 @@
 <p><strong>自适应实例归一化(AdaIN)</strong></p>
 </li>
 <li>通过风格向量调制每个通道的均值和方差</li>
-<li>实现了对特定特征的精确控制
-   <code>python
-   x = x * (style_split[:, 0] + 1) + style_split[:, 1]</code></li>
-<li>每个channel的feature map显式调节方差和均值，这两个统计量表示图片的风格</li>
+<li>实现了对特定特征的精确控制</li>
 </ol>
+<p><code>python
+   x = x * (style_split[:, 0] + 1) + style_split[:, 1]</code></p>
+<ul>
+<li>每个channel的feature map显式调节方差和均值，这两个统计量表示图片的风格</li>
+</ul>
 <h2 id="_2">技术细节</h2>
 <ol>
 <li><strong>LOD (Level of Detail) 计算</strong>:</li>
@@ -279,18 +293,18 @@
 <pre><code>mapping_results = self.mapping(z, label) # label 是用于条件生成的标签
 w = mapping_results['w']
 </code></pre>
-<p><strong>输入</strong> :
-  - <span class="arithmatex">\(z\)</span>: 潜在向量，通常是从标准正态分布中采样，形状为 <span class="arithmatex">\([B, z\_dim]\)</span>
-  - <span class="arithmatex">\(\text{label}\)</span>: 条件生成的标签，可选，用于控制生成内容。
-- <strong>过程</strong> :
-  - 使用一个多层感知机 (MLP) 将潜在向量 <span class="arithmatex">\(z\)</span> 映射到样式空间 <span class="arithmatex">\(w\)</span>：</p>
-<pre><code>$$w = f(z) $$
-
-其中 $f$ 是映射网络，输出 $w$ 的形状为 $[B, w\_dim]$，  通常 $w\_dim = 512$。
-</code></pre>
+<p><strong>输入</strong> :</p>
 <ul>
-<li><strong>输出</strong> :</li>
-<li><span class="arithmatex">\(w\)</span>: 样式向量，作为后续生成过程中的特征控制参数。</li>
+<li><span class="arithmatex">\(z\)</span>: 潜在向量，通常是从标准正态分布中采样，形状为 <span class="arithmatex">\([B, z\_dim]\)</span></li>
+<li><span class="arithmatex">\(\text{label}\)</span>: 条件生成的标签，可选，用于控制生成内容。</li>
+<li><strong>过程</strong> :</li>
+<li>
+<p>使用一个多层感知机 (MLP) 将潜在向量 <span class="arithmatex">\(z\)</span> 映射到样式空间 <span class="arithmatex">\(w\)</span>：</p>
+<div class="arithmatex">\[w = f(z) \]</div>
+<p>其中 <span class="arithmatex">\(f\)</span> 是映射网络，输出 <span class="arithmatex">\(w\)</span> 的形状为 <span class="arithmatex">\([B, w\_dim]\)</span>，  通常 <span class="arithmatex">\(w\_dim = 512\)</span>。
+- <strong>输出</strong> :
+  - <span class="arithmatex">\(w\)</span>: 样式向量，作为后续生成过程中的特征控制参数。</p>
+</li>
 </ul>
 <h4 id="2-w">2. W 空间均值的移动平均更新</h4>
 <pre><code class="language-python">if self.training and w_moving_decay &lt; 1:
@@ -387,45 +401,47 @@ wp = w_{avg} + (wp - w_{avg}) \cdot \text{trunc-psi}
 <li><span class="arithmatex">\(\text{trunc-psi}\)</span> 是一个缩放因子，决定了 <span class="arithmatex">\(wp\)</span> 偏离 <span class="arithmatex">\(w_{avg}\)</span> 的程度。</li>
 </ol>
 <p><strong>物理意义</strong> ：
-- 如果 <span class="arithmatex">\(\text{trunc-psi} &lt; 1\)</span>，样式向量的偏离被缩小，生成的图像更接近于全局样式的“平均值”。</p>
-<ul>
-<li>如果 <span class="arithmatex">\(\text{trunc-psi} &gt; 1\)</span>，样式向量的偏离被放大，生成的图像会更极端，更偏离平均风格。</li>
-</ul>
+  - 如果 <span class="arithmatex">\(\text{trunc-psi} &lt; 1\)</span>，样式向量的偏离被缩小，生成的图像更接近于全局样式的“平均值”。</p>
+</li>
+<li>
+<p>如果 <span class="arithmatex">\(\text{trunc-psi} &gt; 1\)</span>，样式向量的偏离被放大，生成的图像会更极端，更偏离平均风格。</p>
 <p><strong>传统截断 (Clipping)</strong> 在传统的“截断”概念中，我们会将某些超出指定范围的值 <strong>直接限制</strong>  在这个范围内，例如：$
 x = \max(\min(x, \text{upper_bound}), \text{lower_bound})
 $</p>
 <p>leGAN 的这个实现中：</p>
-<ul>
+</li>
 <li>
 <p>过缩放操作调整样式向量的幅度。</p>
 </li>
 <li>
 <p>这种方式不会完全去除多样性，而是控制多样性的幅度。
-因此，StyleGAN 的“截断技巧”实际上是一种动态的 <strong>样式向量缩放操作</strong> 。</p>
-</li>
-</ul>
+    因此，StyleGAN 的“截断技巧”实际上是一种动态的 <strong>样式向量缩放操作</strong> 。</p>
 <p><strong>为什么称为截断？</strong>
 尽管操作本质是缩放，但被称为截断可能有以下原因：</p>
 <ol>
 <li><strong>结果上的类似性</strong> ：</li>
-<li>
-<p>缩放操作和传统截断在减少生成样式的多样性上有相似效果。</p>
+<li>缩放操作和传统截断在减少生成样式的多样性上有相似效果。</li>
+</ol>
 </li>
 <li>
 <p>当 <span class="arithmatex">\(\text{trunc\_psi}\)</span> 接近 0 时，样式向量趋近 <span class="arithmatex">\(w\_avg\)</span>，此时的行为类似于将所有样式向量“截断”到一个狭窄的范围。</p>
-</li>
-<li>
-<p><strong>术语沿袭</strong> ：</p>
-</li>
+<ol>
+<li><strong>术语沿袭</strong> ：</li>
 <li>在 GAN 社区，"truncation trick" 是一个广泛使用的术语，尽管具体实现可能会有所不同。</li>
 </ol>
 </li>
 </ul>
-<p><strong>总结</strong>
-1. <strong>StyleGAN 的操作是缩放</strong> ：
-  - 它根据 <span class="arithmatex">\(w\_avg\)</span> 动态调整样式向量 <span class="arithmatex">\(wp\)</span> 的幅度，而不是简单地对其值进行裁剪(缩放)。</p>
+<p><strong>总结</strong></p>
 <ol>
-<li><strong>称为截断的原因</strong> ：</li>
+<li>
+<p><strong>StyleGAN 的操作是缩放</strong> ：</p>
+</li>
+<li>
+<p>它根据 <span class="arithmatex">\(w\_avg\)</span> 动态调整样式向量 <span class="arithmatex">\(wp\)</span> 的幅度，而不是简单地对其值进行裁剪(缩放)。</p>
+</li>
+<li>
+<p><strong>称为截断的原因</strong> ：</p>
+</li>
 <li>
 <p>结果上类似传统截断，能有效减少生成样式的多样性。</p>
 </li>
@@ -435,7 +451,9 @@ $</p>
 <li>
 <p><strong>本质</strong> ：</p>
 </li>
-<li>它是 <strong>样式向量的幅度缩放</strong> ，调控生成图像的多样性与稳定性之间的权衡。</li>
+<li>
+<p>它是 <strong>样式向量的幅度缩放</strong> ，调控生成图像的多样性与稳定性之间的权衡。</p>
+</li>
 </ol>
 <h4 id="5">5. 图像生成</h4>
 <pre><code class="language-python">synthesis_results = self.synthesis(wp, lod, randomize_noise)
@@ -452,10 +470,8 @@ $</p>
 <li>
 <p><span class="arithmatex">\(\text{lod}\)</span> 可以调整生成图像的分辨率，支持逐步增加细节（渐进式生成）。</p>
 </li>
-<li><em>输出</em> :<ul>
+<li><em>输出</em> :</li>
 <li>生成的图像及其相关特征。</li>
-</ul>
-</li>
 </ul>
 <h3 id="2-synthesis-network">2. synthesis network</h3>
 <p>synthesis network 定义在class SynthesisModule 里面，是一个生成器的主要部分，负责生成图像的过程。
@@ -602,7 +618,7 @@ x, style = f&quot;self.layer{2k}&quot;(x, wp[:, 2 * block_idx],randomize_noise)
 <p>每个convblock 的输入都包含上一层的输入,本层的风格向量，以及是否需要添加噪声。</p>
 <p>每一个分辨率的第一个卷积层和第二个卷积层区别在于第二个会加入上采样。</p>
 <h3 id="3-convblock">3. ConvBlock</h3>
-<pre><code>    def forward(self, x, w, randomize_noise=False):
+<pre><code class="language-python">    def forward(self, x, w, randomize_noise=False):
         if self.position != 'const_init':
             x = self.upsample(x)
             weight = self.weight * self.wscale
@@ -630,17 +646,18 @@ x, style = f&quot;self.layer{2k}&quot;(x, wp[:, 2 * block_idx],randomize_noise)
         x, style = self.style(x, w)
         return x, style
 </code></pre>
-<p>具体步骤
-1. 上采样和卷积。只在每一个分辨率的第一层进行上采样。使用的上采样是
-    <code>return F.interpolate(x, scale_factor=self.scale_factor, mode='nearest')</code>
-    卷积的过程中会利用可学习的一个<span class="arithmatex">\(w_{scale}\)</span>对卷积的权重进行缩放。这个想法来自于
-    <a href="book/chapter%203%20GAN/2.2%20pggan/paper.md">progressive growing of gan</a>中。</p>
-<pre><code>其中，如果是init 输入 只会将可以学习的init在batch 维度进行复制
-</code></pre>
+<p>具体步骤</p>
 <ol>
-<li>增加bias
-可学习的一个bias。这个应该不重要。</li>
-<li>增加噪声</li>
+<li>
+<p>上采样和卷积。只在每一个分辨率的第一层进行上采样。使用的上采样是</p>
+<p><code>return F.interpolate(x, scale_factor=self.scale_factor, mode='nearest')</code></p>
+<p>卷积的过程中会利用可学习的一个<span class="arithmatex">\(w_{scale}\)</span>对卷积的权重进行缩放。这个想法来自于
+<a href="../../3.2pggan/paper/">progressive growing of gan</a>中。</p>
+<p>其中，如果是init 输入 只会将可以学习的init在batch 维度进行复制
+2. 增加bias
+可学习的一个bias。这个应该不重要。
+3. 增加噪声</p>
+</li>
 </ol>
 <pre><code>if randomize_noise:
     if self.noise_type == 'spatial':
@@ -659,18 +676,22 @@ elif self.noise_type == 'channel':
 <pre><code>self.activate = nn.LeakyReLU(negative_slope=0.2, inplace=True)
 </code></pre>
 <p><img alt="alt text" src="../../../../images/image-15.png" />
-LeakyReLU 的好处主要体现在以下几个方面：
-* 防止神经元死亡：负值区域的斜率使得神经元不会完全失活。
-* 改善梯度流动：减少梯度消失问题，支持更深层网络的训练。
-* 适应数据分布：捕捉负值区域的信息，更好地处理具有负值特征的数据。
-* 训练稳定性：提升训练过程的稳定性和收敛性。
-* 通用性：在图像生成任务和深度学习网络中表现优异，成为许多模型的默认选择。</p>
-<ol>
-<li>instance normalization
+LeakyReLU 的好处主要体现在以下几个方面：</p>
+<ul>
+<li>防止神经元死亡：负值区域的斜率使得神经元不会完全失活。</li>
+<li>改善梯度流动：减少梯度消失问题，支持更深层网络的训练。</li>
+<li>适应数据分布：捕捉负值区域的信息，更好地处理具有负值特征的数据。</li>
+<li>训练稳定性：提升训练过程的稳定性和收敛性。</li>
+<li>
+<p>通用性：在图像生成任务和深度学习网络中表现优异，成为许多模型的默认选择。</p>
+</li>
+<li>
+<p>instance normalization
 <img alt="alt text" src="../../../../images/image-16.png" />
-标准instance normalization。 使得每个样本的每个通道的featuremap的均值为0， 方差为1.</li>
+标准instance normalization。 使得每个样本的每个通道的featuremap的均值为0， 方差为1.</p>
+</li>
 <li>风格化</li>
-</ol>
+</ul>
 <pre><code>def forward(self, x, w):
     style = self.forward_style(w)
     style_split = style.view(-1, 2, self.out_channels, 1, 1)
