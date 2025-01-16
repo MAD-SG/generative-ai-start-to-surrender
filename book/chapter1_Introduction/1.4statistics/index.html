@@ -141,8 +141,8 @@ Theme by GitBook
 
 
 <h1 id="_1">统计学简介</h1>
-<h2 id="sampling">抽样 sampling</h2>
-<p><strong>1. 抽样 (Sampling in Statistics)</strong> <strong>数学和统计定义</strong></p>
+<h2 id="1-sampling">1.  抽样 sampling</h2>
+<h3 id="11-sampling-in-statistics">1.1 抽样 (Sampling in Statistics)数学和统计定义</h3>
 <ul>
 <li>抽样是从一个总体 (Population) 中选取一个子集 (Sample) 的过程。</li>
 <li>假设总体是集合 <span class="arithmatex">\(\mathcal{P}\)</span>，其大小为 <span class="arithmatex">\(N\)</span>，抽样选取的样本集合记为 <span class="arithmatex">\(\mathcal{S} \subset \mathcal{P}\)</span>，样本大小为 <span class="arithmatex">\(n\)</span>，其中 <span class="arithmatex">\(n \ll N\)</span>。
@@ -158,38 +158,35 @@ Theme by GitBook
 <li>分层抽样：总体分为若干子集，分别从每个子集中按比例抽取样本。</li>
 <li>样本均值：$ \bar{x} = \frac{1}{n} \sum_{i=1}^n x_i$</li>
 </ul>
-<p>样本均值是总体均值的无偏估计。
-<strong>统计依据</strong></p>
+<p>样本均值是总体均值的无偏估计。</p>
+<h3 id="12">1.2 <strong>统计依据</strong></h3>
 <ul>
 <li>
 <p><strong>大数定律</strong> ：样本量 <span class="arithmatex">\(n\)</span> 越大，样本均值 <span class="arithmatex">\(\bar{x}\)</span> 趋近于总体均值 <span class="arithmatex">\(\mu\)</span>。</p>
 </li>
 <li>
-<p><strong>中心极限定理</strong> ：当样本量足够大时，样本均值 <span class="arithmatex">\(\bar{x}\)</span> 的分布接近正态分布。
-<strong>应用示例</strong></p>
-</li>
+<p><strong>中心极限定理</strong> ：当样本量足够大时，样本均值 <span class="arithmatex">\(\bar{x}\)</span> 的分布接近正态分布。</p>
+<p><strong>应用示例</strong></p>
+<ol>
 <li>
 <p><strong>调查研究</strong> ：从城市中的居民中随机抽取 1000 人，调查他们的收入分布。</p>
 </li>
 <li>
 <p><strong>机器学习</strong> ：从一个大规模数据集中选取子集，用于训练模型。</p>
 </li>
-</ul>
-<hr />
-<ol>
-<li>
-<p>和<strong>采样 (Signal Sampling in Mathematics)</strong>的区别</p>
-</li>
-<li>
-<p>采样是从一个连续信号 <span class="arithmatex">\(f(t)\)</span> 中，按照一定规则在离散点 <span class="arithmatex">\(\{t_n\}\)</span> 上取值，形成离散信号 <span class="arithmatex">\(f[n]\)</span> 的过程。</p>
-</li>
-<li>离散化的信号表示为：</li>
 </ol>
+</li>
+</ul>
+<h3 id="13-signal-sampling-in-mathematics">1.3 和 <strong>采样 (Signal Sampling in Mathematics)</strong> 的区别</h3>
+<ul>
+<li>采样是从一个连续信号 <span class="arithmatex">\(f(t)\)</span> 中，按照一定规则在离散点 <span class="arithmatex">\(\{t_n\}\)</span> 上取值，形成离散信号 <span class="arithmatex">\(f[n]\)</span> 的过程。</li>
+<li>离散化的信号表示为：</li>
+</ul>
 <div class="arithmatex">\[
  f[n] = f(t_n), \quad t_n = nT, \quad n \in \mathbb{Z}
 \]</div>
-<p>其中 <span class="arithmatex">\(T\)</span> 是采样间隔，<span class="arithmatex">\(1/T\)</span> 是采样频率。
-核心区别</p>
+<p>其中 <span class="arithmatex">\(T\)</span> 是采样间隔，<span class="arithmatex">\(1/T\)</span> 是采样频率。</p>
+<p>核心区别</p>
 <ul>
 <li><strong>抽样</strong> ：研究离散总体的子集，推断总体特性。</li>
 <li><strong>采样</strong> ：将连续信号离散化，为数字处理或分析做准备。
@@ -230,7 +227,7 @@ Theme by GitBook
 <tr>
 <td>均值估计</td>
 <td><span class="arithmatex">\(\bar{x}=\frac{1}{n}\sum_{i=1}^n x_i\)</span></td>
-<td>$f[n]=f(tn),t_n = nT</td>
+<td><span class="arithmatex">\(f[n]=f(tn),t_n = nT\)</span></td>
 </tr>
 <tr>
 <td>误差范围</td>
@@ -239,16 +236,18 @@ Theme by GitBook
 </tr>
 </tbody>
 </table>
-<h2 id="2-lln">2. 大数定律 (LLN)：</h2>
+<h2 id="2-lln">2. 大数定律 (LLN)</h2>
 <p>在大数定律中，<strong>样本平均值</strong> 的定义为：$ \bar{X}<em>n = \frac{1}{n} \sum</em>{i=1}^n X_i$,
 其中 <span class="arithmatex">\(X_1, X_2, \dots, X_n\)</span> 是独立同分布的随机变量，具有期望值 <span class="arithmatex">\(\mu = \mathbb{E}[X_i]\)</span> 和有限方差 <span class="arithmatex">\(\sigma^2 = \mathrm{Var}(X_i)\)</span>。</p>
 <p><strong>大数定律的结论：</strong></p>
-<p>$$
+<div class="arithmatex">\[
  \bar{X}_n \xrightarrow{\text{a.s.}} \mu, \quad \text{或者} \quad \mathbb{P}(|\bar{X}_n - \mu| &gt; \epsilon) \to 0 \; (\forall \epsilon &gt; 0, \; n \to \infty).
-$$
-<strong>大数定律的关键点：</strong>
-* 它研究的是 <span class="arithmatex">\(\bar{X}_n\)</span> 的长期行为（随着 <span class="arithmatex">\(n \to \infty\)</span>）。
-* 它不涉及样本平均值的概率分布或波动性，只强调<span class="arithmatex">\(\bar{X}_n\)</span>会逐渐接近 <span class="arithmatex">\(\mu\)</span>。</p>
+\]</div>
+<p><strong>大数定律的关键点：</strong></p>
+<ul>
+<li>它研究的是 <span class="arithmatex">\(\bar{X}_n\)</span> 的长期行为（随着 <span class="arithmatex">\(n \to \infty\)</span>）。</li>
+<li>它不涉及样本平均值的概率分布或波动性，只强调<span class="arithmatex">\(\bar{X}_n\)</span>会逐渐接近 <span class="arithmatex">\(\mu\)</span>。</li>
+</ul>
 <h2 id="3-clt">3 中央极限定理 (CLT)</h2>
 <p>在中央极限定理中，考虑的也是<strong>样本平均值</strong> ：<span class="arithmatex">\(\bar{X}_n = \frac{1}{n} \sum_{i=1}^n X_i\)</span>.</p>
 <p>但这里进一步研究了<span class="arithmatex">\(\bar{X}_n\)</span> 的波动性或概率分布的行为。</p>
@@ -269,14 +268,16 @@ $$
 <div class="arithmatex">\[
  \bar{X}_n \sim N\left(\mu, \frac{\sigma^2}{n}\right).
 \]</div>
-<h2 id="4">4. 中心极限定理和大数定律两个平均值的核心差异：</h2>
+<h2 id="4">4. 中心极限定理和大数定律两个平均值的核心差异</h2>
 <p><strong>差异的核心：</strong></p>
 <ul>
 <li><strong>LLN 的平均值</strong> ：关注 <span class="arithmatex">\(\bar{X}_n\)</span> 是否在 <span class="arithmatex">\(n \to \infty\)</span> 时收敛到一个固定值 <span class="arithmatex">\(\mu\)</span>。</li>
 <li><strong>CLT 的平均值</strong> ：关注 <span class="arithmatex">\(\bar{X}_n\)</span> 在有限 $n 时的概率分布行为（波动性）。</li>
 </ul>
-<p><strong>用数学公式表示：</strong>
-1. <strong>LLN</strong>  描述：</p>
+<p><strong>用数学公式表示：</strong></p>
+<ol>
+<li><strong>LLN</strong>  描述：</li>
+</ol>
 <div class="arithmatex">\[
  \bar{X}_n \xrightarrow{\text{a.s.}} \mu \quad \text{（收敛到期望值 \(\mu\)）}.
 \]</div>
@@ -295,12 +296,12 @@ $$
 \]</div>
 <p>即，随着 <span class="arithmatex">\(n\)</span> 增加，样本平均值<span class="arithmatex">\(\bar{X}_n\)</span> 越来越接近期望值 <span class="arithmatex">\(\mu\)</span>。</p>
 <ul>
-<li>在 CLT 中，强调的是：
-$$
- \bar{X}_n \sim N\left(\mu, \frac{\sigma^2}{n}\right),
-$$
-即，样本平均值在有限 <span class="arithmatex">\(n\)</span> 时服从正态分布，方差 <span class="arithmatex">\(\sigma^2 / n\)</span> 会随着 <span class="arithmatex">\(n\)</span> 增大逐渐减小，但存在波动性。</li>
+<li>在 CLT 中，强调的是：</li>
 </ul>
+<div class="arithmatex">\[
+ \bar{X}_n \sim N\left(\mu, \frac{\sigma^2}{n}\right),
+\]</div>
+<p>即，样本平均值在有限 <span class="arithmatex">\(n\)</span> 时服从正态分布，方差 <span class="arithmatex">\(\sigma^2 / n\)</span> 会随着 <span class="arithmatex">\(n\)</span> 增大逐渐减小，但存在波动性。</p>
 <p><strong>直观解释两者差异：</strong></p>
 <ul>
 <li><strong>LLN</strong> ：告诉我们，当 <span class="arithmatex">\(n\)</span> 越来越大时，<span class="arithmatex">\(\bar{X}_n\)</span> 最终会无限接近于期望值 <span class="arithmatex">\(\mu\)</span>（值越来越稳定）。</li>
@@ -312,10 +313,14 @@ $$
 <li><strong>大数定律</strong> ：如果你测量 <span class="arithmatex">\(n\)</span> 个零件，计算它们的平均长度 <span class="arithmatex">\(\bar{X}_n\)</span>，当 <span class="arithmatex">\(n\)</span> 足够大时，这个平均值会无限接近于零件的真实平均长度（期望值 <span class="arithmatex">\(\mu\)</span>）。</li>
 <li><strong>中央极限定理</strong> ：如果 <span class="arithmatex">\(n\)</span> 不是无限大（比如 <span class="arithmatex">\(n = 100\)</span>)),那么平均长度 <span class="arithmatex">\(\bar{X}_n\)</span> 会在某个范围内波动，且这种波动的概率分布是正态分布。</li>
 </ul>
-<p><strong>总结：LLN 和 CLT 的平均值差异</strong>
-1. <strong>LLN</strong>  研究的是 <span class="arithmatex">\(\bar{X}_n\)</span> 是否稳定并最终收敛到 <span class="arithmatex">\(\mu\)</span>，强调长期收敛性。</p>
+<p><strong>总结：LLN 和 CLT 的平均值差异</strong></p>
 <ol>
-<li><strong>CLT</strong>  研究的是 <span class="arithmatex">\(\bar{X}_n\)</span> 的分布如何演变为正态分布，强调分布形状和波动性。</li>
+<li>
+<p><strong>LLN</strong>  研究的是 <span class="arithmatex">\(\bar{X}_n\)</span> 是否稳定并最终收敛到 <span class="arithmatex">\(\mu\)</span>，强调长期收敛性。</p>
+</li>
+<li>
+<p><strong>CLT</strong>  研究的是 <span class="arithmatex">\(\bar{X}_n\)</span> 的分布如何演变为正态分布，强调分布形状和波动性。</p>
+</li>
 </ol>
 <p>用更直观的比喻：</p>
 <ul>
@@ -346,12 +351,16 @@ $</p>
 <p><span class="arithmatex">\(\left| \cdot \right|\)</span>：是行列式的绝对值，因为概率密度需要非负。</p>
 </li>
 </ul>
-<p><strong>直观理解</strong>
-1. <strong>变换带来的密度变化</strong> ：
-如果变换 <span class="arithmatex">\(f(x)\)</span> 压缩了某一区域的体积（即行列式小于 1），则该区域的概率密度会增加；反之，如果体积扩大，则概率密度会减小。</p>
+<p><strong>直观理解</strong></p>
 <ol>
-<li><strong>概率保持不变</strong> ：
-随机变量的总概率始终为 1，因此变换只改变密度的分布形式，而不改变总体积。</li>
+<li>
+<p><strong>变换带来的密度变化</strong> ：
+如果变换 <span class="arithmatex">\(f(x)\)</span> 压缩了某一区域的体积（即行列式小于 1），则该区域的概率密度会增加；反之，如果体积扩大，则概率密度会减小。</p>
+</li>
+<li>
+<p><strong>概率保持不变</strong> ：
+随机变量的总概率始终为 1，因此变换只改变密度的分布形式，而不改变总体积。</p>
+</li>
 </ol>
 <p><strong>一维情况</strong> 在一维情况下（即 <span class="arithmatex">\(z\)</span> 和 <span class="arithmatex">\(x\)</span> 是标量），雅可比矩阵 <span class="arithmatex">\(\frac{\partial f(x)}{\partial x}\)</span> 退化为导数 <span class="arithmatex">\(f'(x)\)</span>，公式简化为：$
  p_X(x) = p_Z(f(x)) \cdot \left| f'(x) \right|
