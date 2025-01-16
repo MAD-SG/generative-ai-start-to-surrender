@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<title>Statistics - Generative AI: From Start to Surrender</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<meta name="generator" content="mkdocs-1.6.1, mkdocs-gitbook-1.0.7">
+
+<link rel="shortcut icon" href="../../../images/favicon.ico" type="image/x-icon">
+<meta name="HandheldFriendly" content="true"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta rel="next" href="" />
+<link href="../../../css/style.min.css" rel="stylesheet"> 
+</head>
+
+<body>
+<div class="book">
+<div class="book-summary">
+<div id="book-search-input" role="search">
+<input type="text" placeholder="Type to search" />
+</div> <!-- end of book-search-input -->
+
+<nav role="navigation">
+<ul class="summary">
+<li>
+<a href="../../.." target="_blank" class="custom-link">Generative AI: From Start to Surrender</a>
+</li>
+<li class="divider"></li>
+<li class="chapter" data-path="">
+<a href="../../..">Home</a>
+<li class="header">Introduction</li>
+
+<li>
+<a href="../1.1terminology/" class="">Terms</a>
+</li>
+
+<li>
+<a href="../1.2fourier_transform/" class="">Fourier Transform</a>
+</li>
+
+<li>
+<a href="../1.3signal_processing/" class="">Signal Processing</a>
+</li>
+
+<li>
+<a href="./" class="active">Statistics</a>
+</li>
+
+<li>
+<a href="../1.5SDE/" class="">SDE</a>
+</li>
+
+<li class="header">VAE</li>
+
+<li>
+<a href="../../chapter2_VAE/2.1introduction/" class="">VAE Introduction</a>
+</li>
+
+<li class="header">GANs</li>
+
+<li>
+<a href="../../chapter3_GAN/3.2pggan/paper/" class="">PGGAN</a>
+</li>
+
+<li>
+<a href="../../chapter3_GAN/3.3stylegan/paper/" class="">StyleGAN</a>
+</li>
+
+<li>
+<a href="../../chapter3_GAN/3.4stylegan2/paper/" class="">StyleGAN2</a>
+</li>
+
+<li>
+<a href="../../chapter3_GAN/3.5stylegan3/paper/" class="">StyleGAN3</a>
+</li>
+
+<li>
+<a href="../../chapter3_GAN/3.6styleganT/paper/" class="">StyleGAN T</a>
+</li>
+
+<li>
+<a href="../../chapter3_GAN/3.7R3Gan/paper/" class="">R3Gan</a>
+</li>
+
+<li class="header">Diffusion</li>
+
+<li>
+<a href="../../chapter4_diffusion/4.1introduction/" class="">Introduction</a>
+</li>
+
+<li>
+<a href="../../chapter4_diffusion/4.2DDPM/" class="">DDPM</a>
+</li>
+
+<li class="header">Generation Theory</li>
+
+<li>
+<a href="../../chapter5_generation_theory/5.1basic/" class="">Basic</a>
+</li>
+
+<li class="divider"></li>
+
+
+
+<li><a href="http://www.mkdocs.org">
+Published with MkDocs
+</a></li>
+
+<li><a href="https://github.com/GitbookIO/theme-default">
+Theme by GitBook
+</a></li>
+</ul>
+
+</nav>
+
+</div> <!-- end of book-summary -->
+
+<div class="book-body">
+<div class="body-inner">
+<div class="book-header" role="navigation">
+
+<!-- Title -->
+<h1>
+<i class="fa fa-circle-o-notch fa-spin"></i>
+<a href="." ></a>
+</h1>
+
+</div> <!-- end of book-header -->
+
+<div class="page-wrapper" tabindex="-1" role="main">
+<div class="page-inner">
+<div id="book-search-results">
+<div class="search-noresults">
+
+<section class="normal markdown-section">
+
+
+
+<h1 id="_1">统计学简介</h1>
+<h2 id="sampling">抽样 sampling</h2>
+<p><strong>1. 抽样 (Sampling in Statistics)</strong> <strong>数学和统计定义</strong></p>
+<ul>
+<li>抽样是从一个总体 (Population) 中选取一个子集 (Sample) 的过程。</li>
+<li>假设总体是集合 <span class="arithmatex">\(\mathcal{P}\)</span>，其大小为 <span class="arithmatex">\(N\)</span>，抽样选取的样本集合记为 <span class="arithmatex">\(\mathcal{S} \subset \mathcal{P}\)</span>，样本大小为 <span class="arithmatex">\(n\)</span>，其中 <span class="arithmatex">\(n \ll N\)</span>。
+<strong>核心目标</strong></li>
+<li>
+<p><strong>统计推断</strong> ：通过研究样本 <span class="arithmatex">\(\mathcal{S}\)</span>，估计总体 <span class="arithmatex">\(\mathcal{P}\)</span> 的参数（如均值、方差、分布等）。</p>
+</li>
+<li>
+<p><strong>核心问题</strong> ：如何保证样本具有代表性，以减少总体与样本之间的误差。
+<strong>数学方法</strong></p>
+</li>
+<li>随机抽样：样本是从总体中独立且等概率地抽取的，每个元素被抽取的概率为 <span class="arithmatex">\(\frac{1}{N}\)</span>。</li>
+<li>分层抽样：总体分为若干子集，分别从每个子集中按比例抽取样本。</li>
+<li>样本均值：$ \bar{x} = \frac{1}{n} \sum_{i=1}^n x_i$</li>
+</ul>
+<p>样本均值是总体均值的无偏估计。
+<strong>统计依据</strong></p>
+<ul>
+<li>
+<p><strong>大数定律</strong> ：样本量 <span class="arithmatex">\(n\)</span> 越大，样本均值 <span class="arithmatex">\(\bar{x}\)</span> 趋近于总体均值 <span class="arithmatex">\(\mu\)</span>。</p>
+</li>
+<li>
+<p><strong>中心极限定理</strong> ：当样本量足够大时，样本均值 <span class="arithmatex">\(\bar{x}\)</span> 的分布接近正态分布。
+<strong>应用示例</strong></p>
+</li>
+<li>
+<p><strong>调查研究</strong> ：从城市中的居民中随机抽取 1000 人，调查他们的收入分布。</p>
+</li>
+<li>
+<p><strong>机器学习</strong> ：从一个大规模数据集中选取子集，用于训练模型。</p>
+</li>
+</ul>
+<hr />
+<ol>
+<li>
+<p>和<strong>采样 (Signal Sampling in Mathematics)</strong>的区别</p>
+</li>
+<li>
+<p>采样是从一个连续信号 <span class="arithmatex">\(f(t)\)</span> 中，按照一定规则在离散点 <span class="arithmatex">\(\{t_n\}\)</span> 上取值，形成离散信号 <span class="arithmatex">\(f[n]\)</span> 的过程。</p>
+</li>
+<li>离散化的信号表示为：</li>
+</ol>
+<div class="arithmatex">\[
+ f[n] = f(t_n), \quad t_n = nT, \quad n \in \mathbb{Z}
+\]</div>
+<p>其中 <span class="arithmatex">\(T\)</span> 是采样间隔，<span class="arithmatex">\(1/T\)</span> 是采样频率。
+核心区别</p>
+<ul>
+<li><strong>抽样</strong> ：研究离散总体的子集，推断总体特性。</li>
+<li><strong>采样</strong> ：将连续信号离散化，为数字处理或分析做准备。
+<strong>操作对象</strong></li>
+<li><strong>抽样</strong> ：离散总体（有限集合）。</li>
+<li><strong>采样</strong> ：连续信号（时间域或空间域函数）。
+<strong>理论依据</strong></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>抽样</th>
+<th>采样</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>基础理论</td>
+<td>大数定律、中心极限定理</td>
+<td>奈奎斯特采样定理、插值理论</td>
+</tr>
+<tr>
+<td>样本代表性</td>
+<td>随机性和覆盖性是关键</td>
+<td>采样频率决定是否能够还原信号</td>
+</tr>
+<tr>
+<td><strong>数学公式</strong></td>
+<td>特性</td>
+<td>抽样公式</td>
+</tr>
+<tr>
+<td>---</td>
+<td>---</td>
+<td>---</td>
+</tr>
+<tr>
+<td>均值估计</td>
+<td><span class="arithmatex">\(\bar{x}=\frac{1}{n}\sum_{i=1}^n x_i\)</span></td>
+<td>$f[n]=f(tn),t_n = nT</td>
+</tr>
+<tr>
+<td>误差范围</td>
+<td>标准误差：<span class="arithmatex">\(text{SE} = \frac{\sigma}{\sqrt{n}}\)</span>​</td>
+<td>采样误差：由混叠频率引起</td>
+</tr>
+</tbody>
+</table>
+<h2 id="2-lln">2. 大数定律 (LLN)：</h2>
+<p>在大数定律中，<strong>样本平均值</strong> 的定义为：$ \bar{X}<em>n = \frac{1}{n} \sum</em>{i=1}^n X_i$,
+其中 <span class="arithmatex">\(X_1, X_2, \dots, X_n\)</span> 是独立同分布的随机变量，具有期望值 <span class="arithmatex">\(\mu = \mathbb{E}[X_i]\)</span> 和有限方差 <span class="arithmatex">\(\sigma^2 = \mathrm{Var}(X_i)\)</span>。</p>
+<p><strong>大数定律的结论：</strong></p>
+<p>$$
+ \bar{X}_n \xrightarrow{\text{a.s.}} \mu, \quad \text{或者} \quad \mathbb{P}(|\bar{X}_n - \mu| &gt; \epsilon) \to 0 \; (\forall \epsilon &gt; 0, \; n \to \infty).
+$$
+<strong>大数定律的关键点：</strong>
+* 它研究的是 <span class="arithmatex">\(\bar{X}_n\)</span> 的长期行为（随着 <span class="arithmatex">\(n \to \infty\)</span>）。
+* 它不涉及样本平均值的概率分布或波动性，只强调<span class="arithmatex">\(\bar{X}_n\)</span>会逐渐接近 <span class="arithmatex">\(\mu\)</span>。</p>
+<h2 id="3-clt">3 中央极限定理 (CLT)</h2>
+<p>在中央极限定理中，考虑的也是<strong>样本平均值</strong> ：<span class="arithmatex">\(\bar{X}_n = \frac{1}{n} \sum_{i=1}^n X_i\)</span>.</p>
+<p>但这里进一步研究了<span class="arithmatex">\(\bar{X}_n\)</span> 的波动性或概率分布的行为。</p>
+<p><strong>标准化形式：</strong></p>
+<p>我们构造一个标准化的随机变量 <span class="arithmatex">\(Z_n\)</span>，用来衡量 <span class="arithmatex">\(\bar{X}_n\)</span> 偏离期望值的程度：</p>
+<div class="arithmatex">\[Z_n = \frac{\sqrt{n}(\bar{X}_n - \mu)}{\sigma}.\]</div>
+<p><strong>CLT 的结论：</strong>
+当 <span class="arithmatex">\(n \to \infty\)</span>，标准化的变量 <span class="arithmatex">\(Z_n\)</span> 的分布收敛于标准正态分布：<span class="arithmatex">\(Z_n \xrightarrow{d} N(0, 1)\)</span>。</p>
+<p>这说明：</p>
+<ul>
+<li>
+<p><strong>样本平均值</strong> 在 <span class="arithmatex">\(n\)</span> 足够大时的分布会趋于正态分布，且中心是 <span class="arithmatex">\(\mu\)</span>，标准差是 <span class="arithmatex">\(\frac{\sigma}{\sqrt{n}}\)</span>。</p>
+</li>
+<li>
+<p>样本平均值 <span class="arithmatex">\(\bar{X}_n\)</span> 的分布近似为：</p>
+</li>
+</ul>
+<div class="arithmatex">\[
+ \bar{X}_n \sim N\left(\mu, \frac{\sigma^2}{n}\right).
+\]</div>
+<h2 id="4">4. 中心极限定理和大数定律两个平均值的核心差异：</h2>
+<p><strong>差异的核心：</strong></p>
+<ul>
+<li><strong>LLN 的平均值</strong> ：关注 <span class="arithmatex">\(\bar{X}_n\)</span> 是否在 <span class="arithmatex">\(n \to \infty\)</span> 时收敛到一个固定值 <span class="arithmatex">\(\mu\)</span>。</li>
+<li><strong>CLT 的平均值</strong> ：关注 <span class="arithmatex">\(\bar{X}_n\)</span> 在有限 $n 时的概率分布行为（波动性）。</li>
+</ul>
+<p><strong>用数学公式表示：</strong>
+1. <strong>LLN</strong>  描述：</p>
+<div class="arithmatex">\[
+ \bar{X}_n \xrightarrow{\text{a.s.}} \mu \quad \text{（收敛到期望值 \(\mu\)）}.
+\]</div>
+<ol>
+<li><strong>CLT</strong>  描述：</li>
+</ol>
+<div class="arithmatex">\[
+ \sqrt{n}(\bar{X}_n - \mu) \xrightarrow{d} N(0, \sigma^2) \quad \text{（描述标准化偏差的分布行为）}.
+\]</div>
+<p><strong>公式差异总结：</strong></p>
+<ul>
+<li>在 LLN 中，强调的是：</li>
+</ul>
+<div class="arithmatex">\[
+ \bar{X}_n \approx \mu \quad (\text{当 } n \to \infty).
+\]</div>
+<p>即，随着 <span class="arithmatex">\(n\)</span> 增加，样本平均值<span class="arithmatex">\(\bar{X}_n\)</span> 越来越接近期望值 <span class="arithmatex">\(\mu\)</span>。</p>
+<ul>
+<li>在 CLT 中，强调的是：
+$$
+ \bar{X}_n \sim N\left(\mu, \frac{\sigma^2}{n}\right),
+$$
+即，样本平均值在有限 <span class="arithmatex">\(n\)</span> 时服从正态分布，方差 <span class="arithmatex">\(\sigma^2 / n\)</span> 会随着 <span class="arithmatex">\(n\)</span> 增大逐渐减小，但存在波动性。</li>
+</ul>
+<p><strong>直观解释两者差异：</strong></p>
+<ul>
+<li><strong>LLN</strong> ：告诉我们，当 <span class="arithmatex">\(n\)</span> 越来越大时，<span class="arithmatex">\(\bar{X}_n\)</span> 最终会无限接近于期望值 <span class="arithmatex">\(\mu\)</span>（值越来越稳定）。</li>
+<li><strong>CLT</strong> ：告诉我们，对于有限的 <span class="arithmatex">\(n\)</span>，<span class="arithmatex">\(\bar{X}_n\)</span> 仍然有波动，并且这种波动遵循正态分布，且波动范围随 <span class="arithmatex">\(n\)</span> 增大而减小（<span class="arithmatex">\(\sim \frac{1}{\sqrt{n}}\)</span>）。
+<strong>例子</strong></li>
+</ul>
+<p>假如你测量某机器零件的长度，单个零件的长度是随机变量 <span class="arithmatex">\(X\)</span>:</p>
+<ul>
+<li><strong>大数定律</strong> ：如果你测量 <span class="arithmatex">\(n\)</span> 个零件，计算它们的平均长度 <span class="arithmatex">\(\bar{X}_n\)</span>，当 <span class="arithmatex">\(n\)</span> 足够大时，这个平均值会无限接近于零件的真实平均长度（期望值 <span class="arithmatex">\(\mu\)</span>）。</li>
+<li><strong>中央极限定理</strong> ：如果 <span class="arithmatex">\(n\)</span> 不是无限大（比如 <span class="arithmatex">\(n = 100\)</span>)),那么平均长度 <span class="arithmatex">\(\bar{X}_n\)</span> 会在某个范围内波动，且这种波动的概率分布是正态分布。</li>
+</ul>
+<p><strong>总结：LLN 和 CLT 的平均值差异</strong>
+1. <strong>LLN</strong>  研究的是 <span class="arithmatex">\(\bar{X}_n\)</span> 是否稳定并最终收敛到 <span class="arithmatex">\(\mu\)</span>，强调长期收敛性。</p>
+<ol>
+<li><strong>CLT</strong>  研究的是 <span class="arithmatex">\(\bar{X}_n\)</span> 的分布如何演变为正态分布，强调分布形状和波动性。</li>
+</ol>
+<p>用更直观的比喻：</p>
+<ul>
+<li>
+<p><strong>LLN</strong>  就像你测量很多次，逐渐逼近“真实值”。</p>
+</li>
+<li>
+<p><strong>CLT</strong>  告诉你在有限次测量时，这个“逼近值”有多大的波动范围，以及波动的概率分布是什么样的。</p>
+</li>
+</ul>
+<h2 id="5-change-of-variable">5. change of variable</h2>
+<p>随机变量分布的 <strong>Change of Variable</strong> （变量变换）是概率论中一个重要的公式，用于描述当随机变量通过某种函数进行变换时，其概率密度如何变化。</p>
+<p><strong>公式推导</strong> 假设我们有一个随机变量 <span class="arithmatex">\(z\)</span>，其概率密度为 <span class="arithmatex">\(p_Z(z)\)</span>，并定义了一个可逆变换 <span class="arithmatex">\(z = f(x)\)</span>，其逆变换为 <span class="arithmatex">\(x = f^{-1}(z)\)</span>。目标是求变换后随机变量 <span class="arithmatex">\(x\)</span> 的概率密度 <span class="arithmatex">\(p_X(x)\)</span>。</p>
+<p><strong>Change of Variable 定理</strong> 当 <span class="arithmatex">\(z = f(x)\)</span> 且变换 <span class="arithmatex">\(f(x)\)</span> 可逆时，变换后的概率密度 <span class="arithmatex">\(p_X(x)\)</span> 可以通过以下公式计算：$
+ p_X(x) = p_Z(f(x)) \cdot \left| \det \left( \frac{\partial f(x)}{\partial x} \right) \right|
+$</p>
+<ul>
+<li>
+<p><span class="arithmatex">\(p_Z(f(x))\)</span>：是原始变量 <span class="arithmatex">\(z\)</span> 的概率密度函数值。</p>
+</li>
+<li>
+<p><span class="arithmatex">\(\frac{\partial f(x)}{\partial x}\)</span>：是变换 <span class="arithmatex">\(f(x)\)</span> 的雅可比矩阵（Jacobian Matrix）。</p>
+</li>
+<li>
+<p><span class="arithmatex">\(\det \left( \frac{\partial f(x)}{\partial x} \right)\)</span>：是雅可比矩阵的行列式，表示变换对概率密度的缩放程度。</p>
+</li>
+<li>
+<p><span class="arithmatex">\(\left| \cdot \right|\)</span>：是行列式的绝对值，因为概率密度需要非负。</p>
+</li>
+</ul>
+<p><strong>直观理解</strong>
+1. <strong>变换带来的密度变化</strong> ：
+如果变换 <span class="arithmatex">\(f(x)\)</span> 压缩了某一区域的体积（即行列式小于 1），则该区域的概率密度会增加；反之，如果体积扩大，则概率密度会减小。</p>
+<ol>
+<li><strong>概率保持不变</strong> ：
+随机变量的总概率始终为 1，因此变换只改变密度的分布形式，而不改变总体积。</li>
+</ol>
+<p><strong>一维情况</strong> 在一维情况下（即 <span class="arithmatex">\(z\)</span> 和 <span class="arithmatex">\(x\)</span> 是标量），雅可比矩阵 <span class="arithmatex">\(\frac{\partial f(x)}{\partial x}\)</span> 退化为导数 <span class="arithmatex">\(f'(x)\)</span>，公式简化为：$
+ p_X(x) = p_Z(f(x)) \cdot \left| f'(x) \right|
+$</p>
+<p>例如：</p>
+<ul>
+<li>如果 <span class="arithmatex">\(z \sim \mathcal{N}(0, 1)\)</span> 且 <span class="arithmatex">\(z = f(x) = 2x + 3\)</span>，则：
+$
+ p_X(x) = \mathcal{N}(f(x) \mid 0, 1) \cdot \left| f'(x) \right| = \mathcal{N}(2x + 3 \mid 0, 1) \cdot 2
+$</li>
+</ul>
+<p><strong>多维情况</strong> 在多维情况下（即 <span class="arithmatex">\(z\)</span> 和 <span class="arithmatex">\(x\)</span> 是向量），需要使用雅可比矩阵。雅可比矩阵定义为：$
+ J_f(x) = \frac{\partial f(x)}{\partial x} =
+\begin{bmatrix}
+\frac{\partial f_1}{\partial x_1} &amp; \cdots &amp; \frac{\partial f_1}{\partial x_n} \
+\vdots &amp; \ddots &amp; \vdots \
+\frac{\partial f_m}{\partial x_1} &amp; \cdots &amp; \frac{\partial f_m}{\partial x_n}
+\end{bmatrix}
+$</p>
+<p>多维情况下，公式为：<span class="arithmatex">\(p_X(x) = p_Z(f(x)) \cdot \left| \det J_f(x) \right|\)</span></p>
+
+
+</section>
+</div> <!-- end of search-noresults -->
+<div class="search-results">
+<div class="has-results">
+
+<h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+<ul class="search-results-list"></ul>
+
+</div> <!-- end of has-results -->
+<div class="no-results">
+
+<h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+
+</div> <!-- end of no-results -->
+</div> <!-- end of search-results -->
+</div> <!-- end of book-search-results -->
+
+</div> <!-- end of page-inner -->
+</div> <!-- end of page-wrapper -->
+
+</div> <!-- end of body-inner -->
+
+</div> <!-- end of book-body -->
+<script src="../../../js/main.js"></script>
+<script src="../../../javascripts/mathjax.js"></script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script src="../../../search/main.js"></script>
+<script src="../../../js/gitbook.min.js"></script>
+<script src="../../../js/theme.min.js"></script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-<title>VAE Introduction - Generative AI: From Start to Surrender</title>
+<title>Introduction - Generative AI: From Start to Surrender</title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
 <meta name="generator" content="mkdocs-1.6.1, mkdocs-gitbook-1.0.7">
@@ -57,7 +57,7 @@
 <li class="header">VAE</li>
 
 <li>
-<a href="./" class="active">VAE Introduction</a>
+<a href="../../chapter2_VAE/2.1introduction/" class="">VAE Introduction</a>
 </li>
 
 <li class="header">GANs</li>
@@ -89,11 +89,11 @@
 <li class="header">Diffusion</li>
 
 <li>
-<a href="../../chapter4_diffusion/4.1introduction/" class="">Introduction</a>
+<a href="./" class="active">Introduction</a>
 </li>
 
 <li>
-<a href="../../chapter4_diffusion/4.2DDPM/" class="">DDPM</a>
+<a href="../4.2DDPM/" class="">DDPM</a>
 </li>
 
 <li class="header">Generation Theory</li>
@@ -140,7 +140,56 @@ Theme by GitBook
 
 
 
-
+<h1 id="diffusion-models">Diffusion Models</h1>
+<h2 id="_1">需要的前置知识</h2>
+<p>数学：</p>
+<ul>
+<li>微积分：</li>
+<li>导数和梯度的计算。</li>
+<li>偏微分和链式法则。</li>
+<li>多变量函数优化（如梯度下降）。</li>
+<li>微分方程：</li>
+<li>常微分方程的基础知识（扩散模型涉及随机微分方程）。</li>
+<li>伊藤引理（Itô Lemma）。</li>
+</ul>
+<p>统计学：</p>
+<ul>
+<li>必备知识点：</li>
+<li>布朗运动（Brownian Motion）：<ul>
+<li>随机游走及其连续极限。</li>
+<li>高斯过程。</li>
+</ul>
+</li>
+<li>随机微分方程（SDE）：<ul>
+<li>Itô公式及其在扩散模型中的应用。</li>
+</ul>
+</li>
+<li>马尔可夫过程：<ul>
+<li>时间连续和离散的马尔可夫过程。</li>
+<li>马尔可夫链的定义及性质。</li>
+<li>转移概率矩阵的理解。</li>
+</ul>
+</li>
+</ul>
+<p>系统地学习扩散模型（Diffusion Models）需要一个结构化的学习路径，从基础理论到高级应用逐步深入。以下是建议的学习步骤：</p>
+<h2 id="reading-list">Reading list</h2>
+<ol>
+<li>
+<p><a href="https://arxiv.org/abs/2006.11239">Denoising Diffusion Probabilistic Models (DDPM)</a>  - 核心理论。</p>
+</li>
+<li>
+<p><a href="https://arxiv.org/abs/2102.09672">Improved Denoising Diffusion Probabilistic Models</a>  - 模型优化方法。</p>
+</li>
+<li>
+<p><a href="https://arxiv.org/abs/2105.05233">Diffusion Models Beat GANs on Image Synthesis</a>  - 扩散模型在图像生成任务中的优势。</p>
+</li>
+<li>
+<p><a href="https://arxiv.org/abs/2011.13456">Score-Based Generative Modeling through Stochastic Differential Equations</a>  - 介绍基于分数的生成建模方法。</p>
+</li>
+<li>
+<p><a href="https://arxiv.org/abs/2112.10752">Latent Diffusion Models</a>  - 扩散模型与潜在空间的结合。</p>
+</li>
+</ol>
 
 
 </section>
