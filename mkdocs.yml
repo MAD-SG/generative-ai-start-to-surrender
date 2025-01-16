@@ -5,6 +5,8 @@ nav:
       - Terms: "book/chapter1_Introduction/1.1terminology.md"
       - Fourier Transform: "book/chapter1_Introduction/1.2fourier_transform.md"
       - Signal Processing: "book/chapter1_Introduction/1.3signal_processing.md"
+      - Statistics: "book/chapter1_Introduction/1.4statistics.md"
+      - SDE: "book/chapter1_Introduction/1.5SDE.md"
   - VAE:
       - VAE Introduction: "book/chapter2_VAE/2.1introduction.md"
   - GANs:
@@ -12,6 +14,13 @@ nav:
       - StyleGAN: "book/chapter3_GAN/3.3stylegan/paper.md"
       - StyleGAN2: "book/chapter3_GAN/3.4stylegan2/paper.md"
       - StyleGAN3: "book/chapter3_GAN/3.5stylegan3/paper.md"
+      - StyleGAN T: "book/chapter3_GAN/3.6styleganT/paper.md"
+      - R3Gan: "book/chapter3_GAN/3.7R3Gan/paper.md"
+  - Diffusion:
+      - Introduction: "book/chapter4_diffusion/4.1introduction.md"
+      - DDPM: "book/chapter4_diffusion/4.2DDPM.md"
+  - Generation Theory:
+      - Basic: "book/chapter5_generation_theory/5.1basic.md"
 theme:
   name: gitbook
 
