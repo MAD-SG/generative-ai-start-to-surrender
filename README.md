@@ -15,6 +15,18 @@ We are grateful for the contributions from our community. Here are some of our k
 Your contributions help make this project better. Thank you for your support!
 
 ## Contribution
+### vscode 设置保存图片位置. vscode 可以支持直接复制图片，会把粘贴板上的图片复制到markdown 文件中，并且保存文件到指定目录中。
+
+在settings.json中添加
+
+```json
+{
+    "markdown.copyFiles.destination": {
+        "**/*": "${documentWorkspaceFolder}/docs/images/"
+    },
+    ...
+}
+```
 
 ### 使用Markdownlint
 
