@@ -99,7 +99,7 @@
 <li class="header">Generation Theory</li>
 
 <li>
-<a href="../../chapter5_generation_theory/5.1basic/" class="">Basic</a>
+<a href="../../chapter5_generation_theory/5.1MLE/" class="">Maximal Likelihood</a>
 </li>
 
 <li class="divider"></li>
@@ -381,6 +381,369 @@ $</li>
 \end{bmatrix}
 $</p>
 <p>多维情况下，公式为：<span class="arithmatex">\(p_X(x) = p_Z(f(x)) \cdot \left| \det J_f(x) \right|\)</span></p>
+<h2 id="6">6. 随机变量和分布</h2>
+<p>表示一个随机变量的分布通常使用以下几种方式：</p>
+<h3 id="61-pdf-probability-density-function">6.1 概率密度函数(PDF, Probability Density Function)</h3>
+<ul>
+<li>
+<p>如果随机变量是连续型随机变量(如正态分布),其分布可以用概率密度函数 <span class="arithmatex">\(f_X(x)\)</span> 表示。</p>
+</li>
+<li>
+<p>例如，对于正态分布:</p>
+</li>
+</ul>
+<div class="arithmatex">\[
+ X \sim \mathcal{N}(\mu, \sigma^2)
+\]</div>
+<p>或</p>
+<div class="arithmatex">\[
+ f_X(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}
+\]</div>
+<p>表示 <span class="arithmatex">\(X\)</span> 服从均值为 <span class="arithmatex">\(\mu\)</span>、方差为 <span class="arithmatex">\(\sigma^2\)</span> 的正态分布。</p>
+<h3 id="62-pmf-probability-mass-function">6.2. 概率质量函数(PMF, Probability Mass Function)</h3>
+<ul>
+<li>
+<p>如果随机变量是离散型随机变量，其分布用概率质量函数 <span class="arithmatex">\(<span class="arithmatex">\(P(X = x)\)</span>\)</span> 表示。</p>
+</li>
+<li>
+<p>例如，对于一个离散型变量 <span class="arithmatex">\(X\)</span> 的伯努利分布：</p>
+</li>
+</ul>
+<div class="arithmatex">\[
+ P(X = x) = p^x (1-p)^{1-x}, \quad x \in \{0, 1\}
+\]</div>
+<h3 id="63-cdf-cumulative-distribution-function">6.3. **累积分布函数(CDF, Cumulative Distribution Function)</h3>
+<ul>
+<li>累积分布函数表示随机变量小于等于某个值的概率：</li>
+</ul>
+<div class="arithmatex">\[
+ F_X(x) = P(X \leq x)
+\]</div>
+<ul>
+<li>它适用于连续型和离散型随机变量。</li>
+</ul>
+<h3 id="64">6.4. <strong>分布符号表示</strong></h3>
+<ul>
+<li>在简化场景中，可以直接用符号 <span class="arithmatex">\(\sim\)</span> 表示随机变量的分布类型。例如：</li>
+<li><span class="arithmatex">\(X \sim \mathcal{N}(\mu, \sigma^2)\)</span>：正态分布。</li>
+<li><span class="arithmatex">\(X \sim \text{Bernoulli}(p)\)</span>：伯努利分布。</li>
+<li><span class="arithmatex">\(X \sim \text{Uniform}(a, b)\)</span>：均匀分布。</li>
+</ul>
+<p>或者更进一步, 可以表示为：<span class="arithmatex">\(\mathcal{N}(\mathbf{X}; \mu, \Sigma)\)</span>,
+<span class="arithmatex">\(\mathcal{N}\)</span> 是 "Normal"（正态分布）的首字母，用于表明分布的类型。
+这是一种记号惯例，用来简洁地表示多元正态分布:</p>
+<ul>
+<li>
+<p>第一部分 <span class="arithmatex">\(\mathbf{X}\)</span> 是随机变量。</p>
+</li>
+<li>
+<p>第二部分 <span class="arithmatex">\(0\)</span> 和 <span class="arithmatex">\(\mathbf{I}\)</span> 分别表示均值向量和协方差矩阵。</p>
+</li>
+</ul>
+<h3 id="65">6.5. <strong>联合分布与条件分布</strong></h3>
+<ul>
+<li>如果有多个随机变量，可以用联合分布或条件分布来描述它们的关系：</li>
+<li>
+<p>联合分布：<span class="arithmatex">\(P(X, Y)\)</span> 或 <span class="arithmatex">\(f_{X, Y}(x, y)\)</span>。</p>
+</li>
+<li>
+<p>条件分布：<span class="arithmatex">\(P(X | Y)\)</span> 表示在 <span class="arithmatex">\(Y\)</span> 已知的条件下，<span class="arithmatex">\(X\)</span> 的分布。</p>
+</li>
+</ul>
+<h2 id="7-markov">7. Markov链</h2>
+<p><strong>Markov链</strong> （Markov Chain）是一个满足 <strong>Markov性</strong> （或称为“无后效性”）的随机过程。简单来说，Markov性指的是：未来的状态只与当前的状态有关，而与过去的状态无关。</p>
+<h3 id="71-markov">7.1 Markov链的数学定义</h3>
+<p>设 <span class="arithmatex">\(X_t\)</span> 表示一个随机过程在时间 <span class="arithmatex">\(t\)</span> 时的状态。如果对于任意的 <span class="arithmatex">\(t\)</span> 和状态序列 <span class="arithmatex">\(x_0, x_1, \ldots, x_t\)</span>，满足条件：</p>
+<div class="arithmatex">\[
+ P(X_{t+1} = x_{t+1} \mid X_t = x_t, X_{t-1} = x_{t-1}, \ldots, X_0 = x_0) = P(X_{t+1} = x_{t+1} \mid X_t = x_t)
+\]</div>
+<p>即，给定当前状态 <span class="arithmatex">\(X_t\)</span>，未来状态 <span class="arithmatex">\(X_{t+1}\)</span> 的分布与过去的状态 <span class="arithmatex">\(X_{t-1}, X_{t-2}, \ldots\)</span> 无关，那么这个随机过程就是一个<strong>Markov过程</strong> 。如果状态空间是离散的，并且时间也是离散的，这个过程称为<strong>离散时间Markov链</strong> （Discrete-Time Markov Chain, DTMC）。</p>
+<h3 id="72-markov">7.2 Markov链的要素</h3>
+<ol>
+<li>
+<p><strong>状态空间</strong>  (<span class="arithmatex">\(S\)</span>)
+Markov链可以处于的所有可能状态的集合。状态空间可以是有限的，也可以是无限的。</p>
+</li>
+<li>
+<p><strong>转移概率</strong>
+从当前状态转移到下一个状态的概率。通常用 <strong><em>*转移概率</em>*
+从当前状态转移到下一个状态的概率。通常用 转移概率矩阵 <span class="arithmatex">\(P\)</span></strong>  表示：$
+ P_{ij} = P(X_{t+1} = j \mid X_t = i)
+$
+这里 <span class="arithmatex">\(P_{ij}\)</span> 表示从状态 <span class="arithmatex">\(i\)</span> 转移到状态 <span class="arithmatex">\(j\)</span> 的概率。</p>
+</li>
+<li>
+<p><strong>初始状态分布</strong>
+指随机过程在 <span class="arithmatex">\(t = 0\)</span> 时各个状态的概率分布，记为 <span class="arithmatex">\(\pi_0\)</span>。</p>
+</li>
+</ol>
+<hr />
+<h3 id="73-markov">7.3 Markov链的性质</h3>
+<ol>
+<li>
+<p><strong>无后效性（Markov性）</strong> ：未来的状态只依赖于当前状态，与过去状态无关。</p>
+</li>
+<li>
+<p><strong>状态转移的概率分布固定</strong> ：转移概率矩阵 <span class="arithmatex">\(P\)</span> 通常是时间不变的。</p>
+</li>
+<li>
+<p><strong>n步转移概率</strong> ：经过 <span class="arithmatex">\(n\)</span> 步从状态 <span class="arithmatex">\(i\)</span> 转移到状态 <span class="arithmatex">\(j\)</span> 的概率可用矩阵幂表示：</p>
+</li>
+</ol>
+<div class="arithmatex">\[
+ P^{(n)}_{ij} = P(X_{t+n} = j \mid X_t = i)
+\]</div>
+<h3 id="73">7.3 典型应用</h3>
+<ul>
+<li>
+<p><strong>自然语言处理</strong> ：如语言模型中用Markov链预测下一个词。</p>
+</li>
+<li>
+<p><strong>金融建模</strong> ：股票价格或经济指标的动态建模。</p>
+</li>
+<li>
+<p><strong>网络分析</strong> ：如PageRank算法，用Markov链分析网页跳转。</p>
+</li>
+<li>
+<p><strong>生物信息学</strong> ：基因序列分析。</p>
+</li>
+</ul>
+<h3 id="74-markov">7.4 不同形式的Markov链</h3>
+<p>Markov链中的“<strong>状态转移的概率分布固定</strong> ”并不是一个必须条件，而是针对<strong>齐次Markov链</strong> （Homogeneous Markov Chain）的假设。实际上，Markov链也有以下情况：</p>
+<p><strong>1. 齐次Markov链（Homogeneous Markov Chain）</strong> 这是最常见的情况，转移概率矩阵 <span class="arithmatex">\(P\)</span> <strong>不随时间变化</strong> ，即对于任意时间 <span class="arithmatex">\(t\)</span>：$
+ P(X_{t+1} = j \mid X_t = i) = P_{ij}, \quad \text{(恒定)}。
+$</p>
+<p>这种假设简化了分析，且在很多实际问题中是合理的，比如PageRank算法、天气模型等。</p>
+<p><strong>2. 非齐次Markov链（Non-Homogeneous Markov Chain）</strong> 在一些场景下，转移概率可能<strong>随时间变化</strong> ，即：$
+ P(X_{t+1} = j \mid X_t = i) = P_{ij}^{(t)}， \quad \text{(随 <span class="arithmatex">\( t \)</span> 变化)}。
+$
+这意味着状态从 <span class="arithmatex">\(i\)</span> 转移到 <span class="arithmatex">\(j\)</span> 的概率依赖于时间 <span class="arithmatex">\(t\)</span>。这种情况通常用于以下情景：</p>
+<ul>
+<li>
+<p><strong>季节性变化</strong> ：比如天气模型，夏季的天气转移概率不同于冬季。</p>
+</li>
+<li>
+<p><strong>动态系统</strong> ：比如金融市场，其状态转移可能随时间或外部事件调整。</p>
+</li>
+</ul>
+<p><strong>3. 其他扩展形式</strong>
+除了以上两种，还可以有更复杂的Markov链形式：</p>
+<ol>
+<li>
+<p><strong>半Markov过程（Semi-Markov Process）</strong> ：允许在每个状态停留的时间不是固定的，也不是指数分布。</p>
+</li>
+<li>
+<p><strong>高阶Markov链（Higher-Order Markov Chain）</strong> ：未来状态依赖于多个历史状态（不仅是上一个状态），如：</p>
+</li>
+</ol>
+<div class="arithmatex">\[
+ P(X_{t+1} \mid X_t, X_{t-1}, \ldots, X_{t-k})。
+\]</div>
+<h2 id="8-monte-carlo-estimate">8 Monte Carlo estimate</h2>
+<p><strong>Monte Carlo estimate</strong>  是一种利用随机抽样方法来近似计算复杂问题的数值解的统计技术。它广泛应用于数学、物理、金融、工程等领域，尤其是那些解析解难以获得的问题。</p>
+<hr />
+<h3 id="81">8.1 基本原理</h3>
+<p>Monte Carlo 方法基于以下核心思想：</p>
+<ol>
+<li>
+<p>使用随机数生成一系列样本。</p>
+</li>
+<li>
+<p>根据这些样本，计算一个函数或系统的平均值。</p>
+</li>
+<li>
+<p>使用大数定律和中心极限定理，来确保通过大量随机样本的平均值可以逼近真实值。</p>
+</li>
+</ol>
+<p>简单来说，Monte Carlo 方法通过多次模拟和统计分析，来估计某些复杂问题的解。</p>
+<hr />
+<h3 id="82-monte-carlo-estimate">8.2 Monte Carlo estimate 的步骤</h3>
+<p>以估计积分 <span class="arithmatex">\(\int_a^b f(x) dx\)</span> 为例：</p>
+<ol>
+<li>
+<p>在区间 <span class="arithmatex">\([a, b]\)</span> 内生成 <span class="arithmatex">\(N\)</span> 个随机样本 <span class="arithmatex">\(x_1, x_2, \ldots, x_N\)</span>。</p>
+</li>
+<li>
+<p>计算 <span class="arithmatex">\(f(x)\)</span> 的值在这些样本点上的平均值：$ \text{平均值} = \frac{1}{N} \sum_{i=1}^N f(x_i)$</p>
+</li>
+<li>
+<p>用以下公式估计积分值：<span class="arithmatex">\(\int_a^b f(x) dx \approx (b-a) \cdot \text{平均值}\)</span></p>
+</li>
+</ol>
+<p>对于多维积分、概率分布计算或复杂物理系统模拟，Monte Carlo 方法可以通过类似的方式进行扩展。</p>
+<h3 id="83-monte-carlo-estimate">8.3 Monte Carlo estimate 的典型应用</h3>
+<ol>
+<li>
+<p><strong>计算复杂积分</strong>:  用于解决传统数值积分方法难以处理的高维积分问题。</p>
+</li>
+<li>
+<p><strong>模拟随机过程</strong>:  模拟股票价格路径（如 Black-Scholes 模型）、粒子运动、队列排队等问题。</p>
+</li>
+<li>
+<p><strong>概率估计</strong>:  估计事件发生的概率，例如在统计物理中模拟系统的状态分布。</p>
+</li>
+<li>
+<p><strong>优化问题</strong>:  在机器学习中，用 Monte Carlo 方法优化参数或模型性能。</p>
+</li>
+</ol>
+<h3 id="84">8.4 优点与缺点</h3>
+<h4 id="841">8.4.1 优点</h4>
+<ul>
+<li>
+<p><strong>通用性强</strong>:  可以应用于高维、复杂的问题。</p>
+</li>
+<li>
+<p><strong>易于实现</strong>:  不依赖问题的具体形式，只需要生成随机样本并计算平均值。</p>
+</li>
+<li>
+<p><strong>渐进收敛：</strong>  随着样本数量增加，估计值会逐渐收敛到真实值。</p>
+</li>
+</ul>
+<h4 id="842">8.4.2 缺点</h4>
+<ul>
+<li>
+<p><strong>效率较低：</strong>  收敛速度较慢，通常需要大量样本来达到高精度。</p>
+</li>
+<li>
+<p><strong>依赖随机数质量：</strong>  生成高质量的随机样本对结果至关重要。</p>
+</li>
+<li>
+<p><strong>高维问题的样本效率低：</strong>  高维问题中的“维度灾难”会显著增加所需样本数量。</p>
+</li>
+</ul>
+<h3 id="85">8.5 直观例子</h3>
+<p><strong>Monte Carlo estimate</strong>  是一种利用随机抽样方法来近似计算复杂问题的数值解的统计技术。它广泛应用于数学、物理、金融、工程等领域，尤其是那些解析解难以获得的问题。</p>
+<h2 id="9entropykl-divergenceelbo">9.Entropy,KL divergence,ELBO</h2>
+<h3 id="91-entropy">9.1 熵(Entropy)</h3>
+<p>熵衡量分布的平均不确定性。
+<strong>积分形式</strong> 对于连续分布 <span class="arithmatex">\(p(x)\)</span>，熵的积分形式为：</p>
+<div class="arithmatex">\[
+ H(X) = -\int p(x) \log p(x) \, dx
+\]</div>
+<p><strong>期望形式</strong> 熵也可以表示为随机变量 <span class="arithmatex">\(X\)</span> 的信息量的期望：</p>
+<div class="arithmatex">\[
+ H(X) = -\mathbb{E}_{X \sim p(x)}[\log p(X)]
+\]</div>
+<p>其中 <span class="arithmatex">\(\mathbb{E}_{X \sim p(x)}\)</span> 表示关于分布 <span class="arithmatex">\(p(x)\)</span> 的期望。</p>
+<h3 id="92klkl-divergence">9.2KL散度（KL Divergence</h3>
+<p>KL散度衡量两个分布之间的差异。
+<strong>积分形式</strong> 对于连续分布 <span class="arithmatex">\(p(x)\)</span> 和 <span class="arithmatex">\(q(x)\)</span>，KL散度的积分形式为：</p>
+<div class="arithmatex">\[
+ D_{\text{KL}}(P \| Q) = \int p(x) \log \frac{p(x)}{q(x)} \, dx
+\]</div>
+<p><strong>期望形式</strong> KL散度可以写为关于分布 <span class="arithmatex">\(p(x)\)</span> 的对数比值的期望：</p>
+<div class="arithmatex">\[
+ D_{\text{KL}}(P \| Q) = \mathbb{E}_{X \sim p(x)} \left[ \log \frac{p(X)}{q(X)} \right]
+\]</div>
+<h3 id="93-evidence-lower-bound-elbo">9.3. 证据下界（Evidence Lower Bound, ELBO)</h3>
+<p>ELBO 是在变分推断中用来优化后验分布的目标函数。</p>
+<p><strong>积分形式</strong>
+ELBO 的积分形式为：</p>
+<div class="arithmatex">\[
+ \mathcal{L}(q) = \int q(z) \log p(\mathcal{D} \mid z) \, dz - \int q(z) \log \frac{q(z)}{p(z)} \, dz
+\]</div>
+<p><strong>期望形式</strong> 将积分形式改写为关于 <span class="arithmatex">\(<span class="arithmatex">\(q(z)\)</span>\)</span> 的期望，得到：</p>
+<div class="arithmatex">\[
+ \mathcal{L}(q) = \mathbb{E}_{z \sim q(z)}[\log p(\mathcal{D} \mid z)] - D_{\text{KL}}(q(z) \| p(z))
+\]</div>
+<p><strong>分解为对数似然</strong>
+边际对数似然可以分解为 ELBO 和 KL 散度：</p>
+<div class="arithmatex">\[
+ \log p(\mathcal{D}) = \mathcal{L}(q) + D_{\text{KL}}(q(z) \| p(z \mid \mathcal{D}))
+\]</div>
+<p>其中：</p>
+<div class="arithmatex">\[\mathcal{L}(q) = \mathbb{E}_{z \sim q(z)}[\log p(\mathcal{D}, z) - \log q(z)]\]</div>
+<p><strong>总结</strong></p>
+<table>
+<thead>
+<tr>
+<th>概念</th>
+<th>积分形式</th>
+<th>期望形式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>熵 <span class="arithmatex">\(H(X)\)</span></td>
+<td><span class="arithmatex">\(-\int p(x) \log p(x)\)</span></td>
+<td><span class="arithmatex">\(-\mathbb{E}_{X \sim p(x)}[\log p(X)]\)</span></td>
+</tr>
+<tr>
+<td>KL散度 <span class="arithmatex">\({\text{KL}}(P \| Q)\)</span></td>
+<td><span class="arithmatex">\(\int p(x) \log \frac{p(x)}{q(x)} \, dx\)</span></td>
+<td><span class="arithmatex">\(\mathbb{E}_{X \sim p(x)} \left[ \log \frac{p(X)}{q(X)} \right]\)</span></td>
+</tr>
+<tr>
+<td>ELBO <span class="arithmatex">\(\mathcal{L}(q)\)</span></td>
+<td><span class="arithmatex">\(\int q(z) \log p(\mathcal{D} \mid z) \, dz - \int q(z) \log \frac{q(z)}{p(z)}\)</span></td>
+<td>$\mathbb{E}<em>{z \sim q(z)}[\log p(\mathcal{D} \mid z)] - D</em>{\text{KL}}(q(z) | p(z)) $</td>
+</tr>
+</tbody>
+</table>
+<p><a id="elbo"></a></p>
+<h4 id="931-elbo">9.3.1 ELBO</h4>
+<hr />
+<p>证明</p>
+<div class="arithmatex">\[
+ \mathcal{L}(x, \theta, q) = \log p_\theta(x) - D_{\text{KL}}(q_\phi(z|x) \| p_\theta(z|x)).\\
+=\mathbb{E}_{z \sim q_\phi} [\log p_\theta(x, z)] + H(q_\phi).
+\]</div>
+<p>推导步骤</p>
+<ol>
+<li><strong>KL 散度定义</strong> ：
+由 KL 散度的定义：</li>
+</ol>
+<div class="arithmatex">\[
+ D_{\text{KL}}(q_\phi(z|x) \| p_\theta(z|x)) = \mathbb{E}_{z \sim q_\phi} \left[ \log \frac{q_\phi(z|x)}{p_\theta(z|x)} \right].
+\]</div>
+<p>将其代入公式：</p>
+<div class="arithmatex">\[
+ \mathcal{L}(x, \theta, q) = \log p_\theta(x) - \mathbb{E}_{z \sim q_\phi} \left[ \log \frac{q_\phi(z|x)}{p_\theta(z|x)} \right].
+\]</div>
+<ol>
+<li><strong>贝叶斯公式替换 <span class="arithmatex">\(p_\theta(z|x)\)</span></strong> :</li>
+</ol>
+<p>根据贝叶斯公式：</p>
+<div class="arithmatex">\[
+ p_\theta(z|x) = \frac{p_\theta(x, z)}{p_\theta(x)}.
+\]</div>
+<p>将其代入：</p>
+<div class="arithmatex">\[
+ \mathcal{L}(x, \theta, q) = \log p_\theta(x) - \mathbb{E}_{z \sim q_\phi} \left[ \log \frac{q_\phi(z|x)}{p_\theta(x, z) / p_\theta(x)} \right].
+\]</div>
+<p>简化分母中的分数：</p>
+<div class="arithmatex">\[
+ \mathcal{L}(x, \theta, q) = \log p_\theta(x) - \mathbb{E}_{z \sim q_\phi} \left[ \log \left( q_\phi(z|x) \cdot \frac{p_\theta(x)}{p_\theta(x, z)} \right) \right].
+\]</div>
+<ol>
+<li><strong>分解对数项</strong> ：
+展开对数项：</li>
+</ol>
+<div class="arithmatex">\[
+ \mathcal{L}(x, \theta, q) = \log p_\theta(x) - \mathbb{E}_{z \sim q_\phi} \left[ \log q_\phi(z|x) + \log p_\theta(x) - \log p_\theta(x, z) \right].
+\]</div>
+<p>将期望展开：</p>
+<div class="arithmatex">\[
+ \mathcal{L}(x, \theta, q) = \log p_\theta(x) - \mathbb{E}_{z \sim q_\phi} [\log q_\phi(z|x)] - \mathbb{E}_{z \sim q_\phi} [\log p_\theta(x)] + \mathbb{E}_{z \sim q_\phi} [\log p_\theta(x, z)].
+\]</div>
+<p>注意到 <span class="arithmatex">\(\log p_\theta(x)\)</span> 是常数，可以提到期望外部：</p>
+<div class="arithmatex">\[
+ \mathcal{L}(x, \theta, q) = \mathbb{E}_{z \sim q_\phi} [\log p_\theta(x, z)] - \mathbb{E}_{z \sim q_\phi} [\log q_\phi(z|x)].
+\]</div>
+<ol>
+<li><strong>熵的定义替换</strong> ：</li>
+</ol>
+<p>根据熵的定义：</p>
+<div class="arithmatex">\[
+ H(q_\phi) = -\mathbb{E}_{z \sim q_\phi} [\log q_\phi(z|x)].
+\]</div>
+<p>将其代入：</p>
+<div class="arithmatex">\[
+ \mathcal{L}(x, \theta, q) = \mathbb{E}_{z \sim q_\phi} [\log p_\theta(x, z)] + H(q_\phi).
+\]</div>
+<hr />
+<h2 id="reference">Reference</h2>
+<p>[1] <a href="https://github.com/janishar/mit-deep-learning-book-pdf/blob/master/complete-book-pdf/Ian%20Goodfellow%2C%20Yoshua%20Bengio%2C%20Aaron%20Courville%20-%20Deep%20Learning%20(2017%2C%20MIT).pdf">Book: Deep Learning, Ian Goodfellow, Yoshua Bengio, Aaron Courville</a></p>
 
 
 </section>
