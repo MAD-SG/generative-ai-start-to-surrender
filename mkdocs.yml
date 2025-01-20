@@ -20,7 +20,7 @@ nav:
       - Introduction: "book/chapter4_diffusion/4.1introduction.md"
       - DDPM: "book/chapter4_diffusion/4.2DDPM.md"
   - Generation Theory:
-      - Maximal Likelihood: "docs/book/chapter5_generation_theory/5.1MLE.md"
+      - Maximal Likelihood: "book/chapter5_generation_theory/5.1MLE.md"
 theme:
   name: gitbook
 

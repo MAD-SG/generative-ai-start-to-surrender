@@ -44,11 +44,26 @@ Markdownlint 是一个对 Markdown 进行规范检查的扩展，除了给出 li
         "default": true,
         "MD033": false,
         "MD049":false,
+        "MD022":false,
     }
 }
 ```
 
 其中markdownlint.config 可以控制对特定的error选择进行忽略。选择"MD049" 对数学公式的自动修复进行忽略。
+### 交叉引用
+
+如果想引用其他的markdown 文件中的某个章节或者内容，可以添加一个anchor
+
+```markdown
+<a id="elbo"></a>
+#### 9.3.1-ELBO
+```
+
+引用时
+
+```markdown
+[引用](<relative_path/to/file.md#elbo)
+```
 
 ## BUGS
 
@@ -67,6 +82,7 @@ Markdownlint 是一个对 Markdown 进行规范检查的扩展，除了给出 li
    text...
 
    $$...$$
+
 
 
 
