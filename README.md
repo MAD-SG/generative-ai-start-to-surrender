@@ -15,7 +15,8 @@ We are grateful for the contributions from our community. Here are some of our k
 Your contributions help make this project better. Thank you for your support!
 
 ## Contribution
-### vscode 设置保存图片位置. vscode 可以支持直接复制图片，会把粘贴板上的图片复制到markdown 文件中，并且保存文件到指定目录中。
+
+### vscode 设置保存图片位置. vscode 可以支持直接复制图片，会把粘贴板上的图片复制到markdown 文件中，并且保存文件到指定目录中
 
 在settings.json中添加
 
@@ -38,9 +39,16 @@ Markdownlint 是一个对 Markdown 进行规范检查的扩展，除了给出 li
    ...
    "editor.codeActionsOnSave": {
       "source.fixAll.markdownlint": true
-   }
+   },
+   "markdownlint.config": {
+        "default": true,
+        "MD033": false,
+        "MD049":false,
+    }
 }
 ```
+
+其中markdownlint.config 可以控制对特定的error选择进行忽略。选择"MD049" 对数学公式的自动修复进行忽略。
 
 ## BUGS
 
@@ -59,6 +67,7 @@ Markdownlint 是一个对 Markdown 进行规范检查的扩展，除了给出 li
    text...
 
    $$...$$
+
 
 
 
