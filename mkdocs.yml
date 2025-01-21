@@ -21,15 +21,31 @@ nav:
       - DDPM: "book/chapter4_diffusion/4.2DDPM.md"
   - Generation Theory:
       - Maximal Likelihood: "book/chapter5_generation_theory/5.1MLE.md"
-theme:
-  name: gitbook
 
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - toc.integrate  # 集成页内目录
+extra:
+  navigation:
+    collapse: true  # 左侧导航可折叠
+  toc:
+    placement: right  # 将目录放在右侧
+
+# theme:
+#   name: gitbook
+# extra_css:
+#   - styles/custom.css
 plugins:
   - search
 
 markdown_extensions:
   - pymdownx.arithmatex:
       generic: true
+  - toc:
+      permalink: true   # 在标题旁添加可点击的链接
+      toc_depth: 2      # 设置目录深度，例如只显示 h2 和 h3
 
 extra_javascript:
   - javascripts/mathjax.js

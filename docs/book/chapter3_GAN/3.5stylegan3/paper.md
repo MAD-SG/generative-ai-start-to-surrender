@@ -1,10 +1,6 @@
-# [stylegan3](https://proceedings.neurips.cc/paper/2021/file/076ccd93ad68be51f23707988e934906-Paper.pdf)
+# StyleGAN3 Overview
 
-**Author**: Tero Karras
-**Institution**: NVIDIA
-
-# Terms
-
+## Terms
 Aliasing（混叠） 是一个信号处理领域的基本问题，指的是当信号在采样过程中采样率不足时，高频信号的特性会被错误地映射到低频部分，从而导致失真或不正确的结果。这种现象同样适用于图像处理和深度学习中的生成网络。
 
 在信号处理中的解释
@@ -17,9 +13,7 @@ Aliasing（混叠） 是一个信号处理领域的基本问题，指的是当�
 在音频信号中，采样不足会导致原本的高音变成不相关的低音。
 在图像处理中，缩小图像而没有正确低通滤波时会导致边缘或纹理出现波纹或锯齿状伪影。
 
-## Aliasing
-
-# 摘要
+## Abstract
 
 **问题描述：**
 当前典型的 GAN 尽管具有层次化的卷积结构，但生成过程却依赖于绝对像素坐标，导致图像细节“粘在”像素网格上，而不是自然地附着在物体表面。
@@ -37,14 +31,14 @@ Aliasing（混叠） 是一个信号处理领域的基本问题，指的是当�
 **应用前景：**
 这些改进为生成模型在视频和动画等动态任务中的应用奠定了基础，使生成效果更加自然和连贯。
 
-# Introduction
+## Introduction
 
 引言部分明确了现有 GAN 中混叠问题的危害，分析了其原因，并提出了通过改进信号处理和生成器架构来解决这一问题的研究目标和贡献
 
-1. 问题背景
+### 问题背景
 近年来，GAN 的图像生成质量有了显著提升（如 StyleGAN2 等），广泛应用于图像编辑、域迁移和视频生成等领域。
 尽管生成器具有层次化的卷积结构，但生成过程对绝对像素坐标的依赖会导致 “纹理粘连”（texture sticking） 问题，即细节固定在像素坐标上而非自然附着在物体表面。
-2. 问题分析
+### 问题分析
 纹理粘连现象：
 生成细节（如纹理、毛发）在对象移动时未能正确随物体表面移动，破坏了视觉一致性，特别是在视频和动画生成中。
 问题根源：
@@ -54,12 +48,12 @@ Aliasing（混叠） 是一个信号处理领域的基本问题，指的是当�
    - 网络边界填充（padding）等操作导致绝对像素坐标泄露。
    - 混叠的放大机制：
 网络会主动利用这些混叠信息，通过多个尺度的结合放大它们，从而建立依赖绝对屏幕坐标的纹理模式。
-3. 论文目标
+### 论文目标
 设计一个生成器架构，能够：
 完全消除混叠问题，确保生成过程不依赖绝对像素坐标。
 实现 平移和旋转等变性（translation and rotation equivariance），使生成的图像细节能够自然随物体变化。
 保持与现有 GAN（如 StyleGAN2）相当的图像质量。
-4. 主要贡献
+### 主要贡献
 提出一种基于 连续信号解释（continuous signal interpretation） 的方法，重新设计 StyleGAN2 的生成器架构。
 发现当前上采样滤波器在抑制混叠方面不够有效，需要更高质量的滤波器（如超过 100dB 的衰减能力）。
 提出了一些普适的小型架构改动，既能有效抑制混叠，又能保证生成器的等变性。
@@ -89,24 +83,11 @@ Ours（改进后的模型）：
         allowfullscreen>
 </iframe>
 
-# 通过连续信号的解释实现生成器的集合等变性(平移和旋转)
+## Continuous and Discrete Signals
 
 将网络中的特征图视为连续信号，而不是离散像素，从而严格遵循信号处理理论（如 Nyquist 定理）
 
-# 根据连续信号解释的等变形
-
-- 采样定理
-
-```markdown
-According to the Nyquist–Shannon sampling theorem [51 ], a regularly sampled signal can represent
-any continuous signal containing frequencies between zero and half of the sampling rate
-```
-
-翻译为:插值频率是连续信号的两倍时，可以完全重建原始信号
-需要注意的是 这里假设原始信号是一个带限信号，也就信号的频率被限制在一个空间内。
-![alt text](../../../images/image-8.png)
-
-## 连续型号和离散型号的关系
+### Relationship Between Continuous and Discrete Signals
 
 假设连续信号为$z(x)$,离散信号为$Z(x)$, 采样频率为$s$, 采样间隔则为$T=\frac{1}{s}$.$\cdot$表示乘积, 卷积表示$\ast$.
 二维狄拉克梳妆函数为$III(x,y)=\sum_{m=-\infty}^{\infty}\sum_{n=-\infty}^{\infty}\delta(x-mT)\delta(y-nT)$
@@ -141,17 +122,7 @@ suppose$\alpha(x，y) = \text{sinc}(\frac{x}{T})\text{sinc}(\frac{y}{T})$
 上面是sinc 函数的图形。对于x,y 这个位置, 恢复这一点的信息需要附近区域的采样值，且距离x,y 越远，对于恢复信息的贡献越小。
 这就是为什么需要扩充采样空间的原因。在实际情况下，对于给定区域不需要扩充太大，因为sinc 呈现了一个随距离衰减的趋势。论文在实现的时候会先对特征图做一个扩充，也就是这个原理。
 
-**连续和离散的网络操作表达**
-
-$$
-f(z) = \phi_{s'} \ast \text{F}(\Pi_s \odot z),\quad\quad
-\text{F}(Z) = \Pi_{s'} \odot f(\phi_s \ast Z),
-$$
-
-其中$\odot$表示点乘，$s$and$s'$表示输入的采样频率和输出的采样频率
-有些操作会改变采样频率 比如上采样 下采样
-
-## Equivariant network layers
+### Equivariant Network Layers
 
 translation equivariance transformation
 
@@ -159,9 +130,9 @@ $$f\cdot t = t\cdot f$$
 
 假设输出的采样频率为$s'$， 那么根据采样定理，需要满足$f$作用之后的信号频率不操作$s'/2$，也就$f$不产生超过$s'/2$的高频信号。
 
-### convolution layer
+#### Convolution Layer
 
-### Convolution
+#### Convolution
 
 Consider a standard convolution with a discrete kernel$K$. We can interpret$K$as living in the same grid as the input feature map, with sampling rate$s$. The discrete-domain operation is simply:
 
@@ -190,7 +161,7 @@ $$
 卷积对应的频域示意图
 ![alt text](../../../images/image-10.png)
 
-### upsample and downsample
+#### Upsample and Downsample
 
 **上采样**
 上采样增加了信号的采样率。这里假设是理想上采样，也就是“插0” + 理想低通滤波
@@ -244,8 +215,9 @@ $$
 h(x, y) = 2 \frac{J_1(2\pi r)}{r}, \quad r = \sqrt{x^2 + y^2}.
 $$
 
-At$r = 0$,$h(0, 0) = 1$.
----
+at $r = 0$,$h(0, 0) = 1$.
+
+
 ### Fourier Transform
 The frequency response is:
 
@@ -337,14 +309,14 @@ $$
 
 而且非线性操作也是网络中唯一生成额外高频信息的操作。可以控制她从而控制每一层需要的额外高频信息。高频信息即纹理信息。
 
-# practical application
+## Practical Application
 
 descriminator 不发生变化
 
 **generator**
 **目标**： 设计等变性神经网络
 用PSNR值衡量。值越高表示等变形越强。
-## EQ-T 公式
+### EQ-T 公式
 
 $$
 \text{EQ-T} = 10 \cdot \log_{10} \left( \frac{I_{\text{max}}^2}{\mathbb{E}_{\text{w} \sim \mathcal{W}, x \sim \mathcal{X}^2, p \sim \mathcal{V}, c \sim \mathcal{C}} \left[ \left( g(t_x[z_0]; \text{w})_c(p) - t_x[g(z_0; \text{w})]_c(p) \right)^2 \right]} \right)
@@ -362,7 +334,7 @@ $$
 -$z_0$: 输入噪声或潜在变量。
 从这个公式可以看到, 在旋转和平移是作用在 初始输入$z_0$上的，而不是latent code$w$.
 
-##  Fourier 特征
+### Fourier 特征
 用 Fourier 特征替换 StyleGAN2 中的学习输入常数，便于精确连续变换输入，改善了 FID 并能计算等变性指标，但初始架构离等变性仍远。
 SynthesisInput Forward 计算流程数学公式
 输入定义和符号说明
@@ -487,41 +459,9 @@ $$
 平移不会改变信号的频率分量（振幅不变），但会引入与平移量成比例的相位偏移。
 旋转会同时改变空间域和频域信号的方向，但频率的幅度不变
 
-## 移除逐像素噪声输入
+## 代码解读
 
-虽对 FID 近乎无影响，但单独考虑时未提升等变性指标。
-
-## 简化设置
-
-包括减少映射网络深度、禁用混合正则化和路径长度正则化、消除输出跳跃连接，并通过跟踪像素和特征图的指数移动平均进行归一化，使 FID 回到原始 StyleGAN2 水平且略微提升了平移等变性。
-
-## 边界和上采样（config E）
-
-通过在目标画布周围保持固定边界扩展特征图近似无限空间，用窗口化 sinc 滤波器（）替代双线性上采样滤波器，提升了平移等变性，但 FID 有所下降。
-
-## 滤波非线性（config F）
-
-按照理论对非线性函数进行滤波处理，用自定义 CUDA 内核实现高效的上采样 - 非线性 - 下采样操作，进一步提高了平移等变性（EQ - T）。
-
-## 非临界采样（config G）
-
-采用非临界采样降低截止频率抑制混叠，改善平移等变性且使 FID 低于原始 StyleGAN2，同时根据新的采样方式调整了确定特征图数量的启发式方法。
-
-## 变换 Fourier 特征（config H）
-
-引入学习仿射层变换输入 Fourier 特征，使特征方向可基于变化，略微改善了 FID。
-
-## 灵活层规格（config T）
-
-灵活设置每层滤波器参数，改善了平移等变性并消除剩余伪影，使网络结构更灵活，且固定层数在不同输出分辨率下表现稳定。
-
-## 旋转等变性（config R）
-
-将所有层的卷积换为卷积并补偿容量，用径向对称 jinc 基滤波器替换 sinc 基下采样滤波器，实现旋转等变性且不损害 FID，同时采用高斯模糊技巧防止训练初期崩溃。
-
-# 代码解读
-
-## modulated_conv2d
+### modulated_conv2d
 
 ```
 def modulated_conv2d(
@@ -587,7 +527,7 @@ $$
 2. 归一化和去归一化过程避免了数值不稳定性。权重归一化作用在i,k,h 维度上，也就是不同的卷积核上做normalize，具有相同的范数。对style 的归一化作用在所有的维度上。也就是整个s 归一化之后的范数为1.
 3. 分组卷积高效地实现了每个样本独立的权重调制计算。
 
-## SynthesisLayer
+### SynthesisLayer
 
 ```
 # Track input magnitude.
