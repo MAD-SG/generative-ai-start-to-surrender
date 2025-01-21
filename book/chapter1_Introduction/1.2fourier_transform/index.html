@@ -140,9 +140,9 @@ Theme by GitBook
 
 
 
-<h1 id="1">1. 傅里叶变化</h1>
-<h2 id="11">1.1 傅里叶变换和逆变换公式</h2>
-<h3 id="111-continuous-fourier-transform">1.1.1 连续傅里叶变换 (Continuous Fourier Transform)</h3>
+<h1 id="1">1. 傅里叶变化<a class="headerlink" href="#1" title="Permanent link">&para;</a></h1>
+<h2 id="11">1.1 傅里叶变换和逆变换公式<a class="headerlink" href="#11" title="Permanent link">&para;</a></h2>
+<h3 id="111-continuous-fourier-transform">1.1.1 连续傅里叶变换 (Continuous Fourier Transform)<a class="headerlink" href="#111-continuous-fourier-transform" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>公式</strong>：
   <span class="arithmatex">\(X(f) = \int_{-\infty}^{\infty} x(t) e^{-j 2\pi f t} \, dt\)</span></li>
@@ -151,7 +151,7 @@ Theme by GitBook
   - <span class="arithmatex">\(x(t)\)</span>：时域信号。
   - <span class="arithmatex">\(X(f)\)</span>：频域信号（频谱）。
   - <span class="arithmatex">\(f\)</span>：频率，单位为赫兹 (Hz)。</p>
-<h3 id="112-inverse-continuous-fourier-transform">1.1.2 连续傅里叶逆变换 (Inverse Continuous Fourier Transform)</h3>
+<h3 id="112-inverse-continuous-fourier-transform">1.1.2 连续傅里叶逆变换 (Inverse Continuous Fourier Transform)<a class="headerlink" href="#112-inverse-continuous-fourier-transform" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>公式</strong>：
   <span class="arithmatex">\(x(t) = \int_{-\infty}^{\infty} X(f) e^{j 2\pi f t} \, df\)</span></li>
@@ -159,14 +159,14 @@ Theme by GitBook
 <p>其中：
   - <span class="arithmatex">\(X(f)\)</span>：频域信号。
   - <span class="arithmatex">\(x(t)\)</span>：重建回来的时域信号。</p>
-<h3 id="113-discrete-fourier-transform-dft">1.1.3 离散傅里叶变换 (Discrete Fourier Transform, DFT)</h3>
+<h3 id="113-discrete-fourier-transform-dft">1.1.3 离散傅里叶变换 (Discrete Fourier Transform, DFT)<a class="headerlink" href="#113-discrete-fourier-transform-dft" title="Permanent link">&para;</a></h3>
 <p>对于离散信号 <span class="arithmatex">\(x[n]\)</span>：
 - <strong>公式</strong>：
   <span class="arithmatex">\(X[k] = \sum_{n=0}^{N-1} x[n] e^{-j \frac{2\pi}{N} kn}, \quad k = 0, 1, 2, \dots, N-1\)</span></p>
 <p>其中：
   - <span class="arithmatex">\(x[n]\)</span>：时域离散信号。
   - <span class="arithmatex">\(X[k]\)</span>：频域离散信号。</p>
-<h3 id="114-inverse-discrete-fourier-transform-idft">1.1.4 离散傅里叶逆变换 (Inverse Discrete Fourier Transform, IDFT)</h3>
+<h3 id="114-inverse-discrete-fourier-transform-idft">1.1.4 离散傅里叶逆变换 (Inverse Discrete Fourier Transform, IDFT)<a class="headerlink" href="#114-inverse-discrete-fourier-transform-idft" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>公式</strong>：
   <span class="arithmatex">\(x[n] = \frac{1}{N} \sum_{k=0}^{N-1} X[k] e^{j \frac{2\pi}{N} kn}, \quad n = 0, 1, 2, \dots, N-1\)</span></li>
@@ -174,24 +174,24 @@ Theme by GitBook
 <p>其中：
   - <span class="arithmatex">\(X[k]\)</span>：频域离散信号。
   - <span class="arithmatex">\(x[n]\)</span>：重建回来的时域信号。</p>
-<h2 id="12">1.2 公式中的关键点</h2>
-<h3 id="121">1.2.1 正负号区别：</h3>
+<h2 id="12">1.2 公式中的关键点<a class="headerlink" href="#12" title="Permanent link">&para;</a></h2>
+<h3 id="121">1.2.1 正负号区别：<a class="headerlink" href="#121" title="Permanent link">&para;</a></h3>
 <ul>
 <li>傅里叶变换中，指数部分为 <span class="arithmatex">\(e^{-j 2\pi f t}\)</span>（正弦和余弦分量）。</li>
 <li>逆变换中，指数部分为 <span class="arithmatex">\(e^{j 2\pi f t}\)</span>（相位相反）。</li>
 </ul>
-<h3 id="122-vs">1.2.2 连续 vs 离散：</h3>
+<h3 id="122-vs">1.2.2 连续 vs 离散：<a class="headerlink" href="#122-vs" title="Permanent link">&para;</a></h3>
 <ul>
 <li>连续变换涉及积分（时域到频域，或频域到时域）。</li>
 <li>离散变换涉及求和（用于离散信号处理）。</li>
 </ul>
-<h3 id="123">1.2.3 归一化系数：</h3>
+<h3 id="123">1.2.3 归一化系数：<a class="headerlink" href="#123" title="Permanent link">&para;</a></h3>
 <ul>
 <li>对于连续傅里叶变换，不需要显式归一化系数。</li>
 <li>对于离散傅里叶逆变换，需要除以信号长度 <span class="arithmatex">\(N\)</span>。</li>
 </ul>
-<h2 id="13">1.3 示例</h2>
-<h3 id="131">1.3.1 连续信号示例</h3>
+<h2 id="13">1.3 示例<a class="headerlink" href="#13" title="Permanent link">&para;</a></h2>
+<h3 id="131">1.3.1 连续信号示例<a class="headerlink" href="#131" title="Permanent link">&para;</a></h3>
 <p>时域信号：<span class="arithmatex">\(x(t) = \cos(2\pi f_0 t)\)</span></p>
 <ul>
 <li>
@@ -204,7 +204,7 @@ Theme by GitBook
   得到 <span class="arithmatex">\(x(t) = \cos(2\pi f_0 t)\)</span>。</p>
 </li>
 </ul>
-<h3 id="132">1.3.2 离散信号示例</h3>
+<h3 id="132">1.3.2 离散信号示例<a class="headerlink" href="#132" title="Permanent link">&para;</a></h3>
 <p>时域信号：<span class="arithmatex">\(x[n] = [1, 2, 3, 4]\)</span></p>
 <ul>
 <li>
@@ -216,18 +216,18 @@ Theme by GitBook
   使用逆变换公式计算 <span class="arithmatex">\(x[n]\)</span>，重建信号。</p>
 </li>
 </ul>
-<h2 id="14">1.4 离散信号做傅里叶变换的例子</h2>
-<h3 id="141">1.4.1 离散信号</h3>
+<h2 id="14">1.4 离散信号做傅里叶变换的例子<a class="headerlink" href="#14" title="Permanent link">&para;</a></h2>
+<h3 id="141">1.4.1 离散信号<a class="headerlink" href="#141" title="Permanent link">&para;</a></h3>
 <p>假设一个长度为 <span class="arithmatex">\(N=4\)</span> 的离散信号：</p>
 <div class="arithmatex">\[
 x[n] = [1, 2, 3, 4], \quad n = 0, 1, 2, 3
 \]</div>
 <p>我们用离散傅里叶变换 (DFT) 的公式计算其频域信号 <span class="arithmatex">\(X[k]\)</span>。</p>
-<h3 id="142-dft">1.4.2 DFT 公式</h3>
+<h3 id="142-dft">1.4.2 DFT 公式<a class="headerlink" href="#142-dft" title="Permanent link">&para;</a></h3>
 <div class="arithmatex">\[
 X[k] = \sum_{n=0}^{N-1} x[n] e^{-j \frac{2\pi}{N} kn}, \quad k = 0, 1, \dots, N-1
 \]</div>
-<h3 id="143">1.4.3 计算步骤</h3>
+<h3 id="143">1.4.3 计算步骤<a class="headerlink" href="#143" title="Permanent link">&para;</a></h3>
 <ol>
 <li>
 <p><strong>信号长度 <span class="arithmatex">\(N=4\)</span></strong>，频率索引 <span class="arithmatex">\(k = 0, 1, 2, 3\)</span>。</p>
@@ -239,13 +239,13 @@ X[k] = \sum_{n=0}^{N-1} x[n] e^{-j \frac{2\pi}{N} kn}, \quad k = 0, 1, \dots, N-
 <p>分别计算 <span class="arithmatex">\(k = 0, 1, 2, 3\)</span> 时的 <span class="arithmatex">\(X[k]\)</span>：</p>
 </li>
 </ol>
-<h3 id="144-k-0">1.4.4 k = 0</h3>
+<h3 id="144-k-0">1.4.4 k = 0<a class="headerlink" href="#144-k-0" title="Permanent link">&para;</a></h3>
 <div class="arithmatex">\[
 X[0] = \sum_{n=0}^{3} x[n] e^{-j \frac{2\pi}{4} \cdot 0 \cdot n}
 = x[0] + x[1] + x[2] + x[3]
 = 1 + 2 + 3 + 4 = 10
 \]</div>
-<h3 id="145-k-1">1.4.5 k = 1</h3>
+<h3 id="145-k-1">1.4.5 k = 1<a class="headerlink" href="#145-k-1" title="Permanent link">&para;</a></h3>
 <div class="arithmatex">\[
 X[1] = \sum_{n=0}^{3} x[n] e^{-j \frac{\pi}{2} n}
 = x[0] + x[1] e^{-j \frac{\pi}{2}} + x[2] e^{-j \pi} + x[3] e^{-j \frac{3\pi}{2}}
@@ -261,7 +261,7 @@ X[1] = \sum_{n=0}^{3} x[n] e^{-j \frac{\pi}{2} n}
 <div class="arithmatex">\[
 X[1] = 1 - 2\cdot j - 3 + 4\cdot j = -2 + 2\cdot j
 \]</div>
-<h3 id="146-k-2">1.4.6 k = 2</h3>
+<h3 id="146-k-2">1.4.6 k = 2<a class="headerlink" href="#146-k-2" title="Permanent link">&para;</a></h3>
 <div class="arithmatex">\[
 X[2] = \sum_{n=0}^{3} x[n] e^{-j \pi n}
 = x[0] + x[1] e^{-j \pi} + x[2] e^{-j 2\pi} + x[3] e^{-j 3\pi}
@@ -277,7 +277,7 @@ X[2] = \sum_{n=0}^{3} x[n] e^{-j \pi n}
 <div class="arithmatex">\[
 X[2] = 1 - 2 + 3 - 4 = -2
 \]</div>
-<h3 id="147-k-3">1.4.7 k = 3</h3>
+<h3 id="147-k-3">1.4.7 k = 3<a class="headerlink" href="#147-k-3" title="Permanent link">&para;</a></h3>
 <div class="arithmatex">\[
 X[3] = \sum_{n=0}^{3} x[n] e^{-j \frac{3\pi}{2} n}
 = x[0] + x[1] e^{-j \frac{3\pi}{2}} + x[2] e^{-j 3\pi} + x[3] e^{-j \frac{9\pi}{2}}
@@ -293,17 +293,17 @@ X[3] = \sum_{n=0}^{3} x[n] e^{-j \frac{3\pi}{2} n}
 <div class="arithmatex">\[
 X[3] = 1 + 2j - 3 - 4j = -2 - 2j
 \]</div>
-<h2 id="15">1.5 结果汇总</h2>
+<h2 id="15">1.5 结果汇总<a class="headerlink" href="#15" title="Permanent link">&para;</a></h2>
 <p>频域信号 <span class="arithmatex">\(X[k]\)</span> 为：</p>
 <div class="arithmatex">\[
 X[k] = [10, -2 + 2j, -2, -2 - 2j]
 \]</div>
-<h2 id="16">1.6 解释</h2>
+<h2 id="16">1.6 解释<a class="headerlink" href="#16" title="Permanent link">&para;</a></h2>
 <ol>
 <li><strong><span class="arithmatex">\(X[0] = 10\)</span></strong>：直流分量，表示信号的平均值。</li>
 <li><strong>其余 <span class="arithmatex">\(X[k]\)</span></strong>：表示信号的其他频率分量，包括振幅和相位。</li>
 </ol>
-<h2 id="17">1.7 可视化频谱</h2>
+<h2 id="17">1.7 可视化频谱<a class="headerlink" href="#17" title="Permanent link">&para;</a></h2>
 <ol>
 <li>幅值 <span class="arithmatex">\(|X[k]|\)</span>：</li>
 </ol>
@@ -316,8 +316,8 @@ X[k] = [10, -2 + 2j, -2, -2 - 2j]
 <p>$$
    \text{arg}(X[1]) = \arctan\left(\frac{2}{-2}\right) = \frac{3\pi}{4}, \quad \text{arg}(X[3]) = \arctan\left(\frac{-2}{-2}\right) = -\frac{3\pi}{4}
    $$</p>
-<h2 id="18">1.8 傅里叶变换后的系数代表的性质</h2>
-<h3 id="181-magnitude">1.8.1 幅值（Magnitude）</h3>
+<h2 id="18">1.8 傅里叶变换后的系数代表的性质<a class="headerlink" href="#18" title="Permanent link">&para;</a></h2>
+<h3 id="181-magnitude">1.8.1 幅值（Magnitude）<a class="headerlink" href="#181-magnitude" title="Permanent link">&para;</a></h3>
 <p>幅值 <span class="arithmatex">\(|X(f)|\)</span> 或 <span class="arithmatex">\(|X[k]|\)</span> 表示信号在某个频率上的<strong>强度</strong>或<strong>能量分布</strong>。</p>
 <ul>
 <li>较大的幅值意味着信号在该频率上具有较强的成分。</li>
@@ -326,7 +326,7 @@ X[k] = [10, -2 + 2j, -2, -2 - 2j]
 <p><strong>示例</strong>：
 - 如果信号主要是一个频率为 <span class="arithmatex">\(f_0\)</span> 的正弦波，其频谱在 <span class="arithmatex">\(f = f_0\)</span> 和 <span class="arithmatex">\(f = -f_0\)</span> 处有峰值。
 - 多个频率成分的信号在对应频率位置会出现多个峰值。</p>
-<h3 id="182-phase">1.8.2 相位（Phase）</h3>
+<h3 id="182-phase">1.8.2 相位（Phase）<a class="headerlink" href="#182-phase" title="Permanent link">&para;</a></h3>
 <p>相位 <span class="arithmatex">\(\text{arg}(X(f))\)</span> 或 <span class="arithmatex">\(\text{arg}(X[k])\)</span> 表示信号在对应频率上的<strong>相位偏移</strong>。</p>
 <ul>
 <li>相位决定了该频率成分的正弦波（或余弦波）在时间上的偏移。</li>
@@ -335,19 +335,19 @@ X[k] = [10, -2 + 2j, -2, -2 - 2j]
 <p><strong>示例</strong>：
 - 如果信号的相位为零，频率成分与时间轴对齐。
 - 非零相位表示该频率成分的时间偏移量。</p>
-<h3 id="183-dc-component">1.8.3 直流分量（DC Component）</h3>
+<h3 id="183-dc-component">1.8.3 直流分量（DC Component）<a class="headerlink" href="#183-dc-component" title="Permanent link">&para;</a></h3>
 <p>当频率 <span class="arithmatex">\(f = 0\)</span> 或 <span class="arithmatex">\(k = 0\)</span> 时的系数 <span class="arithmatex">\(X(0)\)</span> 或 <span class="arithmatex">\(X[0]\)</span> 表示信号的<strong>平均值</strong>，称为<strong>直流分量</strong>。</p>
 <ul>
 <li>如果信号的平均值为零（例如纯交流信号），直流分量为零。</li>
 <li>如果信号有非零平均值，则 <span class="arithmatex">\(X[0]\)</span> 对应该值。</li>
 </ul>
-<h3 id="184">1.8.4 频率分量</h3>
+<h3 id="184">1.8.4 频率分量<a class="headerlink" href="#184" title="Permanent link">&para;</a></h3>
 <p>每个傅里叶系数 <span class="arithmatex">\(X(f)\)</span> 或 <span class="arithmatex">\(X[k]\)</span> 对应于信号在某个特定频率上的贡献。</p>
 <ul>
 <li><strong>连续傅里叶变换</strong>中的 <span class="arithmatex">\(X(f)\)</span>：对应连续频率 <span class="arithmatex">\(f\)</span>。</li>
 <li><strong>离散傅里叶变换</strong>中的 <span class="arithmatex">\(X[k]\)</span>：对应离散频率 <span class="arithmatex">\(k \cdot f_s / N\)</span>，其中 <span class="arithmatex">\(f_s\)</span> 是采样频率，<span class="arithmatex">\(N\)</span> 是信号长度。</li>
 </ul>
-<h3 id="185">1.8.5 能量和功率</h3>
+<h3 id="185">1.8.5 能量和功率<a class="headerlink" href="#185" title="Permanent link">&para;</a></h3>
 <p>通过帕塞瓦尔定理，傅里叶变换的系数可以用来计算信号的总能量或功率：</p>
 <ul>
 <li><strong>连续信号</strong>的能量：</li>
@@ -361,7 +361,7 @@ X[k] = [10, -2 + 2j, -2, -2 - 2j]
 <p>$$
   E = \sum_{n=0}^{N-1} |x[n]|^2 = \frac{1}{N} \sum_{k=0}^{N-1} |X[k]|^2
   $$</p>
-<h3 id="186">1.8.6 对称性</h3>
+<h3 id="186">1.8.6 对称性<a class="headerlink" href="#186" title="Permanent link">&para;</a></h3>
 <p>如果信号是<strong>实值信号</strong>（例如音频信号）：
 - 频谱关于零频对称：</p>
 <p>$$
@@ -372,19 +372,19 @@ X[k] = [10, -2 + 2j, -2, -2 - 2j]
   X[N-k] = \overline{X[k]}
   $$</p>
 <p>如果信号是<strong>偶函数</strong>或<strong>奇函数</strong>，频谱也会表现出对称性或反对称性。</p>
-<h3 id="187">1.8.7 频域分辨率</h3>
+<h3 id="187">1.8.7 频域分辨率<a class="headerlink" href="#187" title="Permanent link">&para;</a></h3>
 <p>傅里叶系数的数量和间隔取决于信号的采样率和长度：
 - 信号长度越长，频域分辨率越高（频率间隔越小）。
 - 如果信号是周期信号，其频谱会表现为离散的峰值。</p>
-<h2 id="19">1.9 总结</h2>
+<h2 id="19">1.9 总结<a class="headerlink" href="#19" title="Permanent link">&para;</a></h2>
 <p>傅里叶变换后的系数主要描述信号的以下性质：
 1. <strong>频率成分的强度</strong>（幅值）。
 2. <strong>频率成分的时间偏移</strong>（相位）。
 3. <strong>信号的直流分量</strong>（零频分量）。
 4. <strong>信号的频率分布和能量分布</strong>。</p>
 <p>这些性质共同定义了信号在频域中的表现，是信号分析和处理的基础。</p>
-<h2 id="110">1.10 角频率与频率</h2>
-<h3 id="1101-frequency">1.10.1 频率（Frequency）</h3>
+<h2 id="110">1.10 角频率与频率<a class="headerlink" href="#110" title="Permanent link">&para;</a></h2>
+<h3 id="1101-frequency">1.10.1 频率（Frequency）<a class="headerlink" href="#1101-frequency" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>定义</strong>：频率表示信号每秒完成振荡的次数，通常用符号 <span class="arithmatex">\(f\)</span> 表示。</li>
 <li><strong>单位</strong>：赫兹 (Hz)，即每秒振荡的周期数。</li>
@@ -397,7 +397,7 @@ X[k] = [10, -2 + 2j, -2, -2 - 2j]
 <p><strong>示例</strong>：
 - 一个信号每秒振荡 50 次，其频率为 <span class="arithmatex">\(f = 50 \, \text{Hz}\)</span>。
 - 电网交流电的频率通常为 <span class="arithmatex">\(50 \, \text{Hz}\)</span> 或 <span class="arithmatex">\(60 \, \text{Hz}\)</span>。</p>
-<h3 id="1102-angular-frequency">1.10.2 角频率（Angular Frequency）</h3>
+<h3 id="1102-angular-frequency">1.10.2 角频率（Angular Frequency）<a class="headerlink" href="#1102-angular-frequency" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>定义</strong>：角频率表示信号每秒转过的弧度数，通常用符号 <span class="arithmatex">\(\omega\)</span> 表示。</li>
 <li><strong>单位</strong>：弧度每秒 (rad/s)。</li>
@@ -410,7 +410,7 @@ X[k] = [10, -2 + 2j, -2, -2 - 2j]
 <p><strong>角频率的物理意义</strong>：
 - 一个周期内，信号的相位变化为 <span class="arithmatex">\(2\pi\)</span> 弧度（对应完整的一个波形）。
 - 角频率是频率的另一种表示方式，更适合描述正弦波中的振荡特性。</p>
-<h3 id="1103">1.10.3 频率与角频率的区别与联系</h3>
+<h3 id="1103">1.10.3 频率与角频率的区别与联系<a class="headerlink" href="#1103" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>频率 <span class="arithmatex">\(f\)</span></strong> 描述的是信号在单位时间内的周期数（次/秒）。</li>
 <li><strong>角频率 <span class="arithmatex">\(\omega\)</span></strong> 描述的是信号在单位时间内的相位变化量（弧度/秒）。</li>
@@ -419,7 +419,7 @@ X[k] = [10, -2 + 2j, -2, -2 - 2j]
 <p>$$
   \omega = 2\pi f \quad \text{或} \quad f = \frac{\omega}{2\pi}
   $$</p>
-<h3 id="1104">1.10.4 正弦波中的使用</h3>
+<h3 id="1104">1.10.4 正弦波中的使用<a class="headerlink" href="#1104" title="Permanent link">&para;</a></h3>
 <p>在正弦波中：
 - <strong>使用角频率的表达</strong>：</p>
 <p>$$
@@ -438,7 +438,7 @@ X[k] = [10, -2 + 2j, -2, -2 - 2j]
 <p><strong>注意</strong>：
 - 角频率在正弦信号的数学分析中更为常用。
 - 频率用于描述信号的周期性和计数特性。</p>
-<h3 id="1105">1.10.5 示例对比</h3>
+<h3 id="1105">1.10.5 示例对比<a class="headerlink" href="#1105" title="Permanent link">&para;</a></h3>
 <p>假设一个信号的频率为 <span class="arithmatex">\(f = 10 \, \text{Hz}\)</span>：
 - <strong>周期</strong>：</p>
 <p>$$
@@ -451,11 +451,11 @@ X[k] = [10, -2 + 2j, -2, -2 - 2j]
   \omega = 2\pi f = 2\pi \cdot 10 \approx 62.8 \, \text{rad/s}
   $$</p>
 <p>这意味着每秒完成 10 个周期，同时每秒相位变化约为 <span class="arithmatex">\(62.8 \, \text{弧度}\)</span>。</p>
-<h3 id="1106">1.10.6 信号频谱图</h3>
+<h3 id="1106">1.10.6 信号频谱图<a class="headerlink" href="#1106" title="Permanent link">&para;</a></h3>
 <p><a href="https://zhuanlan.zhihu.com/p/161678102">点击链接查看信号频谱介绍</a>
 <img alt="alt text" src="../../../images/image-3.png" />
 纵轴表示幅度，横轴表示角评率，忽略了相位信息。</p>
-<h3 id="1107">1.10.7 总结</h3>
+<h3 id="1107">1.10.7 总结<a class="headerlink" href="#1107" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -487,9 +487,9 @@ X[k] = [10, -2 + 2j, -2, -2 - 2j]
 </tr>
 </tbody>
 </table>
-<h1 id="2">2. 周期信号和非周期信号的频谱</h1>
-<h2 id="21">2.1 周期信号与非周期信号的频谱</h2>
-<h3 id="211">2.1.1 基本概念</h3>
+<h1 id="2">2. 周期信号和非周期信号的频谱<a class="headerlink" href="#2" title="Permanent link">&para;</a></h1>
+<h2 id="21">2.1 周期信号与非周期信号的频谱<a class="headerlink" href="#21" title="Permanent link">&para;</a></h2>
+<h3 id="211">2.1.1 基本概念<a class="headerlink" href="#211" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>周期信号</strong>的频谱是<strong>离散的</strong>，由基频及其整数倍（谐波）组成。
   周期信号可以用傅里叶级数表示为：</li>
@@ -506,13 +506,13 @@ X[k] = [10, -2 + 2j, -2, -2 - 2j]
   X(f) = \int_{-\infty}^\infty x(t) e^{-j 2\pi f t} dt
   $$</p>
 <p>它在整个频率轴上是连续分布的。</p>
-<h2 id="22">2.2 信号重建分析</h2>
-<h3 id="221">2.2.1 完全重建</h3>
+<h2 id="22">2.2 信号重建分析<a class="headerlink" href="#22" title="Permanent link">&para;</a></h2>
+<h3 id="221">2.2.1 完全重建<a class="headerlink" href="#221" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>周期信号</strong>可以完全用基频及其整数倍的频率分量来表示。</li>
 <li><strong>非周期信号</strong>则<strong>不能完全重建</strong>，因为它的频谱是连续的，频率成分不局限于离散点。</li>
 </ul>
-<h3 id="222">2.2.2 近似重建</h3>
+<h3 id="222">2.2.2 近似重建<a class="headerlink" href="#222" title="Permanent link">&para;</a></h3>
 <p>尽管非周期信号无法完全用离散频率成分来重建，但可以用有限个离散频率成分来<strong>近似重建</strong>，即：</p>
 <div class="arithmatex">\[
 x(t) \approx \sum_{n=-N}^N c_n e^{j 2\pi n f_0 t}
@@ -520,14 +520,14 @@ x(t) \approx \sum_{n=-N}^N c_n e^{j 2\pi n f_0 t}
 <p>当选取的频率点（<span class="arithmatex">\(N\)</span> 较大）足够多时，可以近似模拟信号的主要特性，但这种方法有以下限制：
 - 模拟的结果是有限精度的。
 - 对高频分量较丰富的信号，近似需要更多的频率点。</p>
-<h2 id="23">2.3 示例分析</h2>
-<h3 id="231">2.3.1 周期信号示例</h3>
+<h2 id="23">2.3 示例分析<a class="headerlink" href="#23" title="Permanent link">&para;</a></h2>
+<h3 id="231">2.3.1 周期信号示例<a class="headerlink" href="#231" title="Permanent link">&para;</a></h3>
 <p>设 <span class="arithmatex">\(x(t) = \cos(2\pi f_0 t)\)</span> 是一个周期信号，其频谱为：</p>
 <div class="arithmatex">\[
 X(f) = \frac{1}{2}[\delta(f - f_0) + \delta(f + f_0)]
 \]</div>
 <p>显然可以用基频 <span class="arithmatex">\(f_0\)</span> 的离散频率分量表示，无需额外频率。</p>
-<h3 id="232">2.3.2 非周期信号示例（矩形脉冲）</h3>
+<h3 id="232">2.3.2 非周期信号示例（矩形脉冲）<a class="headerlink" href="#232" title="Permanent link">&para;</a></h3>
 <p>设 <span class="arithmatex">\(x(t)\)</span> 是一个宽度为 <span class="arithmatex">\(T\)</span> 的矩形脉冲：</p>
 <div class="arithmatex">\[
 x(t) =
@@ -541,26 +541,26 @@ x(t) =
 X(f) = T \cdot \text{sinc}(fT)
 \]</div>
 <p><span class="arithmatex">\(\text{sinc}(fT)\)</span> 是一个连续函数，覆盖所有频率，不能完全用离散频率表示。但如果只取若干主要频率分量，可以近似重建。</p>
-<h3 id="233">2.3.3 带噪信号示例</h3>
+<h3 id="233">2.3.3 带噪信号示例<a class="headerlink" href="#233" title="Permanent link">&para;</a></h3>
 <p>对于非周期且带噪声的信号，其频谱可能分布在一个较宽的频率范围内，用离散频率分量只能部分近似重建，且高频部分的误差可能较大。</p>
-<h2 id="24">2.4 常见的频谱逼近方法</h2>
+<h2 id="24">2.4 常见的频谱逼近方法<a class="headerlink" href="#24" title="Permanent link">&para;</a></h2>
 <p>对于非周期信号，如果希望用离散频率表示，可以考虑以下方法：</p>
-<h3 id="241-dft">2.4.1 离散傅里叶变换 (DFT)</h3>
+<h3 id="241-dft">2.4.1 离散傅里叶变换 (DFT)<a class="headerlink" href="#241-dft" title="Permanent link">&para;</a></h3>
 <ul>
 <li>将连续信号采样为离散信号，并用有限频率点的频谱表示。</li>
 <li>结果是信号的频谱在有限频率点上的离散近似。</li>
 </ul>
-<h3 id="242">2.4.2 窗口化处理</h3>
+<h3 id="242">2.4.2 窗口化处理<a class="headerlink" href="#242" title="Permanent link">&para;</a></h3>
 <ul>
 <li>非周期信号可以通过时间窗口截断，使其近似为有限时长的周期信号。</li>
 <li>截断后的信号频谱会接近于离散频率分量，但会引入频谱泄露。</li>
 </ul>
-<h3 id="243">2.4.3 带宽限制</h3>
+<h3 id="243">2.4.3 带宽限制<a class="headerlink" href="#243" title="Permanent link">&para;</a></h3>
 <ul>
 <li>对非周期信号施加低通滤波器，去掉高频分量。</li>
 <li>带宽限制后，信号频谱能更好地用有限离散频率模拟。</li>
 </ul>
-<h2 id="25">2.5 总结</h2>
+<h2 id="25">2.5 总结<a class="headerlink" href="#25" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>完全重建</strong>：只有周期信号能完全用基频及其整数倍频率表示。</li>
 <li><strong>近似重建</strong>：非周期信号可以用有限个离散频率分量进行近似，但无法完全重建。</li>

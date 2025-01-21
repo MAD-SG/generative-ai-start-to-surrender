@@ -140,9 +140,9 @@ Theme by GitBook
 
 
 
-<h1 id="_1">统计学简介</h1>
-<h2 id="1-sampling">1.  抽样 sampling</h2>
-<h3 id="11-sampling-in-statistics">1.1 抽样 (Sampling in Statistics)数学和统计定义</h3>
+<h1 id="_1">统计学简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<h2 id="1-sampling">1.  抽样 sampling<a class="headerlink" href="#1-sampling" title="Permanent link">&para;</a></h2>
+<h3 id="11-sampling-in-statistics">1.1 抽样 (Sampling in Statistics)数学和统计定义<a class="headerlink" href="#11-sampling-in-statistics" title="Permanent link">&para;</a></h3>
 <ul>
 <li>抽样是从一个总体 (Population) 中选取一个子集 (Sample) 的过程。</li>
 <li>假设总体是集合 <span class="arithmatex">\(\mathcal{P}\)</span>，其大小为 <span class="arithmatex">\(N\)</span>，抽样选取的样本集合记为 <span class="arithmatex">\(\mathcal{S} \subset \mathcal{P}\)</span>，样本大小为 <span class="arithmatex">\(n\)</span>，其中 <span class="arithmatex">\(n \ll N\)</span>。
@@ -159,7 +159,7 @@ Theme by GitBook
 <li>样本均值：$ \bar{x} = \frac{1}{n} \sum_{i=1}^n x_i$</li>
 </ul>
 <p>样本均值是总体均值的无偏估计。</p>
-<h3 id="12">1.2 <strong>统计依据</strong></h3>
+<h3 id="12">1.2 <strong>统计依据</strong><a class="headerlink" href="#12" title="Permanent link">&para;</a></h3>
 <ul>
 <li>
 <p><strong>大数定律</strong> ：样本量 <span class="arithmatex">\(n\)</span> 越大，样本均值 <span class="arithmatex">\(\bar{x}\)</span> 趋近于总体均值 <span class="arithmatex">\(\mu\)</span>。</p>
@@ -177,7 +177,7 @@ Theme by GitBook
 </ol>
 </li>
 </ul>
-<h3 id="13-signal-sampling-in-mathematics">1.3 和 <strong>采样 (Signal Sampling in Mathematics)</strong> 的区别</h3>
+<h3 id="13-signal-sampling-in-mathematics">1.3 和 <strong>采样 (Signal Sampling in Mathematics)</strong> 的区别<a class="headerlink" href="#13-signal-sampling-in-mathematics" title="Permanent link">&para;</a></h3>
 <ul>
 <li>采样是从一个连续信号 <span class="arithmatex">\(f(t)\)</span> 中，按照一定规则在离散点 <span class="arithmatex">\(\{t_n\}\)</span> 上取值，形成离散信号 <span class="arithmatex">\(f[n]\)</span> 的过程。</li>
 <li>离散化的信号表示为：</li>
@@ -236,7 +236,7 @@ Theme by GitBook
 </tr>
 </tbody>
 </table>
-<h2 id="2-lln">2. 大数定律 (LLN)</h2>
+<h2 id="2-lln">2. 大数定律 (LLN)<a class="headerlink" href="#2-lln" title="Permanent link">&para;</a></h2>
 <p>在大数定律中，<strong>样本平均值</strong> 的定义为：$ \bar{X}<em>n = \frac{1}{n} \sum</em>{i=1}^n X_i$,
 其中 <span class="arithmatex">\(X_1, X_2, \dots, X_n\)</span> 是独立同分布的随机变量，具有期望值 <span class="arithmatex">\(\mu = \mathbb{E}[X_i]\)</span> 和有限方差 <span class="arithmatex">\(\sigma^2 = \mathrm{Var}(X_i)\)</span>。</p>
 <p><strong>大数定律的结论：</strong></p>
@@ -248,7 +248,7 @@ Theme by GitBook
 <li>它研究的是 <span class="arithmatex">\(\bar{X}_n\)</span> 的长期行为（随着 <span class="arithmatex">\(n \to \infty\)</span>）。</li>
 <li>它不涉及样本平均值的概率分布或波动性，只强调<span class="arithmatex">\(\bar{X}_n\)</span>会逐渐接近 <span class="arithmatex">\(\mu\)</span>。</li>
 </ul>
-<h2 id="3-clt">3 中央极限定理 (CLT)</h2>
+<h2 id="3-clt">3 中央极限定理 (CLT)<a class="headerlink" href="#3-clt" title="Permanent link">&para;</a></h2>
 <p>在中央极限定理中，考虑的也是<strong>样本平均值</strong> ：<span class="arithmatex">\(\bar{X}_n = \frac{1}{n} \sum_{i=1}^n X_i\)</span>.</p>
 <p>但这里进一步研究了<span class="arithmatex">\(\bar{X}_n\)</span> 的波动性或概率分布的行为。</p>
 <p><strong>标准化形式：</strong></p>
@@ -268,7 +268,7 @@ Theme by GitBook
 <div class="arithmatex">\[
  \bar{X}_n \sim N\left(\mu, \frac{\sigma^2}{n}\right).
 \]</div>
-<h2 id="4">4. 中心极限定理和大数定律两个平均值的核心差异</h2>
+<h2 id="4">4. 中心极限定理和大数定律两个平均值的核心差异<a class="headerlink" href="#4" title="Permanent link">&para;</a></h2>
 <p><strong>差异的核心：</strong></p>
 <ul>
 <li><strong>LLN 的平均值</strong> ：关注 <span class="arithmatex">\(\bar{X}_n\)</span> 是否在 <span class="arithmatex">\(n \to \infty\)</span> 时收敛到一个固定值 <span class="arithmatex">\(\mu\)</span>。</li>
@@ -331,7 +331,7 @@ Theme by GitBook
 <p><strong>CLT</strong>  告诉你在有限次测量时，这个“逼近值”有多大的波动范围，以及波动的概率分布是什么样的。</p>
 </li>
 </ul>
-<h2 id="5-change-of-variable">5. change of variable</h2>
+<h2 id="5-change-of-variable">5. change of variable<a class="headerlink" href="#5-change-of-variable" title="Permanent link">&para;</a></h2>
 <p>随机变量分布的 <strong>Change of Variable</strong> （变量变换）是概率论中一个重要的公式，用于描述当随机变量通过某种函数进行变换时，其概率密度如何变化。</p>
 <p><strong>公式推导</strong> 假设我们有一个随机变量 <span class="arithmatex">\(z\)</span>，其概率密度为 <span class="arithmatex">\(p_Z(z)\)</span>，并定义了一个可逆变换 <span class="arithmatex">\(z = f(x)\)</span>，其逆变换为 <span class="arithmatex">\(x = f^{-1}(z)\)</span>。目标是求变换后随机变量 <span class="arithmatex">\(x\)</span> 的概率密度 <span class="arithmatex">\(p_X(x)\)</span>。</p>
 <p><strong>Change of Variable 定理</strong> 当 <span class="arithmatex">\(z = f(x)\)</span> 且变换 <span class="arithmatex">\(f(x)\)</span> 可逆时，变换后的概率密度 <span class="arithmatex">\(p_X(x)\)</span> 可以通过以下公式计算：$
@@ -381,9 +381,9 @@ $</li>
 \end{bmatrix}
 $</p>
 <p>多维情况下，公式为：<span class="arithmatex">\(p_X(x) = p_Z(f(x)) \cdot \left| \det J_f(x) \right|\)</span></p>
-<h2 id="6">6. 随机变量和分布</h2>
+<h2 id="6">6. 随机变量和分布<a class="headerlink" href="#6" title="Permanent link">&para;</a></h2>
 <p>表示一个随机变量的分布通常使用以下几种方式：</p>
-<h3 id="61-pdf-probability-density-function">6.1 概率密度函数(PDF, Probability Density Function)</h3>
+<h3 id="61-pdf-probability-density-function">6.1 概率密度函数(PDF, Probability Density Function)<a class="headerlink" href="#61-pdf-probability-density-function" title="Permanent link">&para;</a></h3>
 <ul>
 <li>
 <p>如果随机变量是连续型随机变量(如正态分布),其分布可以用概率密度函数 <span class="arithmatex">\(f_X(x)\)</span> 表示。</p>
@@ -400,7 +400,7 @@ $</p>
  f_X(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}
 \]</div>
 <p>表示 <span class="arithmatex">\(X\)</span> 服从均值为 <span class="arithmatex">\(\mu\)</span>、方差为 <span class="arithmatex">\(\sigma^2\)</span> 的正态分布。</p>
-<h3 id="62-pmf-probability-mass-function">6.2. 概率质量函数(PMF, Probability Mass Function)</h3>
+<h3 id="62-pmf-probability-mass-function">6.2. 概率质量函数(PMF, Probability Mass Function)<a class="headerlink" href="#62-pmf-probability-mass-function" title="Permanent link">&para;</a></h3>
 <ul>
 <li>
 <p>如果随机变量是离散型随机变量，其分布用概率质量函数 <span class="arithmatex">\(<span class="arithmatex">\(P(X = x)\)</span>\)</span> 表示。</p>
@@ -412,7 +412,7 @@ $</p>
 <div class="arithmatex">\[
  P(X = x) = p^x (1-p)^{1-x}, \quad x \in \{0, 1\}
 \]</div>
-<h3 id="63-cdf-cumulative-distribution-function">6.3. **累积分布函数(CDF, Cumulative Distribution Function)</h3>
+<h3 id="63-cdf-cumulative-distribution-function">6.3. **累积分布函数(CDF, Cumulative Distribution Function)<a class="headerlink" href="#63-cdf-cumulative-distribution-function" title="Permanent link">&para;</a></h3>
 <ul>
 <li>累积分布函数表示随机变量小于等于某个值的概率：</li>
 </ul>
@@ -422,7 +422,7 @@ $</p>
 <ul>
 <li>它适用于连续型和离散型随机变量。</li>
 </ul>
-<h3 id="64">6.4. <strong>分布符号表示</strong></h3>
+<h3 id="64">6.4. <strong>分布符号表示</strong><a class="headerlink" href="#64" title="Permanent link">&para;</a></h3>
 <ul>
 <li>在简化场景中，可以直接用符号 <span class="arithmatex">\(\sim\)</span> 表示随机变量的分布类型。例如：</li>
 <li><span class="arithmatex">\(X \sim \mathcal{N}(\mu, \sigma^2)\)</span>：正态分布。</li>
@@ -440,7 +440,7 @@ $</p>
 <p>第二部分 <span class="arithmatex">\(0\)</span> 和 <span class="arithmatex">\(\mathbf{I}\)</span> 分别表示均值向量和协方差矩阵。</p>
 </li>
 </ul>
-<h3 id="65">6.5. <strong>联合分布与条件分布</strong></h3>
+<h3 id="65">6.5. <strong>联合分布与条件分布</strong><a class="headerlink" href="#65" title="Permanent link">&para;</a></h3>
 <ul>
 <li>如果有多个随机变量，可以用联合分布或条件分布来描述它们的关系：</li>
 <li>
@@ -450,15 +450,15 @@ $</p>
 <p>条件分布：<span class="arithmatex">\(P(X | Y)\)</span> 表示在 <span class="arithmatex">\(Y\)</span> 已知的条件下，<span class="arithmatex">\(X\)</span> 的分布。</p>
 </li>
 </ul>
-<h2 id="7-markov">7. Markov链</h2>
+<h2 id="7-markov">7. Markov链<a class="headerlink" href="#7-markov" title="Permanent link">&para;</a></h2>
 <p><strong>Markov链</strong> （Markov Chain）是一个满足 <strong>Markov性</strong> （或称为“无后效性”）的随机过程。简单来说，Markov性指的是：未来的状态只与当前的状态有关，而与过去的状态无关。</p>
-<h3 id="71-markov">7.1 Markov链的数学定义</h3>
+<h3 id="71-markov">7.1 Markov链的数学定义<a class="headerlink" href="#71-markov" title="Permanent link">&para;</a></h3>
 <p>设 <span class="arithmatex">\(X_t\)</span> 表示一个随机过程在时间 <span class="arithmatex">\(t\)</span> 时的状态。如果对于任意的 <span class="arithmatex">\(t\)</span> 和状态序列 <span class="arithmatex">\(x_0, x_1, \ldots, x_t\)</span>，满足条件：</p>
 <div class="arithmatex">\[
  P(X_{t+1} = x_{t+1} \mid X_t = x_t, X_{t-1} = x_{t-1}, \ldots, X_0 = x_0) = P(X_{t+1} = x_{t+1} \mid X_t = x_t)
 \]</div>
 <p>即，给定当前状态 <span class="arithmatex">\(X_t\)</span>，未来状态 <span class="arithmatex">\(X_{t+1}\)</span> 的分布与过去的状态 <span class="arithmatex">\(X_{t-1}, X_{t-2}, \ldots\)</span> 无关，那么这个随机过程就是一个<strong>Markov过程</strong> 。如果状态空间是离散的，并且时间也是离散的，这个过程称为<strong>离散时间Markov链</strong> （Discrete-Time Markov Chain, DTMC）。</p>
-<h3 id="72-markov">7.2 Markov链的要素</h3>
+<h3 id="72-markov">7.2 Markov链的要素<a class="headerlink" href="#72-markov" title="Permanent link">&para;</a></h3>
 <ol>
 <li>
 <p><strong>状态空间</strong>  (<span class="arithmatex">\(S\)</span>)
@@ -478,7 +478,7 @@ $
 </li>
 </ol>
 <hr />
-<h3 id="73-markov">7.3 Markov链的性质</h3>
+<h3 id="73-markov">7.3 Markov链的性质<a class="headerlink" href="#73-markov" title="Permanent link">&para;</a></h3>
 <ol>
 <li>
 <p><strong>无后效性（Markov性）</strong> ：未来的状态只依赖于当前状态，与过去状态无关。</p>
@@ -493,7 +493,7 @@ $
 <div class="arithmatex">\[
  P^{(n)}_{ij} = P(X_{t+n} = j \mid X_t = i)
 \]</div>
-<h3 id="73">7.3 典型应用</h3>
+<h3 id="73">7.3 典型应用<a class="headerlink" href="#73" title="Permanent link">&para;</a></h3>
 <ul>
 <li>
 <p><strong>自然语言处理</strong> ：如语言模型中用Markov链预测下一个词。</p>
@@ -508,7 +508,7 @@ $
 <p><strong>生物信息学</strong> ：基因序列分析。</p>
 </li>
 </ul>
-<h3 id="74-markov">7.4 不同形式的Markov链</h3>
+<h3 id="74-markov">7.4 不同形式的Markov链<a class="headerlink" href="#74-markov" title="Permanent link">&para;</a></h3>
 <p>Markov链中的“<strong>状态转移的概率分布固定</strong> ”并不是一个必须条件，而是针对<strong>齐次Markov链</strong> （Homogeneous Markov Chain）的假设。实际上，Markov链也有以下情况：</p>
 <p><strong>1. 齐次Markov链（Homogeneous Markov Chain）</strong> 这是最常见的情况，转移概率矩阵 <span class="arithmatex">\(P\)</span> <strong>不随时间变化</strong> ，即对于任意时间 <span class="arithmatex">\(t\)</span>：$
  P(X_{t+1} = j \mid X_t = i) = P_{ij}, \quad \text{(恒定)}。
@@ -539,10 +539,10 @@ $
 <div class="arithmatex">\[
  P(X_{t+1} \mid X_t, X_{t-1}, \ldots, X_{t-k})。
 \]</div>
-<h2 id="8-monte-carlo-estimate">8 Monte Carlo estimate</h2>
+<h2 id="8-monte-carlo-estimate">8 Monte Carlo estimate<a class="headerlink" href="#8-monte-carlo-estimate" title="Permanent link">&para;</a></h2>
 <p><strong>Monte Carlo estimate</strong>  是一种利用随机抽样方法来近似计算复杂问题的数值解的统计技术。它广泛应用于数学、物理、金融、工程等领域，尤其是那些解析解难以获得的问题。</p>
 <hr />
-<h3 id="81">8.1 基本原理</h3>
+<h3 id="81">8.1 基本原理<a class="headerlink" href="#81" title="Permanent link">&para;</a></h3>
 <p>Monte Carlo 方法基于以下核心思想：</p>
 <ol>
 <li>
@@ -557,7 +557,7 @@ $
 </ol>
 <p>简单来说，Monte Carlo 方法通过多次模拟和统计分析，来估计某些复杂问题的解。</p>
 <hr />
-<h3 id="82-monte-carlo-estimate">8.2 Monte Carlo estimate 的步骤</h3>
+<h3 id="82-monte-carlo-estimate">8.2 Monte Carlo estimate 的步骤<a class="headerlink" href="#82-monte-carlo-estimate" title="Permanent link">&para;</a></h3>
 <p>以估计积分 <span class="arithmatex">\(\int_a^b f(x) dx\)</span> 为例：</p>
 <ol>
 <li>
@@ -571,7 +571,7 @@ $
 </li>
 </ol>
 <p>对于多维积分、概率分布计算或复杂物理系统模拟，Monte Carlo 方法可以通过类似的方式进行扩展。</p>
-<h3 id="83-monte-carlo-estimate">8.3 Monte Carlo estimate 的典型应用</h3>
+<h3 id="83-monte-carlo-estimate">8.3 Monte Carlo estimate 的典型应用<a class="headerlink" href="#83-monte-carlo-estimate" title="Permanent link">&para;</a></h3>
 <ol>
 <li>
 <p><strong>计算复杂积分</strong>:  用于解决传统数值积分方法难以处理的高维积分问题。</p>
@@ -586,8 +586,8 @@ $
 <p><strong>优化问题</strong>:  在机器学习中，用 Monte Carlo 方法优化参数或模型性能。</p>
 </li>
 </ol>
-<h3 id="84">8.4 优点与缺点</h3>
-<h4 id="841">8.4.1 优点</h4>
+<h3 id="84">8.4 优点与缺点<a class="headerlink" href="#84" title="Permanent link">&para;</a></h3>
+<h4 id="841">8.4.1 优点<a class="headerlink" href="#841" title="Permanent link">&para;</a></h4>
 <ul>
 <li>
 <p><strong>通用性强</strong>:  可以应用于高维、复杂的问题。</p>
@@ -599,7 +599,7 @@ $
 <p><strong>渐进收敛：</strong>  随着样本数量增加，估计值会逐渐收敛到真实值。</p>
 </li>
 </ul>
-<h4 id="842">8.4.2 缺点</h4>
+<h4 id="842">8.4.2 缺点<a class="headerlink" href="#842" title="Permanent link">&para;</a></h4>
 <ul>
 <li>
 <p><strong>效率较低：</strong>  收敛速度较慢，通常需要大量样本来达到高精度。</p>
@@ -611,10 +611,10 @@ $
 <p><strong>高维问题的样本效率低：</strong>  高维问题中的“维度灾难”会显著增加所需样本数量。</p>
 </li>
 </ul>
-<h3 id="85">8.5 直观例子</h3>
+<h3 id="85">8.5 直观例子<a class="headerlink" href="#85" title="Permanent link">&para;</a></h3>
 <p><strong>Monte Carlo estimate</strong>  是一种利用随机抽样方法来近似计算复杂问题的数值解的统计技术。它广泛应用于数学、物理、金融、工程等领域，尤其是那些解析解难以获得的问题。</p>
-<h2 id="9entropykl-divergenceelbo">9.Entropy,KL divergence,ELBO</h2>
-<h3 id="91-entropy">9.1 熵(Entropy)</h3>
+<h2 id="9entropykl-divergenceelbo">9.Entropy,KL divergence,ELBO<a class="headerlink" href="#9entropykl-divergenceelbo" title="Permanent link">&para;</a></h2>
+<h3 id="91-entropy">9.1 熵(Entropy)<a class="headerlink" href="#91-entropy" title="Permanent link">&para;</a></h3>
 <p>熵衡量分布的平均不确定性。
 <strong>积分形式</strong> 对于连续分布 <span class="arithmatex">\(p(x)\)</span>，熵的积分形式为：</p>
 <div class="arithmatex">\[
@@ -625,7 +625,7 @@ $
  H(X) = -\mathbb{E}_{X \sim p(x)}[\log p(X)]
 \]</div>
 <p>其中 <span class="arithmatex">\(\mathbb{E}_{X \sim p(x)}\)</span> 表示关于分布 <span class="arithmatex">\(p(x)\)</span> 的期望。</p>
-<h3 id="92klkl-divergence">9.2KL散度（KL Divergence</h3>
+<h3 id="92klkl-divergence">9.2KL散度（KL Divergence<a class="headerlink" href="#92klkl-divergence" title="Permanent link">&para;</a></h3>
 <p>KL散度衡量两个分布之间的差异。
 <strong>积分形式</strong> 对于连续分布 <span class="arithmatex">\(p(x)\)</span> 和 <span class="arithmatex">\(q(x)\)</span>，KL散度的积分形式为：</p>
 <div class="arithmatex">\[
@@ -635,7 +635,7 @@ $
 <div class="arithmatex">\[
  D_{\text{KL}}(P \| Q) = \mathbb{E}_{X \sim p(x)} \left[ \log \frac{p(X)}{q(X)} \right]
 \]</div>
-<h3 id="93-evidence-lower-bound-elbo">9.3. 证据下界（Evidence Lower Bound, ELBO)</h3>
+<h3 id="93-evidence-lower-bound-elbo">9.3. 证据下界（Evidence Lower Bound, ELBO)<a class="headerlink" href="#93-evidence-lower-bound-elbo" title="Permanent link">&para;</a></h3>
 <p>ELBO 是在变分推断中用来优化后验分布的目标函数。</p>
 <p><strong>积分形式</strong>
 ELBO 的积分形式为：</p>
@@ -681,7 +681,7 @@ ELBO 的积分形式为：</p>
 </tbody>
 </table>
 <p><a id="elbo"></a></p>
-<h4 id="931-elbo">9.3.1 ELBO</h4>
+<h4 id="931-elbo">9.3.1 ELBO<a class="headerlink" href="#931-elbo" title="Permanent link">&para;</a></h4>
 <hr />
 <p>证明</p>
 <div class="arithmatex">\[
@@ -742,7 +742,7 @@ ELBO 的积分形式为：</p>
  \mathcal{L}(x, \theta, q) = \mathbb{E}_{z \sim q_\phi} [\log p_\theta(x, z)] + H(q_\phi).
 \]</div>
 <hr />
-<h2 id="reference">Reference</h2>
+<h2 id="reference">Reference<a class="headerlink" href="#reference" title="Permanent link">&para;</a></h2>
 <p>[1] <a href="https://github.com/janishar/mit-deep-learning-book-pdf/blob/master/complete-book-pdf/Ian%20Goodfellow%2C%20Yoshua%20Bengio%2C%20Aaron%20Courville%20-%20Deep%20Learning%20(2017%2C%20MIT).pdf">Book: Deep Learning, Ian Goodfellow, Yoshua Bengio, Aaron Courville</a></p>
 
 

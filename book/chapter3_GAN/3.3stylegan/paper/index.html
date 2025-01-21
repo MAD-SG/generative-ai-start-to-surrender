@@ -140,10 +140,10 @@ Theme by GitBook
 
 
 
-<h1 id="stylegan-a-style-based-generator-architecture-for-generative-adversarial-networks">StyleGAN: A Style-Based Generator Architecture for Generative Adversarial Networks</h1>
+<h1 id="stylegan-a-style-based-generator-architecture-for-generative-adversarial-networks">StyleGAN: A Style-Based Generator Architecture for Generative Adversarial Networks<a class="headerlink" href="#stylegan-a-style-based-generator-architecture-for-generative-adversarial-networks" title="Permanent link">&para;</a></h1>
 <p><a href="https://arxiv.org/abs/1812.04948">Paper Link</a>
 <img alt="alt text" src="../../../../images/image-14.png" /></p>
-<h2 id="_1">核心创新</h2>
+<h2 id="_1">核心创新<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
 <ol>
 <li><strong>基于风格的生成器架构</strong>
 <img alt="alt text" src="../../../../images/image-13.png" /></li>
@@ -171,7 +171,7 @@ Theme by GitBook
 <ul>
 <li>每个channel的feature map显式调节方差和均值，这两个统计量表示图片的风格</li>
 </ul>
-<h2 id="_2">技术细节</h2>
+<h2 id="_2">技术细节<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
 <ol>
 <li><strong>LOD (Level of Detail) 计算</strong>:</li>
 <li><strong>目的</strong>: 控制训练期间的分辨率级别，支持渐进式增长。</li>
@@ -233,8 +233,8 @@ Theme by GitBook
 <li><strong>类型</strong>: 空间或通道。</li>
 <li><strong>目的</strong>: 为特征图添加随机变化，增强细节多样性。</li>
 </ol>
-<h2 id="_3">代码解读</h2>
-<h3 id="1-generator">1. Generator</h3>
+<h2 id="_3">代码解读<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="1-generator">1. Generator<a class="headerlink" href="#1-generator" title="Permanent link">&para;</a></h3>
 <pre><code>
     def forward(self,
                 z,
@@ -288,7 +288,7 @@ Theme by GitBook
         return {**mapping_results, **synthesis_results}
 </code></pre>
 <p>generator 分成几个步骤</p>
-<h4 id="1-mapping-network">1. 映射网络 (Mapping Network)</h4>
+<h4 id="1-mapping-network">1. 映射网络 (Mapping Network)<a class="headerlink" href="#1-mapping-network" title="Permanent link">&para;</a></h4>
 <pre><code>mapping_results = self.mapping(z, label) # label 是用于条件生成的标签
 w = mapping_results['w']
 </code></pre>
@@ -305,7 +305,7 @@ w = mapping_results['w']
   - <span class="arithmatex">\(w\)</span>: 样式向量，作为后续生成过程中的特征控制参数。</p>
 </li>
 </ul>
-<h4 id="2-w">2. W 空间均值的移动平均更新</h4>
+<h4 id="2-w">2. W 空间均值的移动平均更新<a class="headerlink" href="#2-w" title="Permanent link">&para;</a></h4>
 <pre><code class="language-python">if self.training and w_moving_decay &lt; 1:
     batch_w_avg = all_gather(w).mean(dim=0)
     self.truncation.w_avg.copy_(
@@ -333,7 +333,7 @@ w_{avg} \gets w_{avg} \cdot \text{decay} + \text{batch-w-avg} \cdot (1 - \text{d
 \]</div>
 </li>
 </ul>
-<h4 id="3-style-mixing">3. 样式混合 (Style Mixing)</h4>
+<h4 id="3-style-mixing">3. 样式混合 (Style Mixing)<a class="headerlink" href="#3-style-mixing" title="Permanent link">&para;</a></h4>
 <pre><code class="language-python">if self.training and style_mixing_prob &gt; 0:
     new_z = torch.randn_like(z)
     new_w = self.mapping(new_z, label)['w']
@@ -454,7 +454,7 @@ $</p>
 <p>它是 <strong>样式向量的幅度缩放</strong> ，调控生成图像的多样性与稳定性之间的权衡。</p>
 </li>
 </ol>
-<h4 id="5">5. 图像生成</h4>
+<h4 id="5">5. 图像生成<a class="headerlink" href="#5" title="Permanent link">&para;</a></h4>
 <pre><code class="language-python">synthesis_results = self.synthesis(wp, lod, randomize_noise)
 </code></pre>
 <ul>
@@ -472,7 +472,7 @@ $</p>
 <li><em>输出</em> :</li>
 <li>生成的图像及其相关特征。</li>
 </ul>
-<h3 id="2-synthesis-network">2. synthesis network</h3>
+<h3 id="2-synthesis-network">2. synthesis network<a class="headerlink" href="#2-synthesis-network" title="Permanent link">&para;</a></h3>
 <p>synthesis network 定义在class SynthesisModule 里面，是一个生成器的主要部分，负责生成图像的过程。
 它的参数意义</p>
 <pre><code>resolution (默认1024): 生成图像的最终输出分辨率。例如设置为1024时，最终生成1024x1024像素的图像。
@@ -566,8 +566,8 @@ lod_transition_img = 300,000（过渡阶段30万张图像）,
 </code></pre>
 </blockquote>
 <p>synthesis 网络的每一个分辨率层都有两个卷积层。初始分辨率的第一个卷积层有所区别。</p>
-<h4 id="_4">第一个分辨率层</h4>
-<h5 id="layer0">layer0</h5>
+<h4 id="_4">第一个分辨率层<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h4>
+<h5 id="layer0">layer0<a class="headerlink" href="#layer0" title="Permanent link">&para;</a></h5>
 <p>layer0 的网络定义为</p>
 <pre><code>self.layer0 =ConvBlock(
     in_channels=self.get_nf(res),
@@ -582,7 +582,7 @@ lod_transition_img = 300,000（过渡阶段30万张图像）,
 <pre><code>x, style = self.layer0(None, wp[:, 0], randomize_noise)
 </code></pre>
 <p>第一个分辨率只有一个convblock，将原始的输入4x4x512 转化为 4x4x512</p>
-<h4 id="k">第k个分辨率层</h4>
+<h4 id="k">第k个分辨率层<a class="headerlink" href="#k" title="Permanent link">&para;</a></h4>
 <p>次后的每个分辨率层包含两个convblock
 第一个convblock 增加了上采样的操作。其余的一样。
 最后一个分辨率只有一个convblock，将512x512x32 转化为 1024x1024x16
@@ -616,7 +616,7 @@ x, style = f&quot;self.layer{2k}&quot;(x, wp[:, 2 * block_idx],randomize_noise)
 </code></pre>
 <p>每个convblock 的输入都包含上一层的输入,本层的风格向量，以及是否需要添加噪声。</p>
 <p>每一个分辨率的第一个卷积层和第二个卷积层区别在于第二个会加入上采样。</p>
-<h3 id="3-convblock">3. ConvBlock</h3>
+<h3 id="3-convblock">3. ConvBlock<a class="headerlink" href="#3-convblock" title="Permanent link">&para;</a></h3>
 <pre><code class="language-python">    def forward(self, x, w, randomize_noise=False):
         if self.position != 'const_init':
             x = self.upsample(x)

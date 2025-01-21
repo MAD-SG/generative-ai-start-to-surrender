@@ -140,8 +140,8 @@ Theme by GitBook
 
 
 
-<h1 id="_1">最大似然估计</h1>
-<h2 id="_2">生成模型可以根据其目标和方法分类</h2>
+<h1 id="_1">最大似然估计<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<h2 id="_2">生成模型可以根据其目标和方法分类<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -255,7 +255,7 @@ Theme by GitBook
  \sum_{x\sim p_{\text {data }}}  \log p_{\theta}(x)
 \]</div>
 <hr />
-<h2 id="1-mlp">定理1. MLP 是最小化分布差异的特定形式</h2>
+<h2 id="1-mlp">定理1. MLP 是最小化分布差异的特定形式<a class="headerlink" href="#1-mlp" title="Permanent link">&para;</a></h2>
 <p><strong>证明</strong>:
 先说明结论：两个分布间的“距离”可以用不同的指标来衡量（如 KL 散度、Jensen-Shannon 散度、Wasserstein 距离等）。MLE 的目标是最小化 KL 散度：</p>
 <div class="arithmatex">\[
@@ -277,15 +277,16 @@ D_{\text{KL}}(p_{\text{data}} || p_\theta)
 <hr />
 <p>从这个角度从新不同的生成模型，包括VAE, GAN, Diffusion等等，它们的目标都是最小化生成分布和原始数据分布的差异(距离)的最小化。</p>
 <hr />
-<h2 id="2gan">定理2：gan的优化目标等价最小化分布距离</h2>
+<h2 id="2gan">定理2：gan的优化目标等价最小化分布距离<a class="headerlink" href="#2gan" title="Permanent link">&para;</a></h2>
 <p>GAN的目的是最小化分布差异，其中vanila GAN的目的是最小化两个分布之间的JSD散度, WGAN的目的是最小化连个分布之前的Wasserstein距离</p>
 <p><strong>证明</strong>：</p>
 <hr />
 <p><strong>1. Vanilla GAN 的优化目标与 Jensen-Shannon 散度</strong></p>
 <p><strong>1.1 GAN 的优化目标</strong></p>
-<p>GAN 的目标函数由生成器 <span class="arithmatex">\(G\)</span> 和判别器 <span class="arithmatex">\(D\)</span> 的对抗博弈组成：$
- \min_G \max_D \mathbb{E}<em>{x \sim p</em>{\text{data}}} [\log D(x)] + \mathbb{E}_{z \sim p(z)} [\log (1 - D(G(z)))]
-$</p>
+<p>GAN 的目标函数由生成器 <span class="arithmatex">\(G\)</span> 和判别器 <span class="arithmatex">\(D\)</span> 的对抗博弈组成：</p>
+<div class="arithmatex">\[
+ \min_G \max_D \mathbb{E}_{x \sim p_{\text{data}}} [\log D(x)] + \mathbb{E}_{z \sim p(z)} [\log (1 - D(G(z)))]
+\]</div>
 <p>其中：</p>
 <ul>
 <li>
@@ -371,7 +372,7 @@ Vanilla GAN 的优化目标是最小化生成分布和数据分布之间的 Jens
 <p>从而KL散度对应的loss 则为</p>
 <div class="arithmatex">\[E_{x\sim P}\left[\log D(x)\right]-E_{x\sim Q_\theta}\left[\log D(x)\right]\]</div>
 <p>参考这个论文 <a href="https://arxiv.org/pdf/1606.00709">https://arxiv.org/pdf/1606.00709</a> 了解更多散度对应的loss</p>
-<h3 id="_3">广泛含义上的分布之间的衡量设计</h3>
+<h3 id="_3">广泛含义上的分布之间的衡量设计<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -428,7 +429,7 @@ Vanilla GAN 的优化目标是最小化生成分布和数据分布之间的 Jens
 </tbody>
 </table>
 <hr />
-<h2 id="3-vae">定理3: VAE 是对最大似然的优化</h2>
+<h2 id="3-vae">定理3: VAE 是对最大似然的优化<a class="headerlink" href="#3-vae" title="Permanent link">&para;</a></h2>
 <p>证明</p>
 <ol>
 <li>连续分布的最大似然估计目标</li>
@@ -483,13 +484,17 @@ Vanilla GAN 的优化目标是最小化生成分布和数据分布之间的 Jens
 <ul>
 <li><strong>第一项</strong>  <span class="arithmatex">\(\mathbb{E}_{q_\phi(z \mid x)} [\log p_\theta(x \mid z)]\)</span>：重构误差（Reconstruction Error），鼓励生成器能够生成接近真实数据 <span class="arithmatex">\(x\)</span> 的分布。 这个没法直接计算。如果用蒙特卡洛采样的话，也需要有 <span class="arithmatex">\(p_\theta(z|x)\)</span>的值，但是这个值也是不可解析的。 因此在原始的论文里，假设 <span class="arithmatex">\(p_\theta(z|x)\)</span>是一个高斯分布，这样就可以计算。</li>
 </ul>
-<p>如果我们假设 <span class="arithmatex">\(p_\theta(x|z)\)</span> 是高斯分布：$
+<p>如果我们假设 <span class="arithmatex">\(p_\theta(x|z)\)</span> 是高斯分布：</p>
+<p>$$
   p_\theta(x|z) = \mathcal{N}(\hat{x}, \sigma^2 I),
-  $
-  其中 <span class="arithmatex">\(\hat{x}\)</span> 是解码器生成的均值，<span class="arithmatex">\(\sigma^2\)</span> 是固定方差。
+  $$</p>
+<p>其中 <span class="arithmatex">\(\hat{x}\)</span> 是解码器生成的均值，<span class="arithmatex">\(\sigma^2\)</span> 是固定方差。
   对数似然展开：</p>
 <p>$$
-  \log p_\theta(x|z) = \log \mathcal{N}(x; \hat{x}, \sigma^2 I) = -\frac{1}{2} \left( \frac{|x - \hat{x}|^2}{\sigma^2} + d \log(2\pi\sigma^2) \right),
+  \begin{aligned}
+  \log p_\theta(x|z) &amp;= \log \mathcal{N}(x; \hat{x}, \sigma^2 I)\
+   &amp;= -\frac{1}{2} \left( \frac{|x - \hat{x}|^2}{\sigma^2} + d \log(2\pi\sigma^2) \right),
+  \end{aligned}
   $$</p>
 <p>其中 <span class="arithmatex">\(d\)</span> 是 <span class="arithmatex">\(x\)</span> 的维度。</p>
 <p>重构误差等价于负对数似然，忽略常数项后为：</p>
@@ -623,11 +628,11 @@ $</p>
 </li>
 </ul>
 <p>对于不同的假设条件，可以得出不同的实现方案。</p>
-<h2 id="normalize-flow-nf">normalize flow （NF）</h2>
+<h2 id="normalize-flow-nf">normalize flow （NF）<a class="headerlink" href="#normalize-flow-nf" title="Permanent link">&para;</a></h2>
 <p>如果映射是可逆的，那么我们就可以直接计算出生成样本的密度函数(分布), 这个时候直接优化最大似然就行了。
 <img alt="alt text" src="../../../images/image-20.png" /></p>
 <p>归一化流（Normalizing Flow）是一种概率密度估计方法，其核心思想是通过一系列可逆的变换，将一个复杂分布映射到一个简单分布（通常是标准正态分布），这些变换是由具有可微参数的函数定义的，因此可以通过最大似然估计对模型进行训练。以下是从最大似然的角度详细解释归一化流的原理：</p>
-<h3 id="_4">最大似然估计</h3>
+<h3 id="_4">最大似然估计<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
 <ol>
 <li><strong>目标：通过最大似然估计复杂分布的概率密度</strong> 给定一个数据集 <span class="arithmatex">\(\{x_1, x_2, \dots, x_N\}\)</span>，我们希望拟合一个概率分布 <span class="arithmatex">\(p_X(x)\)</span> 来描述数据的生成过程。通过最大似然估计（MLE)),目标是最大化模型分布对数据的对数似然：<span class="arithmatex">\(\mathcal{L} = \sum_{i=1}^N \log p_X(x_i)\)</span>.</li>
 </ol>
@@ -689,7 +694,7 @@ $</p>
 <p><strong>RealNVP</strong>  和 <strong>Glow</strong> ：利用特定的结构设计高效的变换。</p>
 </li>
 </ol>
-<h3 id="loss">Loss 的公式直观拆解</h3>
+<h3 id="loss">Loss 的公式直观拆解<a class="headerlink" href="#loss" title="Permanent link">&para;</a></h3>
 <p>在归一化流中，对数似然可以写为：</p>
 <div class="arithmatex">\[
  \log p_X(x) = \log p_Z(f^{-1}(x)) - \log \left| \det \frac{\partial f(x)}{\partial x} \right|.
@@ -726,7 +731,7 @@ $</p>
 </li>
 </ol>
 <hr />
-<h3 id="_5">用日常比喻直观理解</h3>
+<h3 id="_5">用日常比喻直观理解<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
 <p>可以将 Loss 的两个部分类比为：</p>
 <ol>
 <li>
@@ -747,7 +752,7 @@ $</p>
 </ol>
 <p>最终，Loss 就是这两者的加权总成本：既希望布能很好地覆盖地形，又希望变形的过程不要过于复杂。</p>
 <p>实际实现的时候，normalize flow 可以设计为可逆映射的复合。</p>
-<h2 id="diffusion-model">Diffusion Model</h2>
+<h2 id="diffusion-model">Diffusion Model<a class="headerlink" href="#diffusion-model" title="Permanent link">&para;</a></h2>
 <p>我们也可以从最大似然的角度推到出 Diffusion model 的优化目标。类似于VAE，不过这里的<span class="arithmatex">\(z\)</span> 要看做为 <span class="arithmatex">\(X_{1:T}\)</span>, <span class="arithmatex">\(x\)</span> 为 <span class="arithmatex">\(X_0\)</span>。同样利用变分得到ELBO.</p>
 <p><strong>1. 最大似然目标</strong></p>
 <p>最大化数据分布的对数似然 <span class="arithmatex">\(\log p_\theta(x_0)\)</span>。根据变分原理，引入中间变量 <span class="arithmatex">\(x_{1:T}\)</span>，得到：</p>
@@ -819,7 +824,7 @@ $</p>
 <div class="arithmatex">\[
  \mathcal{L}_{\text{DDPM}} = \mathbb{E}_{x_0, \epsilon, t} \Big[ \| \epsilon - \epsilon_\theta(x_t, t) \|^2 \Big].
 \]</div>
-<h2 id="_6">自回归模型</h2>
+<h2 id="_6">自回归模型<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
 <ol>
 <li><strong>图片表示与最大似然目标</strong></li>
 </ol>
@@ -907,7 +912,7 @@ P(x_t | x_1, x_2, \ldots, x_{t-1}, \theta) = \mathcal{N}(x_t | \mu_\theta, \sigm
 </li>
 </ul>
 <p>通过对每个像素的条件概率进行优化，模型能够学习生成图片的复杂分布。</p>
-<h2 id="refenrence">Refenrence</h2>
+<h2 id="refenrence">Refenrence<a class="headerlink" href="#refenrence" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="https://chatgpt.com/c/6788e69d-7f1c-8001-a4e2-f6c8abda90db">normalize flow</a></li>
 <li><a href="https://www.cnblogs.com/Meloniala/p/18285101">Diffusion 综述阅读笔记</a></li>

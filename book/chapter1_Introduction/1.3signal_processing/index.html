@@ -140,11 +140,11 @@ Theme by GitBook
 
 
 
-<h1 id="signal-processing">signal processing</h1>
-<h2 id="_1">采样定理</h2>
+<h1 id="signal-processing">signal processing<a class="headerlink" href="#signal-processing" title="Permanent link">&para;</a></h1>
+<h2 id="_1">采样定理<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
 <pre><code class="language-markdown">核心：采样频率需要是原始信号的带宽的两倍
 </code></pre>
-<h3 id="_2">采样定理的数学描述</h3>
+<h3 id="_2">采样定理的数学描述<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
 <p>假设一个连续时间信号 <span class="arithmatex">\(x(t)\)</span> 是带限的，即它的频谱（傅里叶变换）满足：
 <span class="arithmatex">\(X(f)=0,\quad\forall |f|&gt;B\)</span>,
 其中 <span class="arithmatex">\(B\)</span> 是信号的最高频率（带宽），单位是赫兹（Hz）。这种信号称为<strong>带限信号</strong>。
@@ -159,14 +159,14 @@ Theme by GitBook
    $$</p>
 <p>其中
    <span class="arithmatex">\(\text{sinc}(x) = \frac{\sin(\pi x)}{\pi x}\)</span></p>
-<h3 id="_3">关键条件与解释</h3>
+<h3 id="_3">关键条件与解释<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>带限性</strong>：信号 $ x(t) $ 的频谱中没有超过 $ B $ 的频率分量。</li>
 <li><strong>采样率要求</strong>：采样频率必须满足 $ f_s \geq 2B $，即采样间隔 $ T_s \leq \frac{1}{2B} $。这里的 $ f_s = \frac{1}{T_s} $ 是采样频率，称为<strong>奈奎斯特频率</strong>。
 只有在满足这些条件时，采样信号 $ x[n] $ 可以<strong>无损地重建</strong>为原信号 $ x(t) $.</li>
 </ul>
-<h3 id="_4">重建例子</h3>
-<h3 id="13">1.3 重建例子</h3>
+<h3 id="_4">重建例子<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<h3 id="13">1.3 重建例子<a class="headerlink" href="#13" title="Permanent link">&para;</a></h3>
 <p>考虑一个连续时间信号：</p>
 <div class="arithmatex">\[
 x(t) = \cos(10\pi t)
@@ -176,12 +176,12 @@ x(t) = \cos(10\pi t)
 f_s &gt; 2f = 10\text{ Hz}
 \]</div>
 <p>让我们选择采样频率 <span class="arithmatex">\(f_s = 12\text{ Hz}\)</span>，即采样间隔 <span class="arithmatex">\(T_s = \frac{1}{12}\text{ s}\)</span>。</p>
-<h4 id="131">1.3.1 采样过程</h4>
+<h4 id="131">1.3.1 采样过程<a class="headerlink" href="#131" title="Permanent link">&para;</a></h4>
 <p>采样点可以表示为：</p>
 <div class="arithmatex">\[
 x[n] = \cos(10\pi \cdot \frac{n}{12}), \quad n = 0, \pm1, \pm2, \dots
 \]</div>
-<h4 id="132">1.3.2 重建公式</h4>
+<h4 id="132">1.3.2 重建公式<a class="headerlink" href="#132" title="Permanent link">&para;</a></h4>
 <p>根据奈奎斯特重建公式，原始信号可以通过以下公式重建：</p>
 <div class="arithmatex">\[
 x(t) = \sum_{n=-\infty}^{\infty} x[n] \cdot \text{sinc}(\frac{t-nT_s}{T_s})
@@ -190,21 +190,21 @@ x(t) = \sum_{n=-\infty}^{\infty} x[n] \cdot \text{sinc}(\frac{t-nT_s}{T_s})
 <div class="arithmatex">\[
 x(t) = \sum_{n=-\infty}^{\infty} \cos(10\pi \cdot \frac{n}{12}) \cdot \text{sinc}(12t-n)
 \]</div>
-<h4 id="133">1.3.3 重建原理解释</h4>
+<h4 id="133">1.3.3 重建原理解释<a class="headerlink" href="#133" title="Permanent link">&para;</a></h4>
 <ol>
 <li>每个采样点 <span class="arithmatex">\(x[n]\)</span> 都通过 sinc 函数进行插值</li>
 <li>sinc 函数具有以下性质：</li>
 <li>在采样点处，当前采样点的 sinc 函数值为 1，其他采样点处为 0</li>
 <li>所有采样点的 sinc 函数之和在任意时刻 t 都能重建出原始信号值</li>
 </ol>
-<h4 id="134">1.3.4 验证</h4>
+<h4 id="134">1.3.4 验证<a class="headerlink" href="#134" title="Permanent link">&para;</a></h4>
 <p>可以证明这个重建公式确实能得到原始信号 <span class="arithmatex">\(\cos(10\pi t)\)</span>：</p>
 <ol>
 <li>重建信号的频谱被限制在 <span class="arithmatex">\([-6\text{ Hz}, 6\text{ Hz}]\)</span> 范围内</li>
 <li>由于原始信号频率为 5 Hz，低于奈奎斯特频率 6 Hz</li>
 <li>因此重建信号与原始信号完全相同</li>
 </ol>
-<h4 id="135">1.3.5 推导过程</h4>
+<h4 id="135">1.3.5 推导过程<a class="headerlink" href="#135" title="Permanent link">&para;</a></h4>
 <p>让我们证明重建公式 <span class="arithmatex">\(\sum_{n=-\infty}^{\infty} \cos(10\pi \cdot \frac{n}{12}) \cdot \text{sinc}(12t-n)\)</span> 等于 <span class="arithmatex">\(\cos(10\pi t)\)</span>：</p>
 <ol>
 <li><strong>频域分析</strong></li>
@@ -258,11 +258,11 @@ x(t) = \sum_{n=-\infty}^{\infty} \cos(10\pi \cdot \frac{n}{12}) \cdot \text{sinc
 </li>
 </ul>
 <p>因此，我们证明了重建公式确实能完美重建原始信号 <span class="arithmatex">\(\cos(10\pi t)\)</span>。这个推导过程也说明了为什么采样频率必须大于信号频率的两倍：只有这样，采样后的频谱周期延拓才不会发生混叠。</p>
-<h2 id="2">2. 频谱混叠</h2>
-<h3 id="_5">狄拉克函数与狄拉克梳状函数的特性</h3>
+<h2 id="2">2. 频谱混叠<a class="headerlink" href="#2" title="Permanent link">&para;</a></h2>
+<h3 id="_5">狄拉克函数与狄拉克梳状函数的特性<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
 <hr />
-<h4 id="1-dirac-delta-function">1. <strong>狄拉克函数（Dirac Delta Function）</strong></h4>
-<h5 id="_6">定义</h5>
+<h4 id="1-dirac-delta-function">1. <strong>狄拉克函数（Dirac Delta Function）</strong><a class="headerlink" href="#1-dirac-delta-function" title="Permanent link">&para;</a></h4>
+<h5 id="_6">定义<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h5>
 <ul>
 <li>狄拉克函数 <span class="arithmatex">\(\delta(t)\)</span> 是一个理想化的脉冲函数，用于描述时间 <span class="arithmatex">\(t=0\)</span> 时的无限窄和无限高的信号。
 <img alt="alt text" src="../../../images/image-4.png" /></li>
@@ -275,7 +275,7 @@ x(t) = \sum_{n=-\infty}^{\infty} \cos(10\pi \cdot \frac{n}{12}) \cdot \text{sinc
 <p>$$
   \int_{-\infty}^\infty x(t) \delta(t - t_0) \, dt = x(t_0)
   $$</p>
-<h5 id="_7">特性</h5>
+<h5 id="_7">特性<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h5>
 <ol>
 <li><strong>集中性</strong>：<span class="arithmatex">\(\delta(t) = 0\)</span> 当 <span class="arithmatex">\(t \neq 0\)</span>。</li>
 <li><strong>单位化</strong>：<span class="arithmatex">\(\int_{-\infty}^\infty \delta(t) \, dt = 1\)</span>。</li>
@@ -286,8 +286,8 @@ x(t) = \sum_{n=-\infty}^{\infty} \cos(10\pi \cdot \frac{n}{12}) \cdot \text{sinc
 <li>与位移的狄拉克函数卷积：<span class="arithmatex">\((x * \delta(t - t_0))(t) = x(t - t_0)\)</span>。</li>
 </ol>
 <hr />
-<h4 id="2-dirac-comb-function">2. <strong>狄拉克梳状函数（Dirac Comb Function）</strong></h4>
-<h5 id="_8">狄拉克梳状函数定义</h5>
+<h4 id="2-dirac-comb-function">2. <strong>狄拉克梳状函数（Dirac Comb Function）</strong><a class="headerlink" href="#2-dirac-comb-function" title="Permanent link">&para;</a></h4>
+<h5 id="_8">狄拉克梳状函数定义<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h5>
 <ul>
 <li>狄拉克梳状函数 <span class="arithmatex">\(\mathrm{III}(t)\)</span> 是一列等间隔的狄拉克函数组成的周期性脉冲列：
 <img alt="狄拉克梳状函数" src="https://bkimg.cdn.bcebos.com/pic/6a63f6246b600c3389d4d981134c510fd8f9a1cd?x-bce-process=image/format,f_auto/watermark,image_d2F0ZXIvYmFpa2UyNzI,g_7,xp_5,yp_5,P_20/resize,m_lfit,limit_1,h_1080" /></li>
@@ -296,7 +296,7 @@ x(t) = \sum_{n=-\infty}^{\infty} \cos(10\pi \cdot \frac{n}{12}) \cdot \text{sinc
   \mathrm{III}(t) = \sum_{n=-\infty}^\infty \delta(t - nT)
   $$</p>
 <p>其中 <span class="arithmatex">\(T\)</span> 是脉冲间隔。</p>
-<h5 id="_9">狄拉克梳状函数的特性</h5>
+<h5 id="_9">狄拉克梳状函数的特性<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h5>
 <ol>
 <li><strong>周期性</strong>：<span class="arithmatex">\(\mathrm{III}(t)\)</span> 是周期为 <span class="arithmatex">\(T\)</span> 的函数。</li>
 <li><strong>频域关系</strong>：</li>
@@ -313,8 +313,8 @@ x(t) = \sum_{n=-\infty}^{\infty} \cos(10\pi \cdot \frac{n}{12}) \cdot \text{sinc
 <li>与自身卷积：<span class="arithmatex">\(\mathrm{III}(t) * \mathrm{III}(t) = \mathrm{III}(t)\)</span>。</li>
 </ol>
 <hr />
-<h4 id="3">3. <strong>狄拉克函数与信号采样</strong></h4>
-<h5 id="_10">采样过程</h5>
+<h4 id="3">3. <strong>狄拉克函数与信号采样</strong><a class="headerlink" href="#3" title="Permanent link">&para;</a></h4>
+<h5 id="_10">采样过程<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h5>
 <ul>
 <li>连续信号 <span class="arithmatex">\(x(t)\)</span> 的采样可表示为与狄拉克梳状函数的乘积：</li>
 </ul>
@@ -323,7 +323,7 @@ x(t) = \sum_{n=-\infty}^{\infty} \cos(10\pi \cdot \frac{n}{12}) \cdot \text{sinc
   $$</p>
 <p>其中 <span class="arithmatex">\(T\)</span> 是采样间隔。
 <img alt="alt text" src="../../../images/image-5.png" /></p>
-<h5 id="_11">频域特性</h5>
+<h5 id="_11">频域特性<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h5>
 <ul>
 <li>采样的频谱是原信号频谱的周期性延拓：</li>
 </ul>
@@ -336,7 +336,7 @@ x(t) = \sum_{n=-\infty}^{\infty} \cos(10\pi \cdot \frac{n}{12}) \cdot \text{sinc
    采样型号频谱
    <img alt="alt text" src="../../../images/image-7.png" /></p>
 <hr />
-<h4 id="4">4. <strong>总结</strong></h4>
+<h4 id="4">4. <strong>总结</strong><a class="headerlink" href="#4" title="Permanent link">&para;</a></h4>
 <table>
 <thead>
 <tr>
@@ -373,16 +373,16 @@ x(t) = \sum_{n=-\infty}^{\infty} \cos(10\pi \cdot \frac{n}{12}) \cdot \text{sinc
 </tr>
 </tbody>
 </table>
-<h2 id="3_1">3. 滤波器</h2>
+<h2 id="3_1">3. 滤波器<a class="headerlink" href="#3_1" title="Permanent link">&para;</a></h2>
 <p>滤波器是一种对信号进行频率选择性处理的系统，可以让某些频率成分通过，同时抑制或阻止其他频率成分。</p>
-<h3 id="31">3.1 基本概念</h3>
-<h4 id="311">3.1.1 频率响应</h4>
+<h3 id="31">3.1 基本概念<a class="headerlink" href="#31" title="Permanent link">&para;</a></h3>
+<h4 id="311">3.1.1 频率响应<a class="headerlink" href="#311" title="Permanent link">&para;</a></h4>
 <p>滤波器的频率响应 <span class="arithmatex">\(H(f)\)</span> 描述了滤波器对不同频率分量的处理方式：</p>
 <ul>
 <li><strong>幅频响应</strong> <span class="arithmatex">\(|H(f)|\)</span>：表示对不同频率分量的增益或衰减</li>
 <li><strong>相频响应</strong> <span class="arithmatex">\(\angle H(f)\)</span>：表示对不同频率分量的相位变化</li>
 </ul>
-<h4 id="312">3.1.2 重要参数</h4>
+<h4 id="312">3.1.2 重要参数<a class="headerlink" href="#312" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>截止频率</strong>（Cutoff Frequency）：滤波器的幅频响应下降到 -3dB 处的频率</li>
 <li><strong>通带</strong>（Passband）：信号几乎无衰减通过的频率范围</li>
@@ -390,8 +390,8 @@ x(t) = \sum_{n=-\infty}^{\infty} \cos(10\pi \cdot \frac{n}{12}) \cdot \text{sinc
 <li><strong>过渡带</strong>（Transition Band）：通带和阻带之间的过渡区域</li>
 <li><strong>阻带衰减</strong>（Stopband Attenuation）：在阻带中的最小衰减量</li>
 </ul>
-<h3 id="32">3.2 滤波器类型</h3>
-<h4 id="321-low-pass-filter">3.2.1 低通滤波器（Low-Pass Filter）</h4>
+<h3 id="32">3.2 滤波器类型<a class="headerlink" href="#32" title="Permanent link">&para;</a></h3>
+<h4 id="321-low-pass-filter">3.2.1 低通滤波器（Low-Pass Filter）<a class="headerlink" href="#321-low-pass-filter" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>功能</strong>：允许低频信号通过，衰减高频信号</li>
 <li><strong>应用</strong>：去除高频噪声，平滑信号</li>
@@ -403,7 +403,7 @@ x(t) = \sum_{n=-\infty}^{\infty} \cos(10\pi \cdot \frac{n}{12}) \cdot \text{sinc
   0, &amp; |f| &gt; f_c
   \end{cases}
   $$</p>
-<h4 id="322-high-pass-filter">3.2.2 高通滤波器（High-Pass Filter）</h4>
+<h4 id="322-high-pass-filter">3.2.2 高通滤波器（High-Pass Filter）<a class="headerlink" href="#322-high-pass-filter" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>功能</strong>：允许高频信号通过，衰减低频信号</li>
 <li><strong>应用</strong>：去除直流分量，突出信号的快速变化</li>
@@ -415,7 +415,7 @@ x(t) = \sum_{n=-\infty}^{\infty} \cos(10\pi \cdot \frac{n}{12}) \cdot \text{sinc
   1, &amp; |f| &gt; f_c
   \end{cases}
   $$</p>
-<h4 id="323-band-pass-filter">3.2.3 带通滤波器（Band-Pass Filter）</h4>
+<h4 id="323-band-pass-filter">3.2.3 带通滤波器（Band-Pass Filter）<a class="headerlink" href="#323-band-pass-filter" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>功能</strong>：只允许特定频率范围内的信号通过</li>
 <li><strong>应用</strong>：提取特定频段的信号，如音频处理</li>
@@ -427,7 +427,7 @@ x(t) = \sum_{n=-\infty}^{\infty} \cos(10\pi \cdot \frac{n}{12}) \cdot \text{sinc
   0, &amp; \text{其他}
   \end{cases}
   $$</p>
-<h4 id="324-band-stop-filter">3.2.4 带阻滤波器（Band-Stop Filter）</h4>
+<h4 id="324-band-stop-filter">3.2.4 带阻滤波器（Band-Stop Filter）<a class="headerlink" href="#324-band-stop-filter" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>功能</strong>：阻止特定频率范围内的信号通过</li>
 <li><strong>应用</strong>：去除特定频率的干扰，如工频干扰</li>
@@ -439,8 +439,8 @@ x(t) = \sum_{n=-\infty}^{\infty} \cos(10\pi \cdot \frac{n}{12}) \cdot \text{sinc
   1, &amp; \text{其他}
   \end{cases}
   $$</p>
-<h3 id="33">3.3 滤波器特性</h3>
-<h4 id="331">3.3.1 理想滤波器与实际滤波器</h4>
+<h3 id="33">3.3 滤波器特性<a class="headerlink" href="#33" title="Permanent link">&para;</a></h3>
+<h4 id="331">3.3.1 理想滤波器与实际滤波器<a class="headerlink" href="#331" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>理想滤波器</strong>：频率响应在通带和阻带之间有突变，无过渡带</li>
 <li><strong>实际滤波器</strong>：</li>
@@ -449,7 +449,7 @@ x(t) = \sum_{n=-\infty}^{\infty} \cos(10\pi \cdot \frac{n}{12}) \cdot \text{sinc
 <li>阻带衰减有限</li>
 <li>相位响应非线性</li>
 </ul>
-<h4 id="332">3.3.2 常见滤波器类型</h4>
+<h4 id="332">3.3.2 常见滤波器类型<a class="headerlink" href="#332" title="Permanent link">&para;</a></h4>
 <ol>
 <li><strong>巴特沃斯滤波器</strong>：</li>
 <li>特点：通带最平坦，相位响应较好</li>
@@ -469,24 +469,24 @@ x(t) = \sum_{n=-\infty}^{\infty} \cos(10\pi \cdot \frac{n}{12}) \cdot \text{sinc
 <li>特点：最陡峭的过渡带</li>
 <li>缺点：通带和阻带都有波纹</li>
 </ol>
-<h3 id="34">3.4 滤波器的应用</h3>
-<h4 id="341">3.4.1 信号处理中的应用</h4>
+<h3 id="34">3.4 滤波器的应用<a class="headerlink" href="#34" title="Permanent link">&para;</a></h3>
+<h4 id="341">3.4.1 信号处理中的应用<a class="headerlink" href="#341" title="Permanent link">&para;</a></h4>
 <ol>
 <li><strong>噪声去除</strong>：使用低通滤波器去除高频噪声</li>
 <li><strong>信号分离</strong>：使用带通滤波器提取特定频段的信号</li>
 <li><strong>干扰消除</strong>：使用带阻滤波器去除特定频率的干扰</li>
 <li><strong>信号重建</strong>：使用理想低通滤波器进行信号重建</li>
 </ol>
-<h4 id="342">3.4.2 实际应用举例</h4>
+<h4 id="342">3.4.2 实际应用举例<a class="headerlink" href="#342" title="Permanent link">&para;</a></h4>
 <ol>
 <li><strong>音频处理</strong>：均衡器使用多个带通滤波器</li>
 <li><strong>通信系统</strong>：信道选择使用带通滤波器</li>
 <li><strong>生物医学</strong>：心电信号处理使用带阻滤波器去除工频干扰</li>
 </ol>
-<h2 id="4-idea-upsampling">4. idea upsampling</h2>
+<h2 id="4-idea-upsampling">4. idea upsampling<a class="headerlink" href="#4-idea-upsampling" title="Permanent link">&para;</a></h2>
 <p>在数字信号处理（DSP）中，<strong>理想升采样</strong>指的是将一个离散信号从原采样率 <span class="arithmatex">\(F_s\)</span> <strong>无失真</strong>地变换到更高采样率 <span class="arithmatex">\(L \times F_s\)</span> 的理论过程。它通常包含两步：<strong>插零（Zero-stuffing）</strong> 和 <strong>理想低通滤波（Ideal LPF）</strong>。下面从多个角度进行阐述。</p>
 <hr />
-<h3 id="41">4.1. 基本概念</h3>
+<h3 id="41">4.1. 基本概念<a class="headerlink" href="#41" title="Permanent link">&para;</a></h3>
 <ol>
 <li><strong>插零（Zero-stuffing）</strong>
    在时域上将原信号 <span class="arithmatex">\(x[n]\)</span> 的每个采样之间插入 <span class="arithmatex">\(L-1\)</span> 个零，得到新序列 <span class="arithmatex">\(x_{\uparrow L}[n]\)</span>。形式上可写为：</li>
@@ -503,7 +503,7 @@ x(t) = \sum_{n=-\infty}^{\infty} \cos(10\pi \cdot \frac{n}{12}) \cdot \text{sinc
    对插零后的信号进行<strong>理想低通滤波</strong>（带宽为 <span class="arithmatex">\(\pi/L\)</span>），即使用<strong>理想矩形</strong>频率响应滤波器 <span class="arithmatex">\(H_{\text{ideal}}(e^{j\omega})\)</span>。它在 <span class="arithmatex">\(|\omega|\le \pi/L\)</span> 上为 1，其他区间为 0。此过程可滤除插零导致的“镜像频谱”成分。</li>
 </ol>
 <hr />
-<h3 id="42">4.2. 频域分析</h3>
+<h3 id="42">4.2. 频域分析<a class="headerlink" href="#42" title="Permanent link">&para;</a></h3>
 <ol>
 <li>
 <p><strong>原信号的频谱</strong>
@@ -543,14 +543,14 @@ x(t) = \sum_{n=-\infty}^{\infty} \cos(10\pi \cdot \frac{n}{12}) \cdot \text{sinc
    理想低通滤波器 <span class="arithmatex">\(H_{\text{ideal}}(e^{j\omega})\)</span> 在 <span class="arithmatex">\(|\omega|\le \pi/L\)</span> 内为 1，超出此范围为 0，仅保留最中心的那段原始频谱副本，其余镜像分量被滤除。</li>
 </ol>
 <hr />
-<h3 id="43">4.3. 时域结果</h3>
+<h3 id="43">4.3. 时域结果<a class="headerlink" href="#43" title="Permanent link">&para;</a></h3>
 <p>滤波后的输出信号可写为</p>
 <div class="arithmatex">\[
 y[n] = \bigl[x_{\uparrow L} * h_{\text{ideal}}\bigr](n),
 \]</div>
 <p>其中 <span class="arithmatex">\(h_{\text{ideal}}[n]\)</span> 为理想低通滤波器的冲激响应（离散版 <span class="arithmatex">\(\mathrm{sinc}\)</span> 函数）。若滤波器可理想实现，则输出 <span class="arithmatex">\(y[n]\)</span> 与原信号在更高采样率下一一对应，达到“<strong>完美插值</strong>”的效果。</p>
 <hr />
-<h3 id="44">4.4. 实际实现的差异</h3>
+<h3 id="44">4.4. 实际实现的差异<a class="headerlink" href="#44" title="Permanent link">&para;</a></h3>
 <ul>
 <li>
 <p><strong>无限长滤波器的难题</strong>
@@ -562,7 +562,7 @@ y[n] = \bigl[x_{\uparrow L} * h_{\text{ideal}}\bigr](n),
 </li>
 </ul>
 <hr />
-<h3 id="45">4.5. 结论</h3>
+<h3 id="45">4.5. 结论<a class="headerlink" href="#45" title="Permanent link">&para;</a></h3>
 <ol>
 <li>
 <p><strong>理想升采样的本质</strong>
@@ -593,13 +593,13 @@ y[n] = \bigl[x_{\uparrow L} * h_{\text{ideal}}\bigr](n),
    理想上采样 = “插零 + 理想低通滤波(带宽 <span class="arithmatex">\(\pi/L\)</span>”，从而滤除除主带外的那些镜像频谱。
    这样得到的输出在新的采样率下仍然只保留原先的带宽信息，但对应于离散角频率<span class="arithmatex">\(\omega\)</span>，它就压缩到了 <span class="arithmatex">\(- \pi/L, + \pi/L\)</span> 以内。
    此时你会看到，频谱也不会“变大”，而是保持原带宽” —— 只是量纲从“频率/采样点”变成新的更密集采样下的“频率/采样点”。这就是“在离散域出现了频率压缩”。</p>
-<h2 id="5-downsampling">5. 下采样（Downsampling）</h2>
+<h2 id="5-downsampling">5. 下采样（Downsampling）<a class="headerlink" href="#5-downsampling" title="Permanent link">&para;</a></h2>
 <p><strong>下采样</strong>（也称“降采样”或“抽取”）指在数字信号处理中，将离散信号的采样率从原先的 <span class="arithmatex">\(F_s\)</span> <strong>降低</strong>到 <span class="arithmatex">\(\tfrac{F_s}{M}\)</span>（<span class="arithmatex">\(M\)</span> 为降采样因子），从而减少采样点数。设原序列为 <span class="arithmatex">\(x[n]\)</span>，则下采样后的序列为</p>
 <div class="arithmatex">\[
 y[m] \;=\; x[m\,M].
 \]</div>
 <hr />
-<h3 id="51">5.1. 时域描述</h3>
+<h3 id="51">5.1. 时域描述<a class="headerlink" href="#51" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>操作</strong>：每间隔 <span class="arithmatex">\(M\)</span> 个索引取一个样本，其余样本被舍弃。</li>
 <li><strong>示例</strong>：如果 <span class="arithmatex">\(M = 2\)</span>，则</li>
@@ -608,7 +608,7 @@ y[m] \;=\; x[m\,M].
     y[0] = x[0], \quad y[1] = x[2], \quad y[2] = x[4], \dots
   $$</p>
 <hr />
-<h3 id="52-aliasing">5.2. 频域影响：混叠(Aliasing)</h3>
+<h3 id="52-aliasing">5.2. 频域影响：混叠(Aliasing)<a class="headerlink" href="#52-aliasing" title="Permanent link">&para;</a></h3>
 <p>在离散时间傅里叶变换(DTFT)视角，<strong>下采样</strong>会产生<strong>混叠</strong>(aliasing)。
 常见结论是：</p>
 <div class="arithmatex">\[
@@ -620,7 +620,7 @@ X\!\Bigl(e^{\,j\,\tfrac{\Omega + 2\pi k}{M}}\Bigr),
 \]</div>
 <p>其中 <span class="arithmatex">\(X(e^{j\omega})\)</span> 和 <span class="arithmatex">\(Y(e^{j\Omega})\)</span> 分别为 <span class="arithmatex">\(x[n]\)</span> 和 <span class="arithmatex">\(y[m]\)</span> 的 DTFT。该公式表明，新序列的频谱是<strong>原序列频谱的多个平移/折叠副本</strong>相加在一起，这就是混叠的本质。</p>
 <hr />
-<h3 id="53-anti-aliasing-filter">5.3. 需要先低通滤波 (抗混叠滤波，Anti-Aliasing Filter)</h3>
+<h3 id="53-anti-aliasing-filter">5.3. 需要先低通滤波 (抗混叠滤波，Anti-Aliasing Filter)<a class="headerlink" href="#53-anti-aliasing-filter" title="Permanent link">&para;</a></h3>
 <ol>
 <li><strong>目的</strong></li>
 <li>若信号原本包含高于新的奈奎斯特频率 <span class="arithmatex">\(\tfrac{\pi}{M}\)</span>（相对于旧采样率计）的成分，则在下采样后会出现重叠混叠。</li>
@@ -630,17 +630,17 @@ X\!\Bigl(e^{\,j\,\tfrac{\Omega + 2\pi k}{M}}\Bigr),
 <li>实际中常用<strong>有限冲激响应(FIR)低通滤波器</strong>或 IIR 滤波器进行处理，然后再每隔 <span class="arithmatex">\(M\)</span> 点取样。</li>
 </ol>
 <hr />
-<h3 id="54">5.4. 应用场景</h3>
+<h3 id="54">5.4. 应用场景<a class="headerlink" href="#54" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>多速率数字信号处理</strong>：在滤波器组、子带编码等中，通过降采样减少数据速率，降低运算量。</li>
 <li><strong>音频/图像转码</strong>：从更高采样率转到更低采样率；例如音频从 48 kHz 降到 16 kHz，必须先滤除 8 kHz 以上的频率成分。</li>
 <li><strong>小波变换</strong>：将信号分解为不同分辨率子带后，对每个子带做抽取以减少冗余。</li>
 </ul>
-<h3 id="55">5.5 离散表述和连续表述的关系</h3>
+<h3 id="55">5.5 离散表述和连续表述的关系<a class="headerlink" href="#55" title="Permanent link">&para;</a></h3>
 <p>下采样频谱分析：离散表述 vs. 连续表述</p>
 <p>在数字信号处理里，常见“<strong>下采样(Downsampling)</strong>”操作是将采样率降低到原来的 <code>1/M</code>。下采样前后，信号在<strong>离散域</strong>与<strong>连续域</strong>会有不同的频谱表述，但它们本质上表达的是<strong>同一个混叠(aliasing)原理</strong>。以下分别做简要说明。</p>
 <hr />
-<h4 id="551-m">5.5.1. 离散表述：带宽 &lt; π/M</h4>
+<h4 id="551-m">5.5.1. 离散表述：带宽 &lt; π/M<a class="headerlink" href="#551-m" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>离散时间</strong>中，下采样因子为 <code>M</code> 时，若要避免混叠，需要信号在 <strong>离散角频率</strong> <code>ω</code> 上满足</li>
 </ul>
@@ -651,7 +651,7 @@ X\!\Bigl(e^{\,j\,\tfrac{\Omega + 2\pi k}{M}}\Bigr),
 <li>在离散傅里叶变换(DTFT)中，<code>ω</code> 取值范围通常是 <code>[-π, π]</code>，对应一个完整的 2π-周期。若原信号带宽超过 <code>π/M</code>，下采样后会出现多个平移副本互相重叠，引发混叠。</li>
 </ul>
 <hr />
-<h4 id="552-f2m">5.5.2. 连续表述：带宽 &lt; F/(2M)</h4>
+<h4 id="552-f2m">5.5.2. 连续表述：带宽 &lt; F/(2M)<a class="headerlink" href="#552-f2m" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>连续时间</strong>中，如果原先采样率是 <code>F</code> (Hz)，下采样因子 <code>M</code> 会使 <strong>新采样率</strong> 变为 <code>F' = F/M</code>。</li>
 <li>根据采样定理(Nyquist-Shannon)，要避免混叠，需要带宽 <code>B</code> 小于新奈奎斯特频率 <code>(F/M)/2</code>，即</li>
@@ -663,7 +663,7 @@ X\!\Bigl(e^{\,j\,\tfrac{\Omega + 2\pi k}{M}}\Bigr),
 <li>当带宽超过 <code>F/(2M)</code> 时，在新的采样率下必然会产生 aliasing（别名失真）。</li>
 </ul>
 <hr />
-<h4 id="553">5.5.3. 二者一致性</h4>
+<h4 id="553">5.5.3. 二者一致性<a class="headerlink" href="#553" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>离散域</strong>里 “带宽 &lt; π/M (rad/sample)”</li>
 <li><strong>连续域</strong>里 “带宽 &lt; F/(2M) (Hz)”</li>
@@ -678,7 +678,7 @@ X\!\Bigl(e^{\,j\,\tfrac{\Omega + 2\pi k}{M}}\Bigr),
 \]</div>
 <p>这就是为什么在离散公式和连续公式中，<strong>阈值</strong>看起来不同但含义相同。</p>
 <hr />
-<h4 id="554">5.5.4. 下采样在连续域的频谱公式</h4>
+<h4 id="554">5.5.4. 下采样在连续域的频谱公式<a class="headerlink" href="#554" title="Permanent link">&para;</a></h4>
 <p>在连续域，用冲激列(Dirac comb) 表示采样，周期从 <code>T = 1/F</code> 增大到 <code>M·T</code> 时，频域表现为 <strong>原信号谱的多个平移并相加</strong>：</p>
 <div class="arithmatex">\[
 Y_{\mathrm{sample}}(\omega)
@@ -692,7 +692,7 @@ X\!\Bigl(\omega - 2\pi\,\tfrac{k}{M\,T}\Bigr).
 <li>若带宽超过 <code>1/(2M·T) = F/(2M)</code>，这些副本在频域里发生重叠，导致混叠。</li>
 </ul>
 <hr />
-<h4 id="5">5. 小结</h4>
+<h4 id="5">5. 小结<a class="headerlink" href="#5" title="Permanent link">&para;</a></h4>
 <ol>
 <li><strong>离散 vs. 连续</strong></li>
 <li>离散时间傅里叶变换(DTFT)以 <code>ω</code> (rad/sample) 为轴，完整周期是 <code>2π</code>；</li>
@@ -715,7 +715,7 @@ X\!\Bigl(\omega - 2\pi\,\tfrac{k}{M\,T}\Bigr).
 <blockquote>
 <p><strong>一句话总结</strong>：在离散表述与连续表述下，避免混叠的条件之所以看起来有两个不同的阈值(“&lt; π/M” vs. “&lt; F/(2M)”)，只是频率单位变化的缘故，本质上是同一个频率带宽限制。</p>
 </blockquote>
-<h2 id="references">references</h2>
+<h2 id="references">references<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
 <ol>
 <li><a href="https://zhuanlan.zhihu.com/p/74736706">频谱混叠</a></li>
 <li><a href="https://www.youtube.com/watch?v=bmbv8N3xsT0&amp;t=281s">视频教程采样</a></li>

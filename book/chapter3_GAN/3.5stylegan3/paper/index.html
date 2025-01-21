@@ -140,10 +140,10 @@ Theme by GitBook
 
 
 
-<h1 id="stylegan3"><a href="https://proceedings.neurips.cc/paper/2021/file/076ccd93ad68be51f23707988e934906-Paper.pdf">stylegan3</a></h1>
+<h1 id="stylegan3"><a href="https://proceedings.neurips.cc/paper/2021/file/076ccd93ad68be51f23707988e934906-Paper.pdf">stylegan3</a><a class="headerlink" href="#stylegan3" title="Permanent link">&para;</a></h1>
 <p><strong>Author</strong>: Tero Karras
 <strong>Institution</strong>: NVIDIA</p>
-<h1 id="terms">Terms</h1>
+<h1 id="terms">Terms<a class="headerlink" href="#terms" title="Permanent link">&para;</a></h1>
 <p>Aliasing（混叠） 是一个信号处理领域的基本问题，指的是当信号在采样过程中采样率不足时，高频信号的特性会被错误地映射到低频部分，从而导致失真或不正确的结果。这种现象同样适用于图像处理和深度学习中的生成网络。</p>
 <p>在信号处理中的解释
 定义：</p>
@@ -152,8 +152,8 @@ Theme by GitBook
 示例：</p>
 <p>在音频信号中，采样不足会导致原本的高音变成不相关的低音。
 在图像处理中，缩小图像而没有正确低通滤波时会导致边缘或纹理出现波纹或锯齿状伪影。</p>
-<h2 id="aliasing">Aliasing</h2>
-<h1 id="_1">摘要</h1>
+<h2 id="aliasing">Aliasing<a class="headerlink" href="#aliasing" title="Permanent link">&para;</a></h2>
+<h1 id="_1">摘要<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
 <p><strong>问题描述：</strong>
 当前典型的 GAN 尽管具有层次化的卷积结构，但生成过程却依赖于绝对像素坐标，导致图像细节“粘在”像素网格上，而不是自然地附着在物体表面。</p>
 <p><strong>问题根源：</strong>
@@ -165,7 +165,7 @@ Theme by GitBook
 新模型在亚像素级别实现了对平移和旋转的等变性。</p>
 <p><strong>应用前景：</strong>
 这些改进为生成模型在视频和动画等动态任务中的应用奠定了基础，使生成效果更加自然和连贯。</p>
-<h1 id="introduction">Introduction</h1>
+<h1 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">&para;</a></h1>
 <p>引言部分明确了现有 GAN 中混叠问题的危害，分析了其原因，并提出了通过改进信号处理和生成器架构来解决这一问题的研究目标和贡献</p>
 <ol>
 <li>问题背景
@@ -219,9 +219,9 @@ Ours（改进后的模型）：
         allowfullscreen>
 </iframe>
 
-<h1 id="_2">通过连续信号的解释实现生成器的集合等变性(平移和旋转)</h1>
+<h1 id="_2">通过连续信号的解释实现生成器的集合等变性(平移和旋转)<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h1>
 <p>将网络中的特征图视为连续信号，而不是离散像素，从而严格遵循信号处理理论（如 Nyquist 定理）</p>
-<h1 id="_3">根据连续信号解释的等变形</h1>
+<h1 id="_3">根据连续信号解释的等变形<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h1>
 <ul>
 <li>采样定理</li>
 </ul>
@@ -231,7 +231,7 @@ any continuous signal containing frequencies between zero and half of the sampli
 <p>翻译为:插值频率是连续信号的两倍时，可以完全重建原始信号
 需要注意的是 这里假设原始信号是一个带限信号，也就信号的频率被限制在一个空间内。
 <img alt="alt text" src="../../../../images/image-8.png" /></p>
-<h2 id="_4">连续型号和离散型号的关系</h2>
+<h2 id="_4">连续型号和离散型号的关系<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
 <p>假设连续信号为<span class="arithmatex">\(z(x)\)</span>,离散信号为<span class="arithmatex">\(Z(x)\)</span>, 采样频率为<span class="arithmatex">\(s\)</span>, 采样间隔则为<span class="arithmatex">\(T=\frac{1}{s}\)</span>.<span class="arithmatex">\(\cdot\)</span>表示乘积, 卷积表示<span class="arithmatex">\(\ast\)</span>.
 二维狄拉克梳妆函数为<span class="arithmatex">\(III(x,y)=\sum_{m=-\infty}^{\infty}\sum_{n=-\infty}^{\infty}\delta(x-mT)\delta(y-nT)\)</span>
 根据插值公式</p>
@@ -264,12 +264,12 @@ f(z) = \phi_{s'} \ast \text{F}(\Pi_s \odot z),\quad\quad
 \]</div>
 <p>其中<span class="arithmatex">\(\odot\)</span>表示点乘，<span class="arithmatex">\(s\)</span>and<span class="arithmatex">\(s'\)</span>表示输入的采样频率和输出的采样频率
 有些操作会改变采样频率 比如上采样 下采样</p>
-<h2 id="equivariant-network-layers">Equivariant network layers</h2>
+<h2 id="equivariant-network-layers">Equivariant network layers<a class="headerlink" href="#equivariant-network-layers" title="Permanent link">&para;</a></h2>
 <p>translation equivariance transformation</p>
 <div class="arithmatex">\[f\cdot t = t\cdot f\]</div>
 <p>假设输出的采样频率为<span class="arithmatex">\(s'\)</span>， 那么根据采样定理，需要满足<span class="arithmatex">\(f\)</span>作用之后的信号频率不操作<span class="arithmatex">\(s'/2\)</span>，也就<span class="arithmatex">\(f\)</span>不产生超过<span class="arithmatex">\(s'/2\)</span>的高频信号。</p>
-<h3 id="convolution-layer">convolution layer</h3>
-<h3 id="convolution">Convolution</h3>
+<h3 id="convolution-layer">convolution layer<a class="headerlink" href="#convolution-layer" title="Permanent link">&para;</a></h3>
+<h3 id="convolution">Convolution<a class="headerlink" href="#convolution" title="Permanent link">&para;</a></h3>
 <p>Consider a standard convolution with a discrete kernel<span class="arithmatex">\(K\)</span>. We can interpret<span class="arithmatex">\(K\)</span>as living in the same grid as the input feature map, with sampling rate<span class="arithmatex">\(s\)</span>. The discrete-domain operation is simply:</p>
 <div class="arithmatex">\[
 \text{F}_{\text{conv}}(Z) = K \ast Z,
@@ -288,7 +288,7 @@ f(z) = \phi_{s'} \ast \text{F}(\Pi_s \odot z),\quad\quad
 这就使得卷积操作天然满足采样定理的要求。</p>
 <p>卷积对应的频域示意图
 <img alt="alt text" src="../../../../images/image-10.png" /></p>
-<h3 id="upsample-and-downsample">upsample and downsample</h3>
+<h3 id="upsample-and-downsample">upsample and downsample<a class="headerlink" href="#upsample-and-downsample" title="Permanent link">&para;</a></h3>
 <p><strong>上采样</strong>
 上采样增加了信号的采样率。这里假设是理想上采样，也就是“插0” + 理想低通滤波
 理想上采样后的信号频率会被压缩<span class="arithmatex">\(n\)</span>倍.<span class="arithmatex">\(n\)</span>是上采样的倍数。
@@ -322,14 +322,14 @@ F_{down} (Z)&amp; = \mathrm{III}_{s'} \odot \left[  \psi_{s'} \ast \left( \phi_{
 这个结果直观表示为 下采样之后的信号和原始信号按照最新的下采样频率进行采样时一致的，都满足采样定理，前提是原始信号需要满足带限性，并且带宽<span class="arithmatex">\(f&lt;\frac{1}{2}s'\)</span>。</p>
 <p>下采样具有translation 不变性，即平移之后再下采样和下采样之后再平移得到的结果是一样的。
 但是对于旋转并不保持不变性。如果要保持选择不变性，需要引入理想圆盘低筒滤波器， i.e., 2D Jinc filter</p>
-<h4 id="2d-jinc-filter-frequency-spectrum">2D "Jinc" Filter Frequency Spectrum</h4>
-<h5 id="spatial-domain-definition">Spatial Domain Definition</h5>
+<h4 id="2d-jinc-filter-frequency-spectrum">2D "Jinc" Filter Frequency Spectrum<a class="headerlink" href="#2d-jinc-filter-frequency-spectrum" title="Permanent link">&para;</a></h4>
+<h5 id="spatial-domain-definition">Spatial Domain Definition<a class="headerlink" href="#spatial-domain-definition" title="Permanent link">&para;</a></h5>
 <p>In the spatial domain, the 2D "Jinc" filter is:</p>
 <div class="arithmatex">\[
 h(x, y) = 2 \frac{J_1(2\pi r)}{r}, \quad r = \sqrt{x^2 + y^2}.
 \]</div>
-<h2 id="atr-0h0-0-1">At<span class="arithmatex">\(r = 0\)</span>,<span class="arithmatex">\(h(0, 0) = 1\)</span>.</h2>
-<h3 id="fourier-transform">Fourier Transform</h3>
+<h2 id="atr-0h0-0-1">At<span class="arithmatex">\(r = 0\)</span>,<span class="arithmatex">\(h(0, 0) = 1\)</span>.<a class="headerlink" href="#atr-0h0-0-1" title="Permanent link">&para;</a></h2>
+<h3 id="fourier-transform">Fourier Transform<a class="headerlink" href="#fourier-transform" title="Permanent link">&para;</a></h3>
 <p>The frequency response is:</p>
 <div class="arithmatex">\[
 H(\rho) = 2\pi \int_0^\infty h(r) r J_0(2\pi \rho r) \, dr,
@@ -384,7 +384,7 @@ f_\sigma(z) = \psi_s * \sigma(z),
 -<span class="arithmatex">\(\psi_s\)</span>是理想低通滤波器。
 -<span class="arithmatex">\(\sigma(z)\)</span>是非线性操作后的信号。
 -<span class="arithmatex">\(*\)</span>表示卷积。</p>
-<h4 id="_5">离散形式</h4>
+<h4 id="_5">离散形式<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h4>
 <p>对应的离散版本表示为：</p>
 <div class="arithmatex">\[
 F_\sigma(Z) = s^2 \cdot \Pi_s \odot (\phi_s _\sigma(\phi_s_ Z)),
@@ -400,16 +400,16 @@ F_\sigma(Z) = s^2 \cdot \Pi_s \odot (\phi_s _\sigma(\phi_s_ Z)),
 非线性操作会引入高频分量，离散域中容易产生频谱混叠。</p>
 <p>因此作者的想法是用上采样模拟连续空间，先上采样，再做非线性操作，再下采样。当然，要满足旋转不变性，则需要下采样应用 2D Jinc filter。</p>
 <p>而且非线性操作也是网络中唯一生成额外高频信息的操作。可以控制她从而控制每一层需要的额外高频信息。高频信息即纹理信息。</p>
-<h1 id="practical-application">practical application</h1>
+<h1 id="practical-application">practical application<a class="headerlink" href="#practical-application" title="Permanent link">&para;</a></h1>
 <p>descriminator 不发生变化</p>
 <p><strong>generator</strong>
 <strong>目标</strong>： 设计等变性神经网络
 用PSNR值衡量。值越高表示等变形越强。</p>
-<h2 id="eq-t">EQ-T 公式</h2>
+<h2 id="eq-t">EQ-T 公式<a class="headerlink" href="#eq-t" title="Permanent link">&para;</a></h2>
 <div class="arithmatex">\[
 \text{EQ-T} = 10 \cdot \log_{10} \left( \frac{I_{\text{max}}^2}{\mathbb{E}_{\text{w} \sim \mathcal{W}, x \sim \mathcal{X}^2, p \sim \mathcal{V}, c \sim \mathcal{C}} \left[ \left( g(t_x[z_0]; \text{w})_c(p) - t_x[g(z_0; \text{w})]_c(p) \right)^2 \right]} \right)
 \]</div>
-<h4 id="_6">说明</h4>
+<h4 id="_6">说明<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h4>
 <p>-<span class="arithmatex">\(I_{\text{max}}\)</span>: 图像像素的最大可能值（如 255）。
 -<span class="arithmatex">\(\mathbb{E}\)</span>: 表示期望值。
 -<span class="arithmatex">\(\text{w} \sim \mathcal{W}\)</span>: 权重从分布<span class="arithmatex">\(\mathcal{W}\)</span>中采样。
@@ -420,7 +420,7 @@ F_\sigma(Z) = s^2 \cdot \Pi_s \odot (\phi_s _\sigma(\phi_s_ Z)),
 -<span class="arithmatex">\(t_x\)</span>: 几何变换（如平移、旋转、缩放等）。
 -<span class="arithmatex">\(z_0\)</span>: 输入噪声或潜在变量。
 从这个公式可以看到, 在旋转和平移是作用在 初始输入<span class="arithmatex">\(z_0\)</span>上的，而不是latent code<span class="arithmatex">\(w\)</span>.</p>
-<h2 id="fourier">Fourier 特征</h2>
+<h2 id="fourier">Fourier 特征<a class="headerlink" href="#fourier" title="Permanent link">&para;</a></h2>
 <p>用 Fourier 特征替换 StyleGAN2 中的学习输入常数，便于精确连续变换输入，改善了 FID 并能计算等变性指标，但初始架构离等变性仍远。
 SynthesisInput Forward 计算流程数学公式
 输入定义和符号说明
@@ -473,7 +473,7 @@ T = M_r M_t T_\text{user}
 \]</div>
 <p>频率和相位的变换
 将变换矩阵应用于频率和相位：</p>
-<h3 id="31">3.1 频率变换</h3>
+<h3 id="31">3.1 频率变换<a class="headerlink" href="#31" title="Permanent link">&para;</a></h3>
 <div class="arithmatex">\[
 \text{f}_i'' = \text{f}_i' \cdot \text{T}_{1:2, 1:2}, \quad \forall i \in [1, C]
 \]</div>
@@ -518,24 +518,24 @@ T = M_r M_t T_\text{user}
 平移不会改变信号的频率分量（振幅不变），但会引入与平移量成比例的相位偏移。
 旋转会同时改变空间域和频域信号的方向，但频率的幅度不变</li>
 </ol>
-<h2 id="_7">移除逐像素噪声输入</h2>
+<h2 id="_7">移除逐像素噪声输入<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
 <p>虽对 FID 近乎无影响，但单独考虑时未提升等变性指标。</p>
-<h2 id="_8">简化设置</h2>
+<h2 id="_8">简化设置<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h2>
 <p>包括减少映射网络深度、禁用混合正则化和路径长度正则化、消除输出跳跃连接，并通过跟踪像素和特征图的指数移动平均进行归一化，使 FID 回到原始 StyleGAN2 水平且略微提升了平移等变性。</p>
-<h2 id="config-e">边界和上采样（config E）</h2>
+<h2 id="config-e">边界和上采样（config E）<a class="headerlink" href="#config-e" title="Permanent link">&para;</a></h2>
 <p>通过在目标画布周围保持固定边界扩展特征图近似无限空间，用窗口化 sinc 滤波器（）替代双线性上采样滤波器，提升了平移等变性，但 FID 有所下降。</p>
-<h2 id="config-f">滤波非线性（config F）</h2>
+<h2 id="config-f">滤波非线性（config F）<a class="headerlink" href="#config-f" title="Permanent link">&para;</a></h2>
 <p>按照理论对非线性函数进行滤波处理，用自定义 CUDA 内核实现高效的上采样 - 非线性 - 下采样操作，进一步提高了平移等变性（EQ - T）。</p>
-<h2 id="config-g">非临界采样（config G）</h2>
+<h2 id="config-g">非临界采样（config G）<a class="headerlink" href="#config-g" title="Permanent link">&para;</a></h2>
 <p>采用非临界采样降低截止频率抑制混叠，改善平移等变性且使 FID 低于原始 StyleGAN2，同时根据新的采样方式调整了确定特征图数量的启发式方法。</p>
-<h2 id="fourier-config-h">变换 Fourier 特征（config H）</h2>
+<h2 id="fourier-config-h">变换 Fourier 特征（config H）<a class="headerlink" href="#fourier-config-h" title="Permanent link">&para;</a></h2>
 <p>引入学习仿射层变换输入 Fourier 特征，使特征方向可基于变化，略微改善了 FID。</p>
-<h2 id="config-t">灵活层规格（config T）</h2>
+<h2 id="config-t">灵活层规格（config T）<a class="headerlink" href="#config-t" title="Permanent link">&para;</a></h2>
 <p>灵活设置每层滤波器参数，改善了平移等变性并消除剩余伪影，使网络结构更灵活，且固定层数在不同输出分辨率下表现稳定。</p>
-<h2 id="config-r">旋转等变性（config R）</h2>
+<h2 id="config-r">旋转等变性（config R）<a class="headerlink" href="#config-r" title="Permanent link">&para;</a></h2>
 <p>将所有层的卷积换为卷积并补偿容量，用径向对称 jinc 基滤波器替换 sinc 基下采样滤波器，实现旋转等变性且不损害 FID，同时采用高斯模糊技巧防止训练初期崩溃。</p>
-<h1 id="_9">代码解读</h1>
-<h2 id="modulated_conv2d">modulated_conv2d</h2>
+<h1 id="_9">代码解读<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h1>
+<h2 id="modulated_conv2d">modulated_conv2d<a class="headerlink" href="#modulated_conv2d" title="Permanent link">&para;</a></h2>
 <pre><code>def modulated_conv2d(
     x,                  # Input tensor: [batch_size, in_channels, in_height, in_width]
     w,                  # Weight tensor: [out_channels, in_channels, kernel_height, kernel_width]
@@ -577,7 +577,7 @@ T = M_r M_t T_\text{user}
     x = x.reshape(batch_size, -1, *x.shape[2:])
     return x
 </code></pre>
-<h3 id="_10">最终数学表达式</h3>
+<h3 id="_10">最终数学表达式<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <p>经过以上步骤，最终输出 <span class="arithmatex">\( y \)</span> 的数学表达为：</p>
 <div class="arithmatex">\[
 y_{b,o,h',w'} = \sum_{i,k_h,k_w} \left[ x_{b,i,h+k_h,w+k_w} \cdot \left( w_{o,i,k_h,k_w} \cdot s_{b,i} \cdot d_{\text{coef},o} \cdot \text{input\_gain}_{b,i} \right) \right]
@@ -589,13 +589,13 @@ y_{b,o,h',w'} = \sum_{i,k_h,k_w} \left[ x_{b,i,h+k_h,w+k_w} \cdot \left( w_{o,i,
 <li>$ h', w'$: 输出特征图的位置。</li>
 <li>$ k_h, k_w $: 卷积核的空间维度索引。</li>
 </ul>
-<h3 id="_11">直观意义</h3>
+<h3 id="_11">直观意义<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <ol>
 <li>样式 $ s $ 动态地调节权重，调整每个卷积核的权重。同一个batch里不同的不同的样本style是独立的。体现了生成式模型中特征的个性化调整。</li>
 <li>归一化和去归一化过程避免了数值不稳定性。权重归一化作用在i,k,h 维度上，也就是不同的卷积核上做normalize，具有相同的范数。对style 的归一化作用在所有的维度上。也就是整个s 归一化之后的范数为1.</li>
 <li>分组卷积高效地实现了每个样本独立的权重调制计算。</li>
 </ol>
-<h2 id="synthesislayer">SynthesisLayer</h2>
+<h2 id="synthesislayer">SynthesisLayer<a class="headerlink" href="#synthesislayer" title="Permanent link">&para;</a></h2>
 <pre><code># Track input magnitude.
 if update_emas:
     with torch.autograd.profiler.record_function('update_magnitude_ema'):
@@ -614,7 +614,7 @@ dtype = torch.float16 if (self.use_fp16 and not force_fp32 and x.device.type == 
 x = modulated_conv2d(x=x.to(dtype), w=self.weight, s=styles,
     padding=self.conv_kernel-1, demodulate=(not self.is_torgb), input_gain=input_gain)
 </code></pre>
-<h3 id="_12">数学公式</h3>
+<h3 id="_12">数学公式<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <ol>
 <li><strong>当前输入幅值的平方均值</strong>：</li>
 </ol>
@@ -641,20 +641,20 @@ x = modulated_conv2d(x=x.to(dtype), w=self.weight, s=styles,
    \text{input_gain} = \frac{1}{\sqrt{\text{magnitude_ema}}}
    $$</p>
 <hr />
-<h3 id="_13">公式的直观意义</h3>
+<h3 id="_13">公式的直观意义<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>动态归一化</strong>：通过 <span class="arithmatex">\(\text{input\_gain}\)</span> 调整输入特征的幅值，确保其在训练过程中保持适当范围。</li>
 <li><strong>平滑更新</strong>：EMA 提供了一种平滑的历史幅值估计，避免训练中的剧烈波动。</li>
 <li><strong>数值稳定性</strong>：限制输入特征幅值的过大或过小，确保训练中的梯度稳定。
     input_gain 会作用在之后的卷积上，作用相当于对X做了一个归一化。可以称之为滑动平均归一化。目前所有的归一化都不改变mean。</li>
 </ul>
-<h3 id="filtered_lrelu">filtered_lrelu</h3>
+<h3 id="filtered_lrelu">filtered_lrelu<a class="headerlink" href="#filtered_lrelu" title="Permanent link">&para;</a></h3>
 <pre><code>x = filtered_lrelu.filtered_lrelu(x=x, fu=self.up_filter, fd=self.down_filter, b=self.bias.to(x.dtype),
             up=self.up_factor, down=self.down_factor, padding=self.padding, gain=gain, slope=slope, clamp=self.conv_clamp)
 </code></pre>
 <p><a href="https://github.com/NVlabs/stylegan3/blob/main/torch_utils/ops/filtered_lrelu.py">https://github.com/NVlabs/stylegan3/blob/main/torch_utils/ops/filtered_lrelu.py</a>
 作者把上采样下采样和激活函数重新写了一个cuda kernel。太过于工程化，先跳过这部分。</p>
-<h3 id="synthesislayerdesign_lowpass_filter">SynthesisLayer.design_lowpass_filter</h3>
+<h3 id="synthesislayerdesign_lowpass_filter">SynthesisLayer.design_lowpass_filter<a class="headerlink" href="#synthesislayerdesign_lowpass_filter" title="Permanent link">&para;</a></h3>
 <pre><code>    @staticmethod
     def design_lowpass_filter(numtaps, cutoff, width, fs, radial=False):
         assert numtaps &gt;= 1
@@ -678,8 +678,8 @@ x = modulated_conv2d(x=x.to(dtype), w=self.weight, s=styles,
         f /= np.sum(f)
         return torch.as_tensor(f, dtype=torch.float32)
 </code></pre>
-<h3 id="_14">滤波器的作用域与设计过程</h3>
-<h4 id="_15"><strong>作用域</strong></h4>
+<h3 id="_14">滤波器的作用域与设计过程<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
+<h4 id="_15"><strong>作用域</strong><a class="headerlink" href="#_15" title="Permanent link">&para;</a></h4>
 <p>这些滤波器 <strong>作用在时间域</strong>，它们通过时间域卷积操作处理输入信号或图像。卷积公式为：</p>
 <div class="arithmatex">\[
 y[n] = \sum_{k} x[k] \cdot h[n-k]
@@ -690,20 +690,20 @@ y[n] = \sum_{k} x[k] \cdot h[n-k]
 <li><span class="arithmatex">\(h[k]\)</span>: 滤波器的时间域权重（脉冲响应）。</li>
 <li><span class="arithmatex">\(y[n]\)</span>: 滤波后的输出信号。</li>
 </ul>
-<h4 id="_16"><strong>设计过程</strong></h4>
+<h4 id="_16"><strong>设计过程</strong><a class="headerlink" href="#_16" title="Permanent link">&para;</a></h4>
 <p>尽管滤波器作用在时间域，其设计过程通常基于频域的要求，比如：</p>
 <ul>
 <li><strong>截止频率</strong> (<span class="arithmatex">\(\text{cutoff}\)</span>)：指定滤波器允许通过的频率范围。</li>
 <li><strong>过渡带宽</strong> (<span class="arithmatex">\(\text{width}\)</span>)：控制滤波器从通带到阻带的过渡区域的宽度。</li>
 <li><strong>频域形状</strong>：滤波器的设计目标是实现某种理想频率响应（如低通、高通或带通）。</li>
 </ul>
-<h4 id="_17"><strong>频域与时间域的关系</strong></h4>
+<h4 id="_17"><strong>频域与时间域的关系</strong><a class="headerlink" href="#_17" title="Permanent link">&para;</a></h4>
 <p>根据傅里叶变换理论，时间域与频域是一对互补的表示：</p>
 <ul>
 <li>滤波器的 <strong>时间域权重（脉冲响应）</strong> 决定其频域响应。</li>
 <li>滤波器的 <strong>频域设计目标</strong>（如截止频率、过渡带宽）通过设计过程映射为时间域权重。</li>
 </ul>
-<h3 id="_18">代码中的滤波器设计</h3>
+<h3 id="_18">代码中的滤波器设计<a class="headerlink" href="#_18" title="Permanent link">&para;</a></h3>
 <ol>
 <li><strong>Kaiser 滤波器</strong>：</li>
 <li>使用 <code>scipy.signal.firwin</code> 基于频域要求生成时间域滤波器权重。</li>
@@ -712,7 +712,7 @@ y[n] = \sum_{k} x[k] \cdot h[n-k]
 <li>基于径向对称的 Jinc 函数设计，其核心思想源自频域特性。</li>
 <li>通过叠加 Kaiser 窗口进一步调整频域特性并生成时间域滤波器权重。</li>
 </ol>
-<h3 id="_19">总结</h3>
+<h3 id="_19">总结<a class="headerlink" href="#_19" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>作用域</strong>：滤波器作用在时间域，使用卷积操作处理输入信号或图像。</li>
 <li><strong>设计过程</strong>：基于频域要求（如截止频率、带宽）设计时间域滤波器权重。</li>
