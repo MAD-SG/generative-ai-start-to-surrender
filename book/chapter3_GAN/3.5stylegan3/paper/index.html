@@ -1,149 +1,985 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-<title>StyleGAN3 - Generative AI: From Start to Surrender</title>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-<meta name="generator" content="mkdocs-1.6.1, mkdocs-gitbook-1.0.7">
-
-<link rel="shortcut icon" href="../../../../images/favicon.ico" type="image/x-icon">
-<meta name="HandheldFriendly" content="true"/>
-<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
-<meta rel="next" href="" />
-<link href="../../../../css/style.min.css" rel="stylesheet"> 
-</head>
-
-<body>
-<div class="book">
-<div class="book-summary">
-<div id="book-search-input" role="search">
-<input type="text" placeholder="Type to search" />
-</div> <!-- end of book-search-input -->
-
-<nav role="navigation">
-<ul class="summary">
-<li>
-<a href="../../../.." target="_blank" class="custom-link">Generative AI: From Start to Surrender</a>
-</li>
-<li class="divider"></li>
-<li class="chapter" data-path="">
-<a href="../../../..">Home</a>
-<li class="header">Introduction</li>
-
-<li>
-<a href="../../../chapter1_Introduction/1.1terminology/" class="">Terms</a>
-</li>
-
-<li>
-<a href="../../../chapter1_Introduction/1.2fourier_transform/" class="">Fourier Transform</a>
-</li>
-
-<li>
-<a href="../../../chapter1_Introduction/1.3signal_processing/" class="">Signal Processing</a>
-</li>
-
-<li>
-<a href="../../../chapter1_Introduction/1.4statistics/" class="">Statistics</a>
-</li>
-
-<li>
-<a href="../../../chapter1_Introduction/1.5SDE/" class="">SDE</a>
-</li>
-
-<li class="header">VAE</li>
-
-<li>
-<a href="../../../chapter2_VAE/2.1introduction/" class="">VAE Introduction</a>
-</li>
-
-<li class="header">GANs</li>
-
-<li>
-<a href="../../3.2pggan/paper/" class="">PGGAN</a>
-</li>
-
-<li>
-<a href="../../3.3stylegan/paper/" class="">StyleGAN</a>
-</li>
-
-<li>
-<a href="../../3.4stylegan2/paper/" class="">StyleGAN2</a>
-</li>
-
-<li>
-<a href="./" class="active">StyleGAN3</a>
-</li>
-
-<li>
-<a href="../../3.6styleganT/paper/" class="">StyleGAN T</a>
-</li>
-
-<li>
-<a href="../../3.7R3Gan/paper/" class="">R3Gan</a>
-</li>
-
-<li class="header">Diffusion</li>
-
-<li>
-<a href="../../../chapter4_diffusion/4.1introduction/" class="">Introduction</a>
-</li>
-
-<li>
-<a href="../../../chapter4_diffusion/4.2DDPM/" class="">DDPM</a>
-</li>
-
-<li class="header">Generation Theory</li>
-
-<li>
-<a href="../../../chapter5_generation_theory/5.1MLE/" class="">Maximal Likelihood</a>
-</li>
-
-<li class="divider"></li>
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../../3.4stylegan2/paper/">
+      
+      
+        <link rel="next" href="../../3.6styleganT/paper/">
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.50">
+    
+    
+      
+        <title>StyleGAN3 - Generative AI: From Start to Surrender</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.a40c8224.min.css">
+      
+      
 
 
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
 
-<li><a href="http://www.mkdocs.org">
-Published with MkDocs
-</a></li>
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#stylegan3-overview" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
 
-<li><a href="https://github.com/GitbookIO/theme-default">
-Theme by GitBook
-</a></li>
-</ul>
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="Generative AI: From Start to Surrender" class="md-header__button md-logo" aria-label="Generative AI: From Start to Surrender" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Generative AI: From Start to Surrender
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              StyleGAN3
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../chapter1_Introduction/1.1terminology/" class="md-tabs__link">
+          
+  
+  Introduction
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../chapter2_VAE/2.1introduction/" class="md-tabs__link">
+          
+  
+  VAE
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../3.2pggan/paper/" class="md-tabs__link">
+          
+  
+  GANs
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../chapter4_diffusion/4.1introduction/" class="md-tabs__link">
+          
+  
+  Diffusion
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../chapter5_generation_theory/5.1MLE/" class="md-tabs__link">
+          
+  
+  Generation Theory
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
 </nav>
-
-</div> <!-- end of book-summary -->
-
-<div class="book-body">
-<div class="body-inner">
-<div class="book-header" role="navigation">
-
-<!-- Title -->
-<h1>
-<i class="fa fa-circle-o-notch fa-spin"></i>
-<a href="." ></a>
-</h1>
-
-</div> <!-- end of book-header -->
-
-<div class="page-wrapper" tabindex="-1" role="main">
-<div class="page-inner">
-<div id="book-search-results">
-<div class="search-noresults">
-
-<section class="normal markdown-section">
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
 
 
+  
 
-<h1 id="stylegan3"><a href="https://proceedings.neurips.cc/paper/2021/file/076ccd93ad68be51f23707988e934906-Paper.pdf">stylegan3</a><a class="headerlink" href="#stylegan3" title="Permanent link">&para;</a></h1>
-<p><strong>Author</strong>: Tero Karras
-<strong>Institution</strong>: NVIDIA</p>
-<h1 id="terms">Terms<a class="headerlink" href="#terms" title="Permanent link">&para;</a></h1>
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Generative AI: From Start to Surrender" class="md-nav__button md-logo" aria-label="Generative AI: From Start to Surrender" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Generative AI: From Start to Surrender
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Introduction
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter1_Introduction/1.1terminology/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Terms
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter1_Introduction/1.2fourier_transform/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Fourier Transform
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter1_Introduction/1.3signal_processing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Signal Processing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter1_Introduction/1.4statistics/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Statistics
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter1_Introduction/1.5SDE/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SDE
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    VAE
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            VAE
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter2_VAE/2.1introduction/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    VAE Introduction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    GANs
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            GANs
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../3.2pggan/paper/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PGGAN
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../3.3stylegan/paper/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    StyleGAN
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../3.4stylegan2/paper/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    StyleGAN2
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    StyleGAN3
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    StyleGAN3
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#terms" class="md-nav__link">
+    <span class="md-ellipsis">
+      Terms
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#abstract" class="md-nav__link">
+    <span class="md-ellipsis">
+      Abstract
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#continuous-and-discrete-signals" class="md-nav__link">
+    <span class="md-ellipsis">
+      Continuous and Discrete Signals
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#practical-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practical Application
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      代码解读
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../3.6styleganT/paper/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    StyleGAN T
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../3.7R3Gan/paper/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    R3Gan
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Diffusion
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Diffusion
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter4_diffusion/4.1introduction/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter4_diffusion/4.2DDPM/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    DDPM
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Generation Theory
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Generation Theory
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter5_generation_theory/5.1MLE/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Maximal Likelihood
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="stylegan3-overview">StyleGAN3 Overview<a class="headerlink" href="#stylegan3-overview" title="Permanent link">&para;</a></h1>
+<h2 id="terms">Terms<a class="headerlink" href="#terms" title="Permanent link">&para;</a></h2>
 <p>Aliasing（混叠） 是一个信号处理领域的基本问题，指的是当信号在采样过程中采样率不足时，高频信号的特性会被错误地映射到低频部分，从而导致失真或不正确的结果。这种现象同样适用于图像处理和深度学习中的生成网络。</p>
 <p>在信号处理中的解释
 定义：</p>
@@ -152,8 +988,7 @@ Theme by GitBook
 示例：</p>
 <p>在音频信号中，采样不足会导致原本的高音变成不相关的低音。
 在图像处理中，缩小图像而没有正确低通滤波时会导致边缘或纹理出现波纹或锯齿状伪影。</p>
-<h2 id="aliasing">Aliasing<a class="headerlink" href="#aliasing" title="Permanent link">&para;</a></h2>
-<h1 id="_1">摘要<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<h2 id="abstract">Abstract<a class="headerlink" href="#abstract" title="Permanent link">&para;</a></h2>
 <p><strong>问题描述：</strong>
 当前典型的 GAN 尽管具有层次化的卷积结构，但生成过程却依赖于绝对像素坐标，导致图像细节“粘在”像素网格上，而不是自然地附着在物体表面。</p>
 <p><strong>问题根源：</strong>
@@ -165,36 +1000,33 @@ Theme by GitBook
 新模型在亚像素级别实现了对平移和旋转的等变性。</p>
 <p><strong>应用前景：</strong>
 这些改进为生成模型在视频和动画等动态任务中的应用奠定了基础，使生成效果更加自然和连贯。</p>
-<h1 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">&para;</a></h1>
+<h2 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">&para;</a></h2>
 <p>引言部分明确了现有 GAN 中混叠问题的危害，分析了其原因，并提出了通过改进信号处理和生成器架构来解决这一问题的研究目标和贡献</p>
-<ol>
-<li>问题背景
-近年来，GAN 的图像生成质量有了显著提升（如 StyleGAN2 等），广泛应用于图像编辑、域迁移和视频生成等领域。
-尽管生成器具有层次化的卷积结构，但生成过程对绝对像素坐标的依赖会导致 “纹理粘连”（texture sticking） 问题，即细节固定在像素坐标上而非自然附着在物体表面。</li>
-<li>问题分析
-纹理粘连现象：
+<h3 id="_1">问题背景<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
+<p>近年来，GAN 的图像生成质量有了显著提升（如 StyleGAN2 等），广泛应用于图像编辑、域迁移和视频生成等领域。
+尽管生成器具有层次化的卷积结构，但生成过程对绝对像素坐标的依赖会导致 “纹理粘连”（texture sticking） 问题，即细节固定在像素坐标上而非自然附着在物体表面。</p>
+<h3 id="_2">问题分析<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
+<p>纹理粘连现象：
 生成细节（如纹理、毛发）在对象移动时未能正确随物体表面移动，破坏了视觉一致性，特别是在视频和动画生成中。
 问题根源：
-混叠是导致这一现象的核心原因。混叠源于不当的信号处理，如：</li>
-<li>不理想的上采样滤波器（如双线性插值）。</li>
-<li>激活函数（如 ReLU）带来的高频分量。</li>
-<li>网络边界填充（padding）等操作导致绝对像素坐标泄露。</li>
-<li>混叠的放大机制：
-网络会主动利用这些混叠信息，通过多个尺度的结合放大它们，从而建立依赖绝对屏幕坐标的纹理模式。</li>
-<li>论文目标
-设计一个生成器架构，能够：
+混叠是导致这一现象的核心原因。混叠源于不当的信号处理，如：
+   - 不理想的上采样滤波器（如双线性插值）。
+   - 激活函数（如 ReLU）带来的高频分量。
+   - 网络边界填充（padding）等操作导致绝对像素坐标泄露。
+   - 混叠的放大机制：
+网络会主动利用这些混叠信息，通过多个尺度的结合放大它们，从而建立依赖绝对屏幕坐标的纹理模式。</p>
+<h3 id="_3">论文目标<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<p>设计一个生成器架构，能够：
 完全消除混叠问题，确保生成过程不依赖绝对像素坐标。
 实现 平移和旋转等变性（translation and rotation equivariance），使生成的图像细节能够自然随物体变化。
-保持与现有 GAN（如 StyleGAN2）相当的图像质量。</li>
-<li>
-<p>主要贡献
-提出一种基于 连续信号解释（continuous signal interpretation） 的方法，重新设计 StyleGAN2 的生成器架构。
+保持与现有 GAN（如 StyleGAN2）相当的图像质量。</p>
+<h3 id="_4">主要贡献<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>提出一种基于 连续信号解释（continuous signal interpretation） 的方法，重新设计 StyleGAN2 的生成器架构。
 发现当前上采样滤波器在抑制混叠方面不够有效，需要更高质量的滤波器（如超过 100dB 的衰减能力）。
 提出了一些普适的小型架构改动，既能有效抑制混叠，又能保证生成器的等变性。
 新的生成器在图像质量指标（如 FID）上与 StyleGAN2 持平，但解决了纹理粘连问题，更适合用于视频和动画生成。</p>
-</li>
-<li>
-<p><strong>Texture sticking</strong> 问题举例说明
+<ul>
+<li><strong>Texture sticking</strong> 问题举例说明
 左侧（Central 和 Averaged）：
 StyleGAN2：
 现象：即使生成了一个图像的多个版本（通过对潜在空间的细微扰动），图像的细节（如猫的毛发或纹理）依然固定在绝对的像素坐标上。
@@ -209,9 +1041,8 @@ Ours（改进后的模型）：
 现象：头发的细节会随人物的位置自然移动，生成更连贯的动态效果。
 结果：解决了纹理粘连问题，头发看起来更像真实物体的一部分。
 视屏中更加明显。
-<img alt="alt text" src="../../../../images/image-2.png" /></p>
-</li>
-</ol>
+<img alt="alt text" src="../../../../images/image-2.png" /></li>
+</ul>
 <iframe width="560" height="315"
         src="https://nvlabs-fi-cdn.nvidia.com/_web/stylegan3/videos/video_9_slice_visualization.mp4"
         frameborder="0"
@@ -219,19 +1050,9 @@ Ours（改进后的模型）：
         allowfullscreen>
 </iframe>
 
-<h1 id="_2">通过连续信号的解释实现生成器的集合等变性(平移和旋转)<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h1>
+<h2 id="continuous-and-discrete-signals">Continuous and Discrete Signals<a class="headerlink" href="#continuous-and-discrete-signals" title="Permanent link">&para;</a></h2>
 <p>将网络中的特征图视为连续信号，而不是离散像素，从而严格遵循信号处理理论（如 Nyquist 定理）</p>
-<h1 id="_3">根据连续信号解释的等变形<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h1>
-<ul>
-<li>采样定理</li>
-</ul>
-<pre><code class="language-markdown">According to the Nyquist–Shannon sampling theorem [51 ], a regularly sampled signal can represent
-any continuous signal containing frequencies between zero and half of the sampling rate
-</code></pre>
-<p>翻译为:插值频率是连续信号的两倍时，可以完全重建原始信号
-需要注意的是 这里假设原始信号是一个带限信号，也就信号的频率被限制在一个空间内。
-<img alt="alt text" src="../../../../images/image-8.png" /></p>
-<h2 id="_4">连续型号和离散型号的关系<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<h3 id="relationship-between-continuous-and-discrete-signals">Relationship Between Continuous and Discrete Signals<a class="headerlink" href="#relationship-between-continuous-and-discrete-signals" title="Permanent link">&para;</a></h3>
 <p>假设连续信号为<span class="arithmatex">\(z(x)\)</span>,离散信号为<span class="arithmatex">\(Z(x)\)</span>, 采样频率为<span class="arithmatex">\(s\)</span>, 采样间隔则为<span class="arithmatex">\(T=\frac{1}{s}\)</span>.<span class="arithmatex">\(\cdot\)</span>表示乘积, 卷积表示<span class="arithmatex">\(\ast\)</span>.
 二维狄拉克梳妆函数为<span class="arithmatex">\(III(x,y)=\sum_{m=-\infty}^{\infty}\sum_{n=-\infty}^{\infty}\delta(x-mT)\delta(y-nT)\)</span>
 根据插值公式</p>
@@ -257,19 +1078,12 @@ z(x,y) = \left(\sum_{m=-\infty}^{\infty}\sum_{n=-\infty}^{\infty}Z(mT,nT)\text{s
 <img alt="alt text" src="../../../../images/image-9.png" />
 上面是sinc 函数的图形。对于x,y 这个位置, 恢复这一点的信息需要附近区域的采样值，且距离x,y 越远，对于恢复信息的贡献越小。
 这就是为什么需要扩充采样空间的原因。在实际情况下，对于给定区域不需要扩充太大，因为sinc 呈现了一个随距离衰减的趋势。论文在实现的时候会先对特征图做一个扩充，也就是这个原理。</p>
-<p><strong>连续和离散的网络操作表达</strong></p>
-<div class="arithmatex">\[
-f(z) = \phi_{s'} \ast \text{F}(\Pi_s \odot z),\quad\quad
-\text{F}(Z) = \Pi_{s'} \odot f(\phi_s \ast Z),
-\]</div>
-<p>其中<span class="arithmatex">\(\odot\)</span>表示点乘，<span class="arithmatex">\(s\)</span>and<span class="arithmatex">\(s'\)</span>表示输入的采样频率和输出的采样频率
-有些操作会改变采样频率 比如上采样 下采样</p>
-<h2 id="equivariant-network-layers">Equivariant network layers<a class="headerlink" href="#equivariant-network-layers" title="Permanent link">&para;</a></h2>
+<h3 id="equivariant-network-layers">Equivariant Network Layers<a class="headerlink" href="#equivariant-network-layers" title="Permanent link">&para;</a></h3>
 <p>translation equivariance transformation</p>
 <div class="arithmatex">\[f\cdot t = t\cdot f\]</div>
 <p>假设输出的采样频率为<span class="arithmatex">\(s'\)</span>， 那么根据采样定理，需要满足<span class="arithmatex">\(f\)</span>作用之后的信号频率不操作<span class="arithmatex">\(s'/2\)</span>，也就<span class="arithmatex">\(f\)</span>不产生超过<span class="arithmatex">\(s'/2\)</span>的高频信号。</p>
-<h3 id="convolution-layer">convolution layer<a class="headerlink" href="#convolution-layer" title="Permanent link">&para;</a></h3>
-<h3 id="convolution">Convolution<a class="headerlink" href="#convolution" title="Permanent link">&para;</a></h3>
+<h4 id="convolution-layer">Convolution Layer<a class="headerlink" href="#convolution-layer" title="Permanent link">&para;</a></h4>
+<h4 id="convolution">Convolution<a class="headerlink" href="#convolution" title="Permanent link">&para;</a></h4>
 <p>Consider a standard convolution with a discrete kernel<span class="arithmatex">\(K\)</span>. We can interpret<span class="arithmatex">\(K\)</span>as living in the same grid as the input feature map, with sampling rate<span class="arithmatex">\(s\)</span>. The discrete-domain operation is simply:</p>
 <div class="arithmatex">\[
 \text{F}_{\text{conv}}(Z) = K \ast Z,
@@ -288,7 +1102,7 @@ f(z) = \phi_{s'} \ast \text{F}(\Pi_s \odot z),\quad\quad
 这就使得卷积操作天然满足采样定理的要求。</p>
 <p>卷积对应的频域示意图
 <img alt="alt text" src="../../../../images/image-10.png" /></p>
-<h3 id="upsample-and-downsample">upsample and downsample<a class="headerlink" href="#upsample-and-downsample" title="Permanent link">&para;</a></h3>
+<h4 id="upsample-and-downsample">Upsample and Downsample<a class="headerlink" href="#upsample-and-downsample" title="Permanent link">&para;</a></h4>
 <p><strong>上采样</strong>
 上采样增加了信号的采样率。这里假设是理想上采样，也就是“插0” + 理想低通滤波
 理想上采样后的信号频率会被压缩<span class="arithmatex">\(n\)</span>倍.<span class="arithmatex">\(n\)</span>是上采样的倍数。
@@ -328,7 +1142,7 @@ F_{down} (Z)&amp; = \mathrm{III}_{s'} \odot \left[  \psi_{s'} \ast \left( \phi_{
 <div class="arithmatex">\[
 h(x, y) = 2 \frac{J_1(2\pi r)}{r}, \quad r = \sqrt{x^2 + y^2}.
 \]</div>
-<h2 id="atr-0h0-0-1">At<span class="arithmatex">\(r = 0\)</span>,<span class="arithmatex">\(h(0, 0) = 1\)</span>.<a class="headerlink" href="#atr-0h0-0-1" title="Permanent link">&para;</a></h2>
+<p>at <span class="arithmatex">\(r = 0\)</span>,<span class="arithmatex">\(h(0, 0) = 1\)</span>.</p>
 <h3 id="fourier-transform">Fourier Transform<a class="headerlink" href="#fourier-transform" title="Permanent link">&para;</a></h3>
 <p>The frequency response is:</p>
 <div class="arithmatex">\[
@@ -400,12 +1214,12 @@ F_\sigma(Z) = s^2 \cdot \Pi_s \odot (\phi_s _\sigma(\phi_s_ Z)),
 非线性操作会引入高频分量，离散域中容易产生频谱混叠。</p>
 <p>因此作者的想法是用上采样模拟连续空间，先上采样，再做非线性操作，再下采样。当然，要满足旋转不变性，则需要下采样应用 2D Jinc filter。</p>
 <p>而且非线性操作也是网络中唯一生成额外高频信息的操作。可以控制她从而控制每一层需要的额外高频信息。高频信息即纹理信息。</p>
-<h1 id="practical-application">practical application<a class="headerlink" href="#practical-application" title="Permanent link">&para;</a></h1>
+<h2 id="practical-application">Practical Application<a class="headerlink" href="#practical-application" title="Permanent link">&para;</a></h2>
 <p>descriminator 不发生变化</p>
 <p><strong>generator</strong>
 <strong>目标</strong>： 设计等变性神经网络
 用PSNR值衡量。值越高表示等变形越强。</p>
-<h2 id="eq-t">EQ-T 公式<a class="headerlink" href="#eq-t" title="Permanent link">&para;</a></h2>
+<h3 id="eq-t">EQ-T 公式<a class="headerlink" href="#eq-t" title="Permanent link">&para;</a></h3>
 <div class="arithmatex">\[
 \text{EQ-T} = 10 \cdot \log_{10} \left( \frac{I_{\text{max}}^2}{\mathbb{E}_{\text{w} \sim \mathcal{W}, x \sim \mathcal{X}^2, p \sim \mathcal{V}, c \sim \mathcal{C}} \left[ \left( g(t_x[z_0]; \text{w})_c(p) - t_x[g(z_0; \text{w})]_c(p) \right)^2 \right]} \right)
 \]</div>
@@ -420,7 +1234,7 @@ F_\sigma(Z) = s^2 \cdot \Pi_s \odot (\phi_s _\sigma(\phi_s_ Z)),
 -<span class="arithmatex">\(t_x\)</span>: 几何变换（如平移、旋转、缩放等）。
 -<span class="arithmatex">\(z_0\)</span>: 输入噪声或潜在变量。
 从这个公式可以看到, 在旋转和平移是作用在 初始输入<span class="arithmatex">\(z_0\)</span>上的，而不是latent code<span class="arithmatex">\(w\)</span>.</p>
-<h2 id="fourier">Fourier 特征<a class="headerlink" href="#fourier" title="Permanent link">&para;</a></h2>
+<h3 id="fourier">Fourier 特征<a class="headerlink" href="#fourier" title="Permanent link">&para;</a></h3>
 <p>用 Fourier 特征替换 StyleGAN2 中的学习输入常数，便于精确连续变换输入，改善了 FID 并能计算等变性指标，但初始架构离等变性仍远。
 SynthesisInput Forward 计算流程数学公式
 输入定义和符号说明
@@ -518,24 +1332,8 @@ T = M_r M_t T_\text{user}
 平移不会改变信号的频率分量（振幅不变），但会引入与平移量成比例的相位偏移。
 旋转会同时改变空间域和频域信号的方向，但频率的幅度不变</li>
 </ol>
-<h2 id="_7">移除逐像素噪声输入<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
-<p>虽对 FID 近乎无影响，但单独考虑时未提升等变性指标。</p>
-<h2 id="_8">简化设置<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h2>
-<p>包括减少映射网络深度、禁用混合正则化和路径长度正则化、消除输出跳跃连接，并通过跟踪像素和特征图的指数移动平均进行归一化，使 FID 回到原始 StyleGAN2 水平且略微提升了平移等变性。</p>
-<h2 id="config-e">边界和上采样（config E）<a class="headerlink" href="#config-e" title="Permanent link">&para;</a></h2>
-<p>通过在目标画布周围保持固定边界扩展特征图近似无限空间，用窗口化 sinc 滤波器（）替代双线性上采样滤波器，提升了平移等变性，但 FID 有所下降。</p>
-<h2 id="config-f">滤波非线性（config F）<a class="headerlink" href="#config-f" title="Permanent link">&para;</a></h2>
-<p>按照理论对非线性函数进行滤波处理，用自定义 CUDA 内核实现高效的上采样 - 非线性 - 下采样操作，进一步提高了平移等变性（EQ - T）。</p>
-<h2 id="config-g">非临界采样（config G）<a class="headerlink" href="#config-g" title="Permanent link">&para;</a></h2>
-<p>采用非临界采样降低截止频率抑制混叠，改善平移等变性且使 FID 低于原始 StyleGAN2，同时根据新的采样方式调整了确定特征图数量的启发式方法。</p>
-<h2 id="fourier-config-h">变换 Fourier 特征（config H）<a class="headerlink" href="#fourier-config-h" title="Permanent link">&para;</a></h2>
-<p>引入学习仿射层变换输入 Fourier 特征，使特征方向可基于变化，略微改善了 FID。</p>
-<h2 id="config-t">灵活层规格（config T）<a class="headerlink" href="#config-t" title="Permanent link">&para;</a></h2>
-<p>灵活设置每层滤波器参数，改善了平移等变性并消除剩余伪影，使网络结构更灵活，且固定层数在不同输出分辨率下表现稳定。</p>
-<h2 id="config-r">旋转等变性（config R）<a class="headerlink" href="#config-r" title="Permanent link">&para;</a></h2>
-<p>将所有层的卷积换为卷积并补偿容量，用径向对称 jinc 基滤波器替换 sinc 基下采样滤波器，实现旋转等变性且不损害 FID，同时采用高斯模糊技巧防止训练初期崩溃。</p>
-<h1 id="_9">代码解读<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h1>
-<h2 id="modulated_conv2d">modulated_conv2d<a class="headerlink" href="#modulated_conv2d" title="Permanent link">&para;</a></h2>
+<h2 id="_7">代码解读<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
+<h3 id="modulated_conv2d">modulated_conv2d<a class="headerlink" href="#modulated_conv2d" title="Permanent link">&para;</a></h3>
 <pre><code>def modulated_conv2d(
     x,                  # Input tensor: [batch_size, in_channels, in_height, in_width]
     w,                  # Weight tensor: [out_channels, in_channels, kernel_height, kernel_width]
@@ -577,7 +1375,7 @@ T = M_r M_t T_\text{user}
     x = x.reshape(batch_size, -1, *x.shape[2:])
     return x
 </code></pre>
-<h3 id="_10">最终数学表达式<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_8">最终数学表达式<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
 <p>经过以上步骤，最终输出 <span class="arithmatex">\( y \)</span> 的数学表达为：</p>
 <div class="arithmatex">\[
 y_{b,o,h',w'} = \sum_{i,k_h,k_w} \left[ x_{b,i,h+k_h,w+k_w} \cdot \left( w_{o,i,k_h,k_w} \cdot s_{b,i} \cdot d_{\text{coef},o} \cdot \text{input\_gain}_{b,i} \right) \right]
@@ -589,13 +1387,13 @@ y_{b,o,h',w'} = \sum_{i,k_h,k_w} \left[ x_{b,i,h+k_h,w+k_w} \cdot \left( w_{o,i,
 <li>$ h', w'$: 输出特征图的位置。</li>
 <li>$ k_h, k_w $: 卷积核的空间维度索引。</li>
 </ul>
-<h3 id="_11">直观意义<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_9">直观意义<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <ol>
 <li>样式 $ s $ 动态地调节权重，调整每个卷积核的权重。同一个batch里不同的不同的样本style是独立的。体现了生成式模型中特征的个性化调整。</li>
 <li>归一化和去归一化过程避免了数值不稳定性。权重归一化作用在i,k,h 维度上，也就是不同的卷积核上做normalize，具有相同的范数。对style 的归一化作用在所有的维度上。也就是整个s 归一化之后的范数为1.</li>
 <li>分组卷积高效地实现了每个样本独立的权重调制计算。</li>
 </ol>
-<h2 id="synthesislayer">SynthesisLayer<a class="headerlink" href="#synthesislayer" title="Permanent link">&para;</a></h2>
+<h3 id="synthesislayer">SynthesisLayer<a class="headerlink" href="#synthesislayer" title="Permanent link">&para;</a></h3>
 <pre><code># Track input magnitude.
 if update_emas:
     with torch.autograd.profiler.record_function('update_magnitude_ema'):
@@ -614,7 +1412,7 @@ dtype = torch.float16 if (self.use_fp16 and not force_fp32 and x.device.type == 
 x = modulated_conv2d(x=x.to(dtype), w=self.weight, s=styles,
     padding=self.conv_kernel-1, demodulate=(not self.is_torgb), input_gain=input_gain)
 </code></pre>
-<h3 id="_12">数学公式<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<h3 id="_10">数学公式<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <ol>
 <li><strong>当前输入幅值的平方均值</strong>：</li>
 </ol>
@@ -641,7 +1439,7 @@ x = modulated_conv2d(x=x.to(dtype), w=self.weight, s=styles,
    \text{input_gain} = \frac{1}{\sqrt{\text{magnitude_ema}}}
    $$</p>
 <hr />
-<h3 id="_13">公式的直观意义<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
+<h3 id="_11">公式的直观意义<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>动态归一化</strong>：通过 <span class="arithmatex">\(\text{input\_gain}\)</span> 调整输入特征的幅值，确保其在训练过程中保持适当范围。</li>
 <li><strong>平滑更新</strong>：EMA 提供了一种平滑的历史幅值估计，避免训练中的剧烈波动。</li>
@@ -678,8 +1476,8 @@ x = modulated_conv2d(x=x.to(dtype), w=self.weight, s=styles,
         f /= np.sum(f)
         return torch.as_tensor(f, dtype=torch.float32)
 </code></pre>
-<h3 id="_14">滤波器的作用域与设计过程<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
-<h4 id="_15"><strong>作用域</strong><a class="headerlink" href="#_15" title="Permanent link">&para;</a></h4>
+<h3 id="_12">滤波器的作用域与设计过程<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<h4 id="_13"><strong>作用域</strong><a class="headerlink" href="#_13" title="Permanent link">&para;</a></h4>
 <p>这些滤波器 <strong>作用在时间域</strong>，它们通过时间域卷积操作处理输入信号或图像。卷积公式为：</p>
 <div class="arithmatex">\[
 y[n] = \sum_{k} x[k] \cdot h[n-k]
@@ -690,20 +1488,20 @@ y[n] = \sum_{k} x[k] \cdot h[n-k]
 <li><span class="arithmatex">\(h[k]\)</span>: 滤波器的时间域权重（脉冲响应）。</li>
 <li><span class="arithmatex">\(y[n]\)</span>: 滤波后的输出信号。</li>
 </ul>
-<h4 id="_16"><strong>设计过程</strong><a class="headerlink" href="#_16" title="Permanent link">&para;</a></h4>
+<h4 id="_14"><strong>设计过程</strong><a class="headerlink" href="#_14" title="Permanent link">&para;</a></h4>
 <p>尽管滤波器作用在时间域，其设计过程通常基于频域的要求，比如：</p>
 <ul>
 <li><strong>截止频率</strong> (<span class="arithmatex">\(\text{cutoff}\)</span>)：指定滤波器允许通过的频率范围。</li>
 <li><strong>过渡带宽</strong> (<span class="arithmatex">\(\text{width}\)</span>)：控制滤波器从通带到阻带的过渡区域的宽度。</li>
 <li><strong>频域形状</strong>：滤波器的设计目标是实现某种理想频率响应（如低通、高通或带通）。</li>
 </ul>
-<h4 id="_17"><strong>频域与时间域的关系</strong><a class="headerlink" href="#_17" title="Permanent link">&para;</a></h4>
+<h4 id="_15"><strong>频域与时间域的关系</strong><a class="headerlink" href="#_15" title="Permanent link">&para;</a></h4>
 <p>根据傅里叶变换理论，时间域与频域是一对互补的表示：</p>
 <ul>
 <li>滤波器的 <strong>时间域权重（脉冲响应）</strong> 决定其频域响应。</li>
 <li>滤波器的 <strong>频域设计目标</strong>（如截止频率、过渡带宽）通过设计过程映射为时间域权重。</li>
 </ul>
-<h3 id="_18">代码中的滤波器设计<a class="headerlink" href="#_18" title="Permanent link">&para;</a></h3>
+<h3 id="_16">代码中的滤波器设计<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
 <ol>
 <li><strong>Kaiser 滤波器</strong>：</li>
 <li>使用 <code>scipy.signal.firwin</code> 基于频域要求生成时间域滤波器权重。</li>
@@ -712,7 +1510,7 @@ y[n] = \sum_{k} x[k] \cdot h[n-k]
 <li>基于径向对称的 Jinc 函数设计，其核心思想源自频域特性。</li>
 <li>通过叠加 Kaiser 窗口进一步调整频域特性并生成时间域滤波器权重。</li>
 </ol>
-<h3 id="_19">总结<a class="headerlink" href="#_19" title="Permanent link">&para;</a></h3>
+<h3 id="_17">总结<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>作用域</strong>：滤波器作用在时间域，使用卷积操作处理输入信号或图像。</li>
 <li><strong>设计过程</strong>：基于频域要求（如截止频率、带宽）设计时间域滤波器权重。</li>
@@ -720,35 +1518,61 @@ y[n] = \sum_{k} x[k] \cdot h[n-k]
 </ul>
 
 
-</section>
-</div> <!-- end of search-noresults -->
-<div class="search-results">
-<div class="has-results">
 
-<h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
-<ul class="search-results-list"></ul>
 
-</div> <!-- end of has-results -->
-<div class="no-results">
 
-<h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
 
-</div> <!-- end of no-results -->
-</div> <!-- end of search-results -->
-</div> <!-- end of book-search-results -->
 
-</div> <!-- end of page-inner -->
-</div> <!-- end of page-wrapper -->
 
-</div> <!-- end of body-inner -->
 
-</div> <!-- end of book-body -->
-<script src="../../../../js/main.js"></script>
-<script src="../../../../javascripts/mathjax.js"></script>
-<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-<script src="../../../../search/main.js"></script>
-<script src="../../../../js/gitbook.min.js"></script>
-<script src="../../../../js/theme.min.js"></script>
-</body>
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "toc.integrate"], "search": "../../../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.60a45f97.min.js"></script>
+      
+        <script src="../../../../javascripts/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
 </html>
