@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.49">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.50">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../../assets/stylesheets/main.6f8fc17f.min.css">
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.a40c8224.min.css">
       
       
 
@@ -1001,18 +1001,32 @@ Overall Introduction</p>
 <li>Data space <span class="arithmatex">\(x\)</span>(Upper horizontal line)</li>
 <li>Generator G's mapping from  <span class="arithmatex">\(z\)</span> to  <span class="arithmatex">\(x\)</span> (Arrows connecting lines)</li>
 </ul>
-<p>From the picture, we can see the training Evolution (from a to d):
-- Initial Stage:
-  - The generated distribution  <span class="arithmatex">\(p_g\)</span> (green) differs significantly from the real distribution <span class="arithmatex">\(p_{data}\)</span> (black)
-  - Discriminator <span class="arithmatex">\(D\)</span>  (blue) attempts to distinguish samples, but performs unstably
-- Discriminator Training: <span class="arithmatex">\(D\)</span> is trained to reach optimal solution: <span class="arithmatex">\(<span class="arithmatex">\(D^*(x) = \frac{p_{data}(x)}{p_{data}(x) + p_g(x)}\)</span>\)</span>
-- Generator Update:  <span class="arithmatex">\(G\)</span> updates based on gradients from <span class="arithmatex">\(D\)</span>
-- Final Convergence: When <span class="arithmatex">\(G\)</span> and <span class="arithmatex">\(D\)</span> have sufficient capacity（ <span class="arithmatex">\(p_{data} =p_g\)</span>), they reach Nash equilibrium</p>
+<p>From the picture, we can see the training Evolution (from a to d):</p>
+<ul>
+<li>
+<p>Initial Stage:</p>
+</li>
+<li>
+<p>The generated distribution  <span class="arithmatex">\(p_g\)</span> (green) differs significantly from the real distribution <span class="arithmatex">\(p_{data}\)</span> (black)</p>
+</li>
+<li>
+<p>Discriminator <span class="arithmatex">\(D\)</span>  (blue) attempts to distinguish samples, but performs unstably</p>
+</li>
+<li>
+<p>Discriminator Training: <span class="arithmatex">\(D\)</span> is trained to reach optimal solution: <span class="arithmatex">\(D^*(x) = \frac{p_{data}(x)}{p_{data}(x) + p_g(x)}\)</span></p>
+</li>
+<li>
+<p>Generator Update:  <span class="arithmatex">\(G\)</span> updates based on gradients from <span class="arithmatex">\(D\)</span></p>
+</li>
+<li>
+<p>Final Convergence: When <span class="arithmatex">\(G\)</span> and <span class="arithmatex">\(D\)</span> have sufficient capacity（ <span class="arithmatex">\(p_{data} =p_g\)</span>), they reach Nash equilibrium</p>
+</li>
+</ul>
 <p><img alt="image" src="https://hackmd.io/_uploads/HJn4UVswye.png" />
 <em>Image Source: Goodfellow et al., "Generative Adversarial Networks" (2014) arXiv:1406.2661</em></p>
 <h1 id="2014cgan-conditional-generative-adversarial-nets">[2014]<a href="https://arxiv.org/abs/1411.1784">cGAN: Conditional Generative Adversarial Nets</a><a class="headerlink" href="#2014cgan-conditional-generative-adversarial-nets" title="Permanent link">&para;</a></h1>
 <h2 id="overall-introduction">Overall Introduction:<a class="headerlink" href="#overall-introduction" title="Permanent link">&para;</a></h2>
-<p>conditional generation
+<p>Conditional generation
 Traditional GANs produce samples from random noise but <strong>can't control the output features</strong>, as they are <strong>unsupervised learning</strong>.</p>
 <p>While conditional GANs (cGANs) <strong>incorporate conditional information into both the generator and discriminator, enabling control over the output properties</strong>. This is achieved through a semi-supervised approach.</p>
 <p>The cGAN paper only shows its generated results on the MNIST dataset, where simply concatenating label embeddings might have limited impact. However, the core idea of "guiding the generation process with conditional information" proposed by cGAN has significantly influenced subsequent generative models. </p>
@@ -1022,12 +1036,24 @@ Traditional GANs produce samples from random noise but <strong>can't control the
 <h2 id="base-model-structure_1">Base model structure<a class="headerlink" href="#base-model-structure_1" title="Permanent link">&para;</a></h2>
 <p><img alt="image" src="https://hackmd.io/_uploads/Hy6cONjwkx.png" />
 <em>Source: Mirza et al., "Conditional Generative Adversarial Nets" (2014) arXiv:1411.1784</em></p>
-<p>How to combine the condition into input:
-- First convert categorical labels into continuous vector representations using nn.Embedding
-  - <code>self.label_emb = nn.Embedding(opt.n_classes, opt.n_classes)</code>
-- Then concatenates torch.cat label embeddings(y) with noise vectors(z) along dimension -1: 
-  - <code>gen_input = torch.cat((self.label_emb(labels), noise), -1)</code>
-- Uses this concatenated vector as input to generate images through multiple network layers</p>
+<p>How to combine the condition into input:</p>
+<ul>
+<li>
+<p>First convert categorical labels into continuous vector representations using nn.Embedding</p>
+</li>
+<li>
+<p><code>self.label_emb = nn.Embedding(opt.n_classes, opt.n_classes)</code></p>
+</li>
+<li>
+<p>Then concatenates torch.cat label embeddings(y) with noise vectors(z) along dimension -1: </p>
+</li>
+<li>
+<p><code>gen_input = torch.cat((self.label_emb(labels), noise), -1)</code></p>
+</li>
+<li>
+<p>Uses this concatenated vector as input to generate images through multiple network layers</p>
+</li>
+</ul>
 <pre><code class="language-python">class Generator(nn.Module):
     def __init__(self):
         super(Generator, self).__init__()
@@ -1055,13 +1081,27 @@ Traditional GANs produce samples from random noise but <strong>can't control the
         img = img.view(img.size(0), *img_shape)
         return img
 </code></pre>
-<p>IN Discriminator:
-- Flattens input images: 
-    - <code>img.view(img.size(0), -1)</code>
-- Similarly, processes labels through embedding: <code>self.label_embedding(labels)</code>
-- Concatenates flattened images and label embeddings:
-    - <code>d_in = torch.cat((img.view(img.size(0), -1), self.label_embedding(labels)), -1)</code>
-- Passes concatenated vector through discriminator network for real/fake classification</p>
+<p>IN Discriminator:</p>
+<ul>
+<li>
+<p>Flattens input images: </p>
+<ul>
+<li><code>img.view(img.size(0), -1)</code></li>
+</ul>
+</li>
+<li>
+<p>Similarly, processes labels through embedding: <code>self.label_embedding(labels)</code></p>
+</li>
+<li>
+<p>Concatenates flattened images and label embeddings:</p>
+<ul>
+<li><code>d_in = torch.cat((img.view(img.size(0), -1), self.label_embedding(labels)), -1)</code></li>
+</ul>
+</li>
+<li>
+<p>Passes concatenated vector through discriminator network for real/fake classification</p>
+</li>
+</ul>
 <pre><code class="language-python">class Discriminator(nn.Module):
     def __init__(self):
         super(Discriminator, self).__init__()
@@ -1094,14 +1134,30 @@ Traditional GANs produce samples from random noise but <strong>can't control the
 <p>For example, an input condition: number "7". If the generator generates an image that looks like "3". Although the discriminator will not directly point out "this is not 7", because the label of "7" in the training data has never been paired with the image of "3". So this wrong match will be identified as "generated" by the discriminator.</p>
 <h2 id="loss-function_1">Loss function<a class="headerlink" href="#loss-function_1" title="Permanent link">&para;</a></h2>
 <div class="arithmatex">\[\min_{G} \max_{D} V(D,G) = \mathbb{E}_{x \sim p_{data}(x)}[\log D(x|y)] + \mathbb{E}_{z \sim p_z(z)}[\log(1 - D(G(z|y)))]\]</div>
-<p>Where: <span class="arithmatex">\(\mathbb{E}\)</span>: Expected value (expectation) <span class="arithmatex">\(\mathbb{E}_{x \sim p_{data}(x)}[\log D(x|y)]\)</span> : 
-- <span class="arithmatex">\(x \sim p_{data(x)}\)</span>:  <span class="arithmatex">\(x\)</span>sampled from real data distribution
-- <span class="arithmatex">\(D(x|y)\)</span>: Discriminator's output for real data  <span class="arithmatex">\(x\)</span> given condition  <span class="arithmatex">\(y\)</span>
-- <span class="arithmatex">\(E[\log D(x|y)]\)</span> - Discriminator's ability to identify real samples</p>
-<p><span class="arithmatex">\(\mathbb{E}_{z \sim p_z(z)}[\log(1 - D(G(z|y)))]\)</span> : 
-- <span class="arithmatex">\(z \sim p_z(z)\)</span> z sampled from noise distribution
-- <span class="arithmatex">\(G(z|y)\)</span>: Generator's output from noise z given condition y
-- <span class="arithmatex">\(E[log(1 - D(G(z|y)))]\)</span> - Discriminator's ability to identify fake samples</p>
+<p>Where: <span class="arithmatex">\(\mathbb{E}\)</span>: Expected value (expectation) <span class="arithmatex">\(\mathbb{E}_{x \sim p_{data}(x)}[\log D(x|y)]\)</span> : </p>
+<ul>
+<li>
+<p><span class="arithmatex">\(x \sim p_{data(x)}\)</span>:  <span class="arithmatex">\(x\)</span>sampled from real data distribution</p>
+</li>
+<li>
+<p><span class="arithmatex">\(D(x|y)\)</span>: Discriminator's output for real data  <span class="arithmatex">\(x\)</span> given condition  <span class="arithmatex">\(y\)</span></p>
+</li>
+<li>
+<p><span class="arithmatex">\(E[\log D(x|y)]\)</span> - Discriminator's ability to identify real samples</p>
+</li>
+</ul>
+<p><span class="arithmatex">\(\mathbb{E}_{z \sim p_z(z)}[\log(1 - D(G(z|y)))]\)</span> : </p>
+<ul>
+<li>
+<p><span class="arithmatex">\(z \sim p_z(z)\)</span> z sampled from noise distribution</p>
+</li>
+<li>
+<p><span class="arithmatex">\(G(z|y)\)</span>: Generator's output from noise z given condition y</p>
+</li>
+<li>
+<p><span class="arithmatex">\(E[log(1 - D(G(z|y)))]\)</span> - Discriminator's ability to identify fake samples</p>
+</li>
+</ul>
 <pre><code class="language-python">for epoch in range(opt.n_epochs):
     for i, (imgs, labels) in enumerate(dataloader):
         batch_size = imgs.shape[0]
@@ -1145,23 +1201,43 @@ Traditional GANs produce samples from random noise but <strong>can't control the
 <em>Source: Mirza et al., "Conditional Generative Adversarial Nets" (2014) arXiv:1411.1784</em></p>
 <hr />
 <h1 id="2015dcgandeep-convolutional-ganunsupervised-representation-learning-with-deep-convolutional-generative-adversarial-networks">[2015]DCGAN(Deep Convolutional GAN）：<a href="https://arxiv.org/abs/1511.06434">Unsupervised Representation Learning with Deep Convolutional Generative Adversarial Networks</a><a class="headerlink" href="#2015dcgandeep-convolutional-ganunsupervised-representation-learning-with-deep-convolutional-generative-adversarial-networks" title="Permanent link">&para;</a></h1>
-<p>Overall Introduction:  Deep Convolutional GAN
-DCGAN integrates the strengths of Convolutional Neural Networks into GANs with key innovations:
-1. Convolutional Layers: Transposed convolutions in the generator and strided convolutions in the discriminator enhance spatial information retention.
-2. Batch Normalization: Used extensively in both parts to improve stability and prevent mode collapse.
-3. Activation Functions: The generator uses ReLU with a Tanh final layer, and the discriminator employs LeakyReLU.</p>
-<ul>
-<li>Starts from 100-dimensional noise z, gradually generating 64×64 images through multiple convolution layers</li>
-<li>Feature map progression(C<em>H</em>W): 
-  <span class="arithmatex">\(100\times1\times1\)</span>-&gt;<span class="arithmatex">\(1024\times4\times4\)</span> -&gt; <span class="arithmatex">\(512\times8\times8\)</span>-&gt;<span class="arithmatex">\(256\times16\times16\)</span>-&gt;<span class="arithmatex">\(128\times32\times32\)</span>-&gt;<span class="arithmatex">\(3\times64\times64\)</span></li>
-</ul>
+<h2 id="overall-introduction-deep-convolutional-gan">Overall Introduction:  Deep Convolutional GAN<a class="headerlink" href="#overall-introduction-deep-convolutional-gan" title="Permanent link">&para;</a></h2>
+<p>DCGAN integrates the strengths of Convolutional Neural Networks into GANs with key innovations:</p>
+<ol>
+<li>
+<p>Convolutional Layers: Transposed convolutions in the generator and strided convolutions in the discriminator enhance spatial information retention.</p>
+</li>
+<li>
+<p>Batch Normalization: Used extensively in both parts to improve stability and prevent mode collapse.</p>
+</li>
+<li>
+<p>Activation Functions: The generator uses ReLU with a Tanh final layer, and the discriminator employs LeakyReLU.</p>
+</li>
+<li>
+<p>Starts from 100-dimensional noise z, gradually generating <span class="arithmatex">\(64×64\)</span> images through multiple convolution layers</p>
+</li>
+<li>
+<p>Feature map progression(C<em>H</em>W): </p>
+</li>
+<li>
+<p><span class="arithmatex">\(100\times1\times1\)</span>-&gt;<span class="arithmatex">\(1024\times4\times4\)</span> -&gt; <span class="arithmatex">\(512\times8\times8\)</span>-&gt;<span class="arithmatex">\(256\times16\times16\)</span>-&gt;<span class="arithmatex">\(128\times32\times32\)</span>-&gt;<span class="arithmatex">\(3\times64\times64\)</span></p>
+</li>
+</ol>
 <h2 id="base-model-structure_2">Base model structure<a class="headerlink" href="#base-model-structure_2" title="Permanent link">&para;</a></h2>
 <p><img alt="image" src="https://hackmd.io/_uploads/SytbYEsPkl.png" />
 <em>Source: Radford et al., "Unsupervised Representation Learning with Deep Convolutional Generative Adversarial Networks" (2016) arXiv:1511.06434</em></p>
-<p>About Transposed convolutions:
-- Input Matrix Expansion: Initially, the input feature map undergoes an expansion by inserting zeros between each element. The number of zeros inserted depends on the stride parameter. 
-- Application of the Convolution Kernel: Next, the convolution kernel is applied to the expanded feature map. This process is similar to traditional convolution operations, where the kernel slides over the expanded feature map, computing the dot product with local regions. Unlike regular convolution, this operation results in a larger output feature map because the input has been expanded.
-- Adjustment of Output Size: Finally, the output feature map might be cropped or padded to adjust its dimensions to the desired size. This adjustment depends on the padding parameter, which can either reduce or increase the spatial dimensions of the output</p>
+<p>About Transposed convolutions:</p>
+<ul>
+<li>
+<p>Input Matrix Expansion: Initially, the input feature map undergoes an expansion by inserting zeros between each element. The number of zeros inserted depends on the stride parameter. </p>
+</li>
+<li>
+<p>Application of the Convolution Kernel: Next, the convolution kernel is applied to the expanded feature map. This process is similar to traditional convolution operations, where the kernel slides over the expanded feature map, computing the dot product with local regions. Unlike regular convolution, this operation results in a larger output feature map because the input has been expanded.</p>
+</li>
+<li>
+<p>Adjustment of Output Size: Finally, the output feature map might be cropped or padded to adjust its dimensions to the desired size. This adjustment depends on the padding parameter, which can either reduce or increase the spatial dimensions of the output</p>
+</li>
+</ul>
 <h2 id="loss-function_2">Loss function<a class="headerlink" href="#loss-function_2" title="Permanent link">&para;</a></h2>
 <p>Same as GAN objective : <span class="arithmatex">\(\min_G \max_D V(D,G) = \mathbb{E}_{x\sim p_{data}}[\log D(x)] + \mathbb{E}_{z\sim p_z}[\log(1-D(G(z)))]\)</span></p>
 <hr />
@@ -1183,24 +1259,44 @@ DCGAN integrates the strengths of Convolutional Neural Networks into GANs with k
 <img alt="image" src="https://hackmd.io/_uploads/SyN95VovJl.png" />
 <em>Source: Arjovsky et al., "Wasserstein GAN" (2017) arXiv:1701.07875</em></p>
 <h3 id="model-collapse">Model collapse<a class="headerlink" href="#model-collapse" title="Permanent link">&para;</a></h3>
-<p>Secondly, even the previously mentioned standard KL divergence term has flaws. Because KL divergence is not a symmetric measure, <span class="arithmatex">\(KL(P_g\|P_r)\)</span> and <span class="arithmatex">\(KL(P_r\|P_g)\)</span> are different. Taking the former as an example:
-<span class="arithmatex">\(KL(P_g||P_r) = \int_x P_g(x)\log(\frac{P_g(x)}{P_r(x)})dx\)</span></p>
+<p>Secondly, even the previously mentioned standard KL divergence term has flaws. Because KL divergence is not a symmetric measure, <span class="arithmatex">\(KL(P_g\|P_r)\)</span> and <span class="arithmatex">\(KL(P_r\|P_g)\)</span> are different. 
+Taking the former as an example: <span class="arithmatex">\(KL(P_g||P_r) = \int_x P_g(x)\log(\frac{P_g(x)}{P_r(x)})dx\)</span></p>
 <ul>
-<li>When <span class="arithmatex">\(P_g(x) \to 0\)</span> and <span class="arithmatex">\(P_{r}(x) \to 1\)</span>, <span class="arithmatex">\(P_g(x)\log\frac{P_g(x)}{P_{r}(x)} \to 0\)</span>, contributing nearly 0 to <span class="arithmatex">\(KL(P_g||P_r)\)</span></li>
-<li>When <span class="arithmatex">\(P_g(x) \to 1\)</span> and <span class="arithmatex">\(P_{r}(x) \to 0\)</span>, <span class="arithmatex">\(P_g(x)\log\frac{P_g(x)}{P_{r}(x)} \to +\infty\)</span>, contributing positively infinite to <span class="arithmatex">\(KL(P_g||P_r)\)</span></li>
-<li>In other words, <span class="arithmatex">\(KL(P_g||P_r)\)</span> penalizes these two types of errors differently. </li>
-<li>The first type of error corresponds to <strong>"generator failing to generate real samples"</strong> with small penalty.</li>
-<li>The second type corresponds to <strong>"generator generating unrealistic samples"</strong> with large penalty. </li>
+<li>
+<p>When <span class="arithmatex">\(P_g(x) \to 0\)</span> and <span class="arithmatex">\(P_{r}(x) \to 1\)</span>, <span class="arithmatex">\(P_g(x)\log\frac{P_g(x)}{P_{r}(x)} \to 0\)</span>, contributing nearly 0 to <span class="arithmatex">\(KL(P_g||P_r)\)</span></p>
+</li>
+<li>
+<p>When <span class="arithmatex">\(P_g(x) \to 1\)</span> and <span class="arithmatex">\(P_{r}(x) \to 0\)</span>, <span class="arithmatex">\(P_g(x)\log\frac{P_g(x)}{P_{r}(x)} \to +\infty\)</span>, contributing positively infinite to <span class="arithmatex">\(KL(P_g||P_r)\)</span></p>
+</li>
+<li>
+<p>In other words, <span class="arithmatex">\(KL(P_g||P_r)\)</span> penalizes these two types of errors differently. </p>
+</li>
+<li>
+<p>The first type of error corresponds to <strong>"generator failing to generate real samples"</strong> with small penalty.</p>
+</li>
+<li>
+<p>The second type corresponds to <strong>"generator generating unrealistic samples"</strong> with large penalty. </p>
+</li>
 </ul>
 <p>The first type of error represents a lack of diversity, while the second type represents a lack of accuracy. As a result, the generator would rather generate some repetitive but "safe" samples, and is reluctant to generate diverse samples, because one small mistake could lead to the second type of error, resulting in an unacceptable loss. This phenomenon is commonly referred to as mode collapse.</p>
 <p><img alt="image" src="https://hackmd.io/_uploads/SJAaYViwJg.png" />
 <em>Source: Arjovsky et al., "Wasserstein GAN" (2017) arXiv:1701.07875</em></p>
-<p>Why Wasserstein distance?
-The superiority of the Wasserstein distance compared to KL divergence and JS divergence lies in its ability to reflect the proximity between two distributions even when they don't overlap. While KL divergence and JS divergence are discontinuous , being either maximum or minimum. The Wasserstein distance is smooth and offers a more natural way to measure distances between distributions.
-1. Training Stability: Provides meaningful gradients even when distributions do not overlap, significantly improving the stability of GAN training.
-2. Reduced Mode Collapse: Encourages diversity in generated samples by considering the overall differences between distributions, reducing mode collapse.
-3. Intuitive Loss Function: Serves as a loss metric, where a smaller Wasserstein distance indicates closer alignment with the target distribution's statistical properties.
-4. Effective GAN Training: WGANs use Wasserstein distance to offer a more stable and effective training process, enhancing the quality and diversity of generated samples.</p>
+<p>Why Wasserstein distance?</p>
+<p>The superiority of the Wasserstein distance compared to KL divergence and JS divergence lies in its ability to reflect the proximity between two distributions even when they don't overlap. While KL divergence and JS divergence are discontinuous , being either maximum or minimum. The Wasserstein distance is smooth and offers a more natural way to measure distances between distributions.</p>
+<ol>
+<li>
+<p>Training Stability: Provides meaningful gradients even when distributions do not overlap, significantly improving the stability of GAN training.</p>
+</li>
+<li>
+<p>Reduced Mode Collapse: Encourages diversity in generated samples by considering the overall differences between distributions, reducing mode collapse.</p>
+</li>
+<li>
+<p>Intuitive Loss Function: Serves as a loss metric, where a smaller Wasserstein distance indicates closer alignment with the target distribution's statistical properties.</p>
+</li>
+<li>
+<p>Effective GAN Training: WGANs use Wasserstein distance to offer a more stable and effective training process, enhancing the quality and diversity of generated samples.</p>
+</li>
+</ol>
 <h2 id="loss-function_3">Loss function<a class="headerlink" href="#loss-function_3" title="Permanent link">&para;</a></h2>
 <ol>
 <li>About Wasserstein Distance (measure distance by estimating the difference between expectation):</li>
@@ -1234,65 +1330,105 @@ The superiority of the Wasserstein distance compared to KL divergence and JS div
 </li>
 </ol>
 <hr />
-<p>how do we get the loss function:
-* Primal Form (Original Wasserstein Distance):
-  <span class="arithmatex">\(<span class="arithmatex">\(W(P,Q) = \inf_{\gamma \in \Pi(P,Q)} \mathbb{E}_{(x,y)\sim \gamma}[||x-y||]\)</span>\)</span>
-  where <span class="arithmatex">\(<span class="arithmatex">\(\Pi(P,Q)\)</span>\)</span> is the set of all joint distributions (couplings) whose margins are P and Q.
-* Kantorovich Duality Theorem:According to the duality Theorem, this problem is equivalent to:
-<span class="arithmatex">\(<span class="arithmatex">\(W(P,Q) = \sup_{f\in Lip_1} \left(\int f\,dP - \int f\,dQ\right)\)</span>\)</span>
-where <span class="arithmatex">\(Lip_1\)</span> is the set of 1-Lipschitz functions.
-*  Expectation Form:Converting the integrals to expectations:
-<span class="arithmatex">\(<span class="arithmatex">\(W(P,Q) = \sup_{||f||_L \leq 1} [\mathbb{E}_{x\sim P}[f(x)] - \mathbb{E}_{x\sim Q}[f(x)]]\)</span>\)</span>
-*  Application to GAN: When P = Pr (real distribution) and Q = Pg (generated distribution):
-<span class="arithmatex">\(<span class="arithmatex">\(W(P_r,P_g) = \sup_{||f||_L \leq 1} [\mathbb{E}_{x\sim P_r}[f(x)] - \mathbb{E}_{x\sim P_g}[f(x)]]\)</span>\)</span></p>
+<p>how do we get the loss function:</p>
+<ul>
+<li>Primal Form (Original Wasserstein Distance):</li>
+</ul>
+<p><span class="arithmatex">\(<span class="arithmatex">\(W(P,Q) = \inf_{\gamma \in \Pi(P,Q)} \mathbb{E}_{(x,y)\sim \gamma}[||x-y||]\)</span>\)</span></p>
+<p>where <span class="arithmatex">\(\Pi(P,Q)\)</span> is the set of all joint distributions (couplings) whose margins are P and Q.</p>
+<ul>
+<li>Kantorovich Duality Theorem:According to the duality Theorem, this problem is equivalent to:</li>
+</ul>
+<p><span class="arithmatex">\(<span class="arithmatex">\(W(P,Q) = \sup_{f\in Lip_1} \left(\int f\,dP - \int f\,dQ\right)\)</span>\)</span>
+where <span class="arithmatex">\(Lip_1\)</span> is the set of 1-Lipschitz functions.</p>
+<ul>
+<li>Expectation Form:Converting the integrals to expectations:</li>
+</ul>
+<div class="arithmatex">\[W(P,Q) = \sup_{||f||_L \leq 1} [\mathbb{E}_{x\sim P}[f(x)] - \mathbb{E}_{x\sim Q}[f(x)]]\]</div>
+<ul>
+<li>Application to GAN: When P = Pr (real distribution) and Q = Pg (generated distribution):</li>
+</ul>
+<div class="arithmatex">\[W(P_r,P_g) = \sup_{||f||_L \leq 1} [\mathbb{E}_{x\sim P_r}[f(x)] - \mathbb{E}_{x\sim P_g}[f(x)]]\]</div>
 <hr />
 <ol>
-<li>Weight Clipping : -&gt; implementation of Lipschitz Constraint in WGAN</li>
-<li>WGAN forces the discriminator to satisfy the Lipschitz constraint through weight clipping or gradient penalty.</li>
-<li>After each gradient update, the weights of the critic (discriminator) are clipped to a fixed range [-c, c] </li>
-<li>In the paper, c = 0.01
- ```python</li>
+<li>
+<p>Weight Clipping : -&gt; implementation of Lipschitz Constraint in WGAN</p>
+</li>
+<li>
+<p>WGAN forces the discriminator to satisfy the Lipschitz constraint through weight clipping or gradient penalty.</p>
+</li>
+<li>
+<p>After each gradient update, the weights of the critic (discriminator) are clipped to a fixed range [-c, c] </p>
+</li>
+<li>
+<p>In the paper, c = 0.01</p>
+</li>
 </ol>
-<h1 id="_1">在每次参数更新后执行<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
-<p>for param in discriminator.parameters():
+<pre><code class="language-python"># 在每次参数更新后执行
+for param in discriminator.parameters():
     param.data.clamp_(-c, c)  # c通常设为0.01
-Weight Clipping -&gt; all weight values are forced to be limited to the range of [-0.01, 0.01].</p>
-<pre><code>- Any value outside this range will be &quot;clipped&quot; to the boundary value. 
-- This ensures the Lipschitz constraint of the network, but may also lead to limitations in expressiveness.
+Weight Clipping -&gt; all weight values are forced to be limited to the range of [-0.01, 0.01].
 
-**&quot;Weight clipping is a clearly terrible way to enforce a Lipschitz constraint.&quot;** -- M. Arjovsky, S. Chintala and L. Bottou, &quot;Wasserstein Generative Adversarial Networks,&quot; in International Conference on Machine Learning, 2017, pp. 214-223.
-
-## Training process -&gt; Wasserstein &amp; Lipschitz  Gradient
-
-![image](https://hackmd.io/_uploads/SkSZ5NovJl.png)
-*Source: Arjovsky et al., &quot;Wasserstein GAN&quot; (2017) arXiv:1701.07875*
-
-
-
-1. Discriminator  Gradient:
-The Wasserstein loss for the Discriminator is:$$L(w) = \mathbb{E}_{x \sim \mathbb{P}_r}[f_w(x)] - \mathbb{E}_{z \sim p(z)}[f_w(g_\theta(z))]$$
-where:
-* $f_w(x)$ Discriminator evaluates real data samples
-* $x\sim\mathbb{P}_r$ means x is sampled from the real data distribution
-* $f_w(g_θ(z))$ Discriminator evaluates generated data samples
-    * $z$ is random noise transformed by generator $g_θ$ 
-    * $g_θ(z)$ represents the Generator generated samples
-
-For a batch of size m, the empirical version becomes:$$L(w) = \frac{1}{m}\sum_{i=1}^m f_w(x^{(i)}) - \frac{1}{m}\sum_{i=1}^m f_w(g_\theta(z^{(i)}))
-$$
-Therefore, the gradient with respect to Discriminator parameters w is:$$\nabla_w L = \frac{1}{m}\sum_{i=1}^m \nabla_w f_w(x^{(i)}) - \frac{1}{m}\sum_{i=1}^m \nabla_w f_w(g_\theta(z^{(i)}))
-$$
-
-2. Generator Gradient:
-The generator's objective is to minimize:$$L(θ) = -\mathbb{E}_{z \sim p(z)}[f_w(g_\theta(z))]$$
-For a batch of size m, this becomes:$$L(θ) = -\frac{1}{m}\sum_{i=1}^m f_w(g_\theta(z^{(i)}))
-$$
-The gradient with respect to generator parameters θ is:$$\nabla_\theta L = -\frac{1}{m}\sum_{i=1}^m \nabla_\theta f_w(g_\theta(z^{(i)}))
-$$
-- Line 5: Discriminator gradient computation$$g_w ← \nabla_w [\frac{1}{m}\sum_{i=1}^m f_w(x^{(i)}) - \frac{1}{m}\sum_{i=1}^m f_w(g_\theta(z^{(i)}))]$$
-- Line 10: Generator gradient computation$$g_\theta ← -\nabla_\theta \frac{1}{m}\sum_{i=1}^m f_w(g_\theta(z^{(i)}))$$
-```python
-for i, (imgs, _) in enumerate(dataloader):
+</code></pre>
+<ul>
+<li>
+<p>Any value outside this range will be "clipped" to the boundary value. </p>
+</li>
+<li>
+<p>This ensures the Lipschitz constraint of the network, but may also lead to limitations in expressiveness.</p>
+</li>
+</ul>
+<p><strong>"Weight clipping is a clearly terrible way to enforce a Lipschitz constraint."</strong> -- M. Arjovsky, S. Chintala and L. Bottou, "Wasserstein Generative Adversarial Networks," in International Conference on Machine Learning, 2017, pp. 214-223.</p>
+<h2 id="training-process-wasserstein-lipschitz-gradient">Training process -&gt; Wasserstein &amp; Lipschitz  Gradient<a class="headerlink" href="#training-process-wasserstein-lipschitz-gradient" title="Permanent link">&para;</a></h2>
+<p><img alt="image" src="https://hackmd.io/_uploads/SkSZ5NovJl.png" />
+<em>Source: Arjovsky et al., "Wasserstein GAN" (2017) arXiv:1701.07875</em></p>
+<ol>
+<li>Discriminator  Gradient:</li>
+</ol>
+<p>The Wasserstein loss for the Discriminator is:<span class="arithmatex">\(<span class="arithmatex">\(L(w) = \mathbb{E}_{x \sim \mathbb{P}_r}[f_w(x)] - \mathbb{E}_{z \sim p(z)}[f_w(g_\theta(z))]\)</span>\)</span>
+where:</p>
+<ul>
+<li>
+<p><span class="arithmatex">\(f_w(x)\)</span> Discriminator evaluates real data samples</p>
+</li>
+<li>
+<p><span class="arithmatex">\(x\sim\mathbb{P}_r\)</span> means x is sampled from the real data distribution</p>
+</li>
+<li>
+<p><span class="arithmatex">\(f_w(g_θ(z))\)</span> Discriminator evaluates generated data samples</p>
+<ul>
+<li>
+<p><span class="arithmatex">\(z\)</span> is random noise transformed by generator <span class="arithmatex">\(g_θ\)</span> </p>
+</li>
+<li>
+<p><span class="arithmatex">\(g_θ(z)\)</span> represents the Generator generated samples</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>For a batch of size m, the empirical version becomes:
+<span class="arithmatex">\(<span class="arithmatex">\(L(w) = \frac{1}{m}\sum_{i=1}^m f_w(x^{(i)}) - \frac{1}{m}\sum_{i=1}^m f_w(g_\theta(z^{(i)}))\)</span>\)</span></p>
+<p>Therefore, the gradient with respect to Discriminator parameters w is:</p>
+<div class="arithmatex">\[\nabla_w L = \frac{1}{m}\sum_{i=1}^m \nabla_w f_w(x^{(i)}) - \frac{1}{m}\sum_{i=1}^m \nabla_w f_w(g_\theta(z^{(i)}))\]</div>
+<ol>
+<li>Generator Gradient:</li>
+</ol>
+<p>The generator's objective is to minimize:</p>
+<div class="arithmatex">\[L(θ) = -\mathbb{E}_{z \sim p(z)}[f_w(g_\theta(z))]\]</div>
+<p>For a batch of size m, this becomes:</p>
+<div class="arithmatex">\[L(θ) = -\frac{1}{m}\sum_{i=1}^m f_w(g_\theta(z^{(i)}))\]</div>
+<p>The gradient with respect to generator parameters θ is:</p>
+<div class="arithmatex">\[\nabla_\theta L = -\frac{1}{m}\sum_{i=1}^m \nabla_\theta f_w(g_\theta(z^{(i)}))\]</div>
+<ul>
+<li>
+<p>Line 5: Discriminator gradient computation
+<span class="arithmatex">\(g_w ← \nabla_w [\frac{1}{m}\sum_{i=1}^m f_w(x^{(i)}) - \frac{1}{m}\sum_{i=1}^m f_w(g_\theta(z^{(i)}))]\)</span></p>
+</li>
+<li>
+<p>Line 10: Generator gradient computation <span class="arithmatex">\(g_\theta ← -\nabla_\theta \frac{1}{m}\sum_{i=1}^m f_w(g_\theta(z^{(i)}))\)</span></p>
+</li>
+</ul>
+<pre><code class="language-python">for i, (imgs, _) in enumerate(dataloader):
         # Configure input
         real_imgs = Variable(imgs.type(Tensor))
         # ---------------------
@@ -1328,52 +1464,116 @@ for i, (imgs, _) in enumerate(dataloader):
 <hr />
 <h1 id="2017-wgan-gp-improved-training-of-wasserstein-gans">[2017] WGAN-GP: <a href="https://arxiv.org/abs/1704.00028">Improved Training of Wasserstein GANs</a><a class="headerlink" href="#2017-wgan-gp-improved-training-of-wasserstein-gans" title="Permanent link">&para;</a></h1>
 <h2 id="overall-introduction-gradient-penalty">Overall Introduction:  gradient penalty<a class="headerlink" href="#overall-introduction-gradient-penalty" title="Permanent link">&para;</a></h2>
-<p>WGAN-GP replaces the weight clipping in the original WGAN by adding a gradient penalty term at the random interpolation points between the real and generated data, thereby achieving a more stable training process and better generation effects.
-Loss function in WGAN: $$L 
- = \sup_{||f||<em>L \leq 1} \mathbb{E}</em>{x \sim \mathbb{P}<em>r}[D(x)] - \mathbb{E}</em>{x \sim \mathbb{P}_g}[D(x)]
- $$
-Loss function in WGAN-GP: <span class="arithmatex">\(<span class="arithmatex">\(L = \mathbb{E}_{x\sim P_r}[D(x)] - \mathbb{E}_{x\sim P_g}[D(x)] + \lambda \mathbb{E}_{\hat{x}\sim P_{\hat{x}}}[(||\nabla_{\hat{x}}D(\hat{x})||_2 - 1)^2]\)</span>\)</span>
-where:
-- Wasserstein Distance Term :<span class="arithmatex">\(\mathbb{E}_{x\sim P_r}[D(x)] - \mathbb{E}_{x\sim P_g}[D(x)]\)</span>
-  - measure distance between real and generated distributions
-- Gradient Penalty Term: <span class="arithmatex">\(\lambda \mathbb{E}_{\hat{x}\sim P_{\hat{x}}}[(||\nabla_{\hat{x}}D(\hat{x})||_2 - 1)^2]\)</span>
-  - λ is penalty coefficient (typically 10)
-  - Ensures gradient norm is close to 1
-  - <span class="arithmatex">\(\hat{x}\)</span> is a random interpolation between real samples and generated samples:</p>
+<p>WGAN-GP replaces the weight clipping in the original WGAN by adding a gradient penalty term at the random interpolation points between the real and generated data, thereby achieving a more stable training process and better generation effects.</p>
+<p>Loss function in WGAN: 
+<span class="arithmatex">\(<span class="arithmatex">\(L = \sup_{||f||_L \leq 1} \mathbb{E}_{x \sim \mathbb{P}_r}[D(x)] - \mathbb{E}_{x \sim \mathbb{P}_g}[D(x)]\)</span>\)</span></p>
+<p>Loss function in WGAN-GP: 
+<span class="arithmatex">\(<span class="arithmatex">\(L = \mathbb{E}_{x\sim P_r}[D(x)] - \mathbb{E}_{x\sim P_g}[D(x)] + \lambda \mathbb{E}_{\hat{x}\sim P_{\hat{x}}}[(||\nabla_{\hat{x}}D(\hat{x})||_2 - 1)^2]\)</span>\)</span></p>
+<p>where:
+- Wasserstein Distance Term :<span class="arithmatex">\(\mathbb{E}_{x\sim P_r}[D(x)] - \mathbb{E}_{x\sim P_g}[D(x)]\)</span></p>
+<ul>
+<li>
+<p>measure distance between real and generated distributions</p>
+</li>
+<li>
+<p>Gradient Penalty Term: <span class="arithmatex">\(\lambda \mathbb{E}_{\hat{x}\sim P_{\hat{x}}}[(||\nabla_{\hat{x}}D(\hat{x})||_2 - 1)^2]\)</span></p>
+</li>
+<li>
+<p>λ is penalty coefficient (typically 10)</p>
+</li>
+<li>
+<p>Ensures gradient norm is close to 1</p>
+</li>
+<li>
+<p><span class="arithmatex">\(\hat{x}\)</span> is a random interpolation between real samples and generated samples:</p>
+</li>
+</ul>
 <h3 id="drawbacks-as-weight-clipping">Drawbacks as weight-clipping<a class="headerlink" href="#drawbacks-as-weight-clipping" title="Permanent link">&para;</a></h3>
 <p><img alt="image" src="https://hackmd.io/_uploads/SJUHiEiD1g.png" />
 <em>Source: Gulrajani et al., "Improved Training of Wasserstein GANs" (2017) arXiv:1704.00028</em></p>
-<p>Capacity underuse
-- Main Issues:
-  - Theoretically, this critic should maintain unit gradient magnitudes everywhere, but when using weight clipping constraints, the critic in WGAN tends to learn overly simplistic functions. 
-- Experimental Validation:
-  - To verify this, we conducted experiments using the real distribution plus random noise as the generator's output. 
-  - The results showed that critics with weight clipping indeed overlook the complex features of the data, learning only simple approximations. 
-Exploding and vanishing gradients
-- Main Issues:
-  - WGAN faces optimization challenges during training, caused by the interaction between weight constraints and the loss function. If the clipping threshold <span class="arithmatex">\(c\)</span> is not carefully adjusted, it may lead to either vanishing or exploding gradients.
-- Experimental Validation:
-  - Researchers conducted experiments on the Swiss Roll toy dataset using three different clipping thresholds: 0.1, 0.01, and 0.001. With weight clipping:
-    - At <span class="arithmatex">\(c=0.1\)</span>, gradients exhibited exponential growth (red line going up).
-    - At <span class="arithmatex">\(c=0.01\)</span> and <span class="arithmatex">\(c=0.001\)</span>, gradients exhibited exponential decay (purple and green lines going down).
-The two smaller graphs on the right show differences in weight distribution:
-- The upper graph: Weight clipping pushes weights toward two extreme values.
-- The lower graph: Gradient penalty results in a more normal distribution of weights.</p>
+<h4 id="capacity-underuse">Capacity underuse<a class="headerlink" href="#capacity-underuse" title="Permanent link">&para;</a></h4>
+<ul>
+<li>
+<p>Main Issues:</p>
+</li>
+<li>
+<p>Theoretically, this critic should maintain unit gradient magnitudes everywhere, but when using weight clipping constraints, the critic in WGAN tends to learn overly simplistic functions. </p>
+</li>
+<li>
+<p>Experimental Validation:</p>
+</li>
+<li>
+<p>To verify this, we conducted experiments using the real distribution plus random noise as the generator's output. </p>
+</li>
+<li>
+<p>The results showed that critics with weight clipping indeed overlook the complex features of the data, learning only simple approximations. </p>
+</li>
+</ul>
+<h4 id="exploding-and-vanishing-gradients">Exploding and vanishing gradients<a class="headerlink" href="#exploding-and-vanishing-gradients" title="Permanent link">&para;</a></h4>
+<ul>
+<li>
+<p>Main Issues:</p>
+</li>
+<li>
+<p>WGAN faces optimization challenges during training, caused by the interaction between weight constraints and the loss function. If the clipping threshold <span class="arithmatex">\(c\)</span> is not carefully adjusted, it may lead to either vanishing or exploding gradients.</p>
+</li>
+<li>
+<p>Experimental Validation:</p>
+</li>
+<li>
+<p>Researchers conducted experiments on the Swiss Roll toy dataset using three different clipping thresholds: 0.1, 0.01, and 0.001. With weight clipping:</p>
+<ul>
+<li>
+<p>At <span class="arithmatex">\(c=0.1\)</span>, gradients exhibited exponential growth (red line going up).</p>
+</li>
+<li>
+<p>At <span class="arithmatex">\(c=0.01\)</span> and <span class="arithmatex">\(c=0.001\)</span>, gradients exhibited exponential decay (purple and green lines going down).</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>The two smaller graphs on the right show differences in weight distribution:</p>
+<ul>
+<li>
+<p>The upper graph: Weight clipping pushes weights toward two extreme values.</p>
+</li>
+<li>
+<p>The lower graph: Gradient penalty results in a more normal distribution of weights.</p>
+</li>
+</ul>
 <h2 id="loss-function_4">Loss function<a class="headerlink" href="#loss-function_4" title="Permanent link">&para;</a></h2>
 <p>Training process:
 <img alt="image" src="https://hackmd.io/_uploads/H1KOo4sw1l.png" />
 <em>Source: Gulrajani et al., "Improved Training of Wasserstein GANs" (2017) arXiv:1704.00028</em></p>
 <p><strong>How does the Gradient Penalty term work in WGAN-GP？</strong></p>
 <ol>
-<li>The loss function of WGAN-GP:  <span class="arithmatex">\(<span class="arithmatex">\(\min_G \max_D \mathbb{E}_{x\sim P_r}[D(x)] - \mathbb{E}_{z\sim P_z}[D(G(z))] + \lambda \mathbb{E}_{\hat{x}\sim P_{\hat{x}}}[(||\nabla_{\hat{x}}D(\hat{x})||_2 - 1)^2]\)</span>\)</span></li>
-<li>The core idea of the Gradient Penalty term is to enforce the 1-Lipschitz constraint on discriminator D across the sample space： <span class="arithmatex">\(|D(x_1) - D(x_2)| \leq |x_1 - x_2|\)</span></li>
-<li>The 1-Lipschitz constraint above is equivalent to having the gradient norm of the discriminator not exceeding 1 at any point:  <span class="arithmatex">\(||\nabla_x D(x)||_2 \leq 1\)</span></li>
-<li>WGAN-GP enforces the gradient norm to be equal to 1, rather than less than or equal to 1, through the penalty term:<span class="arithmatex">\(\mathcal{L}_{GP} = \lambda \mathbb{E}_{\hat{x}\sim P_{\hat{x}}}[(||\nabla_{\hat{x}}D(\hat{x})||_2 - 1)^2]\)</span></li>
-<li><span class="arithmatex">\(\hat{x} = \epsilon x + (1-\epsilon)G(z), \epsilon \sim U[0,1]\)</span><ul>
-<li>So <span class="arithmatex">\(\hat{x}\)</span> is a linear interpolation between data points of the real data distribution <span class="arithmatex">\(P_r\)</span> and the generated data distribution <span class="arithmatex">\(P_g\)</span>.</li>
-<li>Why sampling?</li>
-<li>According to <span class="arithmatex">\(||\nabla_x D(x)||_2 \leq 1\)</span>, the optimal critic forms a line between the paired points of the real and generated distributions with a gradient norm of 1. Therefore, as a compromise, the constraint is only enforced along these sampled lines.</li>
-<li>Easy to implement and worked out in experiments.</li>
+<li>
+<p>The loss function of WGAN-GP:  <span class="arithmatex">\(\min_G \max_D \mathbb{E}_{x\sim P_r}[D(x)] - \mathbb{E}_{z\sim P_z}[D(G(z))] + \lambda \mathbb{E}_{\hat{x}\sim P_{\hat{x}}}[(||\nabla_{\hat{x}}D(\hat{x})||_2 - 1)^2]\)</span></p>
+</li>
+<li>
+<p>The core idea of the Gradient Penalty term is to enforce the 1-Lipschitz constraint on discriminator D across the sample space： <span class="arithmatex">\(|D(x_1) - D(x_2)| \leq |x_1 - x_2|\)</span></p>
+</li>
+<li>
+<p>The 1-Lipschitz constraint above is equivalent to having the gradient norm of the discriminator not exceeding 1 at any point:  <span class="arithmatex">\(||\nabla_x D(x)||_2 \leq 1\)</span></p>
+</li>
+<li>
+<p>WGAN-GP enforces the gradient norm to be equal to 1, rather than less than or equal to 1, through the penalty term:<span class="arithmatex">\(\mathcal{L}_{GP} = \lambda \mathbb{E}_{\hat{x}\sim P_{\hat{x}}}[(||\nabla_{\hat{x}}D(\hat{x})||_2 - 1)^2]\)</span></p>
+</li>
+<li>
+<p><span class="arithmatex">\(\hat{x} = \epsilon x + (1-\epsilon)G(z), \epsilon \sim U[0,1]\)</span></p>
+<ul>
+<li>
+<p>So <span class="arithmatex">\(\hat{x}\)</span> is a linear interpolation between data points of the real data distribution <span class="arithmatex">\(P_r\)</span> and the generated data distribution <span class="arithmatex">\(P_g\)</span>.</p>
+</li>
+<li>
+<p>Why sampling?</p>
+</li>
+<li>
+<p>According to <span class="arithmatex">\(||\nabla_x D(x)||_2 \leq 1\)</span>, the optimal critic forms a line between the paired points of the real and generated distributions with a gradient norm of 1. Therefore, as a compromise, the constraint is only enforced along these sampled lines.</p>
+</li>
+<li>
+<p>Easy to implement and worked out in experiments.</p>
+</li>
 </ul>
 </li>
 </ol>
@@ -1396,21 +1596,43 @@ gradients = autograd.grad(
 <pre><code class="language-python">gradient_penalty = ((gradients.norm(2, dim=1) - 1) ** 2).mean()
 </code></pre>
 <ol>
-<li>The regulatory effect of this penalty term is manifested in:</li>
-<li>When <span class="arithmatex">\(||\nabla_{\hat{x}}D(\hat{x})||_2 &gt; 1\)</span>, showing:<ul>
-<li>Too Steep Gradients: Discriminators tend to be "aggressive" in judging real/fake samples and change too rapidly </li>
-<li>May lead to training instability:</li>
-<li>Likely to cause discriminator overfitting</li>
-<li>Provides too strong gradient signals to the generator</li>
+<li>
+<p>The regulatory effect of this penalty term is manifested in:</p>
+</li>
+<li>
+<p>When <span class="arithmatex">\(||\nabla_{\hat{x}}D(\hat{x})||_2 &gt; 1\)</span>, showing:</p>
+<ul>
+<li>
+<p>Too Steep Gradients: Discriminators tend to be "aggressive" in judging real/fake samples and change too rapidly </p>
+</li>
+<li>
+<p>May lead to training instability:</p>
+</li>
+<li>
+<p>Likely to cause discriminator overfitting</p>
+</li>
+<li>
+<p>Provides too strong gradient signals to the generator</p>
+</li>
 </ul>
 </li>
-<li>When <span class="arithmatex">\(||\nabla_{\hat{x}}D(\hat{x})||_2 &lt; 1\)</span>, showing:<ul>
-<li>Too Flat Gradients: The Discriminator tends to be  insensitive to input changes </li>
-<li>Insufficient Discrimination :  The Discriminator cannot effectively distinguish real/fake samples</li>
-<li>Vanishing Gradients: Generator might not receive effective training signals</li>
+<li>
+<p>When <span class="arithmatex">\(||\nabla_{\hat{x}}D(\hat{x})||_2 &lt; 1\)</span>, showing:</p>
+<ul>
+<li>
+<p>Too Flat Gradients: The Discriminator tends to be  insensitive to input changes </p>
+</li>
+<li>
+<p>Insufficient Discrimination :  The Discriminator cannot effectively distinguish real/fake samples</p>
+</li>
+<li>
+<p>Vanishing Gradients: Generator might not receive effective training signals</p>
+</li>
 </ul>
 </li>
-<li>Only when gradient norm  <span class="arithmatex">\(||\nabla_{\hat{x}}D(\hat{x})||_2 = 1\)</span>, the penalty term becomes zero</li>
+<li>
+<p>Only when gradient norm  <span class="arithmatex">\(||\nabla_{\hat{x}}D(\hat{x})||_2 = 1\)</span>, the penalty term becomes zero</p>
+</li>
 </ol>
 <pre><code class="language-python">def compute_gradient_penalty(D, real_samples, fake_samples):
     # Random interpolation coefficient
@@ -1447,37 +1669,73 @@ for epoch in epochs:
 <h1 id="2018-pggan-progressive-growing-of-gans-for-improved-quality-stability-and-variation">[2018] PGGAN: <a href="https://arxiv.org/abs/1710.10196">Progressive Growing of GANs for Improved Quality, Stability, and Variation</a><a class="headerlink" href="#2018-pggan-progressive-growing-of-gans-for-improved-quality-stability-and-variation" title="Permanent link">&para;</a></h1>
 <h2 id="overall-introduction_2">Overall Introduction:<a class="headerlink" href="#overall-introduction_2" title="Permanent link">&para;</a></h2>
 <ol>
-<li>Progressive Growing</li>
-<li>Core Idea: Start at low resolution and progressively increase to higher resolutions.</li>
-<li>Advantages:  More stable training &amp; Higher computational efficiency &amp; Better memory utilization</li>
-<li>Implementation: Smoothly fade in new layers and synchronous growth of the generator and discriminator</li>
-<li>Minibatch Standard Deviation </li>
-<li>Purpose: Increase the diversity of generated images &amp; prevents mode collapse.</li>
-<li>Implementation: <ul>
-<li>Introduce a statistical layer late in the discriminator</li>
-<li>Calculate the standard deviation within a minibatch of samples</li>
-<li>Concatenate statistical features with the original features</li>
+<li>
+<p>Progressive Growing</p>
+</li>
+<li>
+<p>Core Idea: Start at low resolution and progressively increase to higher resolutions.</p>
+</li>
+<li>
+<p>Advantages:  More stable training &amp; Higher computational efficiency &amp; Better memory utilization</p>
+</li>
+<li>
+<p>Implementation: Smoothly fade in new layers and synchronous growth of the generator and discriminator</p>
+</li>
+<li>
+<p>Minibatch Standard Deviation </p>
+</li>
+<li>
+<p>Purpose: Increase the diversity of generated images &amp; prevents mode collapse.</p>
+</li>
+<li>
+<p>Implementation: </p>
+<ul>
+<li>
+<p>Introduce a statistical layer late in the discriminator</p>
+</li>
+<li>
+<p>Calculate the standard deviation within a minibatch of samples</p>
+</li>
+<li>
+<p>Concatenate statistical features with the original features</p>
+</li>
 </ul>
 </li>
-<li>Normalization Strategies</li>
-<li>Purpose: strategies ensure underlying training stability.</li>
-<li>Implementation: <ul>
-<li>Generator: Uses PixelNorm 
-The structure of PGGAN laid an important foundation for subsequent work (such as StyleGAN).</li>
+<li>
+<p>Normalization Strategies</p>
+</li>
+<li>
+<p>Purpose: strategies ensure underlying training stability.</p>
+</li>
+<li>
+<p>Implementation: </p>
+<ul>
+<li>Generator: Uses PixelNorm </li>
 </ul>
 </li>
 </ol>
+<p>The structure of PGGAN laid an important foundation for subsequent work (such as StyleGAN).</p>
 <h2 id="progressive-growing-of-gans">PROGRESSIVE GROWING OF GANS<a class="headerlink" href="#progressive-growing-of-gans" title="Permanent link">&para;</a></h2>
 <p><img alt="image" src="https://hackmd.io/_uploads/H1g1JBjvJx.png" />
 <em>Source: Karras et al., "Progressive Growing of GANs for Improved Quality, Stability, and Variation" (2018) arXiv:1710.10196</em></p>
 <p><img alt="image" src="https://hackmd.io/_uploads/SJvW1HsDye.png" />
 <em>Source: Karras et al., "Progressive Growing of GANs for Improved Quality, Stability, and Variation" (2018) arXiv:1710.10196</em></p>
 <ul>
-<li>Each resolution stage has two phases:</li>
-<li>Fade-in Phase:<ul>
-<li>The new layer is gradually blended in using alpha parameter</li>
-<li>Alpha increases linearly from 0 to 1</li>
-<li>In PGGAN, the growth of the α parameter is linear and is controlled by the number of training iterations. This is achieved as follows:</li>
+<li>
+<p>Each resolution stage has two phases:</p>
+</li>
+<li>
+<p>Fade-in Phase:</p>
+<ul>
+<li>
+<p>The new layer is gradually blended in using alpha parameter</p>
+</li>
+<li>
+<p>Alpha increases linearly from 0 to 1</p>
+</li>
+<li>
+<p>In PGGAN, the growth of the α parameter is linear and is controlled by the number of training iterations. This is achieved as follows:</p>
+</li>
 </ul>
 </li>
 </ul>
@@ -1494,17 +1752,33 @@ final_out = self.rgb_layers[steps](out)
 return self.fade_in(alpha, final_upscaled, final_out)
 </code></pre>
 <ol>
-<li>Stabilization Phase: <ul>
-<li>Train network with new layers fully active</li>
-<li>Old paths are removed</li>
-<li>Network stabilizes at new resolution
-Time Allocation:</li>
+<li>
+<p>Stabilization Phase: </p>
+<ul>
+<li>
+<p>Train network with new layers fully active</p>
+</li>
+<li>
+<p>Old paths are removed</p>
+</li>
+<li>
+<p>Network stabilizes at new resolution</p>
+</li>
 </ul>
 </li>
-<li>Fade-in Phase: 600k images</li>
-<li>Stabilization Phase: 600k images</li>
-<li>Total per resolution: 1.2M images (600k + 600k)</li>
 </ol>
+<p>Time Allocation:</p>
+<ul>
+<li>
+<p>Fade-in Phase: 600k images</p>
+</li>
+<li>
+<p>Stabilization Phase: 600k images</p>
+</li>
+<li>
+<p>Total per resolution: 1.2M images (600k + 600k)</p>
+</li>
+</ul>
 <pre><code>Complete Training Process Example (from 4×4 to 1024×1024):
 4×4:   Only Stabilization     600k images
 8×8:   Fade-in + Stabilization 1.2M images
@@ -1531,29 +1805,55 @@ Time Allocation:</li>
     return (1 - alpha) * old_rgb + alpha * new_rgb
 </code></pre>
 <ul>
-<li>toRGB: 1×1 convolution to convert features to RGB</li>
-<li>fromRGB: 1×1 convolution to convert RGB to features</li>
-<li>2×: Upsampling (nearest neighbor)</li>
-<li>0.5×: Downsampling (average pooling)</li>
+<li>
+<p>toRGB: 1×1 convolution to convert features to RGB</p>
+</li>
+<li>
+<p>fromRGB: 1×1 convolution to convert RGB to features</p>
+</li>
+<li>
+<p>2×: Upsampling (nearest neighbor)</p>
+</li>
+<li>
+<p>0.5×: Downsampling (average pooling)</p>
+</li>
 </ul>
 <h2 id="increasing-variation-using-minibatch-standard-deviation">INCREASING VARIATION USING MINIBATCH STANDARD DEVIATION<a class="headerlink" href="#increasing-variation-using-minibatch-standard-deviation" title="Permanent link">&para;</a></h2>
 <p><img alt="image" src="https://hackmd.io/_uploads/S1bEyBjwkx.png" />
 <em>Source: Wang et al., "Citrus Disease Image Generation and Classification Based on Improved FastGAN and EfficientNet-B5" (2023) Electronics, 12(5), 1232</em></p>
 <ol>
 <li>For each feature and spatial location i, compute standard deviation across the batch:
-  <span class="arithmatex">\(<span class="arithmatex">\(\sigma_i(x) = \sqrt{\frac{1}{N}\sum_{k=1}^{N}(x_{ik} - \mu_i)^2}\)</span>\)</span>
+  <span class="arithmatex">\(\sigma_i(x) = \sqrt{\frac{1}{N}\sum_{k=1}^{N}(x_{ik} - \mu_i)^2}\)</span>
 where:</li>
-<li><span class="arithmatex">\(x_{ik}\)</span> is the feature value for sample k at position i</li>
-<li><span class="arithmatex">\(\mu_i = \frac{1}{N}\sum_{k=1}^{N}x_{ik}\)</span> is the mean across the batch</li>
-<li>N is the batch size</li>
-<li>Average the standard deviations across features and spatial dimensions:
-  <span class="arithmatex">\(<span class="arithmatex">\(\sigma = \frac{1}{C \times H \times W}\sum_{i}\sigma_i(x)\)</span>\)</span>
-where:</li>
-<li><span class="arithmatex">\(C\)</span> : channels. <span class="arithmatex">\(H\)</span>: height. <span class="arithmatex">\(W\)</span> :width
-These statistics are then:</li>
-<li>Replicated into a <span class="arithmatex">\([1×1×H×W]\)</span> tensor</li>
-<li>Further replicated N times to match batch size: <span class="arithmatex">\([N×1×H×W]\)</span></li>
-<li>Concatenated with original input along channel dimension to get final output of shape <span class="arithmatex">\([N×(C+1)×H×W]\)</span></li>
+<li>
+<p><span class="arithmatex">\(x_{ik}\)</span> is the feature value for sample k at position i</p>
+</li>
+<li>
+<p><span class="arithmatex">\(\mu_i = \frac{1}{N}\sum_{k=1}^{N}x_{ik}\)</span> is the mean across the batch</p>
+</li>
+<li>
+<p>N is the batch size</p>
+</li>
+<li>
+<p>Average the standard deviations across features and spatial dimensions:
+  <span class="arithmatex">\(\sigma = \frac{1}{C \times H \times W}\sum_{i}\sigma_i(x)\)</span></p>
+</li>
+</ol>
+<p>where:</p>
+<ul>
+<li><span class="arithmatex">\(C\)</span> : channels. <span class="arithmatex">\(H\)</span>: height. <span class="arithmatex">\(W\)</span> :width</li>
+</ul>
+<p>These statistics are then:</p>
+<ol>
+<li>
+<p>Replicated into a <span class="arithmatex">\([1×1×H×W]\)</span> tensor</p>
+</li>
+<li>
+<p>Further replicated N times to match batch size: <span class="arithmatex">\([N×1×H×W]\)</span></p>
+</li>
+<li>
+<p>Concatenated with original input along channel dimension to get final output of shape <span class="arithmatex">\([N×(C+1)×H×W]\)</span></p>
+</li>
 </ol>
 <pre><code class="language-python">def minibatch_stddev_layer(x, group_size=4):
     N, C, H, W = x.shape
@@ -1625,57 +1925,95 @@ These statistics are then:</li>
 </tbody>
 </table>
 <h3 id="pixelwise-feature-vector-normalization-in-generator">PIXELWISE FEATURE VECTOR NORMALIZATION IN GENERATOR<a class="headerlink" href="#pixelwise-feature-vector-normalization-in-generator" title="Permanent link">&para;</a></h3>
-<p>Applied after each convolutional layer in the generator at each pixel position independently:
-<span class="arithmatex">\(<span class="arithmatex">\(b_{x,y} = \frac{a_{x,y}}{\sqrt{\frac{1}{N}\sum_{j=0}^{N-1}(a_{x,y}^j)^2 + \epsilon}}\)</span>\)</span>, 
-Where:
+<p>Applied after each convolutional layer in the generator at each pixel position independently:</p>
+<div class="arithmatex">\[b_{x,y} = \frac{a_{x,y}}{\sqrt{\frac{1}{N}\sum_{j=0}^{N-1}(a_{x,y}^j)^2 + \epsilon}}\]</div>
+<p>Where:
 - <span class="arithmatex">\(\epsilon = 10^{-8}\)</span></p>
 <ul>
-<li><span class="arithmatex">\(a_{x,y} \text{ is the original feature vector at pixel position } (x,y)\)</span></li>
-<li><span class="arithmatex">\(b_{x,y} \text{ is the normalized feature vector at pixel position } (x,y)\)</span></li>
-<li><span class="arithmatex">\(N \text{ is the number of feature maps (channels)}\)</span></li>
-<li><span class="arithmatex">\(\epsilon = 10^{-8} \text{ is a small constant to prevent division by zero}\)</span></li>
-<li><span class="arithmatex">\(\text{The sum } \sum_{j=0}^{N-1} \text{ is taken over all } N \text{ feature maps for that pixel position}\)</span></li>
+<li>
+<p><span class="arithmatex">\(a_{x,y} \text{ is the original feature vector at pixel position } (x,y)\)</span></p>
+</li>
+<li>
+<p><span class="arithmatex">\(b_{x,y} \text{ is the normalized feature vector at pixel position } (x,y)\)</span></p>
+</li>
+<li>
+<p><span class="arithmatex">\(N \text{ is the number of feature maps (channels)}\)</span></p>
+</li>
+<li>
+<p><span class="arithmatex">\(\epsilon = 10^{-8} \text{ is a small constant to prevent division by zero}\)</span></p>
+</li>
+<li>
+<p><span class="arithmatex">\(\text{The sum } \sum_{j=0}^{N-1} \text{ is taken over all } N \text{ feature maps for that pixel position}\)</span></p>
+</li>
 </ul>
 <pre><code class="language-python">class PixelNorm(nn.Module):
     def forward(self, x):
         norm = torch.mean(x ** 2, dim=1, keepdim=True)
         norm = torch.sqrt(norm + self.epsilon)
-        return x / norm
-
+        return x / norm    
 </code></pre>
 <ul>
-<li><span class="arithmatex">\(x ** 2\)</span>:  Calculate the squared values of all features at each pixel <span class="arithmatex">\((a_{x,y}^j)^2\)</span></li>
-<li><code>torch.mean(..., dim=1)</code>:  Average these squares across all feature maps <span class="arithmatex">\({\frac{1}{N}\sum_{j=0}^{N-1}(a_{x,y}^j)^2 }\)</span></li>
-<li>torch.sqrt(... + epsilon): Take the square root of the average (plus ε) <span class="arithmatex">\({\sqrt{\frac{1}{N}\sum_{j=0}^{N-1}(a_{x,y}^j)^2 + \epsilon}}\)</span></li>
-<li><span class="arithmatex">\(x / norm\)</span>:  normalization <span class="arithmatex">\(\frac{a_{x,y}}{\sqrt{\frac{1}{N}\sum_{j=0}^{N-1}(a_{x,y}^j)^2 + \epsilon}}\)</span>$</li>
+<li>
+<p><span class="arithmatex">\(x ** 2\)</span>:  Calculate the squared values of all features at each pixel <span class="arithmatex">\((a_{x,y}^j)^2\)</span></p>
+</li>
+<li>
+<p><code>torch.mean(..., dim=1)</code>:  Average these squares across all feature maps <span class="arithmatex">\({\frac{1}{N}\sum_{j=0}^{N-1}(a_{x,y}^j)^2 }\)</span></p>
+</li>
+<li>
+<p>torch.sqrt(... + epsilon): Take the square root of the average (plus ε) <span class="arithmatex">\({\sqrt{\frac{1}{N}\sum_{j=0}^{N-1}(a_{x,y}^j)^2 + \epsilon}}\)</span></p>
+</li>
+<li>
+<p><span class="arithmatex">\(x / norm\)</span>:  normalization <span class="arithmatex">\(\frac{a_{x,y}}{\sqrt{\frac{1}{N}\sum_{j=0}^{N-1}(a_{x,y}^j)^2 + \epsilon}}\)</span>$</p>
+</li>
 </ul>
 <h3 id="qualized-learning-rate">QUALIZED LEARNING RATE<a class="headerlink" href="#qualized-learning-rate" title="Permanent link">&para;</a></h3>
-<p><strong>Problem</strong>: In traditional neural network training, parameters of different layers may have different dynamic ranges. When using adaptive optimizers like RMSProp or Adam, they normalize gradient updates based on the standard deviation of parameters. This results in parameters with larger dynamic ranges requiring more time to adjust properly.
-Specific Implementation:
-1. Traditional Weight Initialization 
-  - In standard neural networks, weights are typically initialized using methods 
-    - like He initialization N(0, sqrt(2/n)), Better suited for ReLU</p>
+<p><strong>Problem</strong>: In traditional neural network training, parameters of different layers may have different dynamic ranges. When using adaptive optimizers like RMSProp or Adam, they normalize gradient updates based on the standard deviation of parameters. This results in parameters with larger dynamic ranges requiring more time to adjust properly.</p>
+<p>Specific Implementation:</p>
+<ol>
+<li>Traditional Weight Initialization </li>
+<li>
+<p>In standard neural networks, weights are typically initialized using methods </p>
+<ul>
+<li>like He initialization N(0, sqrt(2/n)), Better suited for ReLU</li>
+</ul>
+</li>
+</ol>
 <pre><code class="language-python"># Standard He initialization (for comparison)
 weight_shape = (out_channels, in_channels, kernel, kernel)
 std = np.sqrt(2.0 / (in_channels * kernel * kernel))
 weights = np.random.normal(0, std, weight_shape)
 </code></pre>
 <ul>
-<li>This can lead to different layers learning at different rates, causing training instability</li>
-<li>The variance of the gradients can differ significantly between layers</li>
-<li>The Equalized Learning Rate Solution: </li>
-<li>initialization (happens only once when the model is created):<ul>
+<li>
+<p>This can lead to different layers learning at different rates, causing training instability</p>
+</li>
+<li>
+<p>The variance of the gradients can differ significantly between layers</p>
+</li>
+<li>
+<p>The Equalized Learning Rate Solution: </p>
+</li>
+<li>
+<p>initialization (happens only once when the model is created):</p>
+<ul>
 <li>Instead of using usual standard initialization, weights are initialized from N(0,1)</li>
 </ul>
 </li>
 </ul>
 <h2 id="equalized-learning-rate-approach">Equalized learning rate approach<a class="headerlink" href="#equalized-learning-rate-approach" title="Permanent link">&para;</a></h2>
-<p>weights = np.random.normal(0, 1.0, weight_shape)
-runtime_coef = std  # Applied during forward pass</p>
+<pre><code class="language-python">weights = np.random.normal(0, 1.0, weight_shape)
+runtime_coef = std  # Applied during forward pass
+</code></pre>
 <ul>
-<li>During training (happens every forward pass): scaling process</li>
-<li>Each layer's weights are explicitly scaled during runtime by a layer-specific constant </li>
-<li>The scaling factor is the per-layer normalization constant from He initialization</li>
+<li>
+<p>During training (happens every forward pass): scaling process</p>
+</li>
+<li>
+<p>Each layer's weights are explicitly scaled during runtime by a layer-specific constant </p>
+</li>
+<li>
+<p>The scaling factor is the per-layer normalization constant from He initialization</p>
+</li>
 </ul>
 <h3 id="in-equalizedconv2d">In EqualizedConv2d<a class="headerlink" href="#in-equalizedconv2d" title="Permanent link">&para;</a></h3>
 <pre><code class="language-python">self.scale = np.sqrt(2) / np.sqrt(fan_in)  # Calculate He scaling factor
@@ -1689,32 +2027,79 @@ scaled_weight = self.weight * self.scale    # Apply scaling at runtime
 </ul>
 </li>
 </ul>
-<p>Why It's Useful:
-1. Ensures that all weights have a similar dynamic range.
-2. Makes the learning process more balanced, avoiding slow learning for some parameters due to large ranges.
-3. Better adapts to c
-- In standard neural networks, weights are typically initialized using methods 
-  - like He initialization <span class="arithmatex">\(N(0, sqrt(2/n))\)</span>, Better suited for ReLU</p>
+<p>Why It's Useful:</p>
+<ol>
+<li>
+<p>Ensures that all weights have a similar dynamic range.</p>
+</li>
+<li>
+<p>Makes the learning process more balanced, avoiding slow learning for some parameters due to large ranges.</p>
+</li>
+<li>
+<p>Better adapts to c</p>
+</li>
+<li>
+<p>In standard neural networks, weights are typically initialized using methods </p>
+</li>
+<li>
+<p>like He initialization <span class="arithmatex">\(N(0, sqrt(2/n))\)</span>, Better suited for ReLU</p>
+</li>
+</ol>
 <hr />
-<p>RMSProp or Adam, they normalize gradient updates based on the standard deviation of parameters：
-RMSprop:<span class="arithmatex">\(<span class="arithmatex">\(\theta_t = \theta_{t-1} - \frac{\eta}{\sqrt{v_t + \epsilon}} g_t\)</span>\)</span> Adam:<span class="arithmatex">\(<span class="arithmatex">\(\theta_t = \theta_{t-1} - \frac{\eta}{\sqrt{\hat{v}_t} + \epsilon} \hat{m}_t\)</span>\)</span>
-1. Standard Deviation Estimation:
-- <span class="arithmatex">\(v_t\)</span> actually estimates the exponential moving average of squared gradients:<span class="arithmatex">\(v_t = \beta v_{t-1} + (1-\beta)g_t^2\)</span>
-- This accumulated squared gradient <span class="arithmatex">\(v_t\)</span> is essentially estimating the second moment of the gradient, and its square root <span class="arithmatex">\(\sqrt v_t\)</span> approximates the standard deviation of the gradient
-2. Normalization Effect:
-- In the update formula, the gradient term (<span class="arithmatex">\(g_t\)</span> or <span class="arithmatex">\(ĥ_t\)</span>) is divided by <span class="arithmatex">\(\sqrt v_t\)</span>
-- This is equivalent to normalizing the gradient update by the gradient's standard deviation
-- Mathematically equivalent to:<span class="arithmatex">\(<span class="arithmatex">\(\text{normalized update} = \frac{g_t}{\sqrt{v_t + \epsilon}}\)</span>\)</span>
-3. Why This Is Standard Deviation Normalization:
-- If a parameter has large gradient variations (high standard deviation), <span class="arithmatex">\(\sqrt v_t\)</span> will become larger
-- This will make the actual update step smaller
-- Conversely, if gradient variations are small (low standard deviation), the update step will become larger accordingly
-- This achieves adaptive standard deviation normalization
-    - This is also why EQUALIZED LEARNING RATE solves this problem by explicitly controlling the dynamic range of parameters (<span class="arithmatex">\(ŵᵢ = wᵢ/c\)</span>).</p>
-<p>Main Advantages:
-1. Keeps the learning speed consistent for all weights.
-2. Avoids the issue of having both too high and too low learning rates at the same time.
-3. By dynamically scaling during runtime rather than statically at initialization, it makes the training process more stable.</p>
+<p>RMSProp or Adam, they normalize gradient updates based on the standard deviation of parameters：</p>
+<p>RMSprop:
+<span class="arithmatex">\(<span class="arithmatex">\(\theta_t = \theta_{t-1} - \frac{\eta}{\sqrt{v_t + \epsilon}} g_t\)</span>\)</span> Adam:<span class="arithmatex">\(<span class="arithmatex">\(\theta_t = \theta_{t-1} - \frac{\eta}{\sqrt{\hat{v}_t} + \epsilon} \hat{m}_t\)</span>\)</span></p>
+<ol>
+<li>Standard Deviation Estimation:</li>
+<li>
+<p><span class="arithmatex">\(v_t\)</span> actually estimates the exponential moving average of squared gradients:<span class="arithmatex">\(v_t = \beta v_{t-1} + (1-\beta)g_t^2\)</span></p>
+</li>
+<li>
+<p>This accumulated squared gradient <span class="arithmatex">\(v_t\)</span> is essentially estimating the second moment of the gradient, and its square root <span class="arithmatex">\(\sqrt v_t\)</span> approximates the standard deviation of the gradient</p>
+</li>
+<li>
+<p>Normalization Effect:</p>
+</li>
+<li>
+<p>In the update formula, the gradient term (<span class="arithmatex">\(g_t\)</span> or <span class="arithmatex">\(ĥ_t\)</span>) is divided by <span class="arithmatex">\(\sqrt v_t\)</span></p>
+</li>
+<li>
+<p>This is equivalent to normalizing the gradient update by the gradient's standard deviation</p>
+</li>
+<li>
+<p>Mathematically equivalent to:<span class="arithmatex">\(<span class="arithmatex">\(\text{normalized update} = \frac{g_t}{\sqrt{v_t + \epsilon}}\)</span>\)</span></p>
+</li>
+<li>
+<p>Why This Is Standard Deviation Normalization:</p>
+</li>
+<li>
+<p>If a parameter has large gradient variations (high standard deviation), <span class="arithmatex">\(\sqrt v_t\)</span> will become larger</p>
+</li>
+<li>
+<p>This will make the actual update step smaller</p>
+</li>
+<li>
+<p>Conversely, if gradient variations are small (low standard deviation), the update step will become larger accordingly</p>
+</li>
+<li>
+<p>This achieves adaptive standard deviation normalization</p>
+<ul>
+<li>This is also why EQUALIZED LEARNING RATE solves this problem by explicitly controlling the dynamic range of parameters (<span class="arithmatex">\(ŵᵢ = wᵢ/c\)</span>).</li>
+</ul>
+</li>
+</ol>
+<p>Main Advantages:</p>
+<ol>
+<li>
+<p>Keeps the learning speed consistent for all weights.</p>
+</li>
+<li>
+<p>Avoids the issue of having both too high and too low learning rates at the same time.</p>
+</li>
+<li>
+<p>By dynamically scaling during runtime rather than statically at initialization, it makes the training process more stable.</p>
+</li>
+</ol>
 <hr />
 
 
@@ -1762,10 +2147,10 @@ RMSprop:<span class="arithmatex">\(<span class="arithmatex">\(\theta_t = \theta_
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "toc.integrate"], "search": "../../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "toc.integrate"], "search": "../../../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../../../../assets/javascripts/bundle.88dd0f4e.min.js"></script>
+      <script src="../../../../assets/javascripts/bundle.60a45f97.min.js"></script>
       
         <script src="../../../../javascripts/mathjax.js"></script>
       
