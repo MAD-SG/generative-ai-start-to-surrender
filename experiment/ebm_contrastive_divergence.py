@@ -145,6 +145,40 @@ class Sampler:
         else:
             return inp_imgs
 
+class Swish(nn.Module):
+
+    def forward(self, x):
+        return x * torch.sigmoid(x)
+
+
+class CNNModel(nn.Module):
+
+    def __init__(self, hidden_features=32, out_dim=1, **kwargs):
+        super().__init__()
+        # We increase the hidden dimension over layers. Here pre-calculated for simplicity.
+        c_hid1 = hidden_features//2
+        c_hid2 = hidden_features
+        c_hid3 = hidden_features*2
+
+        # Series of convolutions and Swish activation functions
+        self.cnn_layers = nn.Sequential(
+                nn.Conv2d(1, c_hid1, kernel_size=5, stride=2, padding=4), # [16x16] - Larger padding to get 32x32 image
+                Swish(),
+                nn.Conv2d(c_hid1, c_hid2, kernel_size=3, stride=2, padding=1), #  [8x8]
+                Swish(),
+                nn.Conv2d(c_hid2, c_hid3, kernel_size=3, stride=2, padding=1), # [4x4]
+                Swish(),
+                nn.Conv2d(c_hid3, c_hid3, kernel_size=3, stride=2, padding=1), # [2x2]
+                Swish(),
+                nn.Flatten(),
+                nn.Linear(c_hid3*4, c_hid3),
+                Swish(),
+                nn.Linear(c_hid3, out_dim)
+        )
+
+    def forward(self, x):
+        x = self.cnn_layers(x).squeeze(dim=-1)
+        return x
 
 class EBM(pl.LightningModule):
     def __init__(self, batch_size, img_shape=(1,28,28), alpha=0.1, lr=1e-4, beta1=0.0,
@@ -158,12 +192,15 @@ class EBM(pl.LightningModule):
         from torchvision.models import resnet18, ResNet18_Weights
         import timm
         # self.cnn  = timm.create_model('convnext_tiny.in12k', pretrained=True, num_classes=1, in_chans=in_channel)
-        self.cnn = timm.create_model(
-            "mobilenetv3_small_100",
-            in_chans=in_channel,          # 单通道输入
-            pretrained=False,    # 不使用预训练权重（通道数不匹配）
-            num_classes=1       # 分类类别数（例如 MNIST 的 10 类）
-        )
+        # self.cnn = timm.create_model(
+        #     "mobilenetv3_small_100",
+        #     in_chans=in_channel,          # 单通道输入
+        #     pretrained=False,    # 不使用预训练权重（通道数不匹配）
+        #     num_classes=1       # 分类类别数（例如 MNIST 的 10 类）
+        # )
+        self.cnn = CNNModel()
+
+
         # self.cnn = resnet18(weights=ResNet18_Weights.IMAGENET1K_V1, in_channel=in_channel, num_classes=1)
 
 
