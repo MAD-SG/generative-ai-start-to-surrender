@@ -1,4 +1,4 @@
-# Some Base GAN model Introduction
+# From GAN to PGGAN: Some Base GAN model Introduction
 
 # [2014]GAN : [Generative Adversarial Networks](https://arxiv.org/abs/1406.2661)
 
