@@ -10,9 +10,11 @@ from torchvision import transforms
 import torchvision
 from pytorch_lightning.loggers import TensorBoardLogger
 from pytorch_lightning.callbacks import ModelCheckpoint, LearningRateMonitor
+from pytorch_lightning.callbacks import Callback
 import numpy as np
 from torch import optim
 import random
+import math
 
 class Sampler:
     """
@@ -47,6 +49,9 @@ class Sampler:
         self.sample_size = sample_size
         self.max_len = max_len
         self.examples = [(torch.rand((1,)+img_shape)*2-1) for _ in range(self.sample_size)]
+        # init examples are random samples
+        # 添加分布式判断
+        self.is_distributed = torch.distributed.is_initialized()
 
     def sample_new_exmps(self, steps=60, step_size=10, device=None):
         """
@@ -55,16 +60,22 @@ class Sampler:
             steps - Number of iterations in the MCMC algorithm
             step_size - Learning rate nu in the algorithm above
         """
+        # 添加分布式同步
+        if self.is_distributed:
+            torch.distributed.barrier()
+            # 同步缓冲区操作需要更复杂的实现
         # Choose 95% of the batch from the buffer, 5% generate from scratch
-        n_new = np.random.binomial(self.sample_size, 0.05)
-        rand_imgs = torch.rand((n_new,) + self.img_shape) * 2 - 1
-        old_imgs = torch.cat(random.choices(self.examples, k=self.sample_size-n_new), dim=0)
-        inp_imgs = torch.cat([rand_imgs, old_imgs], dim=0).detach().to(device)
+        with torch.no_grad():
+            n_new = np.random.binomial(self.sample_size, 0.05)
+            rand_imgs = torch.rand((n_new,) + self.img_shape) * 2 - 1
 
-        # Perform MCMC sampling
+            old_imgs = torch.cat(random.choices(self.examples, k=self.sample_size-n_new), dim=0)
+            inp_imgs = torch.cat([rand_imgs, old_imgs], dim=0).detach().to(device)
+
+            # Perform MCMC sampling
         inp_imgs = Sampler.generate_samples(self.model, inp_imgs, steps=steps, step_size=step_size)
 
-        # Add new images to the buffer and remove old ones if needed
+            # Add new images to the buffer and remove old ones if needed
         self.examples = list(inp_imgs.to(torch.device("cpu")).chunk(self.sample_size, dim=0)) + self.examples
         self.examples = self.examples[:self.max_len]
         return inp_imgs
@@ -102,14 +113,15 @@ class Sampler:
         # Loop over K (steps)
         for _ in range(steps):
             # Part 1: Add noise to the input.
-            noise.normal_(0, 0.005)
+            sigma = math.sqrt(step_size*2)
+            noise.normal_(0, sigma)
             inp_imgs.data.add_(noise.data)
             inp_imgs.data.clamp_(min=-1.0, max=1.0)
 
             # Part 2: calculate gradients for the current input.
             out_imgs = -model(inp_imgs)
             out_imgs.sum().backward()
-            inp_imgs.grad.data.clamp_(-0.03, 0.03) # For stabilizing and preventing too high gradients
+            # inp_imgs.grad.data.clamp_(-0.03, 0.03) # For stabilizing and preventing too high gradients
 
             # Apply gradients to our current samples
             inp_imgs.data.add_(-step_size * inp_imgs.grad.data)
@@ -135,37 +147,47 @@ class Sampler:
 
 
 class EBM(pl.LightningModule):
-    def __init__(self, batch_size,img_shape=(3,128,128), alpha=0.1, lr=1e-4, beta1=0.0):
+    def __init__(self, batch_size, img_shape=(1,28,28), alpha=0.1, lr=1e-4, beta1=0.0,
+    step_size=0.1, in_channel=3,
+    num_steps=256):
         super().__init__()
         self.save_hyperparameters()
-        from torchvision.models import mobilenet_v3_large
+        # from torchvision.models import mobilenet_v3_large
 
-        self.cnn = mobilenet_v3_large(weights='IMAGENET1K_V1')
-        # 修改后的分类头
-        self.cnn.classifier = nn.Sequential(
-            nn.Linear(960, 512),  # 原始输入特征维度960
-            nn.Hardswish(),
-            nn.Dropout(0.3),
-            nn.Linear(512, 1)
+        # self.cnn = mobilenet_v3_large(weights='IMAGENET1K_V1')
+        from torchvision.models import resnet18, ResNet18_Weights
+        import timm
+        # self.cnn  = timm.create_model('convnext_tiny.in12k', pretrained=True, num_classes=1, in_chans=in_channel)
+        self.cnn = timm.create_model(
+            "mobilenetv3_small_100",
+            in_chans=in_channel,          # 单通道输入
+            pretrained=False,    # 不使用预训练权重（通道数不匹配）
+            num_classes=1       # 分类类别数（例如 MNIST 的 10 类）
         )
+        # self.cnn = resnet18(weights=ResNet18_Weights.IMAGENET1K_V1, in_channel=in_channel, num_classes=1)
+
 
         self.sampler = Sampler(self.cnn, img_shape=img_shape, sample_size=batch_size)
         self.example_input_array = torch.zeros(1, *img_shape)
+        self.step_size = step_size
+        self.num_steps = num_steps
 
     def forward(self, x):
         z = self.cnn(x)
-        return z
+        return z # z is the negative of the energy
 
     def configure_optimizers(self):
         # Energy models can have issues with momentum as the loss surfaces changes with its parameters.
         # Hence, we set it to 0 by default.
-        params = [
-            {'params': self.cnn.features.parameters(), 'lr': self.hparams.lr*0.1},
-            {'params': self.cnn.classifier.parameters(), 'lr': self.hparams.lr}
-        ]
-        optimizer = optim.AdamW(params, weight_decay=1e-5)
-        scheduler = optim.lr_scheduler.StepLR(optimizer, 1, gamma=0.97) # Exponential decay over epochs
-        return [optimizer], [scheduler]
+        optimizer = optim.AdamW(self.parameters(), betas=(0.5, 0.999), lr=self.hparams.lr)
+        # scheduler = optim.lr_scheduler.StepLR(optimizer, 1, gamma=0.97) # Exponential decay over epochs
+        scheduler = optim.lr_scheduler.ReduceLROnPlateau(
+            optimizer,
+            mode='min',
+            factor=0.5,
+            patience=5
+        )
+        return  {"optimizer": optimizer, "lr_scheduler": scheduler, "monitor": "loss/average"}
 
     def training_step(self, batch, batch_idx):
         # We add minimal noise to the original images to prevent the model from focusing on purely "clean" inputs
@@ -174,7 +196,7 @@ class EBM(pl.LightningModule):
         real_imgs.add_(small_noise).clamp_(min=-1.0, max=1.0)
 
         # Obtain samples
-        fake_imgs = self.sampler.sample_new_exmps(steps=60, step_size=10, device=real_imgs.device)
+        fake_imgs = self.sampler.sample_new_exmps(steps=self.num_steps, step_size=self.step_size, device=real_imgs.device)
 
         # Predict energy score for all images
         inp_imgs = torch.cat([real_imgs, fake_imgs], dim=0)
@@ -186,11 +208,22 @@ class EBM(pl.LightningModule):
         loss = reg_loss + cdiv_loss
 
         # Logging
-        self.log('loss', loss)
-        self.log('loss_regularization', reg_loss)
-        self.log('loss_contrastive_divergence', cdiv_loss)
-        self.log('metrics_avg_real', real_out.mean())
-        self.log('metrics_avg_fake', fake_out.mean())
+        self.log('loss/average', loss, sync_dist=True)
+        self.log('loss/reg', reg_loss, sync_dist=True)
+        self.log('loss/cd', cdiv_loss, sync_dist=True)
+
+        self.log('energy/real_mean', - real_out.mean(), sync_dist=True)
+        self.log('energy/real_std', - real_out.std(), sync_dist=True)
+        self.log('energy/fake_mean', - fake_out.mean(), sync_dist=True)
+        self.log('energy/fake_std', - fake_out.std(), sync_dist=True)
+        # log training images
+        if self.trainer.global_rank == 0 and self.global_step % 200 == 0:
+            self.logger.experiment.add_image(
+                "real_imgs", torchvision.utils.make_grid(real_imgs[:16], nrow=4, normalize=True), global_step=self.global_step
+            )
+        # norms = [p.grad.norm() for p in self.parameters() if p.grad is not None]
+        # grad_norm = torch.norm(torch.stack(norms))
+        # self.log('grad_norm', grad_norm, prog_bar=True)
         return loss
 
 
@@ -204,9 +237,9 @@ class EBM(pl.LightningModule):
         real_out, fake_out = self.cnn(inp_imgs).chunk(2, dim=0)
 
         cdiv = fake_out.mean() - real_out.mean()
-        self.log('val_contrastive_divergence', cdiv)
-        self.log('val_fake_out', fake_out.mean())
-        self.log('val_real_out', real_out.mean())
+        self.log('loss/val_cd', cdiv, sync_dist=True)
+        self.log('loss/val_fake_energy', fake_out.mean(),sync_dist=True)
+        self.log('loss/val_real_energy', real_out.mean(),sync_dist=True)
 
 class GenerateCallback(pl.Callback):
     """is used for adding image generations to the model during training. After every  epochs (usually
@@ -216,31 +249,39 @@ class GenerateCallback(pl.Callback):
     that has to do it every iteration, and (2) we do not start from a buffer here, but from scratch.
     """
 
-    def __init__(self, batch_size=8, vis_steps=8, num_steps=256, every_n_epochs=5):
+    def __init__(self, batch_size=8, vis_steps=8, num_steps=256, every_n_epochs=5, step_size=0.1):
         super().__init__()
         self.batch_size = batch_size         # Number of images to generate
         self.vis_steps = vis_steps           # Number of steps within generation to visualize
         self.num_steps = num_steps           # Number of steps to take during generation
         self.every_n_epochs = every_n_epochs # Only save those images every N epochs (otherwise tensorboard gets quite large)
+        self.step_size = step_size
 
-    def on_epoch_end(self, trainer, pl_module):
-        # Skip for all other epochs
-        if (trainer.current_epoch +1) % self.every_n_epochs == 0:
+    def on_train_epoch_end(self, trainer, pl_module):
+        # Skip for all other epoch
+        if trainer.current_epoch % self.every_n_epochs == 0 and trainer.global_rank == 0:
             # Generate images
             imgs_per_step = self.generate_imgs(pl_module)
+            # shape [step, batchsize, 1, 28, 28]
             # Plot and add to tensorboard
+            images   = []
             for i in range(imgs_per_step.shape[1]):
                 step_size = self.num_steps // self.vis_steps
-                imgs_to_plot = imgs_per_step[step_size-1::step_size,i]
-                grid = torchvision.utils.make_grid(imgs_to_plot, nrow=imgs_to_plot.shape[0], normalize=True, range=(-1,1))
-                trainer.logger.experiment.add_image(f"generation_{i}", grid, global_step=trainer.current_epoch)
+                imgs_to_plot = imgs_per_step[step_size-1::step_size,i] # [vis_steps, 1, 28, 28]
+                images.append(imgs_to_plot)
+            # images shape [batch_size, vis_steps, 1, 28, 28]
+            grid = torchvision.utils.make_grid(torch.cat(images, dim=0), nrow=len(images), normalize=True)
+            trainer.logger.experiment.add_image(f"generation", grid, global_step=trainer.current_epoch)
+
+    def on_validation_epoch_end(self, trainer, pl_module):
+        return self.on_train_epoch_end(trainer, pl_module)
 
     def generate_imgs(self, pl_module):
         pl_module.eval()
         start_imgs = torch.rand((self.batch_size,) + pl_module.hparams["img_shape"]).to(pl_module.device)
         start_imgs = start_imgs * 2 - 1
         torch.set_grad_enabled(True)  # Tracking gradients for sampling necessary
-        imgs_per_step = Sampler.generate_samples(pl_module.cnn, start_imgs, steps=self.num_steps, step_size=10, return_img_per_step=True)
+        imgs_per_step = Sampler.generate_samples(pl_module.cnn, start_imgs, steps=self.num_steps, step_size=self.step_size, return_img_per_step=True)
         torch.set_grad_enabled(False)
         pl_module.train()
         return imgs_per_step
@@ -256,10 +297,10 @@ class SamplerCallback(pl.Callback):
         self.num_imgs = num_imgs             # Number of images to plot
         self.every_n_epochs = every_n_epochs # Only save those images every N epochs (otherwise tensorboard gets quite large)
 
-    def on_epoch_end(self, trainer, pl_module):
-        if trainer.current_epoch % self.every_n_epochs == 0:
+    def on_train_epoch_end(self, trainer, pl_module):
+        if trainer.current_epoch % self.every_n_epochs == 0 and trainer.global_rank == 0:
             exmp_imgs = torch.cat(random.choices(pl_module.sampler.examples, k=self.num_imgs), dim=0)
-            grid = torchvision.utils.make_grid(exmp_imgs, nrow=4, normalize=True, range=(-1,1))
+            grid = torchvision.utils.make_grid(exmp_imgs, nrow=4, normalize=True)
             trainer.logger.experiment.add_image("sampler", grid, global_step=trainer.current_epoch)
 
 class OutlierCallback(pl.Callback):
@@ -273,7 +314,7 @@ class OutlierCallback(pl.Callback):
         super().__init__()
         self.batch_size = batch_size
 
-    def on_epoch_end(self, trainer, pl_module):
+    def on_train_epoch_end(self, trainer, pl_module):
         with torch.no_grad():
             pl_module.eval()
             rand_imgs = torch.rand((self.batch_size,) + pl_module.hparams["img_shape"]).to(pl_module.device)
@@ -284,6 +325,40 @@ class OutlierCallback(pl.Callback):
         trainer.logger.experiment.add_scalar("rand_out", rand_out, global_step=trainer.current_epoch)
 
 
+class MNISTDataModule(pl.LightningDataModule):
+    def __init__(self, batch_size=64):
+        super().__init__()
+        self.batch_size = batch_size
+
+    def setup(self, stage=None):
+        from torchvision.datasets import MNIST
+        transform = transforms.Compose([
+            transforms.ToTensor(),
+            transforms.Normalize((0.5,), (0.5,))
+        ])
+        train_set = MNIST(root="~/.cache/MNIST", train=True, transform=transform, download=True)
+        test_set = MNIST(root="~/.cache/MNIST", train=False, transform=transform, download=True)
+
+        class WrapperDataset(Dataset):
+            def __init__(self, train_set):
+                self.dataset = train_set
+
+            def __len__(self):
+                return len(self.dataset)
+
+            def __getitem__(self, idx):
+                image, _ = self.dataset[idx]
+                return image
+
+        self.train_dataset =WrapperDataset(train_set)
+        self.val_dataset =WrapperDataset(test_set)
+
+    def train_dataloader(self):
+        return DataLoader(self.train_dataset, batch_size=self.batch_size, shuffle=True, num_workers=4)
+
+    def val_dataloader(self):
+        return DataLoader(self.val_dataset, batch_size=self.batch_size, shuffle=False, num_workers=4)
+
 class AnimeDataModule(pl.LightningDataModule):
     def __init__(self, batch_size=64, val_ratio=0.1):
         super().__init__()
@@ -291,7 +366,7 @@ class AnimeDataModule(pl.LightningDataModule):
         self.val_ratio = val_ratio
         self.transform = transforms.Compose([
             transforms.ToTensor(),
-            transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
+            transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
         ])
 
     def setup(self, stage=None):
@@ -341,57 +416,90 @@ class AnimeDataModule(pl.LightningDataModule):
             pin_memory=True
         )
 
-def main(config):
-    # Initialize model and data
-    model = EBM(
-        config['batch_size'],img_shape=config['img_shape'],alpha=config['alpha'],
-        lr=config['lr'], beta1=config['beta1'],
-        )
-    data_module = AnimeDataModule(batch_size=config['batch_size'], val_ratio=config['val_ratio'])
 
-    # Setup logger and callbacks
-    logger = TensorBoardLogger(config['log_dir'], name="ebm_anime")
-    checkpoint_callback = ModelCheckpoint(
-        monitor='loss',
-        dirpath='checkpoints',
-        filename='ebm-anime-{epoch:02d}-{loss:.2f}',
-        save_top_k=3,
-        mode='min',
+class DebugCallback(Callback):
+    def on_train_start(self, trainer, pl_module):
+        print("✅ 训练开始回调触发！")
+
+def main(config):
+    # Set random seed for reproducibility
+    pl.seed_everything(42)
+
+    # Dataset specific configurations
+    dataset_configs = {
+        'mnist': {
+            'img_shape': (1, 28, 28),
+            'data_module': MNISTDataModule,
+            'in_channel': 1,
+        },
+        'anime': {
+            'img_shape': (3, 128, 128),
+            'data_module': AnimeDataModule,
+            'in_channel': 3,
+        }
+    }
+
+    # Get dataset specific configuration
+    dataset_name = config.get('dataset', 'mnist')
+    dataset_config = dataset_configs[dataset_name]
+
+    # Create data module
+    data_module = dataset_config['data_module'](batch_size=config.get('batch_size', 64))
+
+    # Create model
+    batch_size = config.get('batch_size', 64)
+    model = EBM(
+        batch_size=batch_size,
+        img_shape=dataset_config['img_shape'],
+        alpha=config.get('alpha', 0.1),
+        lr=config.get('lr', 1e-4),
+        beta1=config.get('beta1', 0.0),
+        step_size=config.get('step_size', 0.1),
+        in_channel=dataset_config['in_channel'],
+        num_steps=config.get('num_steps', 256),
     )
 
-    # Initialize trainer
+    # Create callbacks
+    callbacks = [
+        ModelCheckpoint(monitor='loss/val_cd', mode='min'),
+        GenerateCallback(batch_size=7, vis_steps=8, num_steps=config['num_steps'], every_n_epochs=1,
+            step_size=config.get('step_size', 0.1)),
+        SamplerCallback(num_imgs=32, every_n_epochs=1),
+        OutlierCallback(batch_size=1024),
+        LearningRateMonitor('epoch')
+    ]
+
+    # Create trainer
+    log_dir = config.get('log_dir')
     trainer = pl.Trainer(
-        max_epochs=config['epochs'],
-        accelerator='gpu' if torch.cuda.is_available() else 'cpu',
-        devices=-1,
-        precision='16-mixed',
-        logger=logger,
-        callbacks=[
-            checkpoint_callback,
-            GenerateCallback(every_n_epochs=5),
-            SamplerCallback(every_n_epochs=5),
-            OutlierCallback(batch_size=config['batch_size']),
-            LearningRateMonitor("epoch")
-        ],
-        log_every_n_steps=10,
-        gradient_clip_val=1.0,
+        default_root_dir=f'{log_dir}/{dataset_name}_ebm',
+        accelerator='auto',
+        devices=1,
+        max_epochs=config.get('max_epochs', 200),
+        callbacks=callbacks,
+        logger=TensorBoardLogger(log_dir, name=f'{dataset_name}_ebm'),
+        precision='bf16',
+        strategy='ddp',
     )
 
     # Train model
     trainer.fit(model, data_module)
 
 if __name__ == "__main__":
-    torch.set_float32_matmul_precision('medium')  # Balanced between performance and precision
+    torch.set_float32_matmul_precision('medium')
     torch.backends.cudnn.benchmark = True
 
+    # Configuration
     config = {
-        'batch_size': 64,
-        'val_ratio': 0.02,
-        'img_shape': (3,128,128),
-        'alpha': 0.1,
+        'dataset': 'mnist',  # 'mnist' or 'anime'
+        'batch_size': 256,
+        'max_epochs': 200,
         'lr': 1e-4,
+        'alpha': 0.1,
         'beta1': 0.0,
-        'epochs': 100,
-        'log_dir': '/mnt/nas2/tdd/data-sync/minio/face/lilong/logs/ebm_anime',
+        'num_steps': 256,
+        'step_size': 0.1,
+        'log_dir': "/mnt/nas2/tdd/data-sync/minio/face/lilong/logs/ebm_anime/"
     }
+
     main(config)
