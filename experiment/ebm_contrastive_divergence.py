@@ -3,12 +3,16 @@ import torch.nn as nn
 import torch.nn.functional as F
 import pytorch_lightning as pl
 from torch.utils.data import DataLoader
+from torch.utils.data import Dataset
+
 from datasets import load_dataset
 from torchvision import transforms
 import torchvision
 from pytorch_lightning.loggers import TensorBoardLogger
-from pytorch_lightning.callbacks import ModelCheckpoint
+from pytorch_lightning.callbacks import ModelCheckpoint, LearningRateMonitor
 import numpy as np
+from torch import optim
+import random
 
 class Sampler:
     """
@@ -44,7 +48,7 @@ class Sampler:
         self.max_len = max_len
         self.examples = [(torch.rand((1,)+img_shape)*2-1) for _ in range(self.sample_size)]
 
-    def sample_new_exmps(self, steps=60, step_size=10):
+    def sample_new_exmps(self, steps=60, step_size=10, device=None):
         """
         Function for getting a new batch of "fake" images.
         Inputs:
@@ -134,15 +138,15 @@ class EBM(pl.LightningModule):
     def __init__(self, batch_size,img_shape=(3,128,128), alpha=0.1, lr=1e-4, beta1=0.0):
         super().__init__()
         self.save_hyperparameters()
-        from torchvision.models import mobilenet_v3_small
+        from torchvision.models import mobilenet_v3_large
 
-        self.cnn = mobilenet_v3_small(weights='IMAGENET1K_V1')
-
-        self.backbone.classifier = nn.Sequential(
-            nn.Linear(576, 256),  # 原始最后一层输入尺寸
+        self.cnn = mobilenet_v3_large(weights='IMAGENET1K_V1')
+        # 修改后的分类头
+        self.cnn.classifier = nn.Sequential(
+            nn.Linear(960, 512),  # 原始输入特征维度960
             nn.Hardswish(),
-            nn.Dropout(0.2),
-            nn.Linear(256, 1)
+            nn.Dropout(0.3),
+            nn.Linear(512, 1)
         )
 
         self.sampler = Sampler(self.cnn, img_shape=img_shape, sample_size=batch_size)
@@ -156,8 +160,8 @@ class EBM(pl.LightningModule):
         # Energy models can have issues with momentum as the loss surfaces changes with its parameters.
         # Hence, we set it to 0 by default.
         params = [
-            {'params': self.backbone.features.parameters(), 'lr': self.hparams.lr*0.1},
-            {'params': self.backbone.classifier.parameters(), 'lr': self.hparams.lr}
+            {'params': self.cnn.features.parameters(), 'lr': self.hparams.lr*0.1},
+            {'params': self.cnn.classifier.parameters(), 'lr': self.hparams.lr}
         ]
         optimizer = optim.AdamW(params, weight_decay=1e-5)
         scheduler = optim.lr_scheduler.StepLR(optimizer, 1, gamma=0.97) # Exponential decay over epochs
@@ -165,12 +169,12 @@ class EBM(pl.LightningModule):
 
     def training_step(self, batch, batch_idx):
         # We add minimal noise to the original images to prevent the model from focusing on purely "clean" inputs
-        real_imgs, _ = batch
+        real_imgs = batch
         small_noise = torch.randn_like(real_imgs) * 0.005
         real_imgs.add_(small_noise).clamp_(min=-1.0, max=1.0)
 
         # Obtain samples
-        fake_imgs = self.sampler.sample_new_exmps(steps=60, step_size=10)
+        fake_imgs = self.sampler.sample_new_exmps(steps=60, step_size=10, device=real_imgs.device)
 
         # Predict energy score for all images
         inp_imgs = torch.cat([real_imgs, fake_imgs], dim=0)
@@ -193,7 +197,7 @@ class EBM(pl.LightningModule):
     def validation_step(self, batch, batch_idx):
         # For validating, we calculate the contrastive divergence between purely random images and unseen examples
         # Note that the validation/test step of energy-based models depends on what we are interested in the model
-        real_imgs, _ = batch
+        real_imgs= batch
         fake_imgs = torch.rand_like(real_imgs) * 2 - 1
 
         inp_imgs = torch.cat([real_imgs, fake_imgs], dim=0)
@@ -221,7 +225,7 @@ class GenerateCallback(pl.Callback):
 
     def on_epoch_end(self, trainer, pl_module):
         # Skip for all other epochs
-        if trainer.current_epoch % self.every_n_epochs == 0:
+        if (trainer.current_epoch +1) % self.every_n_epochs == 0:
             # Generate images
             imgs_per_step = self.generate_imgs(pl_module)
             # Plot and add to tensorboard
@@ -287,7 +291,7 @@ class AnimeDataModule(pl.LightningDataModule):
         self.val_ratio = val_ratio
         self.transform = transforms.Compose([
             transforms.ToTensor(),
-            transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+            transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
         ])
 
     def setup(self, stage=None):
@@ -342,7 +346,7 @@ def main(config):
     model = EBM(
         config['batch_size'],img_shape=config['img_shape'],alpha=config['alpha'],
         lr=config['lr'], beta1=config['beta1'],
-         **config['net_args'])
+        )
     data_module = AnimeDataModule(batch_size=config['batch_size'], val_ratio=config['val_ratio'])
 
     # Setup logger and callbacks
@@ -366,18 +370,22 @@ def main(config):
             checkpoint_callback,
             GenerateCallback(every_n_epochs=5),
             SamplerCallback(every_n_epochs=5),
-            OutlierCallback(),
+            OutlierCallback(batch_size=config['batch_size']),
             LearningRateMonitor("epoch")
         ],
         log_every_n_steps=10,
+        gradient_clip_val=1.0,
     )
 
     # Train model
     trainer.fit(model, data_module)
 
 if __name__ == "__main__":
+    torch.set_float32_matmul_precision('medium')  # Balanced between performance and precision
+    torch.backends.cudnn.benchmark = True
+
     config = {
-        'batch_size': 32,
+        'batch_size': 64,
         'val_ratio': 0.02,
         'img_shape': (3,128,128),
         'alpha': 0.1,
