@@ -26,9 +26,7 @@ Overall Introduction
     The discriminator tries to maximize its ability to distinguish between real and fake samples
 ## **Loss function**:
   
-  $$
-  V(D,G) = \underset{D}{\max} {\underbrace{\mathbb{E}_{x \sim p_{data}(x)}[\log D(x)] + \mathbb{E}_{z \sim p_z(z)}[\log(1-D(G(z)))]}_{\text{Discriminator Loss}:L_D}} +\underset{G}{\min} {\underbrace{\mathbb{E}_{z \sim p_z(z)}[\log(1-D(G(z)))]}_{\text{Generator Loss: }L_G}}
-  $$
+  $$V(D,G) = \underset{D}{\max} {\underbrace{\mathbb{E}_{x \sim p_{data}(x)}[\log D(x)] + \mathbb{E}_{z \sim p_z(z)}[\log(1-D(G(z)))]}_{\text{Discriminator Loss}:L_D}} +\underset{G}{\min} {\underbrace{\mathbb{E}_{z \sim p_z(z)}[\log(1-D(G(z)))]}_{\text{Generator Loss: }L_G}}$$
   
   Where:
   - $p_{data}(x)$ is the real data distribution
@@ -215,7 +213,7 @@ For example, an input condition: number "7". If the generator generates an image
 
 $$\min_{G} \max_{D} V(D,G) = \mathbb{E}_{x \sim p_{data}(x)}[\log D(x|y)] + \mathbb{E}_{z \sim p_z(z)}[\log(1 - D(G(z|y)))]$$
 
-Where:$\mathbb{E}$: Expected value (expectation) $\mathbb{E}_{x \sim p_{data}(x)}[\log D(x|y)]$ : 
+Where: $\mathbb{E}$: Expected value (expectation) $\mathbb{E}_{x \sim p_{data}(x)}[\log D(x|y)]$ : 
 - $x \sim p_{data(x)}$:  $x$sampled from real data distribution
 - $D(x|y)$: Discriminator's output for real data  $x$ given condition  $y$
 - $E[\log D(x|y)]$ - Discriminator's ability to identify real samples
