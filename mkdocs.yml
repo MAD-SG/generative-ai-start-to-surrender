@@ -10,7 +10,7 @@ nav:
   - VAE:
       - VAE Introduction: "book/chapter2_VAE/2.1introduction.md"
   - GANs:
-      - PGGAN: "book/chapter3_GAN/3.2pggan/paper.md"
+      - From Gan to PGGAN: "book/chapter3_GAN/3.1from_gan_to_stylegan/paper.md"
       - StyleGAN: "book/chapter3_GAN/3.3stylegan/paper.md"
       - StyleGAN2: "book/chapter3_GAN/3.4stylegan2/paper.md"
       - StyleGAN3: "book/chapter3_GAN/3.5stylegan3/paper.md"
