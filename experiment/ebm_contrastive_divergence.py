@@ -6,7 +6,6 @@ from torch.utils.data import DataLoader
 from datasets import load_dataset
 from torchvision import transforms
 import torchvision
-import wandb
 from pytorch_lightning.loggers import TensorBoardLogger
 from pytorch_lightning.callbacks import ModelCheckpoint
 import numpy as np
