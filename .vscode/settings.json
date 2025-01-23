@@ -8,5 +8,6 @@
         "statusBarItem.remoteBackground": "#ffec49",
         "statusBarItem.remoteForeground": "#000"
     },
-    "python.languageServer": "None"
+    "python.languageServer": "None",
+    "editor.fontLigatures": false
 }
