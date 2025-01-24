@@ -7,20 +7,28 @@ nav:
       - Signal Processing: "book/chapter1_Introduction/1.3signal_processing.md"
       - Statistics: "book/chapter1_Introduction/1.4statistics.md"
       - SDE: "book/chapter1_Introduction/1.5SDE.md"
+      - Tutorials: "book/chapter1_Introduction/tutorials.md"
   - VAE:
-      - VAE Introduction: "book/chapter2_VAE/2.1introduction.md"
+      - Introduction: "book/chapter2_VAE/2.1introduction.md"
   - GANs:
-      - From Gan to PGGAN: "book/chapter3_GAN/3.1from_gan_to_stylegan/paper.md"
+      - From GAN to PGGAN: "book/chapter3_GAN/3.1from_gan_to_stylegan/paper.md"
       - StyleGAN: "book/chapter3_GAN/3.3stylegan/paper.md"
       - StyleGAN2: "book/chapter3_GAN/3.4stylegan2/paper.md"
       - StyleGAN3: "book/chapter3_GAN/3.5stylegan3/paper.md"
       - StyleGAN T: "book/chapter3_GAN/3.6styleganT/paper.md"
-      - R3Gan: "book/chapter3_GAN/3.7R3Gan/paper.md"
+      - R3GAN: "book/chapter3_GAN/3.7R3Gan/paper.md"
   - Diffusion:
       - Introduction: "book/chapter4_diffusion/4.1introduction.md"
       - DDPM: "book/chapter4_diffusion/4.2DDPM.md"
   - Generation Theory:
       - Maximal Likelihood: "book/chapter5_generation_theory/5.1MLE.md"
+      - Manifold Hypothesis: "book/chapter5_generation_theory/manifold_hypothesis.md"
+  - Energy Based Models:
+      - Introduction: "book/chapter6_ebm/introduction.md"
+      - Score Function: "book/chapter6_ebm/score_function.md"
+      - Sampling: "book/chapter6_ebm/sampling.md"
+      - Contrastive Divergence: "book/chapter6_ebm/cd.md"
+      - Score Matching: "book/chapter6_ebm/score_matching.md"
 
 theme:
   name: material
