@@ -1098,18 +1098,27 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#langevin-dynamics-sampling" class="md-nav__link">
+  <a href="#langevin-dynamics" class="md-nav__link">
     <span class="md-ellipsis">
-      Langevin Dynamics Sampling
+      Langevin Dynamics
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#annealed-langevin-dynamics-sampling" class="md-nav__link">
+  <a href="#theoretical-basis-of-dynamics-based-probability-flow-models" class="md-nav__link">
     <span class="md-ellipsis">
-      Annealed Langevin Dynamics Sampling
+      Theoretical Basis of Dynamics-Based Probability Flow Models
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#details-of-annealed-langevin-dynamics-sampling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Details of Annealed Langevin Dynamics Sampling
     </span>
   </a>
   
@@ -1242,100 +1251,6 @@ print(f&quot;Samples: {z1}, {z2}&quot;)
 <li><strong>Langevin Dynamics</strong>: Combines gradient descent with noise to explore probability spaces.</li>
 <li><strong>Hamiltonian Monte Carlo (HMC)</strong>: Uses physical dynamics to efficiently sample from high-dimensional distributions.</li>
 </ol>
-<h4 id="langevin-dynamics">Langevin Dynamics<a class="headerlink" href="#langevin-dynamics" title="Permanent link">&para;</a></h4>
-<p>Langevin dynamics is an iterative process that uses the following equation to sample from a known distribution <span class="arithmatex">\(p(\mathbf{x})\)</span>:</p>
-<div class="arithmatex">\[
-\mathbf{x}_{t+1} = \mathbf{x}_t + \tau \nabla_x \log p(\mathbf{x}_t) + \sqrt{2\tau}\mathbf{z}, \quad \mathbf{z} \sim \mathcal{N}(0, \mathbf{I}),
-\]</div>
-<p>where <span class="arithmatex">\(\tau\)</span> is the step size, and <span class="arithmatex">\(\mathbf{x}_0\)</span> is initialized with white noise.</p>
-<pre><code class="language-python">import torch
-import torch.nn as nn
-
-# Langevin dynamics sampling function
-def langevin_dynamics(energy_function, initial_samples, n_steps=1000, step_size=0.1):
-    x = initial_samples.clone().requires_grad_(True)
-    for i in range(n_steps):
-        energy = energy_function(x)
-        grad = torch.autograd.grad(energy.sum(), x)[0]
-        noise = torch.randn_like(x) * np.sqrt(2 * step_size)
-        x.data += -step_size * grad + noise
-    return x.detach()
-
-# Example energy function
-def example_energy_function(x):
-    return 0.5 * ((x - 2)**2) + 0.5 * ((x + 2)**2)
-
-# Initialize samples
-initial_x = torch.zeros(1000, 1)
-# Sample using Langevin dynamics
-samples = langevin_dynamics(example_energy_function, initial_x)
-</code></pre>
-<h3 id="intuition-behind-langevin-dynamics">Intuition Behind Langevin Dynamics<a class="headerlink" href="#intuition-behind-langevin-dynamics" title="Permanent link">&para;</a></h3>
-<ol>
-<li><strong>Drift Term $ \nabla_x \log p(\mathbf{x}) $</strong>: Acts as a force guiding particles toward high-probability regions.</li>
-<li><strong>Noise Term</strong>: Introduces randomness, allowing exploration and preventing particles from getting stuck.</li>
-<li><strong>Balance Between Drift and Noise</strong>: Ensures thorough exploration of the distribution space.</li>
-<li><strong>Convergence</strong>: Over time, the particle distribution converges to the target distribution.</li>
-</ol>
-<p>In the following sections, we will discuss the Langevin dynamics in continous form and the proof that is converged to the unerline distribution.</p>
-<h3 id="simulation-example">Simulation Example<a class="headerlink" href="#simulation-example" title="Permanent link">&para;</a></h3>
-<p>The following Python code simulates Langevin dynamics for a Gaussian mixture:</p>
-<pre><code class="language-python">import numpy as np
-import matplotlib.pyplot as plt
-
-# Mixture parameters
-pi1, mu1, sigma1 = 0.6, 2.0, 0.5
-pi2, mu2, sigma2 = 0.4, -2.0, 0.2
-
-# PDF and gradient functions
-def gaussian_pdf(x, mu, sigma):
-    return (1.0 / (np.sqrt(2.0 * np.pi) * sigma) * np.exp(-0.5 * ((x - mu)/sigma)**2))
-
-def mixture_pdf(x):
-    return pi1 * gaussian_pdf(x, mu1, sigma1) + pi2 * gaussian_pdf(x, mu2, sigma2)
-
-def grad_log_mixture_pdf(x):
-    n1 = gaussian_pdf(x, mu1, sigma1)
-    n2 = gaussian_pdf(x, mu2, sigma2)
-    numerator = (pi1 * n1 * (-(x - mu1) / sigma1**2) + pi2 * n2 * (-(x - mu2) / sigma2**2))
-    denominator = pi1 * n1 + pi2 * n2 + 1e-16
-    return numerator / denominator
-
-# Langevin dynamics parameters
-M = 10_000
-np.random.seed(1234)
-x_min, x_max = -3.0, 3.0
-x = np.random.uniform(x_min, x_max, size=M)
-eta = 0.01
-n_steps = 100
-plot_times = [0, 1, 10, 100]
-sample_snapshots = {0: x.copy()}
-
-# Perform Langevin dynamics
-for t in range(1, n_steps+1):
-    grad = grad_log_mixture_pdf(x)
-    x = x + eta*grad + np.sqrt(2*eta)*np.random.randn(M)
-    if t in plot_times:
-        sample_snapshots[t] = x.copy()
-
-# Plot results
-plt.figure(figsize=(12, 3))
-for i, t in enumerate(plot_times):
-    plt.subplot(1, len(plot_times), i+1)
-    plt.hist(sample_snapshots[t], bins=50, density=True, alpha=0.7, color='orange')
-    grid = np.linspace(-4, 5, 400)
-    pdf_vals = mixture_pdf(grid)
-    plt.plot(grid, pdf_vals, 'r-', lw=2)
-    plt.title(f&quot;t = {t}&quot;)
-    plt.ylim(0, 0.9)
-plt.suptitle(&quot;Langevin dynamics sampling from a 1D Gaussian mixture&quot;)
-plt.tight_layout()
-plt.show()
-</code></pre>
-<ul>
-<li>Code <code>experiment/langevin_dynamics_simulation.ipynb</code></li>
-</ul>
-<p>This simulation starts from a uniform distribution and converges to a Gaussian mixture, illustrating the effectiveness of Langevin dynamics in sampling from complex distributions.</p>
 <h2 id="markov-chain-monte-carlo-mcmc">Markov Chain Monte Carlo (MCMC)<a class="headerlink" href="#markov-chain-monte-carlo-mcmc" title="Permanent link">&para;</a></h2>
 <p>MCMC is a broad class of algorithms used to draw samples from complex probability distributions, especially when direct sampling or classical numerical integration is difficult. The main idea behind MCMC is:</p>
 <ol>
@@ -1443,8 +1358,536 @@ Because Hamiltonian trajectories can travel <em>long distances</em> in the state
 </li>
 </ul>
 <p>In short, MCMC is the backbone of <em>sampling from complicated distributions</em> when direct sampling is infeasible. Hamiltonian Monte Carlo refines this idea by incorporating physical dynamics to <em>move quickly</em> through the space, often yielding more efficient sampling in high‐dimensional problems.</p>
-<h2 id="langevin-dynamics-sampling">Langevin Dynamics Sampling<a class="headerlink" href="#langevin-dynamics-sampling" title="Permanent link">&para;</a></h2>
-<h2 id="annealed-langevin-dynamics-sampling">Annealed Langevin Dynamics Sampling<a class="headerlink" href="#annealed-langevin-dynamics-sampling" title="Permanent link">&para;</a></h2>
+<h2 id="langevin-dynamics">Langevin Dynamics<a class="headerlink" href="#langevin-dynamics" title="Permanent link">&para;</a></h2>
+<h4 id="1-definition">1. Definition<a class="headerlink" href="#1-definition" title="Permanent link">&para;</a></h4>
+<p>Langevin Dynamics Sampling is a sampling method based on Stochastic Differential Equations (SDE). It is used to sample from high-dimensional probability distributions <span class="arithmatex">\(p(x) \propto e^{-U(x)}\)</span>. The core idea is to add stochastic noise to the deterministic gradient descent process, ensuring a balance between exploration and exploitation, ultimately achieving the desired distribution.</p>
+<hr />
+<h4 id="2-core-principles">2. Core Principles<a class="headerlink" href="#2-core-principles" title="Permanent link">&para;</a></h4>
+<ul>
+<li>
+<p><strong>Physical Perspective</strong> : Derived from particle motion, where <span class="arithmatex">\(U(x)\)</span> represents the particle's potential energy (drift term), and random thermal noise (diffusion term) drives its movement.</p>
+</li>
+<li>
+<p><strong>Mathematical Perspective</strong> : Designed as a random process to enable samples to converge to the target distribution <span class="arithmatex">\(p(x)\)</span>.</p>
+</li>
+<li>
+<p><strong>Key Components</strong> :</p>
+</li>
+<li>
+<p><strong>Gradient Descent</strong> : Following the negative gradient of <span class="arithmatex">\(U(x)\)</span>, which guides the particle toward areas of lower energy (higher probability density).</p>
+</li>
+<li>
+<p><strong>Random Noise</strong> : Adding stochastic perturbations to prevent the algorithm from getting stuck and ensure sufficient exploration.</p>
+</li>
+</ul>
+<h4 id="3-discrete-formulation">3. Discrete Formulation<a class="headerlink" href="#3-discrete-formulation" title="Permanent link">&para;</a></h4>
+<p><strong>Continuous Langevin Dynamics</strong></p>
+<div class="arithmatex">\[
+ dx_t = -\nabla U(x_t)dt + \sqrt{2}dW_t
+\]</div>
+<p>Where:</p>
+<ul>
+<li>
+<p><span class="arithmatex">\(x_t\)</span>: Position of the particle at time <span class="arithmatex">\(t\)</span>.</p>
+</li>
+<li>
+<p><span class="arithmatex">\(W_t\)</span>: Standard Wiener process (Brownian motion), satisfying <span class="arithmatex">\(W_t \sim \mathcal{N}(0, t)\)</span>.</p>
+</li>
+</ul>
+<p><strong>Discrete Update Rule</strong>  (Practical Implementation):</p>
+<div class="arithmatex">\[
+ x_{k+1} = x_k - \epsilon \nabla U(x_k) + \sqrt{2\epsilon} \xi_k, \, \xi_k \sim \mathcal{N}(0, I)
+\]</div>
+<p>Where <span class="arithmatex">\(\epsilon\)</span> is the step size, controlling the trade-off between convergence speed and accuracy.</p>
+<hr />
+<h4 id="4-proof-target-distribution-as-the-stationary-distribution">4. Proof: Target Distribution as the Stationary Distribution<a class="headerlink" href="#4-proof-target-distribution-as-the-stationary-distribution" title="Permanent link">&para;</a></h4>
+<p><strong>Goal</strong> : Prove that the stationary distribution of Langevin Dynamics is <span class="arithmatex">\(p(x) \propto e^{-U(x)}\)</span>.</p>
+<p><strong>Tool</strong> : Fokker-Planck Equation (Describes the evolution of probability density under a stochastic process).</p>
+<ul>
+<li>
+<p><strong>Fokker-Planck Equation</strong> :
+$$
+ \frac{\partial \rho(x, t)}{\partial t} = \nabla \cdot \left( \rho \nabla U(x) \right) + \nabla^2 \rho
+$$</p>
+</li>
+<li>
+<p><strong>Stationary State</strong> : When <span class="arithmatex">\(\frac{\partial \rho(x, t)}{\partial t} = 0\)</span>, solving <span class="arithmatex">\(\rho(x) \propto e^{-U(x)}\)</span> proves the stationary distribution is the target distribution.</p>
+</li>
+</ul>
+<hr />
+<h4 id="5-application-scenarios">5. Application Scenarios<a class="headerlink" href="#5-application-scenarios" title="Permanent link">&para;</a></h4>
+<ol>
+<li>
+<p><strong>Statistical Sampling</strong> : Simulates sampling from high-dimensional distributions.</p>
+</li>
+<li>
+<p><strong>Bayesian Inference</strong> : Samples from posterior distributions <span class="arithmatex">\(p(\theta|D)\)</span> in Bayesian models.</p>
+</li>
+<li>
+<p><strong>Generative Models</strong> : Used in methods like DDPM (Denoising Diffusion Probabilistic Models) for image synthesis.</p>
+</li>
+<li>
+<p><strong>Optimization</strong> : Combines stochastic noise with gradient-based optimization (e.g., Stochastic Gradient Langevin Dynamics, SGLD).</p>
+</li>
+</ol>
+<h4 id="6-implementation-steps-and-hyperparameter-tuning">6. Implementation Steps and Hyperparameter Tuning<a class="headerlink" href="#6-implementation-steps-and-hyperparameter-tuning" title="Permanent link">&para;</a></h4>
+<p><strong>Implementation Process</strong> :</p>
+<ol>
+<li>
+<p><strong>Initialization</strong> : Start with a random initial point <span class="arithmatex">\(x_0\)</span>.</p>
+</li>
+<li>
+<p><strong>Iterative Updates</strong> :</p>
+</li>
+</ol>
+<div class="arithmatex">\[
+ x_{k+1} = x_k - \epsilon \nabla \log p(x) + \sqrt{2\epsilon} \xi_k
+\]</div>
+<ol>
+<li><strong>Stopping Criterion</strong> : Stop when the algorithm converges or sufficient samples are collected.</li>
+</ol>
+<p><strong>Hyperparameter Tuning</strong> :</p>
+<ol>
+<li>
+<p><strong>Step Size (<span class="arithmatex">\(\epsilon\)</span>)</strong> : Should ensure convergence while balancing efficiency and stability (commonly uses an annealing strategy).</p>
+</li>
+<li>
+<p><strong>Noise Level</strong> : Increase <span class="arithmatex">\(\sqrt{2\epsilon}\)</span> to improve exploration but avoid excessively large variances.</p>
+</li>
+<li>
+<p><strong>Regularization</strong> : Use adaptive methods (e.g., SGLD) to accelerate convergence.</p>
+</li>
+</ol>
+<p><strong>Notes</strong> :</p>
+<ul>
+<li>
+<p>May fail for ill-conditioned cases; alternative methods like Metropolis-Hastings or MALA can be used.</p>
+</li>
+<li>
+<p>Works under smoothness assumptions of the target distribution <span class="arithmatex">\(U(x)\)</span> (requires Lipschitz continuous gradients).</p>
+</li>
+</ul>
+<h4 id="7-example-code-python-code">7. Example Code (Python Code)<a class="headerlink" href="#7-example-code-python-code" title="Permanent link">&para;</a></h4>
+<pre><code class="language-python">import numpy as np
+
+def langevin_sampling(grad_log_p, x0, epsilon, n_steps):
+    samples = [x0]
+    x = x0.copy()
+    for _ in range(n_steps):
+        noise = np.random.randn(*x.shape) * np.sqrt(2 * epsilon)
+        x += -epsilon * grad_log_p(x) + noise
+        samples.append(x)
+    return np.array(samples)
+
+# Example: Sampling from \( p(x) \propto e^{-x^2/2}, \, \text{grad_log_p}(x) = -x \)
+grad_log_p = lambda x: -x  # Gradient of log-p(x)
+samples = langevin_sampling(grad_log_p, x0=np.random.randn(), epsilon=0.01, n_steps=1000)
+</code></pre>
+<ul>
+<li>Code <code>experiment/langevin_dynamics_simulation.ipynb</code>
+<img alt="LD sampling process" src="../../../images/image-34.png" /></li>
+</ul>
+<h4 id="8-comparison-with-other-sampling-methods">8. Comparison with Other Sampling Methods<a class="headerlink" href="#8-comparison-with-other-sampling-methods" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Requires Gradients</th>
+<th>Accept/Reject Step</th>
+<th>Applicable Scenarios</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Metropolis-Hastings</td>
+<td>No</td>
+<td>Yes</td>
+<td>General-purpose, less efficient</td>
+</tr>
+<tr>
+<td>HMC (Hamiltonian MC)</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>High efficiency for correlated distributions</td>
+</tr>
+<tr>
+<td>Langevin Dynamics</td>
+<td>Yes (Pure SDE)</td>
+<td>No</td>
+<td>Efficient for high-dimensional sampling</td>
+</tr>
+</tbody>
+</table>
+<h4 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">&para;</a></h4>
+<p>Langevin Dynamics Sampling introduces stochasticity guided by gradients, enabling efficient sampling from high-dimensional distributions. It is a powerful tool in generative modeling, Bayesian inference, and optimization algorithms. The theoretical guarantee relies on the Fokker-Planck Equation ensuring the target distribution, while practical tuning of step size and noise level balances convergence and efficiency.</p>
+<p>This simulation starts from a uniform distribution and converges to a Gaussian mixture, illustrating the effectiveness of Langevin dynamics in sampling from complex distributions.</p>
+<h2 id="theoretical-basis-of-dynamics-based-probability-flow-models">Theoretical Basis of Dynamics-Based Probability Flow Models<a class="headerlink" href="#theoretical-basis-of-dynamics-based-probability-flow-models" title="Permanent link">&para;</a></h2>
+<p>A question is that, why should we sample from <span class="arithmatex">\(p(x)\)</span> should follow LD ? Is there any other way?</p>
+<p>He we introduce various stochastic differential equations (SDEs) designed to generate the steady-state distribution <span class="arithmatex">\(p(x) \propto e^{-U(x)}\)</span>. By learning the appropriate potential <span class="arithmatex">\(U(x)\)</span>, these SDE-based methods can model the target distribution, making them suitable for generative tasks, optimization, and more. Below are common dynamics and SDE models:</p>
+<h3 id="1-underdamped-langevin-dynamics">1. Underdamped Langevin Dynamics<a class="headerlink" href="#1-underdamped-langevin-dynamics" title="Permanent link">&para;</a></h3>
+<p><strong>Definition</strong> :</p>
+<p>Introduces momentum <span class="arithmatex">\(v\)</span>, modeling the dynamics of particles in a potential field. The equations are:</p>
+<div class="arithmatex">\[
+ dx = v dt, \quad dv = -\eta v dt - \nabla U(x) dt + \sqrt{2\eta} dW_v,
+\]</div>
+<p>where <span class="arithmatex">\(\eta &gt; 0\)</span> is the friction coefficient.</p>
+<p><strong>Features</strong> :</p>
+<ul>
+<li>
+<p>Momentum introduces inertia, counteracting the "random walk" effect of overdamped Langevin dynamics.</p>
+</li>
+<li>
+<p>Converges to the stationary distribution <span class="arithmatex">\(p(x) \propto e^{-U(x)}\)</span>.</p>
+</li>
+</ul>
+<p><strong>Applications</strong> :</p>
+<ul>
+<li>
+<p>Sampling methods like Hamiltonian Monte Carlo (HMC).</p>
+</li>
+<li>
+<p>Simulating particle dynamics in physical systems.</p>
+</li>
+</ul>
+<h3 id="2-regularized-x-sde">2. Regularized X-SDE<a class="headerlink" href="#2-regularized-x-sde" title="Permanent link">&para;</a></h3>
+<p><strong>Definition</strong> :</p>
+<p>For a smooth potential <span class="arithmatex">\(U(x)\)</span>, introduces regularization terms. The SDE is:</p>
+<p>$$
+ dx = b(x) dt + \sigma(x) dW_x,
+$$
+where <span class="arithmatex">\(p(x) \propto e^{-U(x)}\)</span>.</p>
+<p><strong>Common Settings</strong> :</p>
+<ul>
+<li>
+<p>Adjust drift <span class="arithmatex">\(b(x)\)</span> and diffusion <span class="arithmatex">\(\sigma(x)\)</span> to incorporate prior knowledge or regularization.</p>
+</li>
+<li>
+<p>Extensions include introducing auxiliary variables (e.g., Metropolis-adjusted Langevin Algorithm, MALA).</p>
+</li>
+</ul>
+<h3 id="3-time-reversal-sde-reverse-diffusion-process">3. Time-Reversal SDE (Reverse Diffusion Process)<a class="headerlink" href="#3-time-reversal-sde-reverse-diffusion-process" title="Permanent link">&para;</a></h3>
+<p><strong>Definition</strong> :</p>
+<p>Given a forward SDE:</p>
+<div class="arithmatex">\[
+ dx = f(x, t) dt + g(x) dW_x,
+\]</div>
+<p>the reverse-time SDE has the form:</p>
+<div class="arithmatex">\[
+ dx_r = f(x, t) - g(x)^2 \nabla \log p(x, t) + g(x) dW_x,
+\]</div>
+<p>where <span class="arithmatex">\(p(x, t)\)</span> is the time-dependent probability density.</p>
+<p><strong>Applications</strong> :</p>
+<ul>
+<li>
+<p>Generative models (e.g., DDPM, score-based models).</p>
+</li>
+<li>
+<p>Denoising diffusion models for approximating <span class="arithmatex">\(\log p(x)\)</span>.</p>
+</li>
+</ul>
+<h3 id="4-preconditioned-langevin-dynamics">4. Preconditioned Langevin Dynamics<a class="headerlink" href="#4-preconditioned-langevin-dynamics" title="Permanent link">&para;</a></h3>
+<p><strong>Definition</strong> :</p>
+<p>Introduces a preconditioning matrix <span class="arithmatex">\(P(x)\)</span> to accelerate convergence. The SDE is:</p>
+<div class="arithmatex">\[
+ dx = -P(x) \nabla U(x) dt + \sqrt{2P(x)} dW_x,
+\]</div>
+<p>where <span class="arithmatex">\(P(x)\)</span> is symmetric and positive definite.</p>
+<p><strong>Features</strong> :</p>
+<ul>
+<li>
+<p>Efficient sampling when <span class="arithmatex">\(P(x)\)</span> adapts to the geometry of <span class="arithmatex">\(U(x)\)</span>.</p>
+</li>
+<li>
+<p>Extends to include Riemannian manifold-based methods.</p>
+</li>
+</ul>
+<h4 id="5-coupled-sde-and-deterministic-flow">5. Coupled SDE and Deterministic Flow<a class="headerlink" href="#5-coupled-sde-and-deterministic-flow" title="Permanent link">&para;</a></h4>
+<p><strong>Definition</strong> :</p>
+<p>Combines SDE with ordinary differential equations (ODEs):</p>
+<div class="arithmatex">\[
+ dx = -\nabla U(x) dt + \sqrt{2} dW_x.
+\]</div>
+<p><strong>Features</strong> :</p>
+<ul>
+<li>
+<p>Balance between randomness (SDE) and determinism (ODE).</p>
+</li>
+<li>
+<p>Stationary distribution <span class="arithmatex">\(p(x) \propto e^{-U(x)}\)</span>.</p>
+</li>
+</ul>
+<p><strong>Applications</strong> :</p>
+<ul>
+<li>
+<p>Probabilistic Flow ODE (PF-ODE).</p>
+</li>
+<li>
+<p>Hybrid optimization-sampling methods.</p>
+</li>
+</ul>
+<h4 id="6-variants-of-stochastic-sdes">6. Variants of Stochastic SDEs<a class="headerlink" href="#6-variants-of-stochastic-sdes" title="Permanent link">&para;</a></h4>
+<ol>
+<li>
+<p><strong>Adaptive Step SDE</strong> :
+Adjusts step size to improve stability and convergence.</p>
+</li>
+<li>
+<p><strong>Augmented SDE</strong> :
+Introduces auxiliary dimensions to simplify sampling.</p>
+</li>
+</ol>
+<h3 id="summary-of-sde-models">Summary of SDE Models<a class="headerlink" href="#summary-of-sde-models" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>SDE Type</th>
+<th>Core Concept</th>
+<th>Advantages</th>
+<th>Applications</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>General Langevin Dynamics</td>
+<td>Basic diffusion model</td>
+<td>Theoretical clarity</td>
+<td>Generative modeling</td>
+</tr>
+<tr>
+<td>Underdamped Langevin Dynamics</td>
+<td>Adds momentum</td>
+<td>Faster convergence</td>
+<td>Sampling, optimization</td>
+</tr>
+<tr>
+<td>Preconditioned Langevin Dynamics</td>
+<td>Preconditioning matrix for geometry</td>
+<td>Accelerates convergence</td>
+<td>Bayesian inference</td>
+</tr>
+<tr>
+<td>Coupled SDE-ODE</td>
+<td>Balance of stochastic/deterministic</td>
+<td>Stable dynamics</td>
+<td>Scientific computing</td>
+</tr>
+<tr>
+<td>Reverse-Time SDE</td>
+<td>Diffusion process reversal</td>
+<td>High-quality generation</td>
+<td>Generative models</td>
+</tr>
+</tbody>
+</table>
+<h3 id="learning-objectives">Learning Objectives<a class="headerlink" href="#learning-objectives" title="Permanent link">&para;</a></h3>
+<p>Why do different SDE formulations yield the same equilibrium distribution?</p>
+<p><strong>Mathematical Tool</strong> :</p>
+<p>Fokker-Planck equation.For the SDE <span class="arithmatex">\(dx = b(x) dt + \sigma(x) dW_x\)</span>, the Fokker-Planck equation is:</p>
+<div class="arithmatex">\[
+ \frac{\partial p}{\partial t} = -\nabla \cdot (p b) + \frac{1}{2} \nabla^2 : (p \sigma \sigma^\top),
+\]</div>
+<p>where <span class="arithmatex">\(p(x, t)\)</span> is the probability density, <span class="arithmatex">\(b(x)\)</span> the drift term, and <span class="arithmatex">\(\sigma(x)\)</span> the diffusion term.Stationary solution <span class="arithmatex">\(p(x)\)</span> satisfies:</p>
+<div class="arithmatex">\[
+ \nabla \cdot (p b) = \frac{1}{2} \nabla^2 : (p \sigma \sigma^\top).
+\]</div>
+<p>By adjusting <span class="arithmatex">\(b(x)\)</span> and <span class="arithmatex">\(\sigma(x)\)</span>, one can achieve the desired stationary distribution.</p>
+<h3 id="practical-recommendations">Practical Recommendations<a class="headerlink" href="#practical-recommendations" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p>Choose the SDE based on your specific problem and computational constraints.</p>
+</li>
+<li>
+<p>For generative tasks, consider time-reversal SDEs or preconditioned Langevin dynamics.</p>
+</li>
+<li>
+<p>When optimizing, balance between exploration (stochastic) and exploitation (deterministic).</p>
+</li>
+</ol>
+<h2 id="details-of-annealed-langevin-dynamics-sampling">Details of Annealed Langevin Dynamics Sampling<a class="headerlink" href="#details-of-annealed-langevin-dynamics-sampling" title="Permanent link">&para;</a></h2>
+<h3 id="1-definition_1">1. Definition<a class="headerlink" href="#1-definition_1" title="Permanent link">&para;</a></h3>
+<p>Annealed Langevin Dynamics Sampling is a stochastic sampling method that incorporates temperature annealing. It enhances the system's ability to explore the target space, balancing between exploration (searching globally) and exploitation (refining locally).</p>
+<h3 id="2-core-principles_1">2. Core Principles<a class="headerlink" href="#2-core-principles_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p><strong>Annealing</strong> : Introduces a temperature schedule <span class="arithmatex">\(T(t)\)</span>, which controls the degree of randomness (higher temperatures lead to larger noise, encouraging exploration; lower temperatures reduce noise for refined optimization).</p>
+</li>
+<li>
+<p><strong>Stationary Distribution</strong> : Gradually transitions the sampling distribution towards the target distribution <span class="arithmatex">\(p(x) \propto e^{-U(x)}\)</span> by reducing the temperature.</p>
+</li>
+</ul>
+<h3 id="3-mathematical-formulation-and-derivation">3. Mathematical Formulation and Derivation<a class="headerlink" href="#3-mathematical-formulation-and-derivation" title="Permanent link">&para;</a></h3>
+<p>The dynamic form of Annealed Langevin Dynamics is:</p>
+<div class="arithmatex">\[
+ dx_t = -\nabla U(x_t) dt + \sqrt{2 T(t)} dW_t,
+\]</div>
+<p>where:</p>
+<ul>
+<li>
+<p><span class="arithmatex">\(T(t)\)</span>: Temperature schedule (e.g., exponential decay <span class="arithmatex">\(T(t) = T_0 e^{-\beta t}\)</span>, or other schedules like polynomial decay <span class="arithmatex">\(T_k = T_0 / (1 + k)\)</span>).</p>
+</li>
+<li>
+<p>Noise term: <span class="arithmatex">\(\sqrt{2 T(t)} dW_t\)</span> ensures randomness at each step.</p>
+</li>
+</ul>
+<p>The discrete iteration formula becomes:</p>
+<div class="arithmatex">\[
+ x_{k+1} = x_k - \epsilon \nabla U(x_k) + \sqrt{2 \epsilon T_k} \xi_k, \quad \xi_k \sim \mathcal{N}(0, I),
+\]</div>
+<p>where <span class="arithmatex">\(\epsilon\)</span> is the step size, and <span class="arithmatex">\(\xi_k\)</span> is Gaussian noise.</p>
+<h3 id="4-temperature-scheduling-design">4. Temperature Scheduling Design<a class="headerlink" href="#4-temperature-scheduling-design" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p><strong>Exponential Decay</strong> : <span class="arithmatex">\(T_k = T_0 \cdot \gamma^k\)</span>, where <span class="arithmatex">\(0 &lt; \gamma &lt; 1\)</span>.</p>
+</li>
+<li>
+<p><strong>Polynomial Decay</strong> : <span class="arithmatex">\(T_k = T_0 / (1 + k)^\alpha\)</span>, where <span class="arithmatex">\(\alpha &gt; 0\)</span>.</p>
+</li>
+<li>
+<p><strong>Adaptive Scheduling</strong> : Adjust <span class="arithmatex">\(T_k\)</span> based on the sampling performance (e.g., adaptively reduce noise if the acceptance rate decreases).</p>
+</li>
+</ul>
+<p>Key parameters:</p>
+<ul>
+<li>
+<p><strong>Initial Temperature</strong>  <span class="arithmatex">\(T_0\)</span> : Chosen high enough to explore the search space widely.</p>
+</li>
+<li>
+<p><strong>Final Temperature</strong> : Chosen low enough to focus on the target distribution.</p>
+</li>
+<li>
+<p><strong>Step Size</strong>  <span class="arithmatex">\(\epsilon\)</span> : Adjusted to balance accuracy and computational cost.</p>
+</li>
+</ul>
+<hr />
+<h3 id="5-theoretical-analysis">5. Theoretical Analysis<a class="headerlink" href="#5-theoretical-analysis" title="Permanent link">&para;</a></h3>
+<p>In the presence of temperature <span class="arithmatex">\(T\)</span>, the stationary distribution of Langevin Dynamics becomes:</p>
+<div class="arithmatex">\[
+ p_T(x) \propto e^{-U(x)/T}.
+\]</div>
+<p>As <span class="arithmatex">\(T \to 0\)</span>, the distribution transitions to <span class="arithmatex">\(p(x) \propto e^{-U(x)}\)</span> (i.e., the target distribution).</p>
+<p><strong>Convergence Analysis</strong> :</p>
+<ul>
+<li>
+<p><strong>Exploration</strong> : High temperatures help explore distant regions of the space.</p>
+</li>
+<li>
+<p><strong>Exploitation</strong> : Gradual cooling refines the search towards the target distribution.</p>
+</li>
+</ul>
+<h3 id="6-applications">6. Applications<a class="headerlink" href="#6-applications" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p><strong>Generative Models</strong> : Used in training and optimization tasks for high-dimensional data.</p>
+</li>
+<li>
+<p><strong>Non-Convex Optimization</strong> : Combines annealing and dynamics for escaping local minima.</p>
+</li>
+</ul>
+<h3 id="7-practical-steps">7. Practical Steps<a class="headerlink" href="#7-practical-steps" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Initialization</strong> :</li>
+<li>
+<p>Set the initial temperature <span class="arithmatex">\(T_0\)</span>, annealing schedule, step size <span class="arithmatex">\(\epsilon\)</span>, and random initialization of <span class="arithmatex">\(x_0\)</span>.</p>
+</li>
+<li>
+<p><strong>Iteration</strong> :</p>
+</li>
+<li>
+<p>Compute <span class="arithmatex">\(\nabla U(x_k)\)</span>.</p>
+</li>
+<li>
+<p>Update <span class="arithmatex">\(T_k\)</span> based on the annealing schedule.</p>
+</li>
+<li>
+<p>Perform the update:</p>
+</li>
+</ol>
+<div class="arithmatex">\[
+ x_{k+1} = x_k - \epsilon \nabla U(x_k) + \sqrt{2 \epsilon T_k} \xi_k.
+\]</div>
+<ol>
+<li>
+<p><strong>Convergence</strong> :</p>
+</li>
+<li>
+<p>Stop when the temperature reaches a specified threshold or convergence criteria are met.</p>
+</li>
+</ol>
+<p><strong>Python Code Example</strong> :</p>
+<pre><code class="language-python">import numpy as np
+
+def annealed_langevin(grad_U, x0, T0, epsilon, n_steps, schedule='exponential', gamma=0.99):
+    x = x0.copy()
+    samples = [x0]
+    T = T0
+    for k in range(n_steps):
+        if schedule == 'exponential':
+            T = T0 * gamma ** k
+        elif schedule == 'polynomial':
+            T = T0 / (1 + k)
+        noise = np.random.randn(x.shape) * np.sqrt(2 * epsilon * T)
+        x = x - epsilon * grad_U(x) + noise
+        samples.append(x)
+    return np.array(samples)
+</code></pre>
+<h3 id="8-comparison-with-other-methods">8. Comparison with Other Methods<a class="headerlink" href="#8-comparison-with-other-methods" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Annealing Strategy</th>
+<th>Noise Term</th>
+<th>Suitable Scenarios</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Standard Langevin Dynamics</td>
+<td>None</td>
+<td>Yes</td>
+<td>Single-mode stationary distributions</td>
+</tr>
+<tr>
+<td>Annealed Langevin Dynamics</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Multi-modal distributions, generative models</td>
+</tr>
+<tr>
+<td>Simulated Annealing</td>
+<td>Yes</td>
+<td>No</td>
+<td>Combinatorial optimization, discrete space</td>
+</tr>
+<tr>
+<td>Hamiltonian Monte Carlo (HMC)</td>
+<td>None</td>
+<td>No</td>
+<td>High-dimensional, parametric distributions</td>
+</tr>
+</tbody>
+</table>
+<h3 id="9-advanced-extensions">9. Advanced Extensions<a class="headerlink" href="#9-advanced-extensions" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p><strong>SGLD with Annealing</strong> :
+Combines stochastic gradient Langevin dynamics with annealing for large-scale datasets.</p>
+</li>
+<li>
+<p><strong>Adaptive Annealing</strong> :
+Dynamically adjusts the annealing schedule based on feedback (e.g., acceptance rate, energy variance).</p>
+</li>
+</ul>
+<hr />
+<h3 id="10-key-considerations">10. Key Considerations<a class="headerlink" href="#10-key-considerations" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p><strong>Temperature Schedule</strong> : Improper schedules (e.g., too rapid cooling) may lead to poor convergence.</p>
+</li>
+<li>
+<p><strong>Step Size Selection</strong> : Balances convergence speed with numerical stability.</p>
+</li>
+</ul>
 
 
 
