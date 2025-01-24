@@ -261,3 +261,7 @@ Because Hamiltonian trajectories can travel *long distances* in the state space 
   - Betancourt, M. (2018). *A Conceptual Introduction to Hamiltonian Monte Carlo.*
 
 In short, MCMC is the backbone of *sampling from complicated distributions* when direct sampling is infeasible. Hamiltonian Monte Carlo refines this idea by incorporating physical dynamics to *move quickly* through the space, often yielding more efficient sampling in high‐dimensional problems.
+
+## Langevin Dynamics Sampling
+
+## Annealed Langevin Dynamics Sampling

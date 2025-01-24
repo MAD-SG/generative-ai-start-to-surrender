@@ -22,7 +22,7 @@ class ScoreNetwork(nn.Module):
             in_channels=channels,  # RGB images
             out_channels=channels,  # Score prediction for each channel
             sample_size=128,  # Image size
-            layers_per_block=1,  # Number of resnet blocks per level
+            layers_per_block=2,  # Number of resnet blocks per level
             block_out_channels=(base_channels, base_channels*2, base_channels*4, base_channels*8),
             down_block_types=(
                 "DownBlock2D",
@@ -59,7 +59,8 @@ class MultiScaleDSM(pl.LightningModule):
         num_scales: int = 10,
         lr: float = 2e-4,
         beta1: float = 0.5,
-        beta2: float = 0.999
+        beta2: float = 0.999,
+        curriculum_epochs: int = 100  # Number of epochs to complete the curriculum
     ):
         super().__init__()
         self.save_hyperparameters()
@@ -71,6 +72,7 @@ class MultiScaleDSM(pl.LightningModule):
         self.lr = lr
         self.beta1 = beta1
         self.beta2 = beta2
+        self.curriculum_epochs = curriculum_epochs
 
         # Create score network
         self.score_net = ScoreNetwork(channels=channels, base_channels=base_channels)
@@ -95,11 +97,46 @@ class MultiScaleDSM(pl.LightningModule):
         t = (sigma_idx / self.num_scales * 999).expand(x.shape[0]).long().to(x.device)
         return self.score_net(x, t)
 
+    def get_sigma_weights(self) -> torch.Tensor:
+        """
+        Calculate sampling weights for sigma indices based on training progress.
+        Early in training: favor small sigmas
+        Late in training: favor large sigmas
+        """
+        current_epoch = self.current_epoch
+        progress = min(current_epoch / self.curriculum_epochs, 1.0)
+
+        # Create base weights
+        weights = torch.ones(self.num_scales, device=self.device)
+
+        # Early training: exponentially favor small sigmas
+        if progress < 0.5:
+            # Exponential decay from small to large sigmas
+            decay = 2.0 * (0.5 - progress)  # starts at 1.0, ends at 0.0
+            weights = torch.exp(-torch.arange(self.num_scales, device=self.device) * decay)
+        # Late training: exponentially favor large sigmas
+        else:
+            # Exponential growth from small to large sigmas
+            growth = 2.0 * (progress - 0.5)  # starts at 0.0, ends at 1.0
+            weights = torch.exp(torch.arange(self.num_scales, device=self.device) * growth)
+
+        # Normalize weights to probabilities
+        weights = weights / weights.sum()
+        return weights
+
     def compute_loss(self, x: torch.Tensor, batch_size: Optional[int] = None) -> torch.Tensor:
         batch_size = x.shape[0]
 
-        # Randomly select sigma indices for each sample in the batch
-        sigma_indices = torch.randint(0, self.num_scales, (batch_size,), device=x.device)
+        # Get sampling weights based on training progress
+        weights = self.get_sigma_weights()
+
+        # Log sigma probabilities during training
+        if self.training and self.global_step % 100 == 0:  # Log every 100 steps
+            for sigma_idx, (sigma, prob) in enumerate(zip(self.sigmas, weights)):
+                self.log(f'sigma_prob/sigma_{sigma:.3f}', prob.item(), prog_bar=False, sync_dist=True)
+
+        # Sample sigma indices according to weights
+        sigma_indices = torch.multinomial(weights, batch_size, replacement=True)
         self.sigmas = self.sigmas.to(x.device)
         sigmas = self.sigmas[sigma_indices]
 
@@ -118,25 +155,25 @@ class MultiScaleDSM(pl.LightningModule):
         loss = 0.5 * (sigmas ** 2) * F.mse_loss(score, target, reduction='none')
 
         # Log losses for specific sigma levels
-        # with torch.no_grad():
-        #     if self.training:
-        #         # Log min sigma loss
-        #         min_mask = (sigma_indices == 0)
-        #         if min_mask.any():
-        #             min_loss = loss[min_mask].detach().mean()
-        #             self.log('loss_sigma_min', min_loss, prog_bar=True, sync_dist=True)
+        with torch.no_grad():
+            if self.training:
+                # Log min sigma loss
+                min_mask = (sigma_indices == 0)
+                if min_mask.any():
+                    min_loss = loss[min_mask].detach().mean()
+                    self.log('loss/sigma_min', min_loss, prog_bar=False, sync_dist=False)
 
-        #         # Log medium sigma loss
-        #         med_mask = (sigma_indices == self.num_scales // 2)
-        #         if med_mask.any():
-        #             med_loss = loss[med_mask].detach().mean()
-        #             self.log('loss_sigma_med', med_loss, prog_bar=True, sync_dist=True)
+                # Log medium sigma loss
+                med_mask = (sigma_indices == self.num_scales // 2)
+                if med_mask.any():
+                    med_loss = loss[med_mask].detach().mean()
+                    self.log('loss/sigma_med', med_loss, prog_bar=False, sync_dist=False)
 
-        #         # Log max sigma loss
-        #         max_mask = (sigma_indices == self.num_scales - 1)
-        #         if max_mask.any():
-        #             max_loss = loss[max_mask].detach().mean()
-        #             self.log('loss_sigma_max', max_loss, prog_bar=True, sync_dist=True)
+                # Log max sigma loss
+                max_mask = (sigma_indices == self.num_scales - 1)
+                if max_mask.any():
+                    max_loss = loss[max_mask].detach().mean()
+                    self.log('loss/sigma_max', max_loss, prog_bar=False, sync_dist=False)
 
         loss = loss.mean()
 
@@ -348,7 +385,7 @@ class AnimeDataModule(pl.LightningDataModule):
 
 def main():
     # Create data module
-    data_module = AnimeDataModule(batch_size=64)
+    data_module = AnimeDataModule(batch_size=200)
 
     # Initialize model
     model = MultiScaleDSM(
@@ -356,8 +393,9 @@ def main():
         base_channels=64,
         sigma_min=0.095,
         sigma_max=1.2,
-        num_scales=10,
-        lr=2e-4
+        num_scales=20,
+        lr=2e-4,
+        curriculum_epochs=100
     )
 
     # Initialize trainer with TensorBoard logger
@@ -390,7 +428,8 @@ def main():
     )
 
     # Train model
-    trainer.fit(model, data_module,  ckpt_path='/mnt/nas2/tdd/data-sync/minio/face/lilong/logs/ebm_anime/dsm_anime/version_21/checkpoints/dsm_22_0.12.ckpt')
+    trainer.fit(model, data_module)
+    #  ckpt_path='/mnt/nas2/tdd/data-sync/minio/face/lilong/logs/ebm_anime/dsm_anime/version_21/checkpoints/dsm_22_0.12.ckpt')
 
 if __name__ == "__main__":
     torch.set_float32_matmul_precision('medium')

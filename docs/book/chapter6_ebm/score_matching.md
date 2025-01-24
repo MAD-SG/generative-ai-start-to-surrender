@@ -464,6 +464,57 @@ The conditional distribution is:
 
 $$ q(\tilde{x}|x) = \mathcal{N}(x, \sigma^2 I) $$
 
+thus,
+
+$$
+q_\sigma(\tilde{\mathbf{x}}) = \int q(\tilde{\mathbf{x}} \mid \mathbf{x}) p_{\text{data}}(\mathbf{x}) \, d\mathbf{x},
+$$
+
+where $ q(\tilde{\mathbf{x}} \mid \mathbf{x}) = \mathcal{N}(\tilde{\mathbf{x}}; \mathbf{x}, \sigma^2 \mathbf{I}) $ is a Gaussian distribution centered at $ \mathbf{x} $ with variance $ \sigma^2 $. This represents a **convolution** of $ p_{\text{data}}(\mathbf{x}) $ with a Gaussian kernel.
+
+#### 1. Small Noise $ \sigma \to 0 $
+
+- **Behavior of $ q(\tilde{\mathbf{x}} \mid \mathbf{x}) $:**
+
+  The Gaussian becomes a Dirac delta function:
+
+  $$
+  q_\sigma(\tilde{\mathbf{x}} \mid \mathbf{x}) \to \delta(\tilde{\mathbf{x}} - \mathbf{x}).
+  $$
+
+- **Effect on $q(\tilde{\mathbf{x}}) $:**
+
+  The integral simplifies to $p_{\text{data}}(\tilde{\mathbf{x}}) $, preserving the original distribution:
+
+  $$
+  q_\sigma(\tilde{\mathbf{x}}) \approx p_{\text{data}}(\tilde{\mathbf{x}}).
+  $$
+- **Interpretation:** Minimal blurring; the perturbed distribution matches the original data distribution.
+
+#### 2. Moderate Noise $ \sigma > 0 $
+
+- **Behavior of $q(\tilde{\mathbf{x}} \mid \mathbf{x}) $:**
+  The Gaussian acts as a smoothing kernel with width proportional to $ \sigma $.
+
+- **Effect on $q(\tilde{\mathbf{x}}) $:**
+
+  The convolution introduces controlled blurring, creating a smoothed version of $ p_{\text{data}}(\mathbf{x}) $. Fine details are averaged, but the global structure remains recognizable.
+
+- **Interpretation:** Useful for regularization or generating "softened" data samples.
+
+#### 3. Large Noise $\sigma \to \infty $**
+
+- **Behavior of $ q_\sigma(\tilde{\mathbf{x}} \mid \mathbf{x}) $:**
+  The Gaussian becomes extremely wide and flat, approximating a uniform distribution over the domain.
+
+- **Effect on $ q_\sigma(\tilde{\mathbf{x}}) $:**
+
+  The integral averages $ p_{\text{data}}(\mathbf{x}) $ over a large region, erasing fine structure. If $ p_{\text{data}}(\mathbf{x}) $ is bounded, $ q(\tilde{\mathbf{x}}) $ approaches a uniform distribution; otherwise, it becomes a broad Gaussian.
+
+- **Interpretation:** Severe distortion; the original distribution is lost.
+
+
+
 #### Step 2: Score of the Noisy Distribution
 The score of $ q(\tilde{x}|x) $ is:
 
@@ -479,8 +530,8 @@ $$ J(\theta) = \mathbb{E}_{q(\tilde{x},x)}\left[ \| s_\theta(\tilde{x}) - \frac{
 
 **Why This Works**:
 
-Minimizing this loss forces $ s_\theta(\tilde{x}) $ to approximate $ \nabla_{\tilde{x}} \log q(\tilde{x}) $, the score of the *marginal* noisy distribution $ q(\tilde{x}) = \int q(\tilde{x}|x)p_{\text{data}}(x)dx $.
-Under mild conditions, this is equivalent to learning the score of the *true* data distribution $ p_{\text{data}}(x) $ as $ \sigma \to 0 $.
+Minimizing this loss forces $ s_\theta(\tilde{x}) $ to approximate $ \nabla_{\tilde{x}} \log q(\tilde{x}) $, the score of the *marginal* noisy distribution $ q(\tilde{x}) = \int q(\tilde{x}|x)p_{\text{data}}(x)dx $,  which has been proved in the above section.
+As illustrated above, this is equivalent to learning the score of the *true* data distribution $ p_{\text{data}}(x) $ as $ \sigma \to 0 $.
 
 
 ### 3. Training Process: Step-by-Step
@@ -564,6 +615,29 @@ Imagine rolling a marble on a bumpy surface (the data landscape). The score tilt
 ### 5. Multi-Scale Noise Training
 
 #### Why Multiple Noise Scales?
+
+**Key Challenges in Training SBMs/EBMs**
+
+- **Undefined Score Function Off the Data Manifold** : Under the manifold hypothesis, data resides on a low-dimensional manifold embedded in a high-dimensional ambient space. The score function $ \nabla_x \log p(x) $, which requires gradients to be defined everywhere in the ambient space, becomes ill-defined outside the manifold.
+
+   **Problem**: Score estimation fails in regions irrelevant to the data, destabilizing training and generation.
+
+   **Implication**: Score estimation fails in regions irrelevant to the data, destabilizing training and generation.
+
+- **Sparse Data in Low-Density Regions**
+
+   **Problem**: Real-world datasets often lack sufficient samples in low-density areas (e.g., transitions between classes or rare features). This sparsity makes it difficult to reliably estimate the score function in these regions.
+
+   **Implication**: Poor score approximation leads to artifacts, mode collapse, or unrealistic interpolations.
+
+- **Degradation of Mixing Distribution Coefficients**
+
+   **Problem**: In near-zero density regions (e.g., far from the manifold), the coefficients (weights) of the mixing distribution—used to model complex data—vanish or become negligible.
+
+   **Implication**: The model loses expressive power in these regions, exacerbating mode collapse and limiting diversity in generated samples.
+
+We use multi-scale noise pertubation could help address these challenges.
+
 Real-world data (e.g., images) has structure at multiple resolutions:
 - **Low noise (small $ \sigma $)**: Captures fine details (e.g., textures).
 - **High noise (large $ \sigma $)**: Captures coarse structure (e.g., shapes).
@@ -635,3 +709,4 @@ Denoising Score Matching elegantly bridges noise and geometry to learn data dist
 - [Score Matching](https://www.jmlr.org/papers/volume6/hyvarinen05a/hyvarinen05a.pdf) (Hyvärinen, 2005)
 - [Denoising Score Matching](https://www.iro.umontreal.ca/~vincentp/Publications/denoising_score_matching_AISTATS2011.pdf) (Vincent, 2011)
 - [Score-Based SDEs](https://arxiv.org/abs/2011.13456) (Song et al., 2021)
+- [Generative Modeling by Estimating Gradients of the Data Distribution](https://arxiv.org/pdf/1907.05600) (YangSong, 2019)
