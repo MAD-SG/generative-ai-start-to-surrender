@@ -9,10 +9,10 @@
       
       
       
-        <link rel="prev" href="../../chapter3_GAN/3.7R3Gan/paper/">
+        <link rel="prev" href="../sampling/">
       
       
-        <link rel="next" href="../4.2DDPM/">
+        <link rel="next" href="../score_matching/">
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
@@ -20,7 +20,7 @@
     
     
       
-        <title>Introduction - Generative AI: From Start to Surrender</title>
+        <title>Contrastive Divergence - Generative AI: From Start to Surrender</title>
       
     
     
@@ -62,7 +62,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#diffusion-models" class="md-skip">
+        <a href="#cd" class="md-skip">
           Skip to content
         </a>
       
@@ -96,7 +96,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Introduction
+              Contrastive Divergence
             
           </span>
         </div>
@@ -234,13 +234,11 @@
         
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="./" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../chapter4_diffusion/4.1introduction/" class="md-tabs__link">
           
   
   Diffusion
@@ -272,11 +270,13 @@
         
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../chapter6_ebm/introduction/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../introduction/" class="md-tabs__link">
           
   
   Energy Based Models
@@ -754,28 +754,23 @@
       
   
   
-    
   
   
-  
     
     
     
       
-        
-        
-      
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -786,7 +781,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             Diffusion
@@ -797,30 +792,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    Introduction
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../chapter4_diffusion/4.1introduction/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -829,44 +804,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      需要的前置知识
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#reading-list" class="md-nav__link">
-    <span class="md-ellipsis">
-      Reading list
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -879,7 +816,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../4.2DDPM/" class="md-nav__link">
+      <a href="../../chapter4_diffusion/4.2DDPM/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -991,23 +928,28 @@
       
   
   
+    
   
   
+  
     
     
     
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
         
           
-          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
             
   
   <span class="md-ellipsis">
@@ -1018,7 +960,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             Energy Based Models
@@ -1032,7 +974,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../chapter6_ebm/introduction/" class="md-nav__link">
+      <a href="../introduction/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1053,7 +995,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../chapter6_ebm/score_function/" class="md-nav__link">
+      <a href="../score_function/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1074,7 +1016,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../chapter6_ebm/sampling/" class="md-nav__link">
+      <a href="../sampling/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1092,10 +1034,30 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../chapter6_ebm/cd/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Contrastive Divergence
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -1104,6 +1066,89 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      引言
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.问题背景：能量模型与配分函数
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-cd" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. CD的核心思想
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. 数学推导
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. 应用与变种
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. 优缺点分析
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. 总结
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1116,7 +1161,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../chapter6_ebm/score_matching/" class="md-nav__link">
+      <a href="../score_matching/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1152,58 +1197,161 @@
                   
 
 
-<h1 id="diffusion-models">Diffusion Models<a class="headerlink" href="#diffusion-models" title="Permanent link">&para;</a></h1>
-<h2 id="_1">需要的前置知识<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<p>数学：</p>
+<h1 id="cd">对比散度（CD）方法详解：从理论推导到直观理解<a class="headerlink" href="#cd" title="Permanent link">&para;</a></h1>
+<h2 id="_1">引言<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>在训练能量模型（如受限玻尔兹曼机，RBM）时，<strong>配分函数</strong>的计算一直是一个核心难题。传统的最大似然估计需要计算配分函数的梯度，但在高维空间中这一过程几乎不可行。
+2002年，Geoffrey Hinton提出 <strong>对比散度（Contrastive Divergence, CD</strong> 方法，通过巧妙的近似策略，绕过了配分函数的显式计算，成为训练能量模型的里程碑式工作。
+本文将深入解析CD的数学原理、直观解释及其实际应用。</p>
+<h2 id="1">1.问题背景：能量模型与配分函数<a class="headerlink" href="#1" title="Permanent link">&para;</a></h2>
+<p>能量模型通过能量函数 $ E_\theta(x) $ 定义概率分布：</p>
+<div class="arithmatex">\[
+p_\theta(x) = \frac{e^{-E_\theta(x)}}{Z(\theta)}, \quad Z(\theta) = \int e^{-E_\theta(x)} dx,
+\]</div>
+<p>其中 $ Z(\theta) $ 是配分函数。训练目标是最大化数据的对数似然：</p>
+<div class="arithmatex">\[
+\mathcal{L}(\theta) = E_{x\sim p_{\text{data}}(x)}[\log p_\theta(x_i)]
+\]</div>
+<p>配分函数的梯度可通过对能量函数求导得到：</p>
+<div class="arithmatex">\[
+\begin{aligned}
+\nabla_\theta \log Z(\theta)
+&amp;= \frac{1}{Z(\theta)} \nabla_\theta Z(\theta) \\
+&amp;= \frac{1}{Z(\theta)} \int \nabla_\theta e^{-E_\theta(x)} dx \\
+&amp;= \frac{1}{Z(\theta)} \int -e^{-E_\theta(x)} \nabla_\theta E_\theta(x) dx \\
+&amp;= -\mathbb{E}_{p_\theta(x)} \left[ \nabla_\theta E_\theta(x) \right].
+\end{aligned}
+\]</div>
+<p>将对数似然的梯度分解为数据项和模型项：
+$$
+\begin{aligned}
+\nabla_\theta \mathcal{L}(\theta)
+&amp;= \mathbb{E}<em>{p</em>{\text{data}}(x)} \left[ \nabla_\theta \log p_\theta(x) \right] \
+&amp;= \mathbb{E}<em>{p</em>{\text{data}}(x)} \left[ -\nabla_\theta E_\theta(x) - \nabla_\theta \log Z(\theta) \right] \
+&amp;= -\mathbb{E}<em>{p</em>{\text{data}}(x)} \left[ \nabla_\theta E_\theta(x) \right] + \mathbb{E}<em>{p</em>\theta(x)} \left[ \nabla_\theta E_\theta(x) \right].
+\end{aligned}
+$$
+其中：
+- <strong>第一项</strong>：数据分布的期望，直接计算训练样本的梯度。
+- <strong>第二项</strong>：模型分布的期望，传统方法需MCMC采样，CD通过短链采样近似。</p>
+<p><strong>梯度计算难题</strong>：
+对数似然的梯度为：
+$$
+\nabla_\theta \mathcal{L}(\theta) = -\mathbb{E}<em>{p</em>{\text{data}}} [\nabla_\theta E_\theta(x)] + \mathbb{E}<em>{p</em>\theta(x)} [\nabla_\theta E_\theta(x)].
+$$
+其中第二项 $ \mathbb{E}<em>{p</em>\theta(x)}[\cdot] $ 需要从模型分布中采样，但传统MCMC方法因高维空间收敛慢而不可行。</p>
+<h2 id="2-cd">2. CD的核心思想<a class="headerlink" href="#2-cd" title="Permanent link">&para;</a></h2>
+<h3 id="21">2.1. 直观解释<a class="headerlink" href="#21" title="Permanent link">&para;</a></h3>
+<p>CD的核心思想是<strong>用少量MCMC步骤生成近似样本</strong>，替代传统方法中的完全收敛链：
+- <strong>从数据分布启动链</strong>：用训练样本 $ x_{\text{data}} $ 初始化MCMC链，而非随机噪声。
+- <strong>短链采样</strong>：仅运行 $ k $ 步（通常 $ k=1 $）MCMC（如Gibbs采样）生成负样本 $ x_{\text{CD_k}} $。
+- <strong>梯度近似</strong>：用 $ x_{\text{CD_k}} $ 近似模型分布的期望，计算梯度更新参数。</p>
+<p><strong>为什么有效？</strong>
+- 数据分布靠近模型分布，短链即可逼近目标分布。
+- 避免了长链MCMC的高计算成本。</p>
+<h2 id="3">3. 数学推导<a class="headerlink" href="#3" title="Permanent link">&para;</a></h2>
+<h3 id="31">3.1  目标函数与梯度<a class="headerlink" href="#31" title="Permanent link">&para;</a></h3>
+<p>最大化对数似然等价于最小化KL散度：</p>
+<div class="arithmatex">\[
+D_{\text{KL}}(p_{\text{data}} \| p_\theta) = \mathbb{E}_{p_{\text{data}}} [\log p_{\text{data}}(x) - \log p_\theta(x)].
+\]</div>
+<p>其梯度为：</p>
+<div class="arithmatex">\[
+\nabla_\theta D_{\text{KL}} = -\mathbb{E}_{p_{\text{data}}} [\nabla_\theta \log p_\theta(x)] + \mathbb{E}_{p_\theta(x)} [\nabla_\theta \log p_\theta(x)].
+\]</div>
+<h3 id="32-cd">3.2. CD的核心策略<a class="headerlink" href="#32-cd" title="Permanent link">&para;</a></h3>
+<p><strong>直接用短链MCMC采样近似模型分布的期望</strong>：
+- <strong>步骤</strong>：
+  1. 从训练数据样本 <span class="arithmatex">\(x_{\text{data}}\)</span> 启动马尔可夫链。
+  2. 运行 <span class="arithmatex">\(k\)</span> 步MCMC（如Gibbs采样）生成样本 <span class="arithmatex">\(x_{\text{CD\_k}}\)</span>。
+  3. 用这些样本的均值近似 <span class="arithmatex">\(\mathbb{E}_{p_\theta(x)}[\cdot]\)</span>，即：</p>
+<pre><code> $$
+ \mathbb{E}_{p_\theta(x)} [\nabla_\theta E_\theta(x)] \approx \frac{1}{B} \sum_{i=1}^B \nabla_\theta E_\theta(x_{\text{CD\_k}}^{(i)}).
+ $$
+</code></pre>
+<h3 id="33">3.3. 参数更新规则的简化<a class="headerlink" href="#33" title="Permanent link">&para;</a></h3>
+<p>梯度公式简化为：</p>
+<div class="arithmatex">\[
+\nabla_\theta \mathcal{L}(\theta) \approx -\mathbb{E}_{p_{\text{data}}} [\nabla_\theta E_\theta(x)] + \frac{1}{B} \sum_{i=1}^B \nabla_\theta E_\theta(x_{\text{CD\_k}}^{(i)}).
+\]</div>
+<p>参数更新方向为：</p>
+<div class="arithmatex">\[
+\Delta \theta \propto -\nabla_\theta E_\theta(x_{\text{data}}) + \nabla_\theta E_\theta(x_{\text{CD\_k}}).
+\]</div>
+<h3 id="34">3.4. 等价损失函数的定义<a class="headerlink" href="#34" title="Permanent link">&para;</a></h3>
+<p>CD的等价损失函数可表示为：
+$$
+\mathcal{L}<em>{\text{CD}} = \mathbb{E}</em>{p_{\text{data}}} [E_\theta(x)] - \mathbb{E}<em>{p</em>{\theta}^{(k)}} [E_\theta(x)],
+$$
+其中：
+- <strong>第一项</strong>：真实数据样本 <span class="arithmatex">\( x \sim p_{\text{data}} \)</span> 的平均能量。
+- <strong>第二项</strong>：从数据分布启动 <span class="arithmatex">\( k \)</span> 步MCMC（如Gibbs采样）生成的样本 <span class="arithmatex">\( x_{\text{CD\_k}} \sim p_{\theta}^{(k)} \)</span> 的平均能量。
+- <strong>优化目标</strong>：最小化 <span class="arithmatex">\( \mathcal{L}_{\text{CD}} \)</span>，即降低真实数据的能量，同时提高生成数据的能量。
+- <strong>作用</strong>：降低真实样本的能量，使其更可能被模型生成。提高生成样本的能量，使其远离当前模型分布。</p>
+<p><img alt="alt text" src="../../../images/image-21.png" /></p>
+<h3 id="35">3.5. 短链采样的合理性<a class="headerlink" href="#35" title="Permanent link">&para;</a></h3>
 <ul>
-<li>微积分：</li>
-<li>导数和梯度的计算。</li>
-<li>偏微分和链式法则。</li>
-<li>多变量函数优化（如梯度下降）。</li>
-<li>微分方程：</li>
-<li>常微分方程的基础知识（扩散模型涉及随机微分方程）。</li>
-<li>伊藤引理（Itô Lemma）。</li>
+<li><strong>热启动</strong>：从数据点启动MCMC链，起点靠近高概率区域，少量步骤即可逼近模型分布。</li>
+<li><strong>局部探索</strong>：短链主要调整样本的局部结构（如纹理细节），而非全局模式。</li>
 </ul>
-<p>统计学：</p>
+<h3 id="36-mcmc">3.6. 与传统MCMC的对比<a class="headerlink" href="#36-mcmc" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th><strong>方法</strong></th>
+<th><strong>初始状态</strong></th>
+<th><strong>链长</strong></th>
+<th><strong>计算成本</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>传统MCMC</strong></td>
+<td>随机噪声</td>
+<td>长（收敛）</td>
+<td>高</td>
+</tr>
+<tr>
+<td><strong>CD</strong></td>
+<td>训练数据</td>
+<td>短（$ k=1 $）</td>
+<td>低</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="4">4. 应用与变种<a class="headerlink" href="#4" title="Permanent link">&para;</a></h2>
+<h3 id="41-rbm">4.1. 在RBM中的实现<a class="headerlink" href="#41-rbm" title="Permanent link">&para;</a></h3>
 <ul>
-<li>必备知识点：</li>
-<li>布朗运动（Brownian Motion）：<ul>
-<li>随机游走及其连续极限。</li>
-<li>高斯过程。</li>
+<li><strong>Gibbs采样步骤</strong>：</li>
+<li>正向传播：计算隐层概率 $ p(h \mid v_{\text{data}}) $，采样 $ h_0 $。</li>
+<li>反向重构：计算可见层概率 $ p(v \mid h_0) $，采样 $ v_1 $。</li>
+<li><strong>参数更新</strong>：
+  $$
+  \Delta w_{ij} \propto v_{\text{data},i} h_{0,j} - v_{1,i} h_{1,j}.
+  $$</li>
 </ul>
-</li>
-<li>随机微分方程（SDE）：<ul>
-<li>Itô公式及其在扩散模型中的应用。</li>
+<h3 id="42">4.2 改进方法<a class="headerlink" href="#42" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Persistent CD (PCD)</strong>：跨批次保留MCMC链状态，提升采样效率（Tijmen Tieleman, 2008）。</li>
+<li><strong>Fast CD</strong>：结合动量、自适应学习率加速训练。</li>
 </ul>
-</li>
-<li>马尔可夫过程：<ul>
-<li>时间连续和离散的马尔可夫过程。</li>
-<li>马尔可夫链的定义及性质。</li>
-<li>转移概率矩阵的理解。</li>
+<hr />
+<h2 id="5">5. 优缺点分析<a class="headerlink" href="#5" title="Permanent link">&para;</a></h2>
+<h3 id="_2"><strong>优点</strong><a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>高效</strong>：避免长链MCMC，计算成本低。</li>
+<li><strong>实用</strong>：在RBM等模型中表现优异，推动了深度学习复兴。</li>
 </ul>
-</li>
+<h3 id="_3"><strong>缺点</strong><a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>有偏估计</strong>：短链未收敛到平稳分布，梯度不准确。</li>
+<li><strong>模式坍塌风险</strong>：可能遗漏低概率区域。</li>
 </ul>
-<p>系统地学习扩散模型（Diffusion Models）需要一个结构化的学习路径，从基础理论到高级应用逐步深入。以下是建议的学习步骤：</p>
-<h2 id="reading-list">Reading list<a class="headerlink" href="#reading-list" title="Permanent link">&para;</a></h2>
-<ol>
-<li>
-<p><a href="https://arxiv.org/abs/2006.11239">Denoising Diffusion Probabilistic Models (DDPM)</a>  - 核心理论。</p>
-</li>
-<li>
-<p><a href="https://arxiv.org/abs/2102.09672">Improved Denoising Diffusion Probabilistic Models</a>  - 模型优化方法。</p>
-</li>
-<li>
-<p><a href="https://arxiv.org/abs/2105.05233">Diffusion Models Beat GANs on Image Synthesis</a>  - 扩散模型在图像生成任务中的优势。</p>
-</li>
-<li>
-<p><a href="https://arxiv.org/abs/2011.13456">Score-Based Generative Modeling through Stochastic Differential Equations</a>  - 介绍基于分数的生成建模方法。</p>
-</li>
-<li>
-<p><a href="https://arxiv.org/abs/2112.10752">Latent Diffusion Models</a>  - 扩散模型与潜在空间的结合。</p>
-</li>
-</ol>
-<p>TO READ
-* [ ] <a href="https://www.cvmart.net/community/detail/6827">https://www.cvmart.net/community/detail/6827</a></p>
+<hr />
+<h2 id="6">6. 总结<a class="headerlink" href="#6" title="Permanent link">&para;</a></h2>
+<p>对比散度（CD）通过<strong>有限步MCMC采样</strong>和<strong>数据分布热启动</strong>的策略，解决了能量模型训练的配分函数难题。尽管存在理论偏差，其实用性和高效性使其成为生成模型训练的基石之一。从RBM到现代深度生成模型，CD的思想仍在持续影响无监督学习的发展。</p>
+<p><strong>参考文献</strong>：
+Hinton, G. E. (2002). Training products of experts by minimizing contrastive divergence. <em>Neural Computation</em>, 14(8), 1771–1800.</p>
 
 
 

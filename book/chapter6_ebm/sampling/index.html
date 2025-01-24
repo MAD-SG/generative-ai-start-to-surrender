@@ -9,10 +9,10 @@
       
       
       
-        <link rel="prev" href="../../chapter3_GAN/3.7R3Gan/paper/">
+        <link rel="prev" href="../score_function/">
       
       
-        <link rel="next" href="../4.2DDPM/">
+        <link rel="next" href="../cd/">
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
@@ -20,7 +20,7 @@
     
     
       
-        <title>Introduction - Generative AI: From Start to Surrender</title>
+        <title>Sampling - Generative AI: From Start to Surrender</title>
       
     
     
@@ -62,7 +62,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#diffusion-models" class="md-skip">
+        <a href="#sampling-from-a-distribution" class="md-skip">
           Skip to content
         </a>
       
@@ -96,7 +96,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Introduction
+              Sampling
             
           </span>
         </div>
@@ -234,13 +234,11 @@
         
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="./" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../chapter4_diffusion/4.1introduction/" class="md-tabs__link">
           
   
   Diffusion
@@ -272,11 +270,13 @@
         
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../chapter6_ebm/introduction/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../introduction/" class="md-tabs__link">
           
   
   Energy Based Models
@@ -754,28 +754,23 @@
       
   
   
-    
   
   
-  
     
     
     
       
-        
-        
-      
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -786,7 +781,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             Diffusion
@@ -797,30 +792,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    Introduction
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../chapter4_diffusion/4.1introduction/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -829,44 +804,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      需要的前置知识
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#reading-list" class="md-nav__link">
-    <span class="md-ellipsis">
-      Reading list
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -879,7 +816,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../4.2DDPM/" class="md-nav__link">
+      <a href="../../chapter4_diffusion/4.2DDPM/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -991,23 +928,28 @@
       
   
   
+    
   
   
+  
     
     
     
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
         
           
-          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
             
   
   <span class="md-ellipsis">
@@ -1018,7 +960,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             Energy Based Models
@@ -1032,7 +974,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../chapter6_ebm/introduction/" class="md-nav__link">
+      <a href="../introduction/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1053,7 +995,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../chapter6_ebm/score_function/" class="md-nav__link">
+      <a href="../score_function/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1071,10 +1013,30 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../chapter6_ebm/sampling/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Sampling
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -1083,6 +1045,80 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#key-concepts-in-sampling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Concepts in Sampling
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sample-from-a-simple-gaussian-distribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      sample from a simple gaussian distribution
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#markov-chain-monte-carlo-mcmc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Markov Chain Monte Carlo (MCMC)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hamiltonian-monte-carlo-hmc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hamiltonian Monte Carlo (HMC)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#langevin-dynamics-sampling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Langevin Dynamics Sampling
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#annealed-langevin-dynamics-sampling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Annealed Langevin Dynamics Sampling
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1095,7 +1131,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../chapter6_ebm/cd/" class="md-nav__link">
+      <a href="../cd/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1116,7 +1152,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../chapter6_ebm/score_matching/" class="md-nav__link">
+      <a href="../score_matching/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1152,58 +1188,263 @@
                   
 
 
-<h1 id="diffusion-models">Diffusion Models<a class="headerlink" href="#diffusion-models" title="Permanent link">&para;</a></h1>
-<h2 id="_1">需要的前置知识<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<p>数学：</p>
-<ul>
-<li>微积分：</li>
-<li>导数和梯度的计算。</li>
-<li>偏微分和链式法则。</li>
-<li>多变量函数优化（如梯度下降）。</li>
-<li>微分方程：</li>
-<li>常微分方程的基础知识（扩散模型涉及随机微分方程）。</li>
-<li>伊藤引理（Itô Lemma）。</li>
-</ul>
-<p>统计学：</p>
-<ul>
-<li>必备知识点：</li>
-<li>布朗运动（Brownian Motion）：<ul>
-<li>随机游走及其连续极限。</li>
-<li>高斯过程。</li>
-</ul>
-</li>
-<li>随机微分方程（SDE）：<ul>
-<li>Itô公式及其在扩散模型中的应用。</li>
-</ul>
-</li>
-<li>马尔可夫过程：<ul>
-<li>时间连续和离散的马尔可夫过程。</li>
-<li>马尔可夫链的定义及性质。</li>
-<li>转移概率矩阵的理解。</li>
-</ul>
-</li>
-</ul>
-<p>系统地学习扩散模型（Diffusion Models）需要一个结构化的学习路径，从基础理论到高级应用逐步深入。以下是建议的学习步骤：</p>
-<h2 id="reading-list">Reading list<a class="headerlink" href="#reading-list" title="Permanent link">&para;</a></h2>
+<h1 id="sampling-from-a-distribution">Sampling from a Distribution<a class="headerlink" href="#sampling-from-a-distribution" title="Permanent link">&para;</a></h1>
+<p>Understanding the process of sampling is crucial in probability and statistics. Sampling is not merely picking random points in space; it involves generating samples that statistically resemble a given probability distribution. This is essential for tasks such as Monte Carlo simulations, statistical modeling, and machine learning.</p>
+<h2 id="key-concepts-in-sampling">Key Concepts in Sampling<a class="headerlink" href="#key-concepts-in-sampling" title="Permanent link">&para;</a></h2>
 <ol>
 <li>
-<p><a href="https://arxiv.org/abs/2006.11239">Denoising Diffusion Probabilistic Models (DDPM)</a>  - 核心理论。</p>
+<p><strong>Representation of the Distribution</strong>: The samples should reflect the underlying probability distribution. For example, if a distribution has a high density in a specific region, more samples should appear in that region.</p>
 </li>
 <li>
-<p><a href="https://arxiv.org/abs/2102.09672">Improved Denoising Diffusion Probabilistic Models</a>  - 模型优化方法。</p>
+<p><strong>Convergence to the Distribution</strong>: As the number of samples increases, the empirical distribution (e.g., a histogram) should converge to the theoretical probability distribution.</p>
 </li>
 <li>
-<p><a href="https://arxiv.org/abs/2105.05233">Diffusion Models Beat GANs on Image Synthesis</a>  - 扩散模型在图像生成任务中的优势。</p>
-</li>
-<li>
-<p><a href="https://arxiv.org/abs/2011.13456">Score-Based Generative Modeling through Stochastic Differential Equations</a>  - 介绍基于分数的生成建模方法。</p>
-</li>
-<li>
-<p><a href="https://arxiv.org/abs/2112.10752">Latent Diffusion Models</a>  - 扩散模型与潜在空间的结合。</p>
+<p><strong>Applications</strong>: Accurate sampling is vital for simulations and models where results depend on how well samples represent the true distribution.</p>
 </li>
 </ol>
-<p>TO READ
-* [ ] <a href="https://www.cvmart.net/community/detail/6827">https://www.cvmart.net/community/detail/6827</a></p>
+<p><img alt="image" src="https://cdn.cognitiveseo.com/blog/wp-content/uploads/2014/03/b79459f12030f5efb4c24f44ab1178db2.png" /></p>
+<p>That is to say, we want to give higher priority to sample that have higher probability.</p>
+<p>Next, if given a density function, how to sample it.
+Unlike the VAE, Gan which directed generated an example. In the energy based model, we only have the probability density function (precisely, we have the unnormalized probability density function), how can we sample from it?</p>
+<p>Generally, sample from a probability distribution can be done in this way</p>
+<ol>
+<li>sample from a uniform distribution</li>
+<li>map the sample to the inverse of the CDF function</li>
+</ol>
+<p>than we obtained the samples that follow the given probability distribution.
+Here CDF is the cumulative distribution function, that is</p>
+<div class="arithmatex">\[ CDF(x) = \int_{-\infty}^x p(z) \, dz \]</div>
+<h2 id="sample-from-a-simple-gaussian-distribution">sample from a simple gaussian distribution<a class="headerlink" href="#sample-from-a-simple-gaussian-distribution" title="Permanent link">&para;</a></h2>
+<p>In python, sample the gussian distribution maybe simple as the following.</p>
+<pre><code class="language-python">import torch
+import torch.distributions as dist
+
+# Sample from a standard normal distribution
+sample = dist.Normal(0, 1).sample()
+print(sample)
+</code></pre>
+<h3 id="transformations-from-uniform-distributions">Transformations from Uniform Distributions<a class="headerlink" href="#transformations-from-uniform-distributions" title="Permanent link">&para;</a></h3>
+<p>While Gaussian distributions can be sampled directly, they can also be derived from uniform distributions using transformations like the Box-Muller method:</p>
+<pre><code class="language-python">import numpy as np
+
+# Box-Muller transform: sampling normal distribution from uniform
+u1 = np.random.uniform(0, 1)
+u2 = np.random.uniform(0, 1)
+z1 = np.sqrt(-2 * np.log(u1)) * np.cos(2 * np.pi * u2)
+z2 = np.sqrt(-2 * np.log(u1)) * np.sin(2 * np.pi * u2)
+print(f&quot;Samples: {z1}, {z2}&quot;)
+</code></pre>
+<p>This method is efficient because it avoids the need for the inverse CDF, which does not have a closed form for Gaussian distributions.</p>
+<h3 id="sampling-from-complex-distributions">Sampling from Complex Distributions<a class="headerlink" href="#sampling-from-complex-distributions" title="Permanent link">&para;</a></h3>
+<p>For complex distributions, especially with unnormalized probability density functions (as in Energy-Based Models), sophisticated methods are needed:</p>
+<ol>
+<li><strong>Markov Chain Monte Carlo (MCMC)</strong>: A broad class of algorithms for sampling from complex distributions.</li>
+<li><strong>Langevin Dynamics</strong>: Combines gradient descent with noise to explore probability spaces.</li>
+<li><strong>Hamiltonian Monte Carlo (HMC)</strong>: Uses physical dynamics to efficiently sample from high-dimensional distributions.</li>
+</ol>
+<h4 id="langevin-dynamics">Langevin Dynamics<a class="headerlink" href="#langevin-dynamics" title="Permanent link">&para;</a></h4>
+<p>Langevin dynamics is an iterative process that uses the following equation to sample from a known distribution <span class="arithmatex">\(p(\mathbf{x})\)</span>:</p>
+<div class="arithmatex">\[
+\mathbf{x}_{t+1} = \mathbf{x}_t + \tau \nabla_x \log p(\mathbf{x}_t) + \sqrt{2\tau}\mathbf{z}, \quad \mathbf{z} \sim \mathcal{N}(0, \mathbf{I}),
+\]</div>
+<p>where <span class="arithmatex">\(\tau\)</span> is the step size, and <span class="arithmatex">\(\mathbf{x}_0\)</span> is initialized with white noise.</p>
+<pre><code class="language-python">import torch
+import torch.nn as nn
+
+# Langevin dynamics sampling function
+def langevin_dynamics(energy_function, initial_samples, n_steps=1000, step_size=0.1):
+    x = initial_samples.clone().requires_grad_(True)
+    for i in range(n_steps):
+        energy = energy_function(x)
+        grad = torch.autograd.grad(energy.sum(), x)[0]
+        noise = torch.randn_like(x) * np.sqrt(2 * step_size)
+        x.data += -step_size * grad + noise
+    return x.detach()
+
+# Example energy function
+def example_energy_function(x):
+    return 0.5 * ((x - 2)**2) + 0.5 * ((x + 2)**2)
+
+# Initialize samples
+initial_x = torch.zeros(1000, 1)
+# Sample using Langevin dynamics
+samples = langevin_dynamics(example_energy_function, initial_x)
+</code></pre>
+<h3 id="intuition-behind-langevin-dynamics">Intuition Behind Langevin Dynamics<a class="headerlink" href="#intuition-behind-langevin-dynamics" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Drift Term $ \nabla_x \log p(\mathbf{x}) $</strong>: Acts as a force guiding particles toward high-probability regions.</li>
+<li><strong>Noise Term</strong>: Introduces randomness, allowing exploration and preventing particles from getting stuck.</li>
+<li><strong>Balance Between Drift and Noise</strong>: Ensures thorough exploration of the distribution space.</li>
+<li><strong>Convergence</strong>: Over time, the particle distribution converges to the target distribution.</li>
+</ol>
+<p>In the following sections, we will discuss the Langevin dynamics in continous form and the proof that is converged to the unerline distribution.</p>
+<h3 id="simulation-example">Simulation Example<a class="headerlink" href="#simulation-example" title="Permanent link">&para;</a></h3>
+<p>The following Python code simulates Langevin dynamics for a Gaussian mixture:</p>
+<pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+
+# Mixture parameters
+pi1, mu1, sigma1 = 0.6, 2.0, 0.5
+pi2, mu2, sigma2 = 0.4, -2.0, 0.2
+
+# PDF and gradient functions
+def gaussian_pdf(x, mu, sigma):
+    return (1.0 / (np.sqrt(2.0 * np.pi) * sigma) * np.exp(-0.5 * ((x - mu)/sigma)**2))
+
+def mixture_pdf(x):
+    return pi1 * gaussian_pdf(x, mu1, sigma1) + pi2 * gaussian_pdf(x, mu2, sigma2)
+
+def grad_log_mixture_pdf(x):
+    n1 = gaussian_pdf(x, mu1, sigma1)
+    n2 = gaussian_pdf(x, mu2, sigma2)
+    numerator = (pi1 * n1 * (-(x - mu1) / sigma1**2) + pi2 * n2 * (-(x - mu2) / sigma2**2))
+    denominator = pi1 * n1 + pi2 * n2 + 1e-16
+    return numerator / denominator
+
+# Langevin dynamics parameters
+M = 10_000
+np.random.seed(1234)
+x_min, x_max = -3.0, 3.0
+x = np.random.uniform(x_min, x_max, size=M)
+eta = 0.01
+n_steps = 100
+plot_times = [0, 1, 10, 100]
+sample_snapshots = {0: x.copy()}
+
+# Perform Langevin dynamics
+for t in range(1, n_steps+1):
+    grad = grad_log_mixture_pdf(x)
+    x = x + eta*grad + np.sqrt(2*eta)*np.random.randn(M)
+    if t in plot_times:
+        sample_snapshots[t] = x.copy()
+
+# Plot results
+plt.figure(figsize=(12, 3))
+for i, t in enumerate(plot_times):
+    plt.subplot(1, len(plot_times), i+1)
+    plt.hist(sample_snapshots[t], bins=50, density=True, alpha=0.7, color='orange')
+    grid = np.linspace(-4, 5, 400)
+    pdf_vals = mixture_pdf(grid)
+    plt.plot(grid, pdf_vals, 'r-', lw=2)
+    plt.title(f&quot;t = {t}&quot;)
+    plt.ylim(0, 0.9)
+plt.suptitle(&quot;Langevin dynamics sampling from a 1D Gaussian mixture&quot;)
+plt.tight_layout()
+plt.show()
+</code></pre>
+<ul>
+<li>Code <code>experiment/langevin_dynamics_simulation.ipynb</code></li>
+</ul>
+<p>This simulation starts from a uniform distribution and converges to a Gaussian mixture, illustrating the effectiveness of Langevin dynamics in sampling from complex distributions.</p>
+<h2 id="markov-chain-monte-carlo-mcmc">Markov Chain Monte Carlo (MCMC)<a class="headerlink" href="#markov-chain-monte-carlo-mcmc" title="Permanent link">&para;</a></h2>
+<p>MCMC is a broad class of algorithms used to draw samples from complex probability distributions, especially when direct sampling or classical numerical integration is difficult. The main idea behind MCMC is:</p>
+<ol>
+<li><strong>We want samples from a target distribution</strong>
+Suppose we have a probability distribution <span class="arithmatex">\(\pi(x)\)</span> (often given up to a normalization constant, e.g., <span class="arithmatex">\(\pi(x)\propto e^{-U(x)}\)</span>), and we want to estimate expectations like</li>
+</ol>
+<div class="arithmatex">\[
+ \mathbb{E}_{x\sim \pi}[f(x)] \;=\; \int f(x)\,\pi(x)\,dx.
+\]</div>
+<p>In many applications (e.g., Bayesian inference), <span class="arithmatex">\(\pi\)</span> may be high‐dimensional or have no closed‐form normalizing constant, making direct sampling infeasible.</p>
+<ol>
+<li>
+<p><strong>Construct a Markov Chain whose stationary distribution is <span class="arithmatex">\(\pi\)</span></strong>
+MCMC methods build a Markov chain <span class="arithmatex">\(X_0, X_1, X_2,\dots\)</span> with a <em>transition rule</em> <span class="arithmatex">\(X_{t+1}\sim T(\cdot\mid X_t)\)</span>. The key is to design <span class="arithmatex">\(T\)</span> so that if <span class="arithmatex">\(X_t\)</span> <em>is distributed</em> according to <span class="arithmatex">\(\pi\)</span>, then <span class="arithmatex">\(X_{t+1}\)</span> is also distributed according to <span class="arithmatex">\(\pi\)</span>. Under suitable conditions (ergodicity), the chain then <em>converges</em> to <span class="arithmatex">\(\pi\)</span> from a wide range of initial states, and the samples <span class="arithmatex">\(X_0, X_1, \dots\)</span> “mix” throughout the support of <span class="arithmatex">\(\pi\)</span>.</p>
+</li>
+<li>
+<p><strong>Samples from the chain approximate samples from <span class="arithmatex">\(\pi\)</span></strong>
+If the Markov chain is <em>ergodic</em> and <em>aperiodic</em>, then for large <span class="arithmatex">\(t\)</span>, the distribution of <span class="arithmatex">\(X_t\)</span> is close to <span class="arithmatex">\(\pi\)</span>. We can compute empirical averages using$
+ \frac{1}{N}\sum_{t=1}^N f(X_t)
+$
+to estimate <span class="arithmatex">\(\mathbb{E}_{\pi}[f]\)</span>. The law of large numbers for Markov chains implies that, as <span class="arithmatex">\(N\to\infty\)</span>, these empirical averages converge to the true expectation (under mild regularity conditions).</p>
+</li>
+</ol>
+<p>Popular MCMC approaches include:</p>
+<ul>
+<li>
+<p><strong>Metropolis–Hastings (MH)</strong> : Propose a new sample from a proposal distribution <span class="arithmatex">\(q(\cdot\mid X_t)\)</span> and accept or reject it based on a <em>Metropolis acceptance probability</em> that ensures <span class="arithmatex">\(\pi\)</span> is the stationary distribution.</p>
+</li>
+<li>
+<p><strong>Gibbs sampling</strong> : Update each component in turn from its conditional distribution, often used when conditionals of <span class="arithmatex">\(\pi\)</span> are simpler than the joint.</p>
+</li>
+</ul>
+<h2 id="hamiltonian-monte-carlo-hmc">Hamiltonian Monte Carlo (HMC)<a class="headerlink" href="#hamiltonian-monte-carlo-hmc" title="Permanent link">&para;</a></h2>
+<p><strong>Hamiltonian Monte Carlo (HMC)</strong>  is a specialized MCMC method designed to tackle high‐dimensional sampling problems more efficiently than basic Metropolis–Hastings or Gibbs sampling, especially when <span class="arithmatex">\(\pi(x)\propto e^{-U(x)}\)</span> for some smooth potential <span class="arithmatex">\(U(x)\)</span>. Its key ingredients:</p>
+<ol>
+<li><strong>Incorporate “physical” dynamics</strong>
+HMC treats the target variable <span class="arithmatex">\(x\)</span> as a <em>position</em> in a physical system and introduces an auxiliary <em>momentum</em> variable <span class="arithmatex">\(p\)</span>. Together, <span class="arithmatex">\((x,p)\)</span> evolve according to (fictitious) Hamiltonian dynamics governed by a Hamiltonian function</li>
+</ol>
+<div class="arithmatex">\[H(x,p) = U(x) + \frac{1}{2}p^\top M^{-1} p\]</div>
+<p>where <span class="arithmatex">\(M\)</span> is a mass matrix (often the identity).</p>
+<ol>
+<li><strong>Hamiltonian flow</strong>
+Starting from <span class="arithmatex">\((x,p)\)</span>, HMC simulates the continuous‐time Hamiltonian equations:</li>
+</ol>
+<div class="arithmatex">\[
+ \begin{cases}
+\dot{x} \;=\; M^{-1} p,\\
+\dot{p} \;=\; -\,\nabla U(x).
+\end{cases}
+\]</div>
+<p>These flow equations conserve the Hamiltonian <span class="arithmatex">\(H(x,p)\)</span>. In practice, one discretizes this flow via a <em>symplectic integrator</em> (e.g., leapfrog method), which approximates the true continuous trajectory but still preserves many beneficial geometry properties.</p>
+<ol>
+<li><strong>Metropolis correction</strong>
+After simulating the Hamiltonian system for a certain number of leapfrog steps, HMC performs a <em>Metropolis acceptance/rejection step</em>:</li>
+<li>
+<p>Propose a new state <span class="arithmatex">\((x^\star,p^\star)\)</span> by integrating from <span class="arithmatex">\((x,p)\)</span>.</p>
+</li>
+<li>
+<p>Accept or reject based on the Metropolis probability involving the change in Hamiltonian:</p>
+</li>
+</ol>
+<div class="arithmatex">\[
+ \alpha \;=\; \min\Bigl(1,\;\exp\bigl[-(H(x^\star,p^\star)-H(x,p))\bigr]\Bigr).
+\]</div>
+<p>This ensures the Markov chain has <span class="arithmatex">\(\pi(x)\cdot\mathcal{N}(p\mid 0,M)\)</span> as its invariant distribution in the extended space.</p>
+<ol>
+<li><strong>Efficient exploration</strong>
+Because Hamiltonian trajectories can travel <em>long distances</em> in the state space without random walk behavior, HMC reduces the <em>random walk</em> inefficiency often seen in simpler MCMC methods. This often leads to better <em>mixing</em> and more <em>decorrelated</em> samples, especially in high dimensions.</li>
+</ol>
+<p><strong>Summary of HMC steps</strong></p>
+<ol>
+<li>
+<p><strong>Sample momentum</strong>  <span class="arithmatex">\(p\sim \mathcal{N}(0,M)\)</span> to get <span class="arithmatex">\((x,p)\)</span>.</p>
+</li>
+<li>
+<p><strong>Simulate Hamiltonian flow</strong>  with a symplectic integrator (e.g., leapfrog) for a chosen number of steps <span class="arithmatex">\(L\)</span> and step size <span class="arithmatex">\(\epsilon\)</span>. This yields a proposal <span class="arithmatex">\((x^\star, p^\star)\)</span>.</p>
+</li>
+<li>
+<p><strong>Accept/Reject</strong>  <span class="arithmatex">\((x^\star,p^\star)\)</span> using the Metropolis probability <span class="arithmatex">\(\alpha\)</span>. If accepted, set <span class="arithmatex">\(X_{t+1}=x^\star\)</span>; else remain at <span class="arithmatex">\(X_{t+1}=x\)</span>.</p>
+</li>
+<li>
+<p><strong>Repeat</strong>  for many iterations.</p>
+</li>
+</ol>
+<h3 id="references-further-reading">References &amp; Further Reading<a class="headerlink" href="#references-further-reading" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>MCMC in general</strong> :</li>
+<li>
+<p>Chib, S. and Greenberg, E. (1995). <em>Understanding the Metropolis–Hastings Algorithm.</em> The American Statistician.</p>
+</li>
+<li>
+<p>Gilks, W. R., Richardson, S., &amp; Spiegelhalter, D. J. (1995). <em>Markov Chain Monte Carlo in Practice.</em> Chapman &amp; Hall.</p>
+</li>
+<li>
+<p><strong>Hamiltonian Monte Carlo</strong> :</p>
+</li>
+<li>
+<p>Duane, S., Kennedy, A. D., Pendleton, B. J., &amp; Roweth, D. (1987). <em>Hybrid Monte Carlo.</em> Physics Letters B.</p>
+</li>
+<li>
+<p>Neal, R. M. (2011). <em>MCMC Using Hamiltonian Dynamics.</em> In <em>Handbook of Markov Chain Monte Carlo</em> (eds S. Brooks, et al.).</p>
+</li>
+<li>
+<p>Betancourt, M. (2018). <em>A Conceptual Introduction to Hamiltonian Monte Carlo.</em></p>
+</li>
+</ul>
+<p>In short, MCMC is the backbone of <em>sampling from complicated distributions</em> when direct sampling is infeasible. Hamiltonian Monte Carlo refines this idea by incorporating physical dynamics to <em>move quickly</em> through the space, often yielding more efficient sampling in high‐dimensional problems.</p>
+<h2 id="langevin-dynamics-sampling">Langevin Dynamics Sampling<a class="headerlink" href="#langevin-dynamics-sampling" title="Permanent link">&para;</a></h2>
+<h2 id="annealed-langevin-dynamics-sampling">Annealed Langevin Dynamics Sampling<a class="headerlink" href="#annealed-langevin-dynamics-sampling" title="Permanent link">&para;</a></h2>
 
 
 

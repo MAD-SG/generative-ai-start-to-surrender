@@ -9,10 +9,10 @@
       
       
       
-        <link rel="prev" href="../../chapter3_GAN/3.7R3Gan/paper/">
+        <link rel="prev" href="../introduction/">
       
       
-        <link rel="next" href="../4.2DDPM/">
+        <link rel="next" href="../sampling/">
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
@@ -20,7 +20,7 @@
     
     
       
-        <title>Introduction - Generative AI: From Start to Surrender</title>
+        <title>Score Function - Generative AI: From Start to Surrender</title>
       
     
     
@@ -62,7 +62,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#diffusion-models" class="md-skip">
+        <a href="#score-function" class="md-skip">
           Skip to content
         </a>
       
@@ -96,7 +96,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Introduction
+              Score Function
             
           </span>
         </div>
@@ -234,13 +234,11 @@
         
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="./" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../chapter4_diffusion/4.1introduction/" class="md-tabs__link">
           
   
   Diffusion
@@ -272,11 +270,13 @@
         
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../chapter6_ebm/introduction/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../introduction/" class="md-tabs__link">
           
   
   Energy Based Models
@@ -754,28 +754,23 @@
       
   
   
-    
   
   
-  
     
     
     
       
-        
-        
-      
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -786,7 +781,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             Diffusion
@@ -797,30 +792,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    Introduction
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../chapter4_diffusion/4.1introduction/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -829,44 +804,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      需要的前置知识
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#reading-list" class="md-nav__link">
-    <span class="md-ellipsis">
-      Reading list
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -879,7 +816,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../4.2DDPM/" class="md-nav__link">
+      <a href="../../chapter4_diffusion/4.2DDPM/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -991,23 +928,28 @@
       
   
   
+    
   
   
+  
     
     
     
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
         
           
-          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
             
   
   <span class="md-ellipsis">
@@ -1018,7 +960,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             Energy Based Models
@@ -1032,7 +974,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../chapter6_ebm/introduction/" class="md-nav__link">
+      <a href="../introduction/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1050,10 +992,19 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../chapter6_ebm/score_function/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -1062,6 +1013,7 @@
   
 
       </a>
+      
     </li>
   
 
@@ -1074,7 +1026,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../chapter6_ebm/sampling/" class="md-nav__link">
+      <a href="../sampling/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1095,7 +1047,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../chapter6_ebm/cd/" class="md-nav__link">
+      <a href="../cd/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1116,7 +1068,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../chapter6_ebm/score_matching/" class="md-nav__link">
+      <a href="../score_matching/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1152,58 +1104,26 @@
                   
 
 
-<h1 id="diffusion-models">Diffusion Models<a class="headerlink" href="#diffusion-models" title="Permanent link">&para;</a></h1>
-<h2 id="_1">需要的前置知识<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<p>数学：</p>
+<h1 id="score-function">Score Function<a class="headerlink" href="#score-function" title="Permanent link">&para;</a></h1>
+<p>In the context of Langevin dynamics and the underlying Fokker-Planck equation, a key component is the gradient of the log-likelihood function <span class="arithmatex">\(\nabla_x \log p(x)\)</span>. This gradient is formally known as the <strong>Stein's score function</strong>, denoted by:</p>
+<div class="arithmatex">\[
+s_\theta(x) \overset{\text{def}}{=} \nabla_x \log p_\theta(x).
+\]</div>
+<p>It's important to distinguish Stein's score function from the <strong>ordinary score function</strong>, defined as:</p>
+<div class="arithmatex">\[
+s_x(\theta) \overset{\text{def}}{=} \nabla_\theta \log p_\theta(x).
+\]</div>
+<p>The ordinary score function is the gradient with respect to the parameter <span class="arithmatex">\(\theta\)</span> of the log-likelihood, commonly used in maximum likelihood estimation. In contrast, Stein's score function is the gradient with respect to the data point <span class="arithmatex">\(x\)</span>, utilized in Langevin dynamics. Despite the naming conventions, in diffusion literature, Stein's score function is often simply referred to as the score function, and we will adopt this terminology here.</p>
+<p>In the context of contrastive divergence (CD), the ordinary score function is used to directly calculate the derivative of <span class="arithmatex">\(p_\theta\)</span> and update the network parameters.</p>
+<p>In score matching methods, Stein's score function is employed, where the loss is defined as the divergence between the gradient of the learned score function and the true gradient of the log-likelihood function.</p>
+<p>Suppose <span class="arithmatex">\(p_\theta\)</span> is a mixture of two Gaussian distributions in one and two dimensions. We can visualize the score function of <span class="arithmatex">\(p_\theta\)</span> in the following figures:</p>
+<p><img alt="1D Gaussian Mixture Score Function" src="../../../images/image-24.png" /></p>
+<p><img alt="2D Gaussian Mixture Score Function" src="../../../images/image-23.png" /></p>
+<p>In two dimensions, the score function can be visualized as a vector field of the log-likelihood function. The arrow direction represents the gradient, and the arrow length indicates the gradient's magnitude. By employing Langevin dynamics, we can randomly choose a point and follow the arrows to sample from the log-likelihood function, ultimately tracing the trajectory of Langevin dynamics. In physics, the score function is analogous to "drift," indicating how diffusion particles should flow towards the lowest energy state.</p>
+<h3 id="reference">Reference<a class="headerlink" href="#reference" title="Permanent link">&para;</a></h3>
 <ul>
-<li>微积分：</li>
-<li>导数和梯度的计算。</li>
-<li>偏微分和链式法则。</li>
-<li>多变量函数优化（如梯度下降）。</li>
-<li>微分方程：</li>
-<li>常微分方程的基础知识（扩散模型涉及随机微分方程）。</li>
-<li>伊藤引理（Itô Lemma）。</li>
+<li>code about the score function of gaussian mixture: experiment/score_function_gaussian.ipynb</li>
 </ul>
-<p>统计学：</p>
-<ul>
-<li>必备知识点：</li>
-<li>布朗运动（Brownian Motion）：<ul>
-<li>随机游走及其连续极限。</li>
-<li>高斯过程。</li>
-</ul>
-</li>
-<li>随机微分方程（SDE）：<ul>
-<li>Itô公式及其在扩散模型中的应用。</li>
-</ul>
-</li>
-<li>马尔可夫过程：<ul>
-<li>时间连续和离散的马尔可夫过程。</li>
-<li>马尔可夫链的定义及性质。</li>
-<li>转移概率矩阵的理解。</li>
-</ul>
-</li>
-</ul>
-<p>系统地学习扩散模型（Diffusion Models）需要一个结构化的学习路径，从基础理论到高级应用逐步深入。以下是建议的学习步骤：</p>
-<h2 id="reading-list">Reading list<a class="headerlink" href="#reading-list" title="Permanent link">&para;</a></h2>
-<ol>
-<li>
-<p><a href="https://arxiv.org/abs/2006.11239">Denoising Diffusion Probabilistic Models (DDPM)</a>  - 核心理论。</p>
-</li>
-<li>
-<p><a href="https://arxiv.org/abs/2102.09672">Improved Denoising Diffusion Probabilistic Models</a>  - 模型优化方法。</p>
-</li>
-<li>
-<p><a href="https://arxiv.org/abs/2105.05233">Diffusion Models Beat GANs on Image Synthesis</a>  - 扩散模型在图像生成任务中的优势。</p>
-</li>
-<li>
-<p><a href="https://arxiv.org/abs/2011.13456">Score-Based Generative Modeling through Stochastic Differential Equations</a>  - 介绍基于分数的生成建模方法。</p>
-</li>
-<li>
-<p><a href="https://arxiv.org/abs/2112.10752">Latent Diffusion Models</a>  - 扩散模型与潜在空间的结合。</p>
-</li>
-</ol>
-<p>TO READ
-* [ ] <a href="https://www.cvmart.net/community/detail/6827">https://www.cvmart.net/community/detail/6827</a></p>
 
 
 
