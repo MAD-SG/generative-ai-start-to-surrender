@@ -4,7 +4,7 @@ import torch.nn.functional as F
 import pytorch_lightning as pl
 from torch.utils.data import DataLoader, Dataset, random_split
 import numpy as np
-from typing import List, Tuple, Optional
+from typing import List, Tuple, Optional, Union
 import matplotlib.pyplot as plt
 import math
 from torchvision import transforms
@@ -12,12 +12,31 @@ from datasets import load_dataset
 import torchvision
 from diffusers.models import UNet2DModel
 
+def logit_transform(image, lam=1e-6):
+    """input is a normalized image in range [0,1], this function map it to (-inf,inf), where the inverse function is the sigmoid function"""
+    image = lam + (1 - 2 * lam) * image
+    return torch.log(image) - torch.log1p(-image)
+
+def add_noise_input(image):
+    """used to handle the low density areas"""
+    image = image/256. * 255 + torch.rand_like(image) / 256.
+    return image
+
 class ScoreNetwork(nn.Module):
     """Score network using diffusers' UNet2D."""
     def __init__(self, channels: int = 3, base_channels: int = 128):
         super().__init__()
 
         # UNet from diffusers
+        # self.unet = UNet2DModel(
+        #     in_channels=channels,  # RGB images
+        #     out_channels=channels,  # Score prediction for each channel
+        #     sample_size=128,  # Image size
+        #     layers_per_block=2,  # Number of resnet blocks per level
+        #     block_out_channels=(base_channels, base_channels*2, base_channels*4, base_channels*8),
+        #     time_embedding_type="fourier"  # Sinusoidal embedding
+        # )
+
         self.unet = UNet2DModel(
             in_channels=channels,  # RGB images
             out_channels=channels,  # Score prediction for each channel
@@ -38,10 +57,16 @@ class ScoreNetwork(nn.Module):
             ),
             # Enable time conditioning
             time_embedding_type="positional",
+            # time_embedding_type="fourier",
             flip_sin_to_cos=True,
             norm_num_groups = 16,
             # use_timestep_embedding=True,
         )
+        # model = UNet2DModel.from_pretrained("google/ddpm-cifar10-32")
+
+        # Modify the model's configuration
+        # model.config.sample_size = 128
+        # self.unet = model
 
     def forward(self, x: torch.Tensor, t: torch.Tensor) -> torch.Tensor:
         # The UNet expects timesteps as float
@@ -78,51 +103,71 @@ class MultiScaleDSM(pl.LightningModule):
         self.score_net = ScoreNetwork(channels=channels, base_channels=base_channels)
 
         # Calculate sigma levels (noise scales)
-        self.sigmas = torch.exp(torch.linspace(
+        sigmas = torch.exp(torch.linspace(
             np.log(sigma_min), np.log(sigma_max), num_scales
-        )).cuda()
-
-        self.sigmas = torch.Tensor(np.linspace(sigma_min,sigma_max,num_scales)).cuda()
-
+        ))
+        sigmas = torch.round(sigmas, decimals=3)
+        self.register_buffer('sigmas', sigmas)
+        time_steps = self.sigma2time_step(self.sigmas)
         print('self.sigmas', self.sigmas)
+        print("t used in unet for conditional noise prediction", time_steps)
 
         # Initialize validation step counter
         self.val_step_count = 0
 
-    def forward(self, x: torch.Tensor, sigma_idx: int) -> torch.Tensor:
+    def sigma2time_step(self, sigma):
+        sigma = (sigma - self.sigma_min) / (self.sigma_max - self.sigma_min)
+        sigma = sigma*999
+        return sigma.long()
+
+    def forward(self, x: torch.Tensor, sigma: Union[float, torch.Tensor]) -> torch.Tensor:
         # Convert sigma index to timestep for the UNet
         # Scale to [0, 999] range which is commonly used in diffusion models
-        if not isinstance(sigma_idx, torch.Tensor):
-            sigma_idx = torch.tensor(sigma_idx, device=x.device)
-        t = (sigma_idx / self.num_scales * 999).expand(x.shape[0]).long().to(x.device)
+        if not isinstance(sigma, torch.Tensor):
+            sigma = torch.tensor(sigma, device=x.device)
+        t = self.sigma2time_step(sigma)
+        if t.numel()==1:
+            t = t.view(-1).expand(x.shape[0])
         return self.score_net(x, t)
 
     def get_sigma_weights(self) -> torch.Tensor:
         """
         Calculate sampling weights for sigma indices based on training progress.
-        Early in training: favor small sigmas
-        Late in training: favor large sigmas
+        - Start: Focus on small sigmas.
+        - Middle: Gradually shift focus to large sigmas.
+        - Final stage: Balance weights between small and large sigmas.
         """
         current_epoch = self.current_epoch
         progress = min(current_epoch / self.curriculum_epochs, 1.0)
 
-        # Create base weights
+        # Initialize weights with equal probabilities
         weights = torch.ones(self.num_scales, device=self.device)
+        if not self.training:
+            return weights / weights.sum()  # Equal probability during validation
 
-        # Early training: exponentially favor small sigmas
-        if progress < 0.5:
-            # Exponential decay from small to large sigmas
-            decay = 2.0 * (0.5 - progress)  # starts at 1.0, ends at 0.0
+        # Stage 1: Strong focus on small sigmas
+        if progress < 0.33:  # First 33% of training
+            decay = 2.0 * (0.33 - progress)  # Higher decay at start
             weights = torch.exp(-torch.arange(self.num_scales, device=self.device) * decay)
-        # Late training: exponentially favor large sigmas
-        else:
-            # Exponential growth from small to large sigmas
-            growth = 2.0 * (progress - 0.5)  # starts at 0.0, ends at 1.0
-            weights = torch.exp(torch.arange(self.num_scales, device=self.device) * growth)
+
+        # Stage 2: Gradual shift to larger sigmas
+        elif progress < 0.66:  # Middle 33%-66% of training
+            decay = 2.0 * (0.66 - progress)  # Decay decreases over time
+            growth = 2.0 * (progress - 0.33)  # Growth increases over time
+            weights = torch.exp(-torch.arange(self.num_scales, device=self.device) * decay) + \
+                    torch.exp(torch.arange(self.num_scales, device=self.device) * growth)
+
+        # Stage 3: Balance between small and large sigmas
+        else:  # Final 33% of training
+            balance = 1.0 + (progress - 0.66)  # Increase balance over time
+            small_sigma_focus = torch.exp(-torch.arange(self.num_scales, device=self.device) * balance)
+            large_sigma_focus = torch.exp(torch.arange(self.num_scales, device=self.device) * balance)
+            weights = small_sigma_focus + large_sigma_focus
 
         # Normalize weights to probabilities
         weights = weights / weights.sum()
         return weights
+
 
     def compute_loss(self, x: torch.Tensor, batch_size: Optional[int] = None) -> torch.Tensor:
         batch_size = x.shape[0]
@@ -132,7 +177,7 @@ class MultiScaleDSM(pl.LightningModule):
 
         # Log sigma probabilities during training
         if self.training and self.global_step % 100 == 0:  # Log every 100 steps
-            for sigma_idx, (sigma, prob) in enumerate(zip(self.sigmas, weights)):
+            for sigma, prob in zip(self.sigmas, weights):
                 self.log(f'sigma_prob/sigma_{sigma:.3f}', prob.item(), prog_bar=False, sync_dist=True)
 
         # Sample sigma indices according to weights
@@ -143,34 +188,37 @@ class MultiScaleDSM(pl.LightningModule):
         # Expand sigmas to match input dimensions
         sigmas = sigmas.view(-1, 1, 1, 1)
 
+        x = add_noise_input(x)
+
         # Generate noise and perturb input
-        noise = torch.randn_like(x) * sigmas
+        noise = torch.randn_like(x) * sigmas # each sample has its own noise
         perturbed_x = x + noise
 
         # Compute score
-        score = self.forward(perturbed_x, sigma_indices)
+        score = self.forward(perturbed_x, sigmas.view(-1))
         target = -noise / (sigmas ** 2)
 
         # Compute loss
-        loss = 0.5 * (sigmas ** 2) * F.mse_loss(score, target, reduction='none')
+
+        loss = 0.5 * (sigmas ** 2) * (score - target) ** 2
 
         # Log losses for specific sigma levels
         with torch.no_grad():
             if self.training:
                 # Log min sigma loss
-                min_mask = (sigma_indices == 0)
+                min_mask = (sigma_indices == 0) | (sigma_indices == 1)
                 if min_mask.any():
                     min_loss = loss[min_mask].detach().mean()
                     self.log('loss/sigma_min', min_loss, prog_bar=False, sync_dist=False)
 
                 # Log medium sigma loss
-                med_mask = (sigma_indices == self.num_scales // 2)
+                med_mask = (sigma_indices == self.num_scales // 2) | (sigma_indices == self.num_scales // 2 + 1)
                 if med_mask.any():
                     med_loss = loss[med_mask].detach().mean()
                     self.log('loss/sigma_med', med_loss, prog_bar=False, sync_dist=False)
 
                 # Log max sigma loss
-                max_mask = (sigma_indices == self.num_scales - 1)
+                max_mask = (sigma_indices == self.num_scales - 1) | (sigma_indices == self.num_scales - 2)
                 if max_mask.any():
                     max_loss = loss[max_mask].detach().mean()
                     self.log('loss/sigma_max', max_loss, prog_bar=False, sync_dist=False)
@@ -196,7 +244,9 @@ class MultiScaleDSM(pl.LightningModule):
         self.log('val_loss', loss, prog_bar=True, sync_dist=True)
 
         # Generate and log samples during validation
-        if batch_idx == 0 and self.val_step_count % 5 == 0:
+        # if batch_idx == 0 and self.val_step_count % 5 == 0:
+        # print("🔴 Validating...", self.val_step_count, self.local_rank, batch_idx)
+        if self.val_step_count % 100 == 0:
             self._log_generated_samples()
         self.val_step_count += 1
 
@@ -221,32 +271,29 @@ class MultiScaleDSM(pl.LightningModule):
         """Generate samples using annealed Langevin dynamics."""
         shape = (num_samples, 3, 128, 128)  # Assuming 128x128 RGB images
         x = torch.randn(*shape).to(device)
-        sigma_weights = self.sigmas / self.sigmas.sum()  # Normalized weights for each sigma
-        steps_per_sigma = (num_steps * sigma_weights).int()  # Allocate steps proportionally
-
-        for sigma_idx in reversed(range(self.num_scales)):
-            sigma = self.sigmas[sigma_idx]
-            step_size = eps * (sigma ** 2)
-
-            for _ in range(steps_per_sigma[sigma_idx]):
-                noise = torch.randn_like(x) * (2 * step_size)
-                score = self.forward(x, torch.tensor(sigma_idx, device=x.device))
-                x = x + step_size * score + noise
-
-        return x
+        images = []
+        for i in range(self.num_scales):
+            sigma = self.sigmas[self.num_scales - 1 - i]
+            sigma_step_size = eps * (sigma / self.sigmas[-1]) ** 2
+            for _ in range(num_steps):
+                noise = torch.randn_like(x) * math.sqrt(2 * sigma_step_size)
+                with torch.no_grad():
+                    score = self.forward(x, sigma)
+                x = x + sigma_step_size * score + noise
+                x = torch.clamp(x, 0, 1)
+            images.append(x)
+        images = torch.stack(images, dim=0) # shape [scales, num_samples, 3, 128, 128]
+        return images
 
     def _log_training_batch(self, batch: torch.Tensor):
         """Log original and noised versions of training batch."""
-        if not isinstance(self.logger, pl.loggers.TensorBoardLogger):
-            return
-
         with torch.no_grad():
             # Original images
             grid_clean = torchvision.utils.make_grid(
-                batch[:16].clamp(-1, 1),
+                batch[:16].clamp(0, 1),
                 nrow=4,
                 normalize=True,
-                value_range=(-1, 1)
+                value_range=(0, 1)
             )
 
             # Noised versions at different scales
@@ -255,10 +302,10 @@ class MultiScaleDSM(pl.LightningModule):
                 sigma = self.sigmas[sigma_idx]
                 noised_batch = batch[:16] + torch.randn_like(batch[:16]) * sigma
                 grid_noised = torchvision.utils.make_grid(
-                    noised_batch.clamp(-1, 1),
+                    noised_batch.clamp(0, 1),
                     nrow=4,
                     normalize=True,
-                    value_range=(-1, 1)
+                    value_range=(0, 1)
                 )
                 noised_grids.append(grid_noised)
 
@@ -275,7 +322,7 @@ class MultiScaleDSM(pl.LightningModule):
                     self.current_epoch
                 )
 
-    def _log_generated_samples(self, num_samples: int = 16):
+    def _log_generated_samples(self, num_samples: int = 2):
         """Generate and log samples to TensorBoard."""
         if not isinstance(self.logger, pl.loggers.TensorBoardLogger):
             return
@@ -284,46 +331,24 @@ class MultiScaleDSM(pl.LightningModule):
         with torch.no_grad():
             # Generate samples
             samples = self.sample(num_samples, device)
-
+            n_samples = samples.shape[1]
             # Create and log image grid
+            samples = samples.permute(1, 0, 2, 3, 4).reshape(-1, samples.shape[2], samples.shape[3], samples.shape[4])
             grid = torchvision.utils.make_grid(
-                samples.clamp(-1, 1),
-                nrow=4,
+                samples.clamp(0, 1),
+                nrow=n_samples,
                 normalize=True,
-                value_range=(-1, 1)
+                value_range=(0, 1)
             )
 
             # Log to TensorBoard
+            name = f'generated/global_{self.global_step}_rank_{self.local_rank}_val_step_{self.val_step_count}'
             self.logger.experiment.add_image(
-                'generated/samples',
+                name,
                 grid,
                 self.global_step
             )
 
-            # Log intermediate steps of generation
-            # if self.current_epoch % 10 == 0:  # Less frequent to save space
-            #     x = torch.randn(num_samples, 3, 128, 128).to(device)
-            #     for sigma_idx in reversed(range(0, self.num_scales, self.num_scales//4)):
-            #         sigma = self.sigmas[sigma_idx]
-            #         step_size = 2e-5 * (sigma ** 2)
-
-            #         # Single Langevin step
-            #         noise = torch.randn_like(x) *(2 * step_size)
-            #         score = self.forward(x, sigma_idx)
-            #         x = x + step_size * score + noise
-
-            #         # Log intermediate result
-            #         grid = torchvision.utils.make_grid(
-            #             x.clamp(-1, 1),
-            #             nrow=4,
-            #             normalize=True,
-            #             value_range=(-1, 1)
-            #         )
-            #         self.logger.experiment.add_image(
-            #             f'generated/intermediate_scale_{sigma_idx}',
-            #             grid,
-            #             self.global_step
-            #         )
 
 class AnimeDataModule(pl.LightningDataModule):
     def __init__(self, batch_size=64, val_ratio=0.1):
@@ -332,8 +357,12 @@ class AnimeDataModule(pl.LightningDataModule):
         self.val_ratio = val_ratio
         self.transform = transforms.Compose(
             [
+                transforms.RandomHorizontalFlip(p=0.5),
+                # transforms.RandomVerticalFlip(p=0.5),
+                transforms.RandomGrayscale(p=0.1),
+                transforms.ColorJitter(brightness=0.1, contrast=0.1, saturation=0.1, hue=0.05),
                 transforms.ToTensor(),
-                transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
+                # transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
             ]
         )
 
@@ -391,21 +420,23 @@ def main():
     model = MultiScaleDSM(
         channels=3,
         base_channels=64,
-        sigma_min=0.095,
+        sigma_min=0.01,
         sigma_max=1.2,
         num_scales=20,
-        lr=2e-4,
-        curriculum_epochs=100
+        lr=1e-4,
+        curriculum_epochs=2000,
     )
 
     # Initialize trainer with TensorBoard logger
     trainer = pl.Trainer(
         default_root_dir="/mnt/nas2/tdd/data-sync/minio/face/lilong/logs/ebm_anime/",
-        max_epochs=100,
+        max_epochs=2000,
         accelerator='auto',
+        benchmark=True,
+        deterministic=False,
         devices=-1,
         precision='bf16',
-        gradient_clip_val=0.1,
+        gradient_clip_val=0.01,
         logger=pl.loggers.TensorBoardLogger(
             save_dir="/mnt/nas2/tdd/data-sync/minio/face/lilong/logs/ebm_anime/",
             name='dsm_anime',
@@ -416,11 +447,10 @@ def main():
             pl.callbacks.ModelCheckpoint(
                 monitor='val_loss',
                 filename='dsm_{epoch:02d}_{val_loss:.3f}',
-                save_top_k=3,
+                # save_top_k=20,
+                every_n_epochs=10,
                 mode='min',
                 auto_insert_metric_name=False
-
-
             ),
             # Add learning rate monitoring
             pl.callbacks.LearningRateMonitor(logging_interval='step')
@@ -428,9 +458,13 @@ def main():
     )
 
     # Train model
-    trainer.fit(model, data_module)
+    ckpt_path='/mnt/nas2/tdd/data-sync/minio/face/lilong/logs/ebm_anime/dsm_anime/version_28/checkpoints/dsm_85_0.010.ckpt'
+
+    trainer.fit(model, data_module, ckpt_path=None)
     #  ckpt_path='/mnt/nas2/tdd/data-sync/minio/face/lilong/logs/ebm_anime/dsm_anime/version_21/checkpoints/dsm_22_0.12.ckpt')
 
 if __name__ == "__main__":
     torch.set_float32_matmul_precision('medium')
     main()
+    # ckpt_path='/mnt/nas2/tdd/data-sync/minio/face/lilong/logs/ebm_anime/dsm_anime/version_28/checkpoints/dsm_85_0.010.ckpt'
+    # load_and_sample(ckpt_path, n_samples=4, save_dir='samples', )
