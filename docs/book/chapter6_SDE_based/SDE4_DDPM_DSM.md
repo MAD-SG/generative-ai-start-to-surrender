@@ -1,7 +1,10 @@
 #  Stochastic Differential Equation for DDPM and DSM
 
-In this section, we show how connect SDE with the denoising defussion probabilistic model and the denoising score matching
+In this section, we show how connect SDE with the denoising defussion probabilistic model and
+the denoising score matching.
 
+
+## Autocorrelation
 
 In the context of the excerpt, the term “autocorrelation function” refers to the covariance
 
@@ -9,53 +12,103 @@ $$
  \mathbb{E}[\xi(t)\,\xi(t')]\quad
 $$
 
-of the noise process $\xi(\cdot)$ evaluated at two different times $t$ and $t'$. For an idealized
-**white‐noise**  process (as in standard Brownian motion), this autocorrelation is taken to be a **Dirac delta function** :
+of the noise process $\xi(\cdot)$ evaluated at two different times $t$ and $t'$. For an
+idealized **white‐noise**  process (as in standard Brownian motion), this autocorrelation is
+taken to be a **Dirac delta function** :
 
 $$
  \mathbb{E}[\xi(t)\,\xi(t')] \;=\;\delta(t - t').
 $$
 
-Intuitively, this means that $\xi(t)$ is “uncorrelated” with itself at any times $t \neq t'$, and all of its correlation is concentrated at the single point $t = t'$. In more precise terms, the Dirac delta is not a function in the usual sense but a distribution, capturing the idea that white noise has no memory or persistence in time—any two distinct instants are independent, but at the same instant the variance (or “intensity”) is infinite in such a way that it integrates to a finite value over an infinitesimal interval.
+Intuitively, this means that $\xi(t)$ is “uncorrelated” with itself at any times $t \neq t'$,
+and all of its correlation is concentrated at the single point $t = t'$. In more precise terms,
+the Dirac delta is not a function in the usual sense but a distribution, capturing the idea that
+white noise has no memory or persistence in time—any two distinct instants are independent,
+but at the same instant the variance (or “intensity”) is infinite in such a way that it integrates
+to a finite value over an infinitesimal interval.
 
 
 
 
-## 1. Forward Diffusion
-Suppose we have the *forward* SDE(1)$$
+## Forward Diffusion
+
+Suppose we have the *forward* SDE(1)
+
+$$
  \tag{1}
 dx \;=\; f(x,t)\,dt \;+\; g(t)\,dW_t,
 $$
-where $$W_t$$ is a standard Wiener process, and $$g(t)$$ is (for simplicity) taken to be spatially constant but possibly time‐dependent. Let $$p_t(x)$$ be the probability density of $$x_t$$ at time $$t$$.
-### 1.1. Fokker–Planck (Forward Kolmogorov) Equation
-The density $$p_t(x)$$ satisfies the Fokker–Planck (or forward‐Kolmogorov) PDE$$
+
+where $W_t$ is a standard Wiener process, and $g(t)$ is (for simplicity) taken to be spatially
+constant but possibly time‐dependent. Let $p_t(x)$ be the probability density of $x_t$ at
+time $t$.
+
+## Reverse Diffusion
+Suppose $p_t(x)$ is the density metric for $x$ at time $t$, then by the Fokker-Planck Equation, we have
+
+$$
+\tag{2}
+ dx \;=\;
+\bigl[f(x,t)\;-\;g(t)^2\,\nabla_x \log p_{t}(x)\bigr]\;dt \;+\; g(t)\,d\overline{W}_t,
+$$
+
+In the following, we give more details why this backward diffusion holds for the density function
+$p_t(x)$.
+
+###  Fokker–Planck (Forward Kolmogorov) Equation
+
+The density $p_t(x)$ satisfies the Fokker–Planck (or forward‐Kolmogorov) PDE
+
+$$\tag{3}
  \frac{\partial p_t(x)}{\partial t}
 \;=\;
 -\nabla\!\cdot\!\bigl[f(x,t)\,p_t(x)\bigr]
 \;+\;
 \frac{1}{2}\,g(t)^2\,\Delta p_t(x),
 $$
-where $$\Delta$$ is the Laplacian in $$x$$.
+where $\Delta$ is the Laplacian in $x$.
 
----
+**NOTE**
 
+>  In **one dimension** , the Laplacian simplifies to:
+>
+>  $$
+>  \Delta p_t(x) = \frac{\partial^2 p_t(x)}{\partial x^2}
+>  $$
+>
+>  In **higher dimensions** , the Laplacian is given by:
+>
+>  $$
+>  \Delta p_t(x) = \sum_{i=1}^{d} \frac{\partial^2 p_t(x)}{\partial x_i^2}
+>  $$
+>
+>  where $d$ is the dimension of the space. Thus, in the context of the **Fokker-Planck equation**, the Laplacian term governs the **diffusive spreading**  of the probability density due to the noise term $g(t) dW_t$ in the associated SDE.
 
-## 2. Time‐Reversal Strategy
-We want an SDE whose sample paths “run backward” in time with the *same* distributions as $$(x_t)$$ running forward. Concretely, define$$
+Now we prove that the reverse diffusion formula
+
+###  Time‐Reversal Strategy
+We want an SDE whose sample paths “run backward” in time with the *same* distributions as $(x_t)$
+ running forward. Concretely, define
+
+ $$
  \hat{X}_s \;=\; x_{T - s}
 \quad
 \text{for } 0 \le s \le T.
 $$
-That is, $$\hat{X}_0 = x_T$$, $$\hat{X}_T = x_0$$. Our goal is to find a stochastic differential equation of the form(2)$$
+
+That is, $\hat{X}_0 = x_T$, $\hat{X}_T = x_0$. Our goal is to find a stochastic differential
+equation of the form
+
+$$
  \tag{2}
 d\hat{X}_s
 \;=\; \hat{f}\bigl(\hat{X}_s, s\bigr)\,ds
 \;+\;
 g(T-s)\,d\overline{W}_s
 $$
-(where $$\overline{W}_s$$ is another Wiener process) such that $$\hat{X}_s$$ has the *same* distribution as $$x_{T-s}$$.In other words, if $$q_s(x)$$ denotes the density of $$\hat{X}_s$$, we want $$q_s(x) = p_{T-s}(x)$$. We must determine the drift $$\hat{f}(x,s)$$.
 
----
+(where $\overline{W}_s$ is another Wiener process) such that $\hat{X}_s$ has the *same* distribution as $x_{T-s}$.In other words, if $q_s(x)$ denotes the density of $\hat{X}_s$, we want $q_s(x) = p_{T-s}(x)$. We must determine the drift $\hat{f}(x,s)$.
+
 
 
 ## 3. Matching Probability Densities via Fokker–Planck
@@ -157,7 +210,10 @@ f(\hat{X}_s,\,T-s)
 g(T-s)\,d\overline{W}_s.
 }
 $$
-Often one writes the time variable in the same forward direction and just says “the reverse‐time SDE from $$t$$ down to 0 is$$
+Often one writes the time variable in the same forward direction and just says
+“the reverse‐time SDE from $$t$$ down to 0 is
+
+$$
  dx \;=\;
 \bigl[f(x,t)\;-\;g(t)^2\,\nabla_x \log p_{t}(x)\bigr]\;dt \;+\; g(t)\,d\overline{W}_t,
 $$
