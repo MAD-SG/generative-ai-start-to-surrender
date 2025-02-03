@@ -1086,7 +1086,7 @@
 <h1 id="stochastic-differential-equation-for-ddpm-and-dsm">Stochastic Differential Equation for DDPM and DSM<a class="headerlink" href="#stochastic-differential-equation-for-ddpm-and-dsm" title="Permanent link">&para;</a></h1>
 <p>In this section, we show how connect SDE with the denoising defussion probabilistic model and
 the denoising score matching.</p>
-<h2 id="autocorrelation">Autocorrelation<a class="headerlink" href="#autocorrelation" title="Permanent link">&para;</a></h2>
+<h2 id="1-autocorrelation">1. Autocorrelation<a class="headerlink" href="#1-autocorrelation" title="Permanent link">&para;</a></h2>
 <p>In the context of the excerpt, the term “autocorrelation function” refers to the covariance</p>
 <div class="arithmatex">\[
  \mathbb{E}[\xi(t)\,\xi(t')]\quad
@@ -1103,7 +1103,7 @@ the Dirac delta is not a function in the usual sense but a distribution, capturi
 white noise has no memory or persistence in time—any two distinct instants are independent,
 but at the same instant the variance (or “intensity”) is infinite in such a way that it integrates
 to a finite value over an infinitesimal interval.</p>
-<h2 id="forward-diffusion">Forward Diffusion<a class="headerlink" href="#forward-diffusion" title="Permanent link">&para;</a></h2>
+<h2 id="2-forward-diffusion">2. Forward Diffusion<a class="headerlink" href="#2-forward-diffusion" title="Permanent link">&para;</a></h2>
 <p>Suppose we have the <em>forward</em> SDE(1)</p>
 <div class="arithmatex">\[
  \tag{1}
@@ -1112,7 +1112,7 @@ dx \;=\; f(x,t)\,dt \;+\; g(t)\,dW_t,
 <p>where <span class="arithmatex">\(W_t\)</span> is a standard Wiener process, and <span class="arithmatex">\(g(t)\)</span> is (for simplicity) taken to be spatially
 constant but possibly time‐dependent. Let <span class="arithmatex">\(p_t(x)\)</span> be the probability density of <span class="arithmatex">\(x_t\)</span> at
 time <span class="arithmatex">\(t\)</span>.</p>
-<h2 id="reverse-diffusion">Reverse Diffusion<a class="headerlink" href="#reverse-diffusion" title="Permanent link">&para;</a></h2>
+<h2 id="3-reverse-diffusion">3. Reverse Diffusion<a class="headerlink" href="#3-reverse-diffusion" title="Permanent link">&para;</a></h2>
 <p>Suppose <span class="arithmatex">\(p_t(x)\)</span> is the density metric for <span class="arithmatex">\(x\)</span> at time <span class="arithmatex">\(t\)</span>, then by the Fokker-Planck Equation, we have</p>
 <div class="arithmatex">\[
 \tag{2}
@@ -1147,136 +1147,147 @@ where <span class="arithmatex">\(\Delta\)</span> is the Laplacian in <span class
 <h3 id="timereversal-strategy">Time‐Reversal Strategy<a class="headerlink" href="#timereversal-strategy" title="Permanent link">&para;</a></h3>
 <p>We want an SDE whose sample paths “run backward” in time with the <em>same</em> distributions as <span class="arithmatex">\((x_t)\)</span>
  running forward. Concretely, define</p>
-<p>$$
- \hat{X}<em>s \;=\; x</em>{T - s}
+<div class="arithmatex">\[
+ \hat{X}_s \;=\; x_{T - s}
 \quad
 \text{for } 0 \le s \le T.
-$$</p>
-<p>That is, <span class="arithmatex">\(\hat{X}_0 = x_T\)</span>, <span class="arithmatex">\(\hat{X}_T = x_0\)</span>. Our goal is to find a stochastic differential
+\]</div>
+<p>That is, <span class="arithmatex">\(\hat{X}_0 = x_{T}\)</span>, <span class="arithmatex">\(\hat{X}_T = x_0\)</span>. Our goal is to find a stochastic differential
 equation of the form</p>
 <div class="arithmatex">\[
- \tag{2}
+ \tag{4}
 d\hat{X}_s
 \;=\; \hat{f}\bigl(\hat{X}_s, s\bigr)\,ds
 \;+\;
 g(T-s)\,d\overline{W}_s
 \]</div>
 <p>(where <span class="arithmatex">\(\overline{W}_s\)</span> is another Wiener process) such that <span class="arithmatex">\(\hat{X}_s\)</span> has the <em>same</em> distribution as <span class="arithmatex">\(x_{T-s}\)</span>.In other words, if <span class="arithmatex">\(q_s(x)\)</span> denotes the density of <span class="arithmatex">\(\hat{X}_s\)</span>, we want <span class="arithmatex">\(q_s(x) = p_{T-s}(x)\)</span>. We must determine the drift <span class="arithmatex">\(\hat{f}(x,s)\)</span>.</p>
-<h2 id="3-matching-probability-densities-via-fokkerplanck">3. Matching Probability Densities via Fokker–Planck<a class="headerlink" href="#3-matching-probability-densities-via-fokkerplanck" title="Permanent link">&para;</a></h2>
-<h3 id="31-pde-for-the-reverse-process">3.1. PDE for the reverse process<a class="headerlink" href="#31-pde-for-the-reverse-process" title="Permanent link">&para;</a></h3>
-<p>If <span class="arithmatex">\(<span class="arithmatex">\(\hat{X}_s\)</span>\)</span> satisfies$$
- d\hat{X}<em>s
+<h3 id="matching-probability-densities-via-fokkerplanck">Matching Probability Densities via Fokker–Planck<a class="headerlink" href="#matching-probability-densities-via-fokkerplanck" title="Permanent link">&para;</a></h3>
+<h4 id="pde-for-the-reverse-process">PDE for the reverse process<a class="headerlink" href="#pde-for-the-reverse-process" title="Permanent link">&para;</a></h4>
+<p>If <span class="arithmatex">\(\hat{X}_s\)</span> satisfies</p>
+<div class="arithmatex">\[
+ d\hat{X}_s
 = \hat{f}(\hat{X}_s, s)\,ds
 \;+\;
 g(T-s)\,d\overline{W}_s,
-$$
-then its density <span class="arithmatex">(<span class="arithmatex">\(q_s(x)\)</span>\)</span> obeys$$
+\]</div>
+<p>then its density <span class="arithmatex">\(q_s(x)\)</span> obeys</p>
+<div class="arithmatex">\[
  \frac{\partial q_s(x)}{\partial s}
 \;=\;
 -\nabla \cdot \bigl[\hat{f}(x, s)\;q_s(x)\bigr]
 \;+\;
 \frac{1}{2}\,g(T-s)^2\;\Delta\,q_s(x).
-$$
-We require <span class="arithmatex">(<span class="arithmatex">\(q_s(x) = p_{T-s}(x)\)</span>\)</span>. Substitute <span class="arithmatex">(<span class="arithmatex">\(q_s(x) = p_{T-s}(x)\)</span>\)</span> into the PDE. Note that$$
- \frac{\partial}{\partial s}\,p</em>{T-s}(x)
+\]</div>
+<p>We require <span class="arithmatex">\(q_s(x) = p_{T-s}(x)\)</span>. Substitute <span class="arithmatex">\(q_s(x) = p_{T-s}(x)\)</span> into the PDE. Note that</p>
+<div class="arithmatex">\[
+ \frac{\partial}{\partial s}\,p_{T-s}(x)
 \;=\;
 -\,\frac{\partial}{\partial t}\,p_{t}(x)\Bigr|_{\,t=T-s}.
-$$</p>
-<p>Hence
-$$
+\]</div>
+<p>Hence</p>
+<div class="arithmatex">\[
  \frac{\partial q_s}{\partial s}(x)
 \;=\;
--\,\frac{\partial}{\partial t}\,p_{t}(x)\Bigr|<em>{t=T-s}.
-$$
-But from the <em>forward</em> Fokker–Planck equation, we know$$
- \frac{\partial}{\partial t}\,p</em>{t}(x)
+-\,\frac{\partial}{\partial t}\,p_{t}(x)\Bigr|_{t=T-s}.
+\]</div>
+<p>But from the <em>forward</em> Fokker–Planck equation, we know</p>
+<div class="arithmatex">\[
+ \frac{\partial}{\partial t}\,p_{t}(x)
 \;=\;
--\nabla!\cdot!\bigl[f(x,t)\,p_t(x)\bigr]
+-\nabla\!\cdot\!\bigl[f(x,t)\,p_t(x)\bigr]
 +\tfrac{1}{2}\,g(t)^2\,\Delta\,p_t(x).
-$$
-Putting <span class="arithmatex">\(<span class="arithmatex">\(t = T-s\)</span>\)</span> and changing the sign, we get$$
+\]</div>
+<p>Putting <span class="arithmatex">\(t = T-s\)</span> and changing the sign, we get</p>
+<div class="arithmatex">\[
  \frac{\partial q_s}{\partial s}(x)
 \;=\;
-+\nabla!\cdot!\bigl[f(x,T-s)\,p_{T-s}(x)\bigr]
++\nabla\!\cdot\!\bigl[f(x,T-s)\,p_{T-s}(x)\bigr]
 \;-\;
 \tfrac{1}{2}\,g(T-s)^2\,\Delta\,p_{T-s}(x).
-$$
-3.2. Identifying the reversed drift <span class="arithmatex">\(<span class="arithmatex">\(\hat{f}\)</span>\)</span>Meanwhile, from the PDE for <span class="arithmatex">\(<span class="arithmatex">\(q_s\)</span>\)</span> we also have$$
- \frac{\partial q_s}{\partial s}(x)
+\]</div>
+<p>Identifying the reversed drift <span class="arithmatex">\(\hat{f}\)</span> Meanwhile, from the PDE for <span class="arithmatex">\(q_s\)</span> we also have</p>
+<div class="arithmatex">\[
+\frac{\partial q_s}{\partial s}(x)
 \;=\;
--\,\nabla!\cdot!\bigl[\hat{f}(x,s)\,q_s(x)\bigr]
+-\,\nabla\!\cdot\!\bigl[\hat{f}(x,s)\,q_s(x)\bigr]
 \;+\;
 \tfrac12\,g(T-s)^2\,\Delta\,q_s(x).
-$$
-Because <span class="arithmatex">\(<span class="arithmatex">\(q_s(x) = p_{T-s}(x)\)</span>\)</span>, we can equate the two expressions. Matching terms gives$$
- \nabla!\cdot!\bigl[\hat{f}(x,s)\,p_{T-s}(x)\bigr]
+\]</div>
+<p>Because <span class="arithmatex">\(q_s(x) = p_{T-s}(x)\)</span>, we can equate the two expressions. Matching terms gives</p>
+<div class="arithmatex">\[
+\nabla\!\cdot\!\bigl[\hat{f}(x,s)\,p_{T-s}(x)\bigr]
 \;=\;
--\,\nabla!\cdot!\bigl[f(x,T-s)\,p_{T-s}(x)\bigr]
+-\,\nabla\!\cdot\!\bigl[f(x,T-s)\,p_{T-s}(x)\bigr]
 \;+\;
-g(T-s)^2 \,\nabla !\cdot!\bigl[\tfrac12\,p_{T-s}(x)\bigr],
-$$
-where we used that <span class="arithmatex">\(<span class="arithmatex">\(\Delta\,p_{T-s}(x) = \nabla \cdot (\nabla\,p_{T-s}(x))\)</span>\)</span>. Rearrange:$$
- \nabla!\cdot!\Bigl[\hat{f}(x,s)\,p_{T-s}(x)\Bigr]
+g(T-s)^2 \,\nabla \!\cdot\!\bigl[\tfrac12\,p_{T-s}(x)\bigr],
+\]</div>
+<p>where we used that</p>
+<div class="arithmatex">\[
+\Delta\,p_{T-s}(x) = \nabla \cdot (\nabla\,p_{T-s}(x))
+\]</div>
+<p>Rearrange:</p>
+<div class="arithmatex">\[
+ \nabla\!\cdot\!\Bigl[\hat{f}(x,s)\,p_{T-s}(x)\Bigr]
 \;=\;
--\nabla!\cdot!\Bigl[f(x,T-s)\,p_{T-s}(x)\Bigr]
+-\nabla\!\cdot\!\Bigl[f(x,T-s)\,p_{T-s}(x)\Bigr]
 \;+\;
-\tfrac12\,g(T-s)^2\,\nabla \cdot!\Bigl[\nabla\,p_{T-s}(x)\Bigr].
-$$
-We can factor out <span class="arithmatex">\(<span class="arithmatex">\(p_{T-s}(x)\)</span>\)</span> to write$$
- \hat{f}(x,s)\,p_{T-s}(x)
+\tfrac12\,g(T-s)^2\,\nabla \cdot\!\Bigl[\nabla\,p_{T-s}(x)\Bigr].
+\]</div>
+<p>We can factor out <span class="arithmatex">\(p_{T-s}(x)\)</span> to write</p>
+<div class="arithmatex">\[
+\hat{f}(x,s)\,p_{T-s}(x)
 \;=\;
 f(x,T-s)\,p_{T-s}(x)
 \;-\;
 \tfrac12\,g(T-s)^2\,\nabla\,p_{T-s}(x)
 \;+\;
 \text{(gradient‐free constant in } x\text{)},
-$$
-but the divergence‐free “constant” in <span class="arithmatex">\(<span class="arithmatex">\(x\)</span>\)</span> must be zero if we want the correct boundary conditions at infinity and a well‐defined velocity field. Dividing both sides by <span class="arithmatex">\(<span class="arithmatex">\(p_{T-s}(x)\)</span>\)</span> then yields$$
- \hat{f}(x,s)
+\]</div>
+<p>but the divergence‐free “constant” in <span class="arithmatex">\(x\)</span> must be zero if we want the correct boundary conditions at infinity and a well‐defined velocity field. Dividing both sides by <span class="arithmatex">\(p_{T-s}(x)\)</span> then yields</p>
+<div class="arithmatex">\[
+\hat{f}(x,s)
 \;=\;
 f(x,T-s)
 \;-\;
 \tfrac12\,g(T-s)^2\,\nabla \log p_{T-s}(x).
-$$</p>
+\]</div>
 <p>This is precisely the extra “score‐function” correction term discovered by Nelson and Anderson.</p>
-<hr />
-<h2 id="4-final-reverse-sde">4. Final Reverse SDE<a class="headerlink" href="#4-final-reverse-sde" title="Permanent link">&para;</a></h2>
-<p>Hence the <em>reversed</em> SDE can be written as$$
- \boxed{
-d\hat{X}<em>s
+<h4 id="final-reverse-sde">Final Reverse SDE<a class="headerlink" href="#final-reverse-sde" title="Permanent link">&para;</a></h4>
+<p>Hence the <em>reversed</em> SDE can be written as</p>
+<div class="arithmatex">\[
+\boxed{
+d\hat{X}_s
 \;=\;
 \Bigl[
 f(\hat{X}_s,\,T-s)
 \;-\;
-\tfrac12\,g(T-s)^2\,\nabla \log p</em>{T-s}(\hat{X}_s)
+\tfrac12\,g(T-s)^2\,\nabla \log p_{T-s}(\hat{X}_s)
 \Bigr]\;ds
 \;+\;
 g(T-s)\,d\overline{W}_s.
 }
-$$
-Often one writes the time variable in the same forward direction and just says
-“the reverse‐time SDE from <span class="arithmatex">\(<span class="arithmatex">\(t\)</span>\)</span> down to 0 is</p>
+\]</div>
+<p>Often one writes the time variable in the same forward direction and just says
+“the reverse‐time SDE from <span class="arithmatex">\(t\)</span> down to 0 is</p>
 <div class="arithmatex">\[
- dx \;=\;
+dx \;=\;
 \bigl[f(x,t)\;-\;g(t)^2\,\nabla_x \log p_{t}(x)\bigr]\;dt \;+\; g(t)\,d\overline{W}_t,
 \]</div>
-<p>”
-where <span class="arithmatex">\(<span class="arithmatex">\(\overline{W}_t\)</span>\)</span> is a standard Wiener process <em>when viewed backward</em> in the original clock. In either notation, the key extra piece is <span class="arithmatex">\(<span class="arithmatex">\(\,-\,g^{2}\nabla\log p_{t}(\cdot)\)</span>\)</span>, which ensures the <em>distributions</em> truly run in reverse.</p>
-<hr />
-<h3 id="key-intuition">Key Intuition<a class="headerlink" href="#key-intuition" title="Permanent link">&para;</a></h3>
+<p>where <span class="arithmatex">\(\overline{W}_t\)</span> is a standard Wiener process <em>when viewed backward</em> in the original clock. In either notation, the key extra piece is <span class="arithmatex">\(\,-\,g^{2}\nabla\log p_{t}(\cdot)\)</span>, which ensures the <em>distributions</em> truly run in reverse.</p>
 <ul>
 <li>
 <p>The drift in the reverse process must “compensate” for how diffusion was spreading mass forward in time.</p>
 </li>
 <li>
-<p>This compensation appears as <span class="arithmatex">\(<span class="arithmatex">\(\,-\,\tfrac12\,g^2 \nabla \log p_t(x)\)</span>\)</span>.</p>
+<p>This compensation appears as <span class="arithmatex">\(\,-\,\tfrac12\,g^2 \nabla \log p_t(x)\)</span>.</p>
 </li>
 <li>
-<p>Equivalently, one can say that in the backward direction, the random walk “knows” how to concentrate probability back into regions from which it had been dispersing forward.
-This completes the derivation (sometimes known as <em>Anderson’s theorem</em>).</p>
+<p>Equivalently, one can say that in the backward direction, the random walk “knows” how to concentrate probability back into regions from which it had been dispersing forward.</p>
 </li>
 </ul>
-<p>hought about Fokker-Planck equation for 4 秒<strong>Understanding the Fokker–Planck Equation: A Gentle Introduction</strong> In many physical, biological, and financial systems, we are often interested not only in the behavior of individual particles or agents but also in how <em>probability distributions</em> evolve over time. If you have ever encountered a situation where randomness (noise) and drift (directed motion) both play roles in the dynamics, you have likely brushed up against the <em>Fokker–Planck equation (FP equation)</em>.
+<p>This completes the derivation (sometimes known as <em>Anderson’s theorem</em>).</p>
+<p><strong>Understanding the Fokker–Planck Equation: A Gentle Introduction</strong> In many physical, biological, and financial systems, we are often interested not only in the behavior of individual particles or agents but also in how <em>probability distributions</em> evolve over time. If you have ever encountered a situation where randomness (noise) and drift (directed motion) both play roles in the dynamics, you have likely brushed up against the <em>Fokker–Planck equation (FP equation)</em>.
 In this blog, we will explore:</p>
 <ol>
 <li>
@@ -1289,12 +1300,180 @@ In this blog, we will explore:</p>
 <p><strong>An intuitive explanation to help you understand it deeply.</strong></p>
 </li>
 </ol>
+<h2 id="4-stochastic-differential-equation-for-ddpm">4. Stochastic Differential Equation for DDPM<a class="headerlink" href="#4-stochastic-differential-equation-for-ddpm" title="Permanent link">&para;</a></h2>
+<p>Denoising Diffusion Probabilistic Models (DDPMs) are generative models that progressively add noise to data in a forward process, and then learn to invert this process to generate new data samples from noise. In the original DDPM (Ho et al., 2020), the forward diffusion is discrete, applying noise in <span class="arithmatex">\(N\)</span> steps until data become (approximately) Gaussian. The reverse process is also defined discretely, denoising step by step.
+Recent perspectives (Song et al., 2021) have shown that we can view diffusion models in <em>continuous time</em>, describing them via SDEs. This text shows how the discrete forward process in DDPM converges to a continuous SDE when we let the number of steps <span class="arithmatex">\(N \to \infty\)</span>, and how the corresponding reverse SDE aligns with the DDPM reverse noising formula.</p>
+<h3 id="41-discrete-forward-process-in-ddpm">4.1 Discrete Forward Process in DDPM<a class="headerlink" href="#41-discrete-forward-process-in-ddpm" title="Permanent link">&para;</a></h3>
+<p>In the standard (discrete) DDPM, each forward step is:</p>
+<div class="arithmatex">\[
+ x_i \;=\; \sqrt{1 - \beta_i}\, x_{i-1} \;+\; \sqrt{\beta_i}\,\epsilon_i,
+\quad
+\epsilon_i \sim \mathcal{N}(0, I),
+\quad i=1,\dots,N.
+\]</div>
+<ul>
+<li>
+<p><span class="arithmatex">\(\beta_i \in [0,1]\)</span> is the noise intensity at step <span class="arithmatex">\(i\)</span>.</p>
+</li>
+<li>
+<p><span class="arithmatex">\(x_0\)</span> is sampled from the real data distribution <span class="arithmatex">\(p_{\mathrm{data}}\)</span>.</p>
+</li>
+<li>
+<p>After <span class="arithmatex">\(N\)</span> steps, <span class="arithmatex">\(x_N\)</span> is (approximately) Gaussian.
+Often, <span class="arithmatex">\(\beta_i\)</span> is chosen according to a schedule (e.g. linear, cosine) from a small value to a moderately larger one. Even if some <span class="arithmatex">\(\beta_i\)</span> are not <em>very</em> small, we can view each step as adding Gaussian noise to the current sample.</p>
+</li>
+</ul>
+<h3 id="42-splitting-large-steps-via-gaussian-additivity">4.2 Splitting Large Steps via Gaussian Additivity<a class="headerlink" href="#42-splitting-large-steps-via-gaussian-additivity" title="Permanent link">&para;</a></h3>
+<p>A key observation is that a single “large step” of Gaussian noise can be <em>split</em> into many smaller Gaussian increments without changing the <strong>final distribution</strong> . Formally, if</p>
+<p>$$
+ x_{i}
+\;=\; \sqrt{1-\beta_i}\,x_{i-1} \;+\; \sqrt{\beta_i}\,\epsilon_i,
+$$
+we can represent <span class="arithmatex">\(\epsilon_i\)</span> as the sum of <span class="arithmatex">\(M\)</span> smaller Gaussians of variance <span class="arithmatex">\(\beta_i/M\)</span>. In other words, we can rewrite that same update with <span class="arithmatex">\(M\)</span> micro-steps, each of which has variance <span class="arithmatex">\(\beta_i/M\)</span>. Because Gaussians are closed under convolution, <span class="arithmatex">\(M\)</span> small steps or <span class="arithmatex">\(1\)</span> big step produce the <em>same</em> marginal distribution for <span class="arithmatex">\(x_i\)</span>.
+When <span class="arithmatex">\(M \to \infty\)</span>, each micro-step becomes infinitesimally small. Hence, we can imagine the entire forward diffusion as a limit of infinitely many tiny Gaussian increments. This viewpoint paves the way to interpret the forward process as a stochastic differential equation.</p>
 <hr />
-<h2 id="1-what-is-the-fokkerplanck-equation">1. What is the Fokker–Planck Equation?<a class="headerlink" href="#1-what-is-the-fokkerplanck-equation" title="Permanent link">&para;</a></h2>
-<p>Put simply, the Fokker–Planck equation describes how the <em>probability density function</em> (PDF) of a stochastic (random) process evolves over time. More formally, if we let <span class="arithmatex">\(p(x,t)\)</span> be the probability density of finding the system in state <span class="arithmatex">\(x\)</span> at time <span class="arithmatex">\(t\)</span>, the Fokker–Planck equation reads:$$
- \frac{\partial p(x,t)}{\partial t} = -\frac{\partial}{\partial x}\big[\,\mu(x)\,p(x,t)\big]
-+ \frac{1}{2}\,\frac{\partial^2}{\partial x^2}\big[\,D(x)\,p(x,t)\big],
+<h2 id="4-from-discrete-updates-to-a-continuous-sde">4. From Discrete Updates to a Continuous SDE<a class="headerlink" href="#4-from-discrete-updates-to-a-continuous-sde" title="Permanent link">&para;</a></h2>
+<h3 id="41-mapping-steps-to-time">4.1 Mapping Steps to Time<a class="headerlink" href="#41-mapping-steps-to-time" title="Permanent link">&para;</a></h3>
+<p>Let the total diffusion run over time <span class="arithmatex">\(t \in [0,1]\)</span>, with discrete steps <span class="arithmatex">\(t_i = i/N\)</span>. Denote <span class="arithmatex">\(\Delta t = 1/N\)</span>. Suppose we set
+$$
+ \beta_i \;\approx\; \beta(t_i)\,\Delta t,
 $$</p>
+<p>where <span class="arithmatex">\(\beta(\cdot)\)</span> is some bounded nonnegative function on <span class="arithmatex">\([0,1]\)</span>.</p>
+<h3 id="42-taylor-expansion-argument">4.2 Taylor Expansion Argument<a class="headerlink" href="#42-taylor-expansion-argument" title="Permanent link">&para;</a></h3>
+<p>Consider one discrete step:</p>
+<div class="arithmatex">\[
+x_{i}=\sqrt{1-\beta_i}\,x_{i-1} \;+\; \sqrt{\beta_i}\,\epsilon_i.
+\]</div>
+<p>If <span class="arithmatex">\(\beta_i\)</span> is small, we use a first-order expansion:</p>
+<div class="arithmatex">\[
+ \sqrt{1-\beta_i}
+\;\approx\;
+1 \;-\; \tfrac12\,\beta_i.
+\]</div>
+<p>Then</p>
+<div class="arithmatex">\[
+x_i - x_{i-1}\;\approx\;-\tfrac12\,\beta_i\,x_{i-1}\;+\; \sqrt{\beta_i}\,\epsilon_i.
+\]</div>
+<p>Suppose <span class="arithmatex">\(x_i = x_{t+\Delta t}\)</span> and <span class="arithmatex">\(x_{i-1}= x_{t}\)</span>,
+Hence</p>
+<div class="arithmatex">\[
+\begin{aligned}
+x_{t + \Delta t}  - x_{t} &amp;= -\frac{1}{2} \beta (t + \Delta t) \Delta t x_{t} + \sqrt{\beta(t+\Delta t)\Delta t}\epsilon_t\\
+&amp;\approx  -\frac{1}{2} \beta (t ) \Delta t x_{t} + \sqrt{\beta(t)\Delta t}\epsilon_t \\
+&amp; = -\frac{1}{2} \beta (t ) x_{t} \Delta t + \sqrt{\beta(t)} \Delta t \epsilon_t \\
+&amp; = -\frac{1}{2} \beta (t ) x_{t} \Delta t + \sqrt{\beta(t)} \big(W(t+\Delta t)- W(t) \big)\\
+&amp; = -\frac{1}{2} \beta (t ) x_{t} \Delta t + \sqrt{\beta(t)} dW
+\end{aligned}
+\]</div>
+<p>Note that</p>
+<div class="arithmatex">\[
+W(t + \Delta t) - W(t) \sim \mathcal{N}(0, \Delta t).
+\]</div>
+<p>Thus in the limit we get the SDE:</p>
+<div class="arithmatex">\[
+d x = -\tfrac12\,\beta(t)\,x\,dt \;+\; \sqrt{\beta(t)}\,dw
+\]</div>
+<p>This is often referred to as the <strong>Variance Preserving SDE (VP-SDE)</strong>  in the score-based literature.</p>
+<h3 id="43-splitting-steps-argument">4.3 Splitting Steps Argument<a class="headerlink" href="#43-splitting-steps-argument" title="Permanent link">&para;</a></h3>
+<p>Alternatively, if <span class="arithmatex">\(\beta_i\)</span> is not initially small, we can split each “big step” into <span class="arithmatex">\(M\)</span> micro-steps of size <span class="arithmatex">\(\beta_i/M\)</span>. If we then let <span class="arithmatex">\(N \to \infty\)</span> and <span class="arithmatex">\(M \to \infty\)</span>, so that <span class="arithmatex">\(\beta_i/M \to 0\)</span>, the entire chain of <span class="arithmatex">\(N\times M\)</span> micro-steps again converges to the same SDE. Both methods lead to the conclusion:</p>
+<div class="arithmatex">\[
+ \boxed{
+\text{Forward SDE: }
+dx = -\tfrac12\,\beta(t)\,x\,dt \;+\; \sqrt{\beta(t)}\,dw.
+}
+\]</div>
+<h3 id="44-the-reverse-sde">4.4. The Reverse SDE<a class="headerlink" href="#44-the-reverse-sde" title="Permanent link">&para;</a></h3>
+<p>Given a forward SDE</p>
+<div class="arithmatex">\[
+ dx = f(x,t)\,dt \;+\; g(t)\,dw,
+\]</div>
+<p>the <em>reverse-time</em> SDE is given by (Anderson, 1982; Song et al., 2021):</p>
+<div class="arithmatex">\[
+d\tilde{x}=\bigl[f(\tilde{x}, t) \;-\; g(t)^2\,\nabla_{\tilde{x}}\!\log p_t(\tilde{x})\bigr]\;dt \;+\; g(t)\,d\tilde{w},
+\]</div>
+<p>where <span class="arithmatex">\(\tilde{w}\)</span> is a Brownian motion in reverse time, and <span class="arithmatex">\(\nabla_{\tilde{x}}!\log p_t(\tilde{x})\)</span> is the <em>score</em> function (gradient of the log density) at time <span class="arithmatex">\(t\)</span>.</p>
+<p>When <span class="arithmatex">\(f(x,t) = -\tfrac12,\beta(t),x\)</span> and <span class="arithmatex">\(g(t)=\sqrt{\beta(t)}\)</span>, the reverse SDE becomes:</p>
+<div class="arithmatex">\[
+d\tilde{x}(t)= - \bigl[\tfrac12\,\beta(t)\,\tilde{x}+\beta(t)\,\nabla_{\tilde{x}}\!\log p_t(\tilde{x})\bigr]\;dt \;+\;\sqrt{\beta(t)}\,d\tilde{w}.
+\]</div>
+<h3 id="43-consistency-with-ddpms-reverse">4.3 Consistency with DDPM’s Reverse<a class="headerlink" href="#43-consistency-with-ddpms-reverse" title="Permanent link">&para;</a></h3>
+<p>Review the reserve step in DDPM</p>
+<div class="arithmatex">\[\tag{5}\boxed{
+x_{t-1} = \frac{1}{\sqrt{1-\beta_t}}\left(x_t - \frac{\beta_t}{\sqrt{1-\bar{\alpha}_t}}\,\epsilon_\theta(x_t,t)\right) + \sqrt{\tilde{\beta}_t}\,z,\quad z\sim\mathcal{N}(0,I)}
+\]</div>
+<p>Recall that in the DDPM reverse process the update (when the network predicts the noise <span class="arithmatex">\(\epsilon_\theta\)</span>) is given by</p>
+<div class="arithmatex">\[
+ x_{t-1} = \frac{1}{\sqrt{1-\beta_t}}\left(x_t - \frac{\beta_t}{\sqrt{1-\bar{\alpha}_t}}\,\epsilon_\theta(x_t,t)\right) + \sqrt{\tilde{\beta}_t}\,z,\quad z\sim \mathcal{N}(0,I),
+\]</div>
+<p>with
+$$
+ \bar{\alpha}<em>t = \prod</em>{s=1}^t (1-\beta_s),\qquad \tilde{\beta}<em>t = \frac{1-\bar{\alpha}</em>{t-1}}{1-\bar{\alpha}_t}\,\beta_t.
+$$</p>
+<p>When the number of steps is large, one may view each update as occurring over a small time interval. In what follows we will reparameterize the discrete index in terms of a small time increment.</p>
+<p>Suppose that in the original (forward) time variable <span class="arithmatex">\(t\)</span> we write the update from <span class="arithmatex">\(t\)</span> to <span class="arithmatex">\(t-\Delta t\)</span> as</p>
+<div class="arithmatex">\[
+ x(t-\Delta t) = \frac{1}{\sqrt{1-\beta(t)\,\Delta t}}\left(x(t) - \frac{\beta(t)\,\Delta t}{\sqrt{1-\bar{\alpha}(t)}}\,\epsilon_\theta(x(t),t)\right) + \sqrt{\tilde{\beta}(t)\,\Delta t}\,z.
+\]</div>
+<p>Here we assume that for a small time interval the noise variance scales aa <span class="arithmatex">\(\beta(t)\,\Delta t\)</span>,
+and similarly <span class="arithmatex">\(\tilde{\beta}(t)\,\Delta t\)</span> is the variance used in the reverse update. (In the continuous limit one typically finds <span class="arithmatex">\(\tilde{\beta}(t)\to\beta(t)\)</span>.)</p>
+<p>Expanding to first order in <span class="arithmatex">\(\Delta t\)</span> gives</p>
+<div class="arithmatex">\[
+\begin{aligned}
+x(t-\Delta t) &amp;\approx \Bigl(1+\tfrac{1}{2}\beta(t)\Delta t\Bigr)\left(x(t) - \frac{\beta(t)\Delta t}{\sqrt{1-\bar{\alpha}(t)}}\,\epsilon_\theta(x(t),t)\right) + \sqrt{\tilde{\beta}(t)\Delta t}\,z\\
+&amp;\approx x(t) - \frac{\beta(t)\,\Delta t}{\sqrt{1-\bar{\alpha}(t)}}\,\epsilon_\theta(x(t),t)+ \frac{1}{2}\beta(t)x(t)\,\Delta t+ \sqrt{\tilde{\beta}(t)\Delta t}\,z.
+\end{aligned}
+\]</div>
+<p>That is, the increment in the original (forward) time is</p>
+<div class="arithmatex">\[-\Delta x = x(t-\Delta t)-x(t) = \left[\frac{1}{2}\beta(t)x(t)-\frac{\beta(t)}{\sqrt{1-\bar{\alpha}(t)}}\,\epsilon_\theta(x(t),t)\right]\Delta t + \sqrt{\tilde{\beta}(t)\,\Delta t}\,z.
+\]</div>
+<p>In the continuous limit, <span class="arithmatex">\(\sqrt{\Delta t}\,z\)</span> becomes the differential <span class="arithmatex">\(dW\)</span> of a standard Wiener process.</p>
+<div class="arithmatex">\[
+ \text{d} x
+=- \left[\frac{1}{2}\beta(t)\,x(t)
+-\frac{\beta(t)}{\sqrt{1-\bar{\alpha}(t)}}\,\epsilon_\theta\Bigl(x(t),\,t)\Bigr)
+\right]dt - \sqrt{\beta(t))}\,dW.
+\]</div>
+<p>Remember that we are treating the reverse process,</p>
+<p>Let <span class="arithmatex">\(\tau = T- t\)</span> and <span class="arithmatex">\(\tilde{x}(\tau) = x(T-\tau)\)</span>,</p>
+<p>We have <span class="arithmatex">\(d \tau = - dx\)</span> and <span class="arithmatex">\(d\tau = -dt\)</span>,
+then,</p>
+<div class="arithmatex">\[
+ \text{d} \tilde{x}
+=- \left[\frac{1}{2}\beta(T-\tau)\,\tilde{x}(\tau)
+-\frac{\beta(T-\tau)}{\sqrt{1-\bar{\alpha}(T-\tau)}}\,\epsilon_\theta\Bigl(\tilde{x}(\tau),\,T-\tau\Bigr)
+\right]\tau + \sqrt{\beta(T-\tau)}\,dW.
+\]</div>
+<p>This derivation shows how one may obtain a continuous-time (SDE) formulation of the DDPM reverse process with an explicit reversed time mapping.</p>
+<p>Recall the formula from the reverse‐time dynamics,</p>
+<div class="arithmatex">\[
+ dx = \Bigl[-\frac{1}{2}\beta(t)x - \beta(t)\,\nabla_x\log p_t(x)\Bigr]dt + \sqrt{\beta(t)}\,d\bar{w}.
+\]</div>
+<p>Use the estimator of the gradient from learning</p>
+<div class="arithmatex">\[
+ \nabla_x\log p_t(x) \approx -\frac{1}{\sqrt{1-\bar{\alpha}(t)}}\,\epsilon_\theta(x,t),
+\]</div>
+<p>We got
+$$
+ dx = \left[-\frac{1}{2}\beta(t)x + \frac{\beta(t)}{\sqrt{1-\bar{\alpha}(t)}}\,\epsilon_\theta(x,t)\right]dt + \sqrt{\beta(t)}\,d\bar{w}.
+$$</p>
+<h2 id="6-network-output-noise-prediction-vs-score">6. Network Output: Noise Prediction vs. Score<a class="headerlink" href="#6-network-output-noise-prediction-vs-score" title="Permanent link">&para;</a></h2>
+<p>In practice, DDPM commonly trains a network to predict the added noise <span class="arithmatex">\(\epsilon\)</span> rather than directly predicting <span class="arithmatex">\(\nabla_x \log p(x_t)\)</span>. However, there is a <strong>simple linear relation</strong>  between <span class="arithmatex">\(\epsilon\)</span> and the score. Therefore:
+1. <strong>Predicting noise</strong>  and <strong>predicting the score</strong>  are <em>equivalent</em> in mathematical terms.</p>
+<ol>
+<li>
+<p>Score-based SDE models often produce <span class="arithmatex">\(\mathbf{s}_\theta(x,t) \approx \nabla_x \log p_t(x)\)</span>.</p>
+</li>
+<li>
+<p>DDPM-like models produce <span class="arithmatex">\(\epsilon_\theta(x_t,t)\)</span>, from which the score can be derived.</p>
+</li>
+</ol>
+<p>Either way, we get a functional approximation to the same “denoising direction” that enables the reverse-time generative process.</p>
+<h2 id="appendix">Appendix<a class="headerlink" href="#appendix" title="Permanent link">&para;</a></h2>
+<h3 id="1-what-is-the-fokkerplanck-equation">1. What is the Fokker–Planck Equation?<a class="headerlink" href="#1-what-is-the-fokkerplanck-equation" title="Permanent link">&para;</a></h3>
+<p>Put simply, the Fokker–Planck equation describes how the <em>probability density function</em> (PDF) of a stochastic (random) process evolves over time. More formally, if we let <span class="arithmatex">\(p(x,t)\)</span> be the probability density of finding the system in state <span class="arithmatex">\(x\)</span> at time <span class="arithmatex">\(t\)</span>, the Fokker–Planck equation reads:</p>
+<div class="arithmatex">\[
+\frac{\partial p(x,t)}{\partial t} =  \left\lbrace -\frac{\partial}{\partial x} \left[ \mu(x)p(x,t)\right] + \frac{1}{2}\,\frac{\partial^2}{\partial x^2}(\,D(x)\,p(x,t))\right\rbrace
+\]</div>
 <p>where</p>
 <ul>
 <li>
@@ -1310,7 +1489,7 @@ $$
 $$</p>
 <p>This partial differential equation tells us how the probability density changes because of both deterministic drift (<span class="arithmatex">\(v\)</span>) and random diffusion (<span class="arithmatex">\(D\)</span>).</p>
 <hr />
-<h2 id="2-when-does-the-probability-follow-the-fokkerplanck-equation">2. When Does the Probability Follow the Fokker–Planck Equation?<a class="headerlink" href="#2-when-does-the-probability-follow-the-fokkerplanck-equation" title="Permanent link">&para;</a></h2>
+<h4 id="when-does-the-probability-follow-the-fokkerplanck-equation">When Does the Probability Follow the Fokker–Planck Equation?<a class="headerlink" href="#when-does-the-probability-follow-the-fokkerplanck-equation" title="Permanent link">&para;</a></h4>
 <p>The Fokker–Planck equation is typically valid under these conditions:</p>
 <ol>
 <li><strong>Continuous Markov processes in one dimension (or higher).</strong></li>
@@ -1318,10 +1497,13 @@ $$</p>
 <p>The process must be <em>Markovian</em>: the future depends only on the present state, not on the history.</p>
 </li>
 <li>
-<p><strong>Stochastic differential equations (SDEs) of the form</strong> $$
- dX_t = \mu(X_t)\,dt + \sqrt{D(X_t)}\,dW_t,
-$$</p>
+<p><strong>Stochastic differential equations (SDEs) of the form</strong></p>
 </li>
+</ol>
+<div class="arithmatex">\[
+ dX_t = \mu(X_t)\,dt + \sqrt{D(X_t)}\,dW_t,
+\]</div>
+<ul>
 <li>
 <p>where <span class="arithmatex">\(W_t\)</span> is a standard Brownian motion (Wiener process).</p>
 </li>
@@ -1336,34 +1518,86 @@ $$</p>
 </li>
 <li>If jumps or large discontinuous moves exist, then we would use <em>generalized</em> kinetic equations (like fractional Fokker–Planck or Master equations) rather than the classical FP equation.
 In essence, if your system follows an Itô-type (or Stratonovich-type) SDE with drift <span class="arithmatex">\(\mu\)</span> and diffusion coefficient <span class="arithmatex">\(D\)</span>, then the <em>probability density</em> of where that system might be at time <span class="arithmatex">\(t\)</span> will satisfy the Fokker–Planck equation.</li>
-</ol>
-<hr />
-<h2 id="3-an-intuitive-explanation">3. An Intuitive Explanation<a class="headerlink" href="#3-an-intuitive-explanation" title="Permanent link">&para;</a></h2>
-<h3 id="a-drift-term-moving-the-probability-along">(a) Drift Term: Moving the Probability Along<a class="headerlink" href="#a-drift-term-moving-the-probability-along" title="Permanent link">&para;</a></h3>
-<p>Imagine you have a pile of sand on a table. If you tilt the table slightly, the sand starts sliding in a certain direction (the <em>drift</em>). In probability terms, this systematic motion is captured by <span class="arithmatex">\(-\frac{\partial}{\partial x}[\mu(x) p(x,t)]\)</span>. It tells us that if there is some drift velocity <span class="arithmatex">\(\mu(x)\)</span>, it will <em>transport</em> the probability density along <span class="arithmatex">\(x\)</span>.
-- <strong>In words</strong> : “If the drift at position <span class="arithmatex">\(x\)</span> is large, probability quickly flows away from <span class="arithmatex">\(x\)</span> to neighboring states.”</p>
-<h3 id="b-diffusion-term-spreading-the-probability-out">(b) Diffusion Term: Spreading the Probability Out<a class="headerlink" href="#b-diffusion-term-spreading-the-probability-out" title="Permanent link">&para;</a></h3>
-<p>Returning to the sand analogy: in addition to sliding, random vibrations (like small shakes) cause the sand to spread out. This spreading effect is the <em>diffusion</em> and is captured by the second term <span class="arithmatex">\(\frac{1}{2}\frac{\partial^2}{\partial x^2}[D(x) p(x,t)]\)</span>.
-- <strong>In words</strong> : “If there is diffusion at position <span class="arithmatex">\(x\)</span>, it causes probability to spread out from regions of higher density to lower density nearby.”</p>
-<h3 id="c-combining-drift-and-diffusion">(c) Combining Drift and Diffusion<a class="headerlink" href="#c-combining-drift-and-diffusion" title="Permanent link">&para;</a></h3>
-<p>The Fokker–Planck equation brings these two effects together. First, it shifts the distribution in the direction of the drift, and second, it broadens (or contracts) the distribution due to diffusion. Over time, the competition or combination of these two dynamics shapes the overall probability distribution in your system.</p>
-<hr />
-<h2 id="4-why-is-the-fokkerplanck-equation-important">4. Why is the Fokker–Planck Equation Important?<a class="headerlink" href="#4-why-is-the-fokkerplanck-equation-important" title="Permanent link">&para;</a></h2>
+</ul>
+<h4 id="intuitive-interpretation-of-drift-and-diffusion-in-the-fokkerplanck-equation">Intuitive Interpretation of Drift and Diffusion in the Fokker–Planck Equation<a class="headerlink" href="#intuitive-interpretation-of-drift-and-diffusion-in-the-fokkerplanck-equation" title="Permanent link">&para;</a></h4>
+<p>The Fokker–Planck equation is a powerful tool for describing how probability densities evolve over time. In many fields—such as physics, biology, and finance—it is used to capture the interplay between deterministic forces and random fluctuations. This blog post provides an intuitive explanation of the two key components: <strong>drift</strong>  and <strong>diffusion</strong> .</p>
+<h5 id="1-drift-the-deterministic-push">1. Drift: The Deterministic Push<a class="headerlink" href="#1-drift-the-deterministic-push" title="Permanent link">&para;</a></h5>
+<h6 id="mathematical-form">Mathematical Form<a class="headerlink" href="#mathematical-form" title="Permanent link">&para;</a></h6>
+<p>In the one-dimensional Fokker–Planck equation, the drift term is commonly written as:</p>
+<div class="arithmatex">\[
+ -\frac{\partial}{\partial x}\Big[A(x)P(x,t)\Big]
+\]</div>
+<p>Here,</p>
 <ul>
 <li>
-<p><strong>Physical systems</strong> : Think of particles in a fluid (like pollen particles in water—Brownian motion). The drift might come from fluid flow or external forces, while the diffusion comes from thermal fluctuations.</p>
+<p><strong><span class="arithmatex">\(A(x)\)</span></strong>  represents the deterministic drift or “drift velocity”. It reflects the average effect of an external force acting on the system.</p>
 </li>
 <li>
-<p><strong>Financial mathematics</strong> : Stock prices are often modeled as stochastic processes with drift and diffusion terms. The FP equation describes the time evolution of the probability density of stock prices.</p>
+<p><strong><span class="arithmatex">\(P(x,t)\)</span></strong>  is the probability density at position <span class="arithmatex">\(x\)</span> and time <span class="arithmatex">\(t\)</span>.</p>
 </li>
 <li>
-<p><strong>Neuroscience</strong> : Membrane potentials of neurons under random synaptic inputs sometimes follow a Fokker–Planck-like dynamics to describe the distribution of firing times.</p>
-</li>
-<li>
-<p><strong>Population genetics</strong> : Allele frequency distributions in a population can be governed by drift (selection) and diffusion (random genetic drift).
-Whenever you have a random variable subject to a systematic force (drift) plus random noise (diffusion), the Fokker–Planck is <em>the</em> PDE that details how that random variable’s distribution evolves.</p>
+<p>The product <strong>The product <span class="arithmatex">\(A(x)P(x,t)\)</span></strong>  represents the probability flux resulting from the deterministic motion.</p>
 </li>
 </ul>
+<h6 id="intuitive-explanation">Intuitive Explanation<a class="headerlink" href="#intuitive-explanation" title="Permanent link">&para;</a></h6>
+<p>Imagine particles moving under the influence of an external force:</p>
+<ul>
+<li>
+<p><strong>Probability Flow:</strong>
+The term <span class="arithmatex">\(A(x)P(x,t)\)</span> can be thought of as the flow of particles moving with velocity <span class="arithmatex">\(A(x)\)</span>. This is similar to how a group of people might move along a corridor when prompted by a guiding signal.</p>
+</li>
+<li>
+<p><strong>Divergence and Local Density Change:</strong>
+The spatial derivative <span class="arithmatex">\(\frac{\partial}{\partial x}[A(x)P(x,t)]\)</span> measures how the flow changes along the <span class="arithmatex">\(x\)</span>-direction (its divergence).</p>
+</li>
+<li>
+<p>If the divergence is <strong>positive</strong>  at a point, more particles are leaving that region than entering it. Because of the negative sign in the equation, this results in a decrease in the probability density (<span class="arithmatex">\(\frac{\partial P}{\partial t} &lt; 0\)</span>).</p>
+</li>
+<li>
+<p>Conversely, if the divergence is <strong>negative</strong> , particles are converging at that point, leading to an increase in the local density (<span class="arithmatex">\(\frac{\partial P}{\partial t} &gt; 0\)</span>).</p>
+</li>
+</ul>
+<p>This formulation captures how deterministic forces cause a net flow of probability, thereby modifying the local density.</p>
+<h5 id="2-diffusion-the-smoothing-effect-of-random-perturbations">2. Diffusion: The Smoothing Effect of Random Perturbations<a class="headerlink" href="#2-diffusion-the-smoothing-effect-of-random-perturbations" title="Permanent link">&para;</a></h5>
+<h6 id="mathematical-form_1">Mathematical Form<a class="headerlink" href="#mathematical-form_1" title="Permanent link">&para;</a></h6>
+<p>The diffusion term in the Fokker–Planck equation is typically expressed as:
+$$
+ \frac{1}{2}\frac{\partial^2}{\partial x^2}\Big[B(x)P(x,t)\Big]
+$$</p>
+<p>Here,</p>
+<ul>
+<li>
+<p><strong><span class="arithmatex">\(B(x)\)</span></strong>  is the diffusion coefficient, indicating the strength of random fluctuations.</p>
+</li>
+<li>
+<p>The second derivative <span class="arithmatex">\(\frac{\partial^2}{\partial x^2}\)</span> reflects the curvature of the probability density, indicating how "peaked" or "spread out" the distribution is locally.</p>
+</li>
+</ul>
+<h6 id="intuitive-explanation_1">Intuitive Explanation<a class="headerlink" href="#intuitive-explanation_1" title="Permanent link">&para;</a></h6>
+<p>Diffusion describes how random perturbations work to smooth out irregularities in the probability distribution:</p>
+<ul>
+<li>
+<p><strong>High-Density Regions (Peaks):</strong>
+At locations where <span class="arithmatex">\(P(x,t)\)</span> forms a peak, the distribution is concave down (negative curvature). The diffusion term acts to reduce the density at these peaks, causing the probability to spread out.</p>
+</li>
+<li>
+<p><strong>Low-Density Regions (Valleys):</strong>
+In contrast, in regions where the density is low and the distribution is convex (positive curvature), diffusion causes the density to increase by “filling in” these valleys with probability from neighboring regions.</p>
+</li>
+</ul>
+<p>This effect is analogous to a drop of ink spreading on paper: the concentrated ink in the center disperses outward, leading to a more uniform concentration over time. Diffusion thus does not simply lower the density everywhere; rather, it redistributes it, diminishing local extremes to create a smoother overall profile.</p>
+<hr />
+<h5 id="3-drift-and-diffusion-combined-evolution-of-the-probability-density">3. Drift and Diffusion: Combined Evolution of the Probability Density<a class="headerlink" href="#3-drift-and-diffusion-combined-evolution-of-the-probability-density" title="Permanent link">&para;</a></h5>
+<p>In the Fokker–Planck equation, drift and diffusion work together to dictate how the probability density evolves:</p>
+<ul>
+<li>
+<p><strong>Drift</strong>  accounts for the systematic, directional movement driven by deterministic forces. It creates flows that can either concentrate or deplete the density depending on the spatial gradient (divergence) of the flux.</p>
+</li>
+<li>
+<p><strong>Diffusion</strong>  represents the effect of random fluctuations, working to smooth out the probability distribution. It reduces sharp peaks and fills in dips, leading to a more even spread of the density.</p>
+</li>
+</ul>
+<p>Together, these processes explain how the overall distribution changes over time, even if the motion of individual particles is unpredictable. By considering both the directional push of drift and the smoothing influence of diffusion, the Fokker–Planck equation provides a comprehensive framework for understanding the evolution of complex systems under uncertainty.</p>
 
 
 
