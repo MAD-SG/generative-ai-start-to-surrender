@@ -402,9 +402,7 @@ $$ \int_{t_n}^{t_{n+1}} f\bigl(X_{s},s\bigr)\,ds$$
 
 $$\int_{t_n}^{t_{n+1}} g\bigl(X_{s},s\bigr)\,dW_{s}$$
 
-Over a small step $\Delta t$, a first approximation uses
-
-$$\,f(X_{s}, s) \approx f(X_n, t_n)$$ and $$g(X_{s}, s) \approx g(X_n, t_n)$$.
+Over a small step $\Delta t$, a first approximation uses $f(X_{s}, s) \approx f(X_n, t_n)$ and $g(X_{s}, s) \approx g(X_n, t_n)$.
 
  This yields:
 

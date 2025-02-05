@@ -6,7 +6,6 @@ nav:
       - Fourier Transform: "book/chapter1_Introduction/1.2fourier_transform.md"
       - Signal Processing: "book/chapter1_Introduction/1.3signal_processing.md"
       - Statistics: "book/chapter1_Introduction/1.4statistics.md"
-      - SDE: "book/chapter1_Introduction/1.5SDE.md"
       - Tutorials: "book/chapter1_Introduction/tutorials.md"
   - VAE:
       - Introduction: "book/chapter2_VAE/2.1introduction.md"
@@ -30,8 +29,11 @@ nav:
       - Contrastive Divergence: "book/chapter6_ebm/cd.md"
       - Score Matching: "book/chapter6_ebm/score_matching.md"
   - SDE Based Models:
+      - Introduction: "book/chapter6_SDE_based/introduction_sde.md"
       - SDE with DDPM: "book/chapter6_SDE_based/SDE4_DDPM_DSM.md"
       - Probability Flow ODE: "book/chapter6_SDE_based/probability_flow_ode.md"
+  - Flow Matching:
+      - Introduction: "book/chapter8_flow_matching/introduction.md"
 
 theme:
   name: material
