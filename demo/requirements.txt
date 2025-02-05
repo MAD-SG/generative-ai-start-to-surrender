@@ -1,0 +1,13 @@
+torch>=2.0.0
+transformers>=4.36.0
+accelerate>=0.25.0
+einops>=0.7.0
+pillow>=10.0.0
+diffusers>=0.25.0
+sentencepiece>=0.1.99
+optimum>=1.16.0
+vllm
+fastapi
+uvicorn
+python-multipart
+jinja2

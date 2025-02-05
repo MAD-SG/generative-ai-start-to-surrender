@@ -29,6 +29,9 @@ nav:
       - Sampling: "book/chapter6_ebm/sampling.md"
       - Contrastive Divergence: "book/chapter6_ebm/cd.md"
       - Score Matching: "book/chapter6_ebm/score_matching.md"
+  - SDE Based Models:
+      - SDE with DDPM: "book/chapter6_SDE_based/SDE4_DDPM_DSM.md"
+      - Probability Flow ODE: "book/chapter6_SDE_based/probability_flow_ode.md"
 
 theme:
   name: material
