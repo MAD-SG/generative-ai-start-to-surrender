@@ -43,6 +43,8 @@
       
     
     
+      <link rel="stylesheet" href="../../../assets/custom.css">
+    
     <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -1641,33 +1643,39 @@ p_\theta(x) = \frac{e^{-E_\theta(x)}}{Z(\theta)}, \quad Z(\theta) = \int e^{-E_\
 &amp;= -\mathbb{E}_{p_\theta(x)} \left[ \nabla_\theta E_\theta(x) \right].
 \end{aligned}
 \]</div>
-<p>将对数似然的梯度分解为数据项和模型项：
-$$
+<p>将对数似然的梯度分解为数据项和模型项：</p>
+<div class="arithmatex">\[
 \begin{aligned}
 \nabla_\theta \mathcal{L}(\theta)
-&amp;= \mathbb{E}<em>{p</em>{\text{data}}(x)} \left[ \nabla_\theta \log p_\theta(x) \right] \
-&amp;= \mathbb{E}<em>{p</em>{\text{data}}(x)} \left[ -\nabla_\theta E_\theta(x) - \nabla_\theta \log Z(\theta) \right] \
-&amp;= -\mathbb{E}<em>{p</em>{\text{data}}(x)} \left[ \nabla_\theta E_\theta(x) \right] + \mathbb{E}<em>{p</em>\theta(x)} \left[ \nabla_\theta E_\theta(x) \right].
+&amp;= \mathbb{E}_{p_{\text{data}}(x)} \left[ \nabla_\theta \log p_\theta(x) \right] \\
+&amp;= \mathbb{E}_{p_{\text{data}}(x)} \left[ -\nabla_\theta E_\theta(x) - \nabla_\theta \log Z(\theta) \right] \\
+&amp;= -\mathbb{E}_{p_{\text{data}}(x)} \left[ \nabla_\theta E_\theta(x) \right] + \mathbb{E}_{p_\theta(x)} \left[ \nabla_\theta E_\theta(x) \right].
 \end{aligned}
-$$
-其中：
-- <strong>第一项</strong>：数据分布的期望，直接计算训练样本的梯度。
-- <strong>第二项</strong>：模型分布的期望，传统方法需MCMC采样，CD通过短链采样近似。</p>
+\]</div>
+<p>其中：</p>
+<ul>
+<li><strong>第一项</strong>：数据分布的期望，直接计算训练样本的梯度。</li>
+<li><strong>第二项</strong>：模型分布的期望，传统方法需MCMC采样，CD通过短链采样近似。</li>
+</ul>
 <p><strong>梯度计算难题</strong>：
-对数似然的梯度为：
-$$
-\nabla_\theta \mathcal{L}(\theta) = -\mathbb{E}<em>{p</em>{\text{data}}} [\nabla_\theta E_\theta(x)] + \mathbb{E}<em>{p</em>\theta(x)} [\nabla_\theta E_\theta(x)].
-$$
-其中第二项 $ \mathbb{E}<em>{p</em>\theta(x)}[\cdot] $ 需要从模型分布中采样，但传统MCMC方法因高维空间收敛慢而不可行。</p>
+对数似然的梯度为：</p>
+<div class="arithmatex">\[
+\nabla_\theta \mathcal{L}(\theta) = -\mathbb{E}_{p_{\text{data}}} [\nabla_\theta E_\theta(x)] + \mathbb{E}_{p_\theta(x)} [\nabla_\theta E_\theta(x)].
+\]</div>
+<p>其中第二项 $ \mathbb{E}<em>{p</em>\theta(x)}[\cdot] $ 需要从模型分布中采样，但传统MCMC方法因高维空间收敛慢而不可行。</p>
 <h2 id="2-cd">2. CD的核心思想<a class="headerlink" href="#2-cd" title="Permanent link">&para;</a></h2>
 <h3 id="21">2.1. 直观解释<a class="headerlink" href="#21" title="Permanent link">&para;</a></h3>
-<p>CD的核心思想是<strong>用少量MCMC步骤生成近似样本</strong>，替代传统方法中的完全收敛链：
-- <strong>从数据分布启动链</strong>：用训练样本 $ x_{\text{data}} $ 初始化MCMC链，而非随机噪声。
-- <strong>短链采样</strong>：仅运行 $ k $ 步（通常 $ k=1 $）MCMC（如Gibbs采样）生成负样本 $ x_{\text{CD_k}} $。
-- <strong>梯度近似</strong>：用 $ x_{\text{CD_k}} $ 近似模型分布的期望，计算梯度更新参数。</p>
-<p><strong>为什么有效？</strong>
-- 数据分布靠近模型分布，短链即可逼近目标分布。
-- 避免了长链MCMC的高计算成本。</p>
+<p>CD的核心思想是<strong>用少量MCMC步骤生成近似样本</strong>，替代传统方法中的完全收敛链：</p>
+<ul>
+<li><strong>从数据分布启动链</strong>：用训练样本 $ x_{\text{data}} $ 初始化MCMC链，而非随机噪声。</li>
+<li><strong>短链采样</strong>：仅运行 $ k $ 步（通常 $ k=1 $）MCMC（如Gibbs采样）生成负样本 $ x_{\text{CD_k}} $。</li>
+<li><strong>梯度近似</strong>：用 $ x_{\text{CD_k}} $ 近似模型分布的期望，计算梯度更新参数。</li>
+</ul>
+<p><strong>为什么有效？</strong></p>
+<ul>
+<li>数据分布靠近模型分布，短链即可逼近目标分布。</li>
+<li>避免了长链MCMC的高计算成本。</li>
+</ul>
 <h2 id="3">3. 数学推导<a class="headerlink" href="#3" title="Permanent link">&para;</a></h2>
 <h3 id="31">3.1  目标函数与梯度<a class="headerlink" href="#31" title="Permanent link">&para;</a></h3>
 <p>最大化对数似然等价于最小化KL散度：</p>
@@ -1679,15 +1687,18 @@ D_{\text{KL}}(p_{\text{data}} \| p_\theta) = \mathbb{E}_{p_{\text{data}}} [\log 
 \nabla_\theta D_{\text{KL}} = -\mathbb{E}_{p_{\text{data}}} [\nabla_\theta \log p_\theta(x)] + \mathbb{E}_{p_\theta(x)} [\nabla_\theta \log p_\theta(x)].
 \]</div>
 <h3 id="32-cd">3.2. CD的核心策略<a class="headerlink" href="#32-cd" title="Permanent link">&para;</a></h3>
-<p><strong>直接用短链MCMC采样近似模型分布的期望</strong>：
-- <strong>步骤</strong>：
-  1. 从训练数据样本 <span class="arithmatex">\(x_{\text{data}}\)</span> 启动马尔可夫链。
-  2. 运行 <span class="arithmatex">\(k\)</span> 步MCMC（如Gibbs采样）生成样本 <span class="arithmatex">\(x_{\text{CD\_k}}\)</span>。
-  3. 用这些样本的均值近似 <span class="arithmatex">\(\mathbb{E}_{p_\theta(x)}[\cdot]\)</span>，即：</p>
-<pre><code> $$
- \mathbb{E}_{p_\theta(x)} [\nabla_\theta E_\theta(x)] \approx \frac{1}{B} \sum_{i=1}^B \nabla_\theta E_\theta(x_{\text{CD\_k}}^{(i)}).
- $$
-</code></pre>
+<p><strong>直接用短链MCMC采样近似模型分布的期望</strong>：</p>
+<ul>
+<li><strong>步骤</strong>：</li>
+<li>从训练数据样本 <span class="arithmatex">\(x_{\text{data}}\)</span> 启动马尔可夫链。</li>
+<li>运行 <span class="arithmatex">\(k\)</span> 步MCMC（如Gibbs采样）生成样本 <span class="arithmatex">\(x_{\text{CD\_k}}\)</span>。</li>
+<li>
+<p>用这些样本的均值近似 <span class="arithmatex">\(\mathbb{E}_{p_\theta(x)}[\cdot]\)</span>，即：</p>
+<p>$$
+ \mathbb{E}<em>{p</em>\theta(x)} [\nabla_\theta E_\theta(x)] \approx \frac{1}{B} \sum_{i=1}^B \nabla_\theta E_\theta(x_{\text{CD_k}}^{(i)}).
+ $$</p>
+</li>
+</ul>
 <h3 id="33">3.3. 参数更新规则的简化<a class="headerlink" href="#33" title="Permanent link">&para;</a></h3>
 <p>梯度公式简化为：</p>
 <div class="arithmatex">\[
@@ -1698,15 +1709,17 @@ D_{\text{KL}}(p_{\text{data}} \| p_\theta) = \mathbb{E}_{p_{\text{data}}} [\log 
 \Delta \theta \propto -\nabla_\theta E_\theta(x_{\text{data}}) + \nabla_\theta E_\theta(x_{\text{CD\_k}}).
 \]</div>
 <h3 id="34">3.4. 等价损失函数的定义<a class="headerlink" href="#34" title="Permanent link">&para;</a></h3>
-<p>CD的等价损失函数可表示为：
-$$
-\mathcal{L}<em>{\text{CD}} = \mathbb{E}</em>{p_{\text{data}}} [E_\theta(x)] - \mathbb{E}<em>{p</em>{\theta}^{(k)}} [E_\theta(x)],
-$$
-其中：
-- <strong>第一项</strong>：真实数据样本 <span class="arithmatex">\( x \sim p_{\text{data}} \)</span> 的平均能量。
-- <strong>第二项</strong>：从数据分布启动 <span class="arithmatex">\( k \)</span> 步MCMC（如Gibbs采样）生成的样本 <span class="arithmatex">\( x_{\text{CD\_k}} \sim p_{\theta}^{(k)} \)</span> 的平均能量。
-- <strong>优化目标</strong>：最小化 <span class="arithmatex">\( \mathcal{L}_{\text{CD}} \)</span>，即降低真实数据的能量，同时提高生成数据的能量。
-- <strong>作用</strong>：降低真实样本的能量，使其更可能被模型生成。提高生成样本的能量，使其远离当前模型分布。</p>
+<p>CD的等价损失函数可表示为：</p>
+<div class="arithmatex">\[
+\mathcal{L}_{\text{CD}} = \mathbb{E}_{p_{\text{data}}} [E_\theta(x)] - \mathbb{E}_{p_{\theta}^{(k)}} [E_\theta(x)],
+\]</div>
+<p>其中：</p>
+<ul>
+<li><strong>第一项</strong>：真实数据样本 <span class="arithmatex">\( x \sim p_{\text{data}} \)</span> 的平均能量。</li>
+<li><strong>第二项</strong>：从数据分布启动 <span class="arithmatex">\( k \)</span> 步MCMC（如Gibbs采样）生成的样本 <span class="arithmatex">\( x_{\text{CD\_k}} \sim p_{\theta}^{(k)} \)</span> 的平均能量。</li>
+<li><strong>优化目标</strong>：最小化 <span class="arithmatex">\( \mathcal{L}_{\text{CD}} \)</span>，即降低真实数据的能量，同时提高生成数据的能量。</li>
+<li><strong>作用</strong>：降低真实样本的能量，使其更可能被模型生成。提高生成样本的能量，使其远离当前模型分布。</li>
+</ul>
 <p><img alt="alt text" src="../../../images/image-21.png" /></p>
 <h3 id="35">3.5. 短链采样的合理性<a class="headerlink" href="#35" title="Permanent link">&para;</a></h3>
 <ul>
@@ -1742,14 +1755,22 @@ $$
 <h2 id="4">4. 应用与变种<a class="headerlink" href="#4" title="Permanent link">&para;</a></h2>
 <h3 id="41-rbm">4.1. 在RBM中的实现<a class="headerlink" href="#41-rbm" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>Gibbs采样步骤</strong>：</li>
-<li>正向传播：计算隐层概率 $ p(h \mid v_{\text{data}}) $，采样 $ h_0 $。</li>
-<li>反向重构：计算可见层概率 $ p(v \mid h_0) $，采样 $ v_1 $。</li>
-<li><strong>参数更新</strong>：
-  $$
-  \Delta w_{ij} \propto v_{\text{data},i} h_{0,j} - v_{1,i} h_{1,j}.
-  $$</li>
+<li>
+<p><strong>Gibbs采样步骤</strong>：</p>
+</li>
+<li>
+<p>正向传播：计算隐层概率 <span class="arithmatex">\(p(h \mid v_{\text{data}})\)</span>，采样 <span class="arithmatex">\(h_0\)</span>。</p>
+</li>
+<li>
+<p>反向重构：计算可见层概率 <span class="arithmatex">\(p(v \mid h_0)\)</span>，采样 <span class="arithmatex">\(v_1\)</span>。</p>
+</li>
+<li>
+<p><strong>参数更新</strong>:</p>
+</li>
 </ul>
+<div class="arithmatex">\[
+\Delta w_{ij} \propto v_{\text{data},i} h_{0,j} - v_{1,i} h_{1,j}.
+\]</div>
 <h3 id="42">4.2 改进方法<a class="headerlink" href="#42" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Persistent CD (PCD)</strong>：跨批次保留MCMC链状态，提升采样效率（Tijmen Tieleman, 2008）。</li>
@@ -1801,9 +1822,19 @@ Hinton, G. E. (2002). Training products of experts by minimizing contrastive div
       <div class="md-copyright">
   
   
-    Made with
-    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
-      Material for MkDocs
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/tsiendragon/learning" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
     </a>
   
 </div>
@@ -1828,6 +1859,8 @@ Hinton, G. E. (2002). Training products of experts by minimizing contrastive div
         <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
       
         <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+        <script src="../../../assets/custom.js"></script>
       
     
   </body>

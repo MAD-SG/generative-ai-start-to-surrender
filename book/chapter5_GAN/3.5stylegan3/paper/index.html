@@ -43,6 +43,8 @@
       
     
     
+      <link rel="stylesheet" href="../../../../assets/custom.css">
+    
     <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -1806,10 +1808,10 @@ pointwise操作天然满足 几何等变性。下面考虑带宽的条件。
 <p>$$
     x(t) = \sum_{k} a_k e^{j 2\pi f_k t},
    $$</p>
-<pre><code>其中：
+<div class="highlight"><pre><span></span><code>其中：
 -$a_k$：信号的傅里叶系数。
 -$f_k$：信号的频率分量。
-</code></pre>
+</code></pre></div>
 <ul>
 <li>非线性操作后的频谱**
     假设对信号进行非线性操作<span class="arithmatex">\(f(x(t))\)</span>，如平方操作<span class="arithmatex">\(x^2(t)\)</span>，则结果为：</li>
@@ -1817,10 +1819,10 @@ pointwise操作天然满足 几何等变性。下面考虑带宽的条件。
 <p>$$
     f(x(t)) \sim \sum_{k,l} g(a_k, a_l) e^{j 2\pi (f_k + f_l)t},
    $$</p>
-<pre><code>其中：
+<div class="highlight"><pre><span></span><code>其中：
 -$g(a_k, a_l)$：非线性操作产生的系数。
 -$f_k + f_l$：新产生的频率分量。
-</code></pre>
+</code></pre></div>
 <p><strong>那要怎么实现非线性操作的带宽限制</strong></p>
 <p>非线性操作后，结合理想低通滤波器<span class="arithmatex">\(\psi_s\)</span>，连续表示为：</p>
 <div class="arithmatex">\[
@@ -1966,47 +1968,47 @@ T = M_r M_t T_\text{user}
 </ol>
 <h2 id="_7">代码解读<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
 <h3 id="modulated_conv2d">modulated_conv2d<a class="headerlink" href="#modulated_conv2d" title="Permanent link">&para;</a></h3>
-<pre><code>def modulated_conv2d(
-    x,                  # Input tensor: [batch_size, in_channels, in_height, in_width]
-    w,                  # Weight tensor: [out_channels, in_channels, kernel_height, kernel_width]
-    s,                  # Style tensor: [batch_size, in_channels]
-    demodulate  = True, # Apply weight demodulation?
-    padding     = 0,    # Padding: int or [padH, padW]
-    input_gain  = None, # Optional scale factors for the input channels: [], [in_channels], or [batch_size, in_channels]
-):
-    with misc.suppress_tracer_warnings(): # this value will be treated as a constant
-        batch_size = int(x.shape[0])
-    out_channels, in_channels, kh, kw = w.shape
-    misc.assert_shape(w, [out_channels, in_channels, kh, kw]) # [OIkk]
-    misc.assert_shape(x, [batch_size, in_channels, None, None]) # [NIHW]
-    misc.assert_shape(s, [batch_size, in_channels]) # [NI]
-
-    # Pre-normalize inputs.
-    if demodulate:
-        w = w * w.square().mean([1,2,3], keepdim=True).rsqrt()
-        s = s * s.square().mean().rsqrt()
-
-    # Modulate weights.
-    w = w.unsqueeze(0) # [NOIkk] # 增加batch维度
-    w = w * s.unsqueeze(1).unsqueeze(3).unsqueeze(4) # [NOIkk]
-
-    # Demodulate weights.
-    if demodulate:
-        dcoefs = (w.square().sum(dim=[2,3,4]) + 1e-8).rsqrt() # [NO]
-        w = w * dcoefs.unsqueeze(2).unsqueeze(3).unsqueeze(4) # [NOIkk]
-
-    # Apply input scaling.
-    if input_gain is not None:
-        input_gain = input_gain.expand(batch_size, in_channels) # [NI]
-        w = w * input_gain.unsqueeze(1).unsqueeze(3).unsqueeze(4) # [NOIkk]
-
-    # Execute as one fused op using grouped convolution.
-    x = x.reshape(1, -1, *x.shape[2:])
-    w = w.reshape(-1, in_channels, kh, kw)
-    x = conv2d_gradfix.conv2d(input=x, weight=w.to(x.dtype), padding=padding, groups=batch_size)
-    x = x.reshape(batch_size, -1, *x.shape[2:])
-    return x
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>def modulated_conv2d(
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    x,                  # Input tensor: [batch_size, in_channels, in_height, in_width]
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    w,                  # Weight tensor: [out_channels, in_channels, kernel_height, kernel_width]
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    s,                  # Style tensor: [batch_size, in_channels]
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    demodulate  = True, # Apply weight demodulation?
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    padding     = 0,    # Padding: int or [padH, padW]
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    input_gain  = None, # Optional scale factors for the input channels: [], [in_channels], or [batch_size, in_channels]
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>):
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    with misc.suppress_tracer_warnings(): # this value will be treated as a constant
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>        batch_size = int(x.shape[0])
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    out_channels, in_channels, kh, kw = w.shape
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    misc.assert_shape(w, [out_channels, in_channels, kh, kw]) # [OIkk]
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    misc.assert_shape(x, [batch_size, in_channels, None, None]) # [NIHW]
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    misc.assert_shape(s, [batch_size, in_channels]) # [NI]
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    # Pre-normalize inputs.
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    if demodulate:
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>        w = w * w.square().mean([1,2,3], keepdim=True).rsqrt()
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>        s = s * s.square().mean().rsqrt()
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    # Modulate weights.
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    w = w.unsqueeze(0) # [NOIkk] # 增加batch维度
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    w = w * s.unsqueeze(1).unsqueeze(3).unsqueeze(4) # [NOIkk]
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>    # Demodulate weights.
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>    if demodulate:
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>        dcoefs = (w.square().sum(dim=[2,3,4]) + 1e-8).rsqrt() # [NO]
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>        w = w * dcoefs.unsqueeze(2).unsqueeze(3).unsqueeze(4) # [NOIkk]
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>    # Apply input scaling.
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>    if input_gain is not None:
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>        input_gain = input_gain.expand(batch_size, in_channels) # [NI]
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>        w = w * input_gain.unsqueeze(1).unsqueeze(3).unsqueeze(4) # [NOIkk]
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>    # Execute as one fused op using grouped convolution.
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>    x = x.reshape(1, -1, *x.shape[2:])
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>    w = w.reshape(-1, in_channels, kh, kw)
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>    x = conv2d_gradfix.conv2d(input=x, weight=w.to(x.dtype), padding=padding, groups=batch_size)
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>    x = x.reshape(batch_size, -1, *x.shape[2:])
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>    return x
+</code></pre></div>
 <h3 id="_8">最终数学表达式<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
 <p>经过以上步骤，最终输出 <span class="arithmatex">\( y \)</span> 的数学表达为：</p>
 <div class="arithmatex">\[
@@ -2026,24 +2028,24 @@ y_{b,o,h',w'} = \sum_{i,k_h,k_w} \left[ x_{b,i,h+k_h,w+k_w} \cdot \left( w_{o,i,
 <li>分组卷积高效地实现了每个样本独立的权重调制计算。</li>
 </ol>
 <h3 id="synthesislayer">SynthesisLayer<a class="headerlink" href="#synthesislayer" title="Permanent link">&para;</a></h3>
-<pre><code># Track input magnitude.
-if update_emas:
-    with torch.autograd.profiler.record_function('update_magnitude_ema'):
-        magnitude_cur = x.detach().to(torch.float32).square().mean()
-        self.magnitude_ema.copy_(magnitude_cur.lerp(self.magnitude_ema, self.magnitude_ema_beta))
-input_gain = self.magnitude_ema.rsqrt()
-
-# Execute affine layer.
-styles = self.affine(w)
-if self.is_torgb:
-    weight_gain = 1 / np.sqrt(self.in_channels * (self.conv_kernel ** 2))
-    styles = styles * weight_gain
-
-# Execute modulated conv2d.
-dtype = torch.float16 if (self.use_fp16 and not force_fp32 and x.device.type == 'cuda') else torch.float32
-x = modulated_conv2d(x=x.to(dtype), w=self.weight, s=styles,
-    padding=self.conv_kernel-1, demodulate=(not self.is_torgb), input_gain=input_gain)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a># Track input magnitude.
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>if update_emas:
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    with torch.autograd.profiler.record_function(&#39;update_magnitude_ema&#39;):
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>        magnitude_cur = x.detach().to(torch.float32).square().mean()
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>        self.magnitude_ema.copy_(magnitude_cur.lerp(self.magnitude_ema, self.magnitude_ema_beta))
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>input_gain = self.magnitude_ema.rsqrt()
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a># Execute affine layer.
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>styles = self.affine(w)
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>if self.is_torgb:
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    weight_gain = 1 / np.sqrt(self.in_channels * (self.conv_kernel ** 2))
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    styles = styles * weight_gain
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a># Execute modulated conv2d.
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>dtype = torch.float16 if (self.use_fp16 and not force_fp32 and x.device.type == &#39;cuda&#39;) else torch.float32
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>x = modulated_conv2d(x=x.to(dtype), w=self.weight, s=styles,
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    padding=self.conv_kernel-1, demodulate=(not self.is_torgb), input_gain=input_gain)
+</code></pre></div>
 <h3 id="_10">数学公式<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <ol>
 <li><strong>当前输入幅值的平方均值</strong>：</li>
@@ -2079,35 +2081,35 @@ x = modulated_conv2d(x=x.to(dtype), w=self.weight, s=styles,
     input_gain 会作用在之后的卷积上，作用相当于对X做了一个归一化。可以称之为滑动平均归一化。目前所有的归一化都不改变mean。</li>
 </ul>
 <h3 id="filtered_lrelu">filtered_lrelu<a class="headerlink" href="#filtered_lrelu" title="Permanent link">&para;</a></h3>
-<pre><code>x = filtered_lrelu.filtered_lrelu(x=x, fu=self.up_filter, fd=self.down_filter, b=self.bias.to(x.dtype),
-            up=self.up_factor, down=self.down_factor, padding=self.padding, gain=gain, slope=slope, clamp=self.conv_clamp)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>x = filtered_lrelu.filtered_lrelu(x=x, fu=self.up_filter, fd=self.down_filter, b=self.bias.to(x.dtype),
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>            up=self.up_factor, down=self.down_factor, padding=self.padding, gain=gain, slope=slope, clamp=self.conv_clamp)
+</code></pre></div>
 <p><a href="https://github.com/NVlabs/stylegan3/blob/main/torch_utils/ops/filtered_lrelu.py">https://github.com/NVlabs/stylegan3/blob/main/torch_utils/ops/filtered_lrelu.py</a>
 作者把上采样下采样和激活函数重新写了一个cuda kernel。太过于工程化，先跳过这部分。</p>
 <h3 id="synthesislayerdesign_lowpass_filter">SynthesisLayer.design_lowpass_filter<a class="headerlink" href="#synthesislayerdesign_lowpass_filter" title="Permanent link">&para;</a></h3>
-<pre><code>    @staticmethod
-    def design_lowpass_filter(numtaps, cutoff, width, fs, radial=False):
-        assert numtaps &gt;= 1
-
-        # Identity filter.
-        if numtaps == 1:
-            return None
-
-        # Separable Kaiser low-pass filter.
-        if not radial:
-            f = scipy.signal.firwin(numtaps=numtaps, cutoff=cutoff, width=width, fs=fs)
-            return torch.as_tensor(f, dtype=torch.float32)
-
-        # Radially symmetric jinc-based filter.
-        x = (np.arange(numtaps) - (numtaps - 1) / 2) / fs
-        r = np.hypot(*np.meshgrid(x, x))
-        f = scipy.special.j1(2 * cutoff * (np.pi * r)) / (np.pi * r)
-        beta = scipy.signal.kaiser_beta(scipy.signal.kaiser_atten(numtaps, width / (fs / 2)))
-        w = np.kaiser(numtaps, beta)
-        f *= np.outer(w, w)
-        f /= np.sum(f)
-        return torch.as_tensor(f, dtype=torch.float32)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>    @staticmethod
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    def design_lowpass_filter(numtaps, cutoff, width, fs, radial=False):
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>        assert numtaps &gt;= 1
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>        # Identity filter.
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>        if numtaps == 1:
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>            return None
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>        # Separable Kaiser low-pass filter.
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>        if not radial:
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>            f = scipy.signal.firwin(numtaps=numtaps, cutoff=cutoff, width=width, fs=fs)
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>            return torch.as_tensor(f, dtype=torch.float32)
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>        # Radially symmetric jinc-based filter.
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>        x = (np.arange(numtaps) - (numtaps - 1) / 2) / fs
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>        r = np.hypot(*np.meshgrid(x, x))
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>        f = scipy.special.j1(2 * cutoff * (np.pi * r)) / (np.pi * r)
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>        beta = scipy.signal.kaiser_beta(scipy.signal.kaiser_atten(numtaps, width / (fs / 2)))
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>        w = np.kaiser(numtaps, beta)
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>        f *= np.outer(w, w)
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>        f /= np.sum(f)
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>        return torch.as_tensor(f, dtype=torch.float32)
+</code></pre></div>
 <h3 id="_12">滤波器的作用域与设计过程<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <h4 id="_13"><strong>作用域</strong><a class="headerlink" href="#_13" title="Permanent link">&para;</a></h4>
 <p>这些滤波器 <strong>作用在时间域</strong>，它们通过时间域卷积操作处理输入信号或图像。卷积公式为：</p>
@@ -2177,9 +2179,19 @@ y[n] = \sum_{k} x[k] \cdot h[n-k]
       <div class="md-copyright">
   
   
-    Made with
-    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
-      Material for MkDocs
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/tsiendragon/learning" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
     </a>
   
 </div>
@@ -2204,6 +2216,8 @@ y[n] = \sum_{k} x[k] \cdot h[n-k]
         <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
       
         <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+        <script src="../../../../assets/custom.js"></script>
       
     
   </body>

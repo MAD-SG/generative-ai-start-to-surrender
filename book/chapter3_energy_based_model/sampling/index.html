@@ -43,6 +43,8 @@
       
     
     
+      <link rel="stylesheet" href="../../../assets/custom.css">
+    
     <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -1645,24 +1647,24 @@ Here CDF is the cumulative distribution function, that is</p>
 <div class="arithmatex">\[ CDF(x) = \int_{-\infty}^x p(z) \, dz \]</div>
 <h2 id="sample-from-a-simple-gaussian-distribution">sample from a simple gaussian distribution<a class="headerlink" href="#sample-from-a-simple-gaussian-distribution" title="Permanent link">&para;</a></h2>
 <p>In python, sample the gussian distribution maybe simple as the following.</p>
-<pre><code class="language-python">import torch
-import torch.distributions as dist
-
-# Sample from a standard normal distribution
-sample = dist.Normal(0, 1).sample()
-print(sample)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span> <span class="nn">torch</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">import</span> <span class="nn">torch.distributions</span> <span class="k">as</span> <span class="nn">dist</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Sample from a standard normal distribution</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">sample</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nb">print</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+</code></pre></div>
 <h3 id="transformations-from-uniform-distributions">Transformations from Uniform Distributions<a class="headerlink" href="#transformations-from-uniform-distributions" title="Permanent link">&para;</a></h3>
 <p>While Gaussian distributions can be sampled directly, they can also be derived from uniform distributions using transformations like the Box-Muller method:</p>
-<pre><code class="language-python">import numpy as np
-
-# Box-Muller transform: sampling normal distribution from uniform
-u1 = np.random.uniform(0, 1)
-u2 = np.random.uniform(0, 1)
-z1 = np.sqrt(-2 * np.log(u1)) * np.cos(2 * np.pi * u2)
-z2 = np.sqrt(-2 * np.log(u1)) * np.sin(2 * np.pi * u2)
-print(f&quot;Samples: {z1}, {z2}&quot;)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Box-Muller transform: sampling normal distribution from uniform</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">u1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">u2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="n">z1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">u1</span><span class="p">))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">u2</span><span class="p">)</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="n">z2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">u1</span><span class="p">))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">u2</span><span class="p">)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Samples: </span><span class="si">{</span><span class="n">z1</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">z2</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
 <p>This method is efficient because it avoids the need for the inverse CDF, which does not have a closed form for Gaussian distributions.</p>
 <h3 id="sampling-from-complex-distributions">Sampling from Complex Distributions<a class="headerlink" href="#sampling-from-complex-distributions" title="Permanent link">&para;</a></h3>
 <p>For complex distributions, especially with unnormalized probability density functions (as in Energy-Based Models), sophisticated methods are needed:</p>
@@ -1723,8 +1725,10 @@ Starting from <span class="arithmatex">\((x,p)\)</span>, HMC simulates the conti
 \]</div>
 <p>These flow equations conserve the Hamiltonian <span class="arithmatex">\(H(x,p)\)</span>. In practice, one discretizes this flow via a <em>symplectic integrator</em> (e.g., leapfrog method), which approximates the true continuous trajectory but still preserves many beneficial geometry properties.</p>
 <ol>
-<li><strong>Metropolis correction</strong>
-After simulating the Hamiltonian system for a certain number of leapfrog steps, HMC performs a <em>Metropolis acceptance/rejection step</em>:</li>
+<li>
+<p><strong>Metropolis correction</strong>
+After simulating the Hamiltonian system for a certain number of leapfrog steps, HMC performs a <em>Metropolis acceptance/rejection step</em>:</p>
+</li>
 <li>
 <p>Propose a new state <span class="arithmatex">\((x^\star,p^\star)\)</span> by integrating from <span class="arithmatex">\((x,p)\)</span>.</p>
 </li>
@@ -1824,15 +1828,13 @@ Because Hamiltonian trajectories can travel <em>long distances</em> in the state
 <p><strong>Goal</strong> : Prove that the stationary distribution of Langevin Dynamics is <span class="arithmatex">\(p(x) \propto e^{-U(x)}\)</span>.</p>
 <p><strong>Tool</strong> : Fokker-Planck Equation (Describes the evolution of probability density under a stochastic process).</p>
 <ul>
-<li>
-<p><strong>Fokker-Planck Equation</strong> :
-$$
+<li><strong>Fokker-Planck Equation</strong> :</li>
+</ul>
+<div class="arithmatex">\[
  \frac{\partial \rho(x, t)}{\partial t} = \nabla \cdot \left( \rho \nabla U(x) \right) + \nabla^2 \rho
-$$</p>
-</li>
-<li>
-<p><strong>Stationary State</strong> : When <span class="arithmatex">\(\frac{\partial \rho(x, t)}{\partial t} = 0\)</span>, solving <span class="arithmatex">\(\rho(x) \propto e^{-U(x)}\)</span> proves the stationary distribution is the target distribution.</p>
-</li>
+\]</div>
+<ul>
+<li><strong>Stationary State</strong> : When <span class="arithmatex">\(\frac{\partial \rho(x, t)}{\partial t} = 0\)</span>, solving <span class="arithmatex">\(\rho(x) \propto e^{-U(x)}\)</span> proves the stationary distribution is the target distribution.</li>
 </ul>
 <hr />
 <h4 id="5-application-scenarios">5. Application Scenarios<a class="headerlink" href="#5-application-scenarios" title="Permanent link">&para;</a></h4>
@@ -1888,21 +1890,21 @@ $$</p>
 </li>
 </ul>
 <h4 id="7-example-code-python-code">7. Example Code (Python Code)<a class="headerlink" href="#7-example-code-python-code" title="Permanent link">&para;</a></h4>
-<pre><code class="language-python">import numpy as np
-
-def langevin_sampling(grad_log_p, x0, epsilon, n_steps):
-    samples = [x0]
-    x = x0.copy()
-    for _ in range(n_steps):
-        noise = np.random.randn(*x.shape) * np.sqrt(2 * epsilon)
-        x += -epsilon * grad_log_p(x) + noise
-        samples.append(x)
-    return np.array(samples)
-
-# Example: Sampling from \( p(x) \propto e^{-x^2/2}, \, \text{grad_log_p}(x) = -x \)
-grad_log_p = lambda x: -x  # Gradient of log-p(x)
-samples = langevin_sampling(grad_log_p, x0=np.random.randn(), epsilon=0.01, n_steps=1000)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">def</span> <span class="nf">langevin_sampling</span><span class="p">(</span><span class="n">grad_log_p</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">):</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">samples</span> <span class="o">=</span> <span class="p">[</span><span class="n">x0</span><span class="p">]</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="n">x</span> <span class="o">=</span> <span class="n">x0</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_steps</span><span class="p">):</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>        <span class="n">noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="o">*</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">epsilon</span><span class="p">)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>        <span class="n">x</span> <span class="o">+=</span> <span class="o">-</span><span class="n">epsilon</span> <span class="o">*</span> <span class="n">grad_log_p</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">noise</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>        <span class="n">samples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Example: Sampling from \( p(x) \propto e^{-x^2/2}, \, \text{grad_log_p}(x) = -x \)</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="n">grad_log_p</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="o">-</span><span class="n">x</span>  <span class="c1"># Gradient of log-p(x)</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="n">samples</span> <span class="o">=</span> <span class="n">langevin_sampling</span><span class="p">(</span><span class="n">grad_log_p</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(),</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">n_steps</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+</code></pre></div>
 <ul>
 <li>Code <code>experiment/langevin_dynamics_simulation.ipynb</code>
 <img alt="LD sampling process" src="../../../images/image-34.png" /></li>
@@ -2102,13 +2104,14 @@ Introduces auxiliary dimensions to simplify sampling.</p>
 <h3 id="learning-objectives">Learning Objectives<a class="headerlink" href="#learning-objectives" title="Permanent link">&para;</a></h3>
 <p>Why do different SDE formulations yield the same equilibrium distribution?</p>
 <p><strong>Mathematical Tool</strong> :</p>
-<p>Fokker-Planck equation.For the SDE <span class="arithmatex">\(dx = b(x) dt + \sigma(x) dW_x\)</span>, the Fokker-Planck equation is:</p>
+<p><strong>Fokker-Planck equation</strong></p>
+<p>For the SDE <span class="arithmatex">\(dx = b(x) dt + \sigma(x) dW_x\)</span>, the Fokker-Planck equation is:</p>
 <div class="arithmatex">\[
- \frac{\partial p}{\partial t} = -\nabla \cdot (p b) + \frac{1}{2} \nabla^2 : (p \sigma \sigma^\top),
+ \frac{\partial p}{\partial t} = -\nabla \cdot (p b) + \frac{1}{2} \nabla^2(p \sigma \sigma^\top),
 \]</div>
-<p>where <span class="arithmatex">\(p(x, t)\)</span> is the probability density, <span class="arithmatex">\(b(x)\)</span> the drift term, and <span class="arithmatex">\(\sigma(x)\)</span> the diffusion term.Stationary solution <span class="arithmatex">\(p(x)\)</span> satisfies:</p>
+<p>where <span class="arithmatex">\(p(x, t)\)</span> is the probability density, <span class="arithmatex">\(b(x)\)</span> the drift term, and <span class="arithmatex">\(\sigma(x)\)</span> the diffusion term. Stationary solution <span class="arithmatex">\(p(x)\)</span> satisfies:</p>
 <div class="arithmatex">\[
- \nabla \cdot (p b) = \frac{1}{2} \nabla^2 : (p \sigma \sigma^\top).
+ \nabla \cdot (p b) = \frac{1}{2} \nabla^2(p \sigma \sigma^\top).
 \]</div>
 <p>By adjusting <span class="arithmatex">\(b(x)\)</span> and <span class="arithmatex">\(\sigma(x)\)</span>, one can achieve the desired stationary distribution.</p>
 <h3 id="practical-recommendations">Practical Recommendations<a class="headerlink" href="#practical-recommendations" title="Permanent link">&para;</a></h3>
@@ -2205,7 +2208,9 @@ Introduces auxiliary dimensions to simplify sampling.</p>
 </ul>
 <h3 id="7-practical-steps">7. Practical Steps<a class="headerlink" href="#7-practical-steps" title="Permanent link">&para;</a></h3>
 <ol>
-<li><strong>Initialization</strong> :</li>
+<li>
+<p><strong>Initialization</strong> :</p>
+</li>
 <li>
 <p>Set the initial temperature <span class="arithmatex">\(T_0\)</span>, annealing schedule, step size <span class="arithmatex">\(\epsilon\)</span>, and random initialization of <span class="arithmatex">\(x_0\)</span>.</p>
 </li>
@@ -2234,22 +2239,22 @@ Introduces auxiliary dimensions to simplify sampling.</p>
 </li>
 </ol>
 <p><strong>Python Code Example</strong> :</p>
-<pre><code class="language-python">import numpy as np
-
-def annealed_langevin(grad_U, x0, T0, epsilon, n_steps, schedule='exponential', gamma=0.99):
-    x = x0.copy()
-    samples = [x0]
-    T = T0
-    for k in range(n_steps):
-        if schedule == 'exponential':
-            T = T0 * gamma ** k
-        elif schedule == 'polynomial':
-            T = T0 / (1 + k)
-        noise = np.random.randn(x.shape) * np.sqrt(2 * epsilon * T)
-        x = x - epsilon * grad_U(x) + noise
-        samples.append(x)
-    return np.array(samples)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">def</span> <span class="nf">annealed_langevin</span><span class="p">(</span><span class="n">grad_U</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">T0</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">,</span> <span class="n">schedule</span><span class="o">=</span><span class="s1">&#39;exponential&#39;</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.99</span><span class="p">):</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="n">x</span> <span class="o">=</span> <span class="n">x0</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="n">samples</span> <span class="o">=</span> <span class="p">[</span><span class="n">x0</span><span class="p">]</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="n">T</span> <span class="o">=</span> <span class="n">T0</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_steps</span><span class="p">):</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>        <span class="k">if</span> <span class="n">schedule</span> <span class="o">==</span> <span class="s1">&#39;exponential&#39;</span><span class="p">:</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>            <span class="n">T</span> <span class="o">=</span> <span class="n">T0</span> <span class="o">*</span> <span class="n">gamma</span> <span class="o">**</span> <span class="n">k</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>        <span class="k">elif</span> <span class="n">schedule</span> <span class="o">==</span> <span class="s1">&#39;polynomial&#39;</span><span class="p">:</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>            <span class="n">T</span> <span class="o">=</span> <span class="n">T0</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">k</span><span class="p">)</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>        <span class="n">noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">epsilon</span> <span class="o">*</span> <span class="n">T</span><span class="p">)</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="n">epsilon</span> <span class="o">*</span> <span class="n">grad_U</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">noise</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>        <span class="n">samples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
+</code></pre></div>
 <h3 id="8-comparison-with-other-methods">8. Comparison with Other Methods<a class="headerlink" href="#8-comparison-with-other-methods" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -2337,9 +2342,19 @@ Dynamically adjusts the annealing schedule based on feedback (e.g., acceptance r
       <div class="md-copyright">
   
   
-    Made with
-    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
-      Material for MkDocs
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/tsiendragon/learning" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
     </a>
   
 </div>
@@ -2364,6 +2379,8 @@ Dynamically adjusts the annealing schedule based on feedback (e.g., acceptance r
         <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
       
         <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+        <script src="../../../assets/custom.js"></script>
       
     
   </body>

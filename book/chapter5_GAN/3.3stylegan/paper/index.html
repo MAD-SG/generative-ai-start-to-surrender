@@ -43,6 +43,8 @@
       
     
     
+      <link rel="stylesheet" href="../../../../assets/custom.css">
+    
     <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -1609,8 +1611,8 @@
 <li>通过风格向量调制每个通道的均值和方差</li>
 <li>实现了对特定特征的精确控制</li>
 </ol>
-<p><code>python
-   x = x * (style_split[:, 0] + 1) + style_split[:, 1]</code></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="p">(</span><span class="n">style_split</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">style_split</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+</code></pre></div>
 <ul>
 <li>每个channel的feature map显式调节方差和均值，这两个统计量表示图片的风格</li>
 </ul>
@@ -1678,63 +1680,62 @@
 </ol>
 <h2 id="_3">代码解读<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
 <h3 id="1-generator">1. Generator<a class="headerlink" href="#1-generator" title="Permanent link">&para;</a></h3>
-<pre><code>
-    def forward(self,
-                z,
-                label=None,
-                lod=None,
-                w_moving_decay=0.995,
-                style_mixing_prob=0.9,
-                trunc_psi=None,
-                trunc_layers=None,
-                randomize_noise=False,
-                **_unused_kwargs):
-        mapping_results = self.mapping(z, label) # label 是用于条件生成的标签
-        w = mapping_results['w'] #  W空间
-        # w shape : [batch_size, w_space_dim] = [B,512]
-
-        if self.training and w_moving_decay &lt; 1:
-            batch_w_avg = all_gather(w).mean(dim=0)
-            self.truncation.w_avg.copy_(
-                self.truncation.w_avg * w_moving_decay +
-                batch_w_avg * (1 - w_moving_decay))
-            # 计算一个W空间中的中心点,用于截断操作
-        if self.training and style_mixing_prob &gt; 0:
-            new_z = torch.randn_like(z)
-            new_w = self.mapping(new_z, label)['w']
-            lod = self.synthesis.lod.cpu().tolist() if lod is None else lod
-            # 这里的 tolist() 可能造成混淆，但对于0维tensor（标量tensor），它返回的是一个标量值。例如：
-            # 所以在这里，lod 就是一个数值，比如 0、1、2 或者 1.5 这样的值，用于控制生成图像的分辨率级别。这个值：
-
-            # 可以是整数：直接对应某个分辨率级别
-            # 也可以是小数：表示在两个分辨率级别之间进行插值
-
-            current_layers = self.num_layers - int(lod) * 2
-            if np.random.uniform() &lt; style_mixing_prob:
-                mixing_cutoff = np.random.randint(1, current_layers)
-                # 前面的current_layers 表示当前的分辨率级别
-                # 后面的 mixing_cutoff 表示截断点
-                # 这里的 np.random.randint(1, current_layers) 表示随机选择一个截断点
-
-                w = self.truncation(w)
-                new_w = self.truncation(new_w)
-                w[:, mixing_cutoff:] = new_w[:, mixing_cutoff:]
-                # 前半部分的 W 空间不变，后半部分的 W 空间进行了替换
-
-        wp = self.truncation(w, trunc_psi, trunc_layers)
-        # wp 也进行了截断。
-        # 形状变化  ：
-        # 输入 w: [batch_size, w_space_dim] = [B, 512]
-        # 输出 wp: [batch_size, num_layers, w_space_dim] = [B, num_layers, 512]
-        synthesis_results = self.synthesis(wp, lod, randomize_noise)
-
-        return {**mapping_results, **synthesis_results}
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>    def forward(self,
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>                z,
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>                label=None,
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>                lod=None,
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>                w_moving_decay=0.995,
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>                style_mixing_prob=0.9,
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>                trunc_psi=None,
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>                trunc_layers=None,
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>                randomize_noise=False,
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>                **_unused_kwargs):
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>        mapping_results = self.mapping(z, label) # label 是用于条件生成的标签
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>        w = mapping_results[&#39;w&#39;] #  W空间
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>        # w shape : [batch_size, w_space_dim] = [B,512]
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>        if self.training and w_moving_decay &lt; 1:
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>            batch_w_avg = all_gather(w).mean(dim=0)
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>            self.truncation.w_avg.copy_(
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>                self.truncation.w_avg * w_moving_decay +
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>                batch_w_avg * (1 - w_moving_decay))
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>            # 计算一个W空间中的中心点,用于截断操作
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>        if self.training and style_mixing_prob &gt; 0:
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>            new_z = torch.randn_like(z)
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>            new_w = self.mapping(new_z, label)[&#39;w&#39;]
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>            lod = self.synthesis.lod.cpu().tolist() if lod is None else lod
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>            # 这里的 tolist() 可能造成混淆，但对于0维tensor（标量tensor），它返回的是一个标量值。例如：
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>            # 所以在这里，lod 就是一个数值，比如 0、1、2 或者 1.5 这样的值，用于控制生成图像的分辨率级别。这个值：
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>            # 可以是整数：直接对应某个分辨率级别
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>            # 也可以是小数：表示在两个分辨率级别之间进行插值
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>            current_layers = self.num_layers - int(lod) * 2
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>            if np.random.uniform() &lt; style_mixing_prob:
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>                mixing_cutoff = np.random.randint(1, current_layers)
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>                # 前面的current_layers 表示当前的分辨率级别
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>                # 后面的 mixing_cutoff 表示截断点
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>                # 这里的 np.random.randint(1, current_layers) 表示随机选择一个截断点
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>                w = self.truncation(w)
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>                new_w = self.truncation(new_w)
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>                w[:, mixing_cutoff:] = new_w[:, mixing_cutoff:]
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>                # 前半部分的 W 空间不变，后半部分的 W 空间进行了替换
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>        wp = self.truncation(w, trunc_psi, trunc_layers)
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>        # wp 也进行了截断。
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>        # 形状变化  ：
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>        # 输入 w: [batch_size, w_space_dim] = [B, 512]
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>        # 输出 wp: [batch_size, num_layers, w_space_dim] = [B, num_layers, 512]
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>        synthesis_results = self.synthesis(wp, lod, randomize_noise)
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>        return {**mapping_results, **synthesis_results}
+</code></pre></div>
 <p>generator 分成几个步骤</p>
 <h4 id="1-mapping-network">1. 映射网络 (Mapping Network)<a class="headerlink" href="#1-mapping-network" title="Permanent link">&para;</a></h4>
-<pre><code>mapping_results = self.mapping(z, label) # label 是用于条件生成的标签
-w = mapping_results['w']
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>mapping_results = self.mapping(z, label) # label 是用于条件生成的标签
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>w = mapping_results[&#39;w&#39;]
+</code></pre></div>
 <p><strong>输入</strong> :</p>
 <ul>
 <li><span class="arithmatex">\(z\)</span>: 潜在向量，通常是从标准正态分布中采样，形状为 <span class="arithmatex">\([B, z\_dim]\)</span></li>
@@ -1749,12 +1750,12 @@ w = mapping_results['w']
 </li>
 </ul>
 <h4 id="2-w">2. W 空间均值的移动平均更新<a class="headerlink" href="#2-w" title="Permanent link">&para;</a></h4>
-<pre><code class="language-python">if self.training and w_moving_decay &lt; 1:
-    batch_w_avg = all_gather(w).mean(dim=0)
-    self.truncation.w_avg.copy_(
-        self.truncation.w_avg * w_moving_decay +
-        batch_w_avg * (1 - w_moving_decay))
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">training</span> <span class="ow">and</span> <span class="n">w_moving_decay</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="n">batch_w_avg</span> <span class="o">=</span> <span class="n">all_gather</span><span class="p">(</span><span class="n">w</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">truncation</span><span class="o">.</span><span class="n">w_avg</span><span class="o">.</span><span class="n">copy_</span><span class="p">(</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">truncation</span><span class="o">.</span><span class="n">w_avg</span> <span class="o">*</span> <span class="n">w_moving_decay</span> <span class="o">+</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>        <span class="n">batch_w_avg</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">w_moving_decay</span><span class="p">))</span>
+</code></pre></div>
 <ul>
 <li><strong>目的</strong> :</li>
 <li>
@@ -1777,40 +1778,40 @@ w_{avg} \gets w_{avg} \cdot \text{decay} + \text{batch-w-avg} \cdot (1 - \text{d
 </li>
 </ul>
 <h4 id="3-style-mixing">3. 样式混合 (Style Mixing)<a class="headerlink" href="#3-style-mixing" title="Permanent link">&para;</a></h4>
-<pre><code class="language-python">if self.training and style_mixing_prob &gt; 0:
-    new_z = torch.randn_like(z)
-    new_w = self.mapping(new_z, label)['w']
-    lod = self.synthesis.lod.cpu().tolist() if lod is None else lod
-    current_layers = self.num_layers - int(lod) * 2
-    if np.random.uniform() &lt; style_mixing_prob:
-        mixing_cutoff = np.random.randint(1, current_layers)
-        # 前面的current_layers 表示当前的分辨率级别
-        # 后面的 mixing_cutoff 表示截断点
-        # 这里的 np.random.randint(1, current_layers) 表示随机选择一个截断点
-
-        w = self.truncation(w)
-        new_w = self.truncation(new_w)
-        w[:, mixing_cutoff:] = new_w[:, mixing_cutoff:]
-        # 前半部分的 W 空间不变，后半部分的 W 空间进行了替换
-
-        # 问题：同一个batch里的mixing_point是一样的。如果对同一个batch里的不同样本做不一样的样式混合，会不会有问题？
-
-#### 4. 截断操作 (Truncation Trick)
-```python
-wp = self.truncation(w, trunc_psi, trunc_layers)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">training</span> <span class="ow">and</span> <span class="n">style_mixing_prob</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="n">new_z</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn_like</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="n">new_w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">(</span><span class="n">new_z</span><span class="p">,</span> <span class="n">label</span><span class="p">)[</span><span class="s1">&#39;w&#39;</span><span class="p">]</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">lod</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">synthesis</span><span class="o">.</span><span class="n">lod</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="k">if</span> <span class="n">lod</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">lod</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="n">current_layers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_layers</span> <span class="o">-</span> <span class="nb">int</span><span class="p">(</span><span class="n">lod</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">style_mixing_prob</span><span class="p">:</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>        <span class="n">mixing_cutoff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">current_layers</span><span class="p">)</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>        <span class="c1"># 前面的current_layers 表示当前的分辨率级别</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>        <span class="c1"># 后面的 mixing_cutoff 表示截断点</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>        <span class="c1"># 这里的 np.random.randint(1, current_layers) 表示随机选择一个截断点</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>        <span class="n">w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">truncation</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>        <span class="n">new_w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">truncation</span><span class="p">(</span><span class="n">new_w</span><span class="p">)</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>        <span class="n">w</span><span class="p">[:,</span> <span class="n">mixing_cutoff</span><span class="p">:]</span> <span class="o">=</span> <span class="n">new_w</span><span class="p">[:,</span> <span class="n">mixing_cutoff</span><span class="p">:]</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>        <span class="c1"># 前半部分的 W 空间不变，后半部分的 W 空间进行了替换</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>        <span class="c1"># 问题：同一个batch里的mixing_point是一样的。如果对同一个batch里的不同样本做不一样的样式混合，会不会有问题？</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="c1">#### 4. 截断操作 (Truncation Trick)</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="err">```</span><span class="n">python</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="n">wp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">truncation</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">trunc_psi</span><span class="p">,</span> <span class="n">trunc_layers</span><span class="p">)</span>
+</code></pre></div>
 <p>在self.truncation里面 会先对<span class="arithmatex">\(w\)</span>进行复制，复制后的shape 为 <span class="arithmatex">\([B, \text{num\_layers}, w\_dim]\)</span>，
 每一层的样式向量都是相同的。
 然后再进行截断操作.</p>
-<pre><code>#self traucation
-if w.ndim == 2:
-    if self.repeat_w and w.shape[1] == self.w_space_dim:
-        w = w.view(-1, 1, self.w_space_dim)
-        wp = w.repeat(1, self.num_layers, 1)
-    else:
-        assert w.shape[1] == self.w_space_dim * self.num_layers
-        wp = w.view(-1, self.num_layers, self.w_space_dim)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>#self traucation
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>if w.ndim == 2:
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    if self.repeat_w and w.shape[1] == self.w_space_dim:
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>        w = w.view(-1, 1, self.w_space_dim)
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>        wp = w.repeat(1, self.num_layers, 1)
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    else:
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>        assert w.shape[1] == self.w_space_dim * self.num_layers
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>        wp = w.view(-1, self.num_layers, self.w_space_dim)
+</code></pre></div>
 <ul>
 <li><strong>目的</strong> :</li>
 <li>
@@ -1898,8 +1899,8 @@ $</p>
 </li>
 </ol>
 <h4 id="5">5. 图像生成<a class="headerlink" href="#5" title="Permanent link">&para;</a></h4>
-<pre><code class="language-python">synthesis_results = self.synthesis(wp, lod, randomize_noise)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">synthesis_results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">synthesis</span><span class="p">(</span><span class="n">wp</span><span class="p">,</span> <span class="n">lod</span><span class="p">,</span> <span class="n">randomize_noise</span><span class="p">)</span>
+</code></pre></div>
 <ul>
 <li><strong>输入</strong> :</li>
 <li><span class="arithmatex">\(wp\)</span>: 分层样式向量。</li>
@@ -1918,182 +1919,181 @@ $</p>
 <h3 id="2-synthesis-network">2. synthesis network<a class="headerlink" href="#2-synthesis-network" title="Permanent link">&para;</a></h3>
 <p>synthesis network 定义在class SynthesisModule 里面，是一个生成器的主要部分，负责生成图像的过程。
 它的参数意义</p>
-<pre><code>resolution (默认1024): 生成图像的最终输出分辨率。例如设置为1024时，最终生成1024x1024像素的图像。
-init_resolution (默认4): 生成器的初始特征图分辨率。StyleGAN从这个低分辨率(通常是4或8)开始，然后通过一系列上采样层逐步增加分辨率直到达到目标分辨率。
-w_space_dim (默认512): W潜在空间的维度。这是StyleGAN的一个关键特征，它是将输入的Z空间通过映射网络转换后的中间潜在空间，用于更好地控制不同尺度的图像特征。
-image_channels (默认3): 输出图像的颜色通道数，对于RGB彩色图像是3。
-final_tanh (默认False): 是否在网络最后一层使用tanh激活函数。使用tanh可以将输出严格限制在[-1, 1]范围内。
-const_input (默认True): 是否使用常量输入。StyleGAN的一个创新是使用学习的常量作为生成器的起点，而不是随机噪声。
-fused_scale (默认'auto'): 控制是否使用融合的上采样卷积操作。融合操作可以提高计算效率。
-use_wscale (默认True): 是否使用权重缩放。这是一种训练技巧，通过对权重进行适当的缩放来帮助训练稳定性。
-noise_type (默认'spatial'): 控制添加到每一层的随机噪声的类型。空间噪声可以帮助生成更多的细节变化。
-fmaps_base (默认16&lt;&lt;10): 基础特征图数量，用于控制网络各层的通道数。默认值是16384。
-fmaps_max (默认512): 限制网络中任何层的最大特征图数量，防止网络变得过大。
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>resolution (默认1024): 生成图像的最终输出分辨率。例如设置为1024时，最终生成1024x1024像素的图像。
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>init_resolution (默认4): 生成器的初始特征图分辨率。StyleGAN从这个低分辨率(通常是4或8)开始，然后通过一系列上采样层逐步增加分辨率直到达到目标分辨率。
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>w_space_dim (默认512): W潜在空间的维度。这是StyleGAN的一个关键特征，它是将输入的Z空间通过映射网络转换后的中间潜在空间，用于更好地控制不同尺度的图像特征。
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>image_channels (默认3): 输出图像的颜色通道数，对于RGB彩色图像是3。
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>final_tanh (默认False): 是否在网络最后一层使用tanh激活函数。使用tanh可以将输出严格限制在[-1, 1]范围内。
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>const_input (默认True): 是否使用常量输入。StyleGAN的一个创新是使用学习的常量作为生成器的起点，而不是随机噪声。
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>fused_scale (默认&#39;auto&#39;): 控制是否使用融合的上采样卷积操作。融合操作可以提高计算效率。
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>use_wscale (默认True): 是否使用权重缩放。这是一种训练技巧，通过对权重进行适当的缩放来帮助训练稳定性。
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>noise_type (默认&#39;spatial&#39;): 控制添加到每一层的随机噪声的类型。空间噪声可以帮助生成更多的细节变化。
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>fmaps_base (默认16&lt;&lt;10): 基础特征图数量，用于控制网络各层的通道数。默认值是16384。
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>fmaps_max (默认512): 限制网络中任何层的最大特征图数量，防止网络变得过大。
+</code></pre></div>
 <p>forward 步骤</p>
-<pre><code>    def forward(self, wp, lod=None, randomize_noise=False):
-        # wp 代表经过映射网络处理后的风格向量（style vector）。
-        # Z 空间（初始潜在空间）
-        # 这是输入的随机噪声向量
-        # 通常是从标准正态分布采样得到
-        # W 空间（中间潜在空间）
-        # 通过映射网络(Mapping Network)将 Z 空间向量转换得到
-        # 相比 Z 空间，W 空间具有更好的解耦特性
-        # W+ 空间（扩展的 W 空间）
-        # 这就是代码中的 wp（w plus）
-        # 它是将 W 空间的向量扩展到每一层都有一个独立的风格向量
-        # 如果网络有 n 层，那么 wp 的形状就是 [batch_size, n, w_dim]
-        lod = self.lod.cpu().tolist() if lod is None else lod
-        # lod 的计算过程：
-        # 基于已训练的图像数量（total_img）计算
-        # 每个分辨率级别的持续时间 = 训练图像数 + 过渡图像数
-        # 当前的 lod 值决定了生成图像的分辨率
-        # 例如，对于512x512的最终分辨率：
-        # 分辨率序列：8 → 16 → 32 → 64 → 128 → 256 → 512
-        # LOD序列：6 → 5 → 4 → 3 → 2 → 1 → 0
-        if lod + self.init_res_log2 &gt; self.final_res_log2: # lod 异常
-            raise ValueError(f'Maximum level-of-detail (lod) is '
-                             f'{self.final_res_log2 - self.init_res_log2}, '
-                             f'but `{lod}` is received!')
-
-        results = {'wp': wp}
-        for res_log2 in range(self.init_res_log2, self.final_res_log2 + 1):
-            current_lod = self.final_res_log2 - res_log2
-            if lod &lt; current_lod + 1:
-                block_idx = res_log2 - self.init_res_log2
-                if block_idx == 0: # 最低分辨率
-                    if self.const_input:
-                        x, style = self.layer0(None, wp[:, 0], randomize_noise)
-                    else:
-                        x = wp[:, 0].view(-1, self.w_space_dim, 1, 1)
-                        x, style = self.layer0(x, wp[:, 0], randomize_noise)
-                else:
-                    x, style = self.__getattr__(f'layer{2 * block_idx}')(
-                        x, wp[:, 2 * block_idx], randomize_noise)
-                    results[f'style{2 * block_idx:02d}'] = style
-                    x, style = self.__getattr__(f'layer{2 * block_idx + 1}')(
-                        x, wp[:, 2 * block_idx + 1], randomize_noise)
-                    results[f'style{2 * block_idx + 1:02d}'] = style
-            if current_lod - 1 &lt; lod &lt;= current_lod:
-                image = self.__getattr__(f'output{block_idx}')(x, None)
-            elif current_lod &lt; lod &lt; current_lod + 1:
-                alpha = np.ceil(lod) - lod
-                image = (self.__getattr__(f'output{block_idx}')(x, None) * alpha
-                         + self.upsample(image) * (1 - alpha))
-            elif lod &gt;= current_lod + 1:
-                image = self.upsample(image)
-        results['image'] = self.final_activate(image)
-        return results
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>    def forward(self, wp, lod=None, randomize_noise=False):
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>        # wp 代表经过映射网络处理后的风格向量（style vector）。
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>        # Z 空间（初始潜在空间）
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>        # 这是输入的随机噪声向量
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>        # 通常是从标准正态分布采样得到
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>        # W 空间（中间潜在空间）
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>        # 通过映射网络(Mapping Network)将 Z 空间向量转换得到
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>        # 相比 Z 空间，W 空间具有更好的解耦特性
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>        # W+ 空间（扩展的 W 空间）
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>        # 这就是代码中的 wp（w plus）
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>        # 它是将 W 空间的向量扩展到每一层都有一个独立的风格向量
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>        # 如果网络有 n 层，那么 wp 的形状就是 [batch_size, n, w_dim]
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>        lod = self.lod.cpu().tolist() if lod is None else lod
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>        # lod 的计算过程：
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>        # 基于已训练的图像数量（total_img）计算
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>        # 每个分辨率级别的持续时间 = 训练图像数 + 过渡图像数
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>        # 当前的 lod 值决定了生成图像的分辨率
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>        # 例如，对于512x512的最终分辨率：
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>        # 分辨率序列：8 → 16 → 32 → 64 → 128 → 256 → 512
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>        # LOD序列：6 → 5 → 4 → 3 → 2 → 1 → 0
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>        if lod + self.init_res_log2 &gt; self.final_res_log2: # lod 异常
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>            raise ValueError(f&#39;Maximum level-of-detail (lod) is &#39;
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>                             f&#39;{self.final_res_log2 - self.init_res_log2}, &#39;
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>                             f&#39;but `{lod}` is received!&#39;)
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a>        results = {&#39;wp&#39;: wp}
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a>        for res_log2 in range(self.init_res_log2, self.final_res_log2 + 1):
+<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a>            current_lod = self.final_res_log2 - res_log2
+<a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a>            if lod &lt; current_lod + 1:
+<a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a>                block_idx = res_log2 - self.init_res_log2
+<a id="__codelineno-8-31" name="__codelineno-8-31" href="#__codelineno-8-31"></a>                if block_idx == 0: # 最低分辨率
+<a id="__codelineno-8-32" name="__codelineno-8-32" href="#__codelineno-8-32"></a>                    if self.const_input:
+<a id="__codelineno-8-33" name="__codelineno-8-33" href="#__codelineno-8-33"></a>                        x, style = self.layer0(None, wp[:, 0], randomize_noise)
+<a id="__codelineno-8-34" name="__codelineno-8-34" href="#__codelineno-8-34"></a>                    else:
+<a id="__codelineno-8-35" name="__codelineno-8-35" href="#__codelineno-8-35"></a>                        x = wp[:, 0].view(-1, self.w_space_dim, 1, 1)
+<a id="__codelineno-8-36" name="__codelineno-8-36" href="#__codelineno-8-36"></a>                        x, style = self.layer0(x, wp[:, 0], randomize_noise)
+<a id="__codelineno-8-37" name="__codelineno-8-37" href="#__codelineno-8-37"></a>                else:
+<a id="__codelineno-8-38" name="__codelineno-8-38" href="#__codelineno-8-38"></a>                    x, style = self.__getattr__(f&#39;layer{2 * block_idx}&#39;)(
+<a id="__codelineno-8-39" name="__codelineno-8-39" href="#__codelineno-8-39"></a>                        x, wp[:, 2 * block_idx], randomize_noise)
+<a id="__codelineno-8-40" name="__codelineno-8-40" href="#__codelineno-8-40"></a>                    results[f&#39;style{2 * block_idx:02d}&#39;] = style
+<a id="__codelineno-8-41" name="__codelineno-8-41" href="#__codelineno-8-41"></a>                    x, style = self.__getattr__(f&#39;layer{2 * block_idx + 1}&#39;)(
+<a id="__codelineno-8-42" name="__codelineno-8-42" href="#__codelineno-8-42"></a>                        x, wp[:, 2 * block_idx + 1], randomize_noise)
+<a id="__codelineno-8-43" name="__codelineno-8-43" href="#__codelineno-8-43"></a>                    results[f&#39;style{2 * block_idx + 1:02d}&#39;] = style
+<a id="__codelineno-8-44" name="__codelineno-8-44" href="#__codelineno-8-44"></a>            if current_lod - 1 &lt; lod &lt;= current_lod:
+<a id="__codelineno-8-45" name="__codelineno-8-45" href="#__codelineno-8-45"></a>                image = self.__getattr__(f&#39;output{block_idx}&#39;)(x, None)
+<a id="__codelineno-8-46" name="__codelineno-8-46" href="#__codelineno-8-46"></a>            elif current_lod &lt; lod &lt; current_lod + 1:
+<a id="__codelineno-8-47" name="__codelineno-8-47" href="#__codelineno-8-47"></a>                alpha = np.ceil(lod) - lod
+<a id="__codelineno-8-48" name="__codelineno-8-48" href="#__codelineno-8-48"></a>                image = (self.__getattr__(f&#39;output{block_idx}&#39;)(x, None) * alpha
+<a id="__codelineno-8-49" name="__codelineno-8-49" href="#__codelineno-8-49"></a>                         + self.upsample(image) * (1 - alpha))
+<a id="__codelineno-8-50" name="__codelineno-8-50" href="#__codelineno-8-50"></a>            elif lod &gt;= current_lod + 1:
+<a id="__codelineno-8-51" name="__codelineno-8-51" href="#__codelineno-8-51"></a>                image = self.upsample(image)
+<a id="__codelineno-8-52" name="__codelineno-8-52" href="#__codelineno-8-52"></a>        results[&#39;image&#39;] = self.final_activate(image)
+<a id="__codelineno-8-53" name="__codelineno-8-53" href="#__codelineno-8-53"></a>        return results
+</code></pre></div>
 <p>lod 表示 level of details.表示分辨率。</p>
-<pre><code>        # Compute level-of-details.
-        phase, subphase = divmod(runner.seen_img, self.lod_duration)
-        lod = self.init_lod - phase
-        if self.lod_transition_img:
-            transition_img = max(subphase - self.lod_training_img, 0)
-            lod = lod - transition_img / self.lod_transition_img
-        lod = max(lod, 0.0)
-        resolution = self.init_res * (2 ** int(np.ceil(self.init_lod - lod)))
-        return lod, resolution
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>        # Compute level-of-details.
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>        phase, subphase = divmod(runner.seen_img, self.lod_duration)
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>        lod = self.init_lod - phase
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>        if self.lod_transition_img:
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>            transition_img = max(subphase - self.lod_training_img, 0)
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>            lod = lod - transition_img / self.lod_transition_img
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>        lod = max(lod, 0.0)
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>        resolution = self.init_res * (2 ** int(np.ceil(self.init_lod - lod)))
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>        return lod, resolution
+</code></pre></div>
 <p>lod 详细计算过程。假设
 其中，init_res 是初始分辨率（通常是4或8）。
 举例说明：</p>
 <blockquote>
-<pre><code>假设 init_lod = 8（从8x8到2048x2048）
+<div class="highlight"><pre><span></span><code>假设 init_lod = 8（从8x8到2048x2048）
 lod_duration = 600,000（每个分辨率级别60万张图像）,
 lod_training_img = 300,000（稳定阶段30万张图像）这个阶段lod一直保持为8,分辨率为8x8,
 lod_transition_img = 300,000（过渡阶段30万张图像）,
 到了这个阶段之后, lod 从 8.0 逐渐降低到 7.0，分辨率一直是16x16。,
 直观上看 每个分辨率训练分成两个阶段，第一阶段训练当前分辨率的稳定阶段，第二阶段训练下一个分辨率的过渡阶段，lod线性递减到下一个分辨率对应的lod。
-</code></pre>
+</code></pre></div>
 </blockquote>
 <p>synthesis 网络的每一个分辨率层都有两个卷积层。初始分辨率的第一个卷积层有所区别。</p>
 <h4 id="_4">第一个分辨率层<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h4>
 <h5 id="layer0">layer0<a class="headerlink" href="#layer0" title="Permanent link">&para;</a></h5>
 <p>layer0 的网络定义为</p>
-<pre><code>self.layer0 =ConvBlock(
-    in_channels=self.get_nf(res),
-    out_channels=self.get_nf(res),
-    resolution=self.init_res,
-    w_space_dim=self.w_space_dim,
-    position='const_init', # 标记为const_init
-    use_wscale=self.use_wscale,
-    noise_type=self.noise_type)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>self.layer0 =ConvBlock(
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>    in_channels=self.get_nf(res),
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>    out_channels=self.get_nf(res),
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>    resolution=self.init_res,
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>    w_space_dim=self.w_space_dim,
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>    position=&#39;const_init&#39;, # 标记为const_init
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>    use_wscale=self.use_wscale,
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>    noise_type=self.noise_type)
+</code></pre></div>
 <p>输入为</p>
-<pre><code>x, style = self.layer0(None, wp[:, 0], randomize_noise)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>x, style = self.layer0(None, wp[:, 0], randomize_noise)
+</code></pre></div>
 <p>第一个分辨率只有一个convblock，将原始的输入4x4x512 转化为 4x4x512</p>
 <h4 id="k">第k个分辨率层<a class="headerlink" href="#k" title="Permanent link">&para;</a></h4>
 <p>次后的每个分辨率层包含两个convblock
 第一个convblock 增加了上采样的操作。其余的一样。
 最后一个分辨率只有一个convblock，将512x512x32 转化为 1024x1024x16
 分辨率增加一倍，output channel 减半，保持卷积整体的参数量每一层一致。</p>
-<pre><code>self.layer{2k-1} =  ConvBlock(
-    in_channels=self.get_nf(res // 2),
-    out_channels=self.get_nf(res),
-    resolution=res,
-    w_space_dim=self.w_space_dim,
-    upsample=True,
-    fused_scale=fused_scale,
-    use_wscale=self.use_wscale,
-    noise_type=self.noise_type
-)
-
-self.layer{2k} =ConvBlock(
-    in_channels=self.w_space_dim,
-    out_channels=self.get_nf(res),
-    resolution=self.init_res,
-    w_space_dim=self.w_space_dim,
-    kernel_size=self.init_res,
-    padding=self.init_res - 1,
-    use_wscale=self.use_wscale,
-    noise_type=self.noise_type
-)
-
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>self.layer{2k-1} =  ConvBlock(
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>    in_channels=self.get_nf(res // 2),
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>    out_channels=self.get_nf(res),
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    resolution=res,
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    w_space_dim=self.w_space_dim,
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>    upsample=True,
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>    fused_scale=fused_scale,
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>    use_wscale=self.use_wscale,
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>    noise_type=self.noise_type
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>)
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>self.layer{2k} =ConvBlock(
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>    in_channels=self.w_space_dim,
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>    out_channels=self.get_nf(res),
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>    resolution=self.init_res,
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>    w_space_dim=self.w_space_dim,
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>    kernel_size=self.init_res,
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>    padding=self.init_res - 1,
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>    use_wscale=self.use_wscale,
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>    noise_type=self.noise_type
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>)
+</code></pre></div>
 <p>输入</p>
-<pre><code>x, style = f&quot;self.layer{2k-11}&quot;(x, wp[:, 2 * block_idx - 1], randomize_noise)
-x, style = f&quot;self.layer{2k}&quot;(x, wp[:, 2 * block_idx],randomize_noise)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>x, style = f&quot;self.layer{2k-11}&quot;(x, wp[:, 2 * block_idx - 1], randomize_noise)
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>x, style = f&quot;self.layer{2k}&quot;(x, wp[:, 2 * block_idx],randomize_noise)
+</code></pre></div>
 <p>每个convblock 的输入都包含上一层的输入,本层的风格向量，以及是否需要添加噪声。</p>
 <p>每一个分辨率的第一个卷积层和第二个卷积层区别在于第二个会加入上采样。</p>
 <h3 id="3-convblock">3. ConvBlock<a class="headerlink" href="#3-convblock" title="Permanent link">&para;</a></h3>
-<pre><code class="language-python">    def forward(self, x, w, randomize_noise=False):
-        if self.position != 'const_init':
-            x = self.upsample(x)
-            weight = self.weight * self.wscale
-            x = F.conv2d(x,
-                             weight=weight,
-                             bias=None,
-                             stride=self.stride,
-                             padding=self.padding)
-            x = self.blur(x)
-        else:
-            x = self.const.repeat(w.shape[0], 1, 1, 1)  # 初始输入
-
-        bias = self.bias * self.bscale if self.bias is not None else None
-
-        if self.position == 'last':
-            if bias is not None:
-                x = x + bias.view(1, -1, 1, 1)
-            return x
-
-        x = self.apply_noise(x, randomize_noise)
-        if bias is not None:
-            x = x + bias.view(1, -1, 1, 1)
-        x = self.activate(x)
-        x = self.normalize(x)
-        x, style = self.style(x, w)
-        return x, style
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">randomize_noise</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">!=</span> <span class="s1">&#39;const_init&#39;</span><span class="p">:</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>            <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upsample</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>            <span class="n">weight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">wscale</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>            <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">conv2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>                             <span class="n">weight</span><span class="o">=</span><span class="n">weight</span><span class="p">,</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>                             <span class="n">bias</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>                             <span class="n">stride</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stride</span><span class="p">,</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>                             <span class="n">padding</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">padding</span><span class="p">)</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>            <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">blur</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>        <span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>            <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">const</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># 初始输入</span>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>        <span class="n">bias</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">bscale</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">==</span> <span class="s1">&#39;last&#39;</span><span class="p">:</span>
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>            <span class="k">if</span> <span class="n">bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>                <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">bias</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>            <span class="k">return</span> <span class="n">x</span>
+<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a>
+<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a>        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">apply_noise</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">randomize_noise</span><span class="p">)</span>
+<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a>        <span class="k">if</span> <span class="n">bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a>            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">bias</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a>        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">activate</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<a id="__codelineno-14-25" name="__codelineno-14-25" href="#__codelineno-14-25"></a>        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<a id="__codelineno-14-26" name="__codelineno-14-26" href="#__codelineno-14-26"></a>        <span class="n">x</span><span class="p">,</span> <span class="n">style</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">style</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
+<a id="__codelineno-14-27" name="__codelineno-14-27" href="#__codelineno-14-27"></a>        <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">style</span>
+</code></pre></div>
 <p>具体步骤</p>
 <ol>
 <li>
 <p>上采样和卷积。只在每一个分辨率的第一层进行上采样。使用的上采样是</p>
-<p><code>python
-return F.interpolate(x, scale_factor=self.scale_factor, mode='nearest')</code></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">scale_factor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scale_factor</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">)</span>
+</code></pre></div>
 <p>卷积的过程中会利用可学习的一个<span class="arithmatex">\(w_{scale}\)</span>对卷积的权重进行缩放。这个想法来自于
 <a href="../3.2pggan/paper.md">progressive growing of gan</a>中。</p>
 <p>其中，如果是init 输入 只会将可以学习的init在batch 维度进行复制
@@ -2102,22 +2102,22 @@ return F.interpolate(x, scale_factor=self.scale_factor, mode='nearest')</code></
 3. 增加噪声</p>
 </li>
 </ol>
-<pre><code>if randomize_noise:
-    if self.noise_type == 'spatial':
-        noise = torch.randn(x.shape[0], 1, self.res, self.res).to(x)
-    elif self.noise_type == 'channel':
-        noise = torch.randn(x.shape[0], self.channels, 1, 1).to(x)
-else:
-    noise = self.noise
-if self.noise_type == 'spatial':
-    x = x + noise * self.weight.view(1, self.channels, 1, 1)
-elif self.noise_type == 'channel':
-    x = x + noise * self.weight.view(1, 1, self.res, self.res)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>if randomize_noise:
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>    if self.noise_type == &#39;spatial&#39;:
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>        noise = torch.randn(x.shape[0], 1, self.res, self.res).to(x)
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>    elif self.noise_type == &#39;channel&#39;:
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>        noise = torch.randn(x.shape[0], self.channels, 1, 1).to(x)
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>else:
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>    noise = self.noise
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>if self.noise_type == &#39;spatial&#39;:
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>    x = x + noise * self.weight.view(1, self.channels, 1, 1)
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>elif self.noise_type == &#39;channel&#39;:
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>    x = x + noise * self.weight.view(1, 1, self.res, self.res)
+</code></pre></div>
 <p>噪音的增加有两种法案。一个是增加在空间上，一个是增加在channel 上。
 4. 非线性激活函数</p>
-<pre><code>self.activate = nn.LeakyReLU(negative_slope=0.2, inplace=True)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>self.activate = nn.LeakyReLU(negative_slope=0.2, inplace=True)
+</code></pre></div>
 <p><img alt="alt text" src="../../../../images/image-15.png" />
 LeakyReLU 的好处主要体现在以下几个方面：</p>
 <ul>
@@ -2135,15 +2135,15 @@ LeakyReLU 的好处主要体现在以下几个方面：</p>
 </li>
 <li>风格化</li>
 </ul>
-<pre><code>def forward(self, x, w):
-    style = self.forward_style(w)
-    style_split = style.view(-1, 2, self.out_channels, 1, 1)
-    x = x * (style_split[:, 0] + 1) + style_split[:, 1]
-    return x, style
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>def forward(self, x, w):
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>    style = self.forward_style(w)
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>    style_split = style.view(-1, 2, self.out_channels, 1, 1)
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>    x = x * (style_split[:, 0] + 1) + style_split[:, 1]
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>    return x, style
+</code></pre></div>
 <p>对featuremap的每一层利用学习到的风格向量进行风格调制。具体来说style_split 每个channel 包含一个学习到的标准差和均值</p>
-<pre><code>x = x * (style_split[:, 0] + 1) + style_split[:, 1]
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>x = x * (style_split[:, 0] + 1) + style_split[:, 1]
+</code></pre></div>
 <p>意味最每一个channel 的feature map显式得调节方差和标准差。一般得，featuremap的方差和均值表示图片的风格。</p>
 <p>```</p>
 
@@ -2175,9 +2175,19 @@ LeakyReLU 的好处主要体现在以下几个方面：</p>
       <div class="md-copyright">
   
   
-    Made with
-    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
-      Material for MkDocs
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/tsiendragon/learning" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
     </a>
   
 </div>
@@ -2202,6 +2212,8 @@ LeakyReLU 的好处主要体现在以下几个方面：</p>
         <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
       
         <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+        <script src="../../../../assets/custom.js"></script>
       
     
   </body>
