@@ -1,0 +1,2208 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../../3.1from_gan_to_stylegan/paper/">
+      
+      
+        <link rel="next" href="../../3.4stylegan2/paper/">
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.50">
+    
+    
+      
+        <title>StyleGAN - Generative AI: From Start to Surrender</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.a40c8224.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#stylegan-a-style-based-generator-architecture-for-generative-adversarial-networks" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="Generative AI: From Start to Surrender" class="md-header__button md-logo" aria-label="Generative AI: From Start to Surrender" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Generative AI: From Start to Surrender
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              StyleGAN
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../chapter1_Introduction/1.1terminology/" class="md-tabs__link">
+          
+  
+  Introduction
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../chapter2_generation_theory/5.1MLE/" class="md-tabs__link">
+          
+  
+  Generation Theory
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../chapter3_energy_based_model/introduction/" class="md-tabs__link">
+          
+  
+  Energy Based Models
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../chapter6_VAE/2.1introduction/" class="md-tabs__link">
+          
+  
+  VAE
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../3.1from_gan_to_stylegan/paper/" class="md-tabs__link">
+          
+  
+  GANs
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../chapter7_diffusion/Introduction_diffusion/" class="md-tabs__link">
+          
+  
+  Diffusion Models
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../chapter9_flow_matching/introduction/" class="md-tabs__link">
+          
+  
+  Flow Matching
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../chapter11_hybrid_sota_models/hybrid_methods/" class="md-tabs__link">
+          
+  
+  Hybrid SOTA Models
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Generative AI: From Start to Surrender" class="md-nav__button md-logo" aria-label="Generative AI: From Start to Surrender" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Generative AI: From Start to Surrender
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Introduction
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter1_Introduction/1.1terminology/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Terms
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter1_Introduction/1.2fourier_transform/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Fourier Transform
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter1_Introduction/1.3signal_processing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Signal Processing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter1_Introduction/1.4statistics/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Statistics
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter1_Introduction/tutorials/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Tutorials
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Generation Theory
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Generation Theory
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter2_generation_theory/5.1MLE/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Maximal Likelihood
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter2_generation_theory/manifold_hypothesis/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Manifold Hypothesis
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Energy Based Models
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Energy Based Models
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter3_energy_based_model/introduction/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter3_energy_based_model/score_function/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Score Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter3_energy_based_model/sampling/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Sampling Methods
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter3_energy_based_model/cd/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Contrastive Divergence
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter3_energy_based_model/score_matching/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Score Matching
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    VAE
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            VAE
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter6_VAE/2.1introduction/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    GANs
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            GANs
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../3.1from_gan_to_stylegan/paper/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    From GAN to StyleGAN
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    StyleGAN Variants
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            StyleGAN Variants
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    StyleGAN
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    StyleGAN
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      核心创新
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      技术细节
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      代码解读
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../3.4stylegan2/paper/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    StyleGAN2
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../3.5stylegan3/paper/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    StyleGAN3
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../3.6styleganT/paper/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    StyleGAN-T
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../3.7R3Gan/paper/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    R3GAN
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Diffusion Models
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Diffusion Models
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_1" id="__nav_7_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Discrete Diffusion
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_1">
+            <span class="md-nav__icon md-icon"></span>
+            Discrete Diffusion
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter7_diffusion/Introduction_diffusion/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_2" id="__nav_7_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Continuous Diffusion
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_2">
+            <span class="md-nav__icon md-icon"></span>
+            Continuous Diffusion
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter7_diffusion/introduction_sde/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SDE Fundamentals
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter7_diffusion/SDE4_DDPM_DSM/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SDE for DDPM
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter7_diffusion/probability_flow_ode/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Probability Flow ODE
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Flow Matching
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            Flow Matching
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter9_flow_matching/introduction/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter9_flow_matching/probability_with_velocity_field/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Velocity Fields
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Hybrid SOTA Models
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            Hybrid SOTA Models
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter11_hybrid_sota_models/hybrid_methods/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hybrid Methods
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter11_hybrid_sota_models/sota_closed_models/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Closed Models
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter11_hybrid_sota_models/sota_open_models/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Open Models
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter11_hybrid_sota_models/trends_future/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Future Trends
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="stylegan-a-style-based-generator-architecture-for-generative-adversarial-networks">StyleGAN: A Style-Based Generator Architecture for Generative Adversarial Networks<a class="headerlink" href="#stylegan-a-style-based-generator-architecture-for-generative-adversarial-networks" title="Permanent link">&para;</a></h1>
+<p><a href="https://arxiv.org/abs/1812.04948">Paper Link</a>
+<img alt="alt text" src="../../../../images/image-14.png" /></p>
+<h2 id="_1">核心创新<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>基于风格的生成器架构</strong>
+<img alt="alt text" src="../../../../images/image-13.png" /></li>
+<li>将传统的输入层替换为常量输入</li>
+<li>通过AdaIN层将潜在编码注入到不同的层级</li>
+<li>
+<p>实现了对不同尺度特征的精确控制</p>
+</li>
+<li>
+<p><strong>中间潜在空间W</strong></p>
+</li>
+<li>引入映射网络F将潜在空间Z映射到中间潜在空间W</li>
+<li>W空间具有更好的解耦特性</li>
+<li>
+<p>支持更好的特征混合和编辑操作</p>
+</li>
+<li>
+<p><strong>自适应实例归一化(AdaIN)</strong></p>
+</li>
+<li>通过风格向量调制每个通道的均值和方差</li>
+<li>实现了对特定特征的精确控制</li>
+</ol>
+<p><code>python
+   x = x * (style_split[:, 0] + 1) + style_split[:, 1]</code></p>
+<ul>
+<li>每个channel的feature map显式调节方差和均值，这两个统计量表示图片的风格</li>
+</ul>
+<h2 id="_2">技术细节<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>LOD (Level of Detail) 计算</strong>:</li>
+<li><strong>目的</strong>: 控制训练期间的分辨率级别，支持渐进式增长。</li>
+<li><strong>计算</strong>:<ul>
+<li><code>lod</code> 基于已见图像数量 (<code>seen_img</code>) 和每个级别的持续时间 (<code>lod_duration</code>) 计算。</li>
+<li>随训练进展而减少，平滑过渡于不同分辨率。</li>
+</ul>
+</li>
+<li>
+<p><strong>阶段</strong>:</p>
+<ul>
+<li>稳定阶段：<code>lod</code> 保持不变。</li>
+<li>过渡阶段：<code>lod</code> 取分数值，平滑分辨率变化。</li>
+</ul>
+</li>
+<li>
+<p><strong>合成网络 (Synthesis Network)</strong>:</p>
+</li>
+<li><strong>结构</strong>: 由多个分辨率层组成，每层包含两个卷积块。</li>
+<li><strong>分辨率层</strong>:<ul>
+<li><strong>初始层</strong>: 将常量输入转换为特征图。</li>
+<li><strong>后续层</strong>: 每层分辨率加倍，通道减半，保持参数一致。</li>
+</ul>
+</li>
+<li>
+<p><strong>卷积块 (ConvBlock)</strong>:</p>
+<ul>
+<li><strong>上采样</strong>: 使用最近邻插值增加分辨率。</li>
+<li><strong>卷积</strong>: 受 PGGAN 启发的缩放权重，稳定训练。</li>
+<li><strong>噪声添加</strong>: 空间或通道噪声，增强细节多样性。</li>
+<li><strong>激活</strong>: LeakyReLU 防止神经元死亡，改善梯度流动。</li>
+<li><strong>归一化</strong>: 实例归一化标准化特征图。</li>
+<li><strong>风格化</strong>: 使用学习的风格向量调制特征图，调整每个特征图的均值和方差。</li>
+</ul>
+</li>
+<li>
+<p><strong>风格调制 (Style Modulation)</strong>:</p>
+</li>
+<li><strong>过程</strong>: 每个特征图通道使用风格向量调制。</li>
+<li>
+<p><strong>方程</strong>:</p>
+<div class="arithmatex">\[
+ x = x \times (\text{style\_split}[:, 0] + 1) + \text{style\_split}[:, 1]
+\]</div>
+</li>
+<li>
+<p><strong>目的</strong>: 显式调整特征图方差和均值，表示图片风格。</p>
+</li>
+<li>
+<p><strong>截断技巧 (Truncation Trick)</strong>:</p>
+</li>
+<li><strong>目的</strong>: 控制生成图像的多样性与稳定性。</li>
+<li>
+<p><strong>过程</strong>: 使用中心平均值 (<code>w_{avg}</code>) 和缩放因子 (<code>trunc_psi</code>) 调整风格向量。它更相当于一个缩放操作，而不是传统意义上的截断操作。</p>
+</li>
+<li>
+<p><strong>噪声注入 (Noise Injection)</strong>:</p>
+</li>
+<li><strong>类型</strong>: 空间或通道。</li>
+<li><strong>目的</strong>: 为特征图添加随机变化，增强细节多样性。</li>
+</ol>
+<h2 id="_3">代码解读<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="1-generator">1. Generator<a class="headerlink" href="#1-generator" title="Permanent link">&para;</a></h3>
+<pre><code>
+    def forward(self,
+                z,
+                label=None,
+                lod=None,
+                w_moving_decay=0.995,
+                style_mixing_prob=0.9,
+                trunc_psi=None,
+                trunc_layers=None,
+                randomize_noise=False,
+                **_unused_kwargs):
+        mapping_results = self.mapping(z, label) # label 是用于条件生成的标签
+        w = mapping_results['w'] #  W空间
+        # w shape : [batch_size, w_space_dim] = [B,512]
+
+        if self.training and w_moving_decay &lt; 1:
+            batch_w_avg = all_gather(w).mean(dim=0)
+            self.truncation.w_avg.copy_(
+                self.truncation.w_avg * w_moving_decay +
+                batch_w_avg * (1 - w_moving_decay))
+            # 计算一个W空间中的中心点,用于截断操作
+        if self.training and style_mixing_prob &gt; 0:
+            new_z = torch.randn_like(z)
+            new_w = self.mapping(new_z, label)['w']
+            lod = self.synthesis.lod.cpu().tolist() if lod is None else lod
+            # 这里的 tolist() 可能造成混淆，但对于0维tensor（标量tensor），它返回的是一个标量值。例如：
+            # 所以在这里，lod 就是一个数值，比如 0、1、2 或者 1.5 这样的值，用于控制生成图像的分辨率级别。这个值：
+
+            # 可以是整数：直接对应某个分辨率级别
+            # 也可以是小数：表示在两个分辨率级别之间进行插值
+
+            current_layers = self.num_layers - int(lod) * 2
+            if np.random.uniform() &lt; style_mixing_prob:
+                mixing_cutoff = np.random.randint(1, current_layers)
+                # 前面的current_layers 表示当前的分辨率级别
+                # 后面的 mixing_cutoff 表示截断点
+                # 这里的 np.random.randint(1, current_layers) 表示随机选择一个截断点
+
+                w = self.truncation(w)
+                new_w = self.truncation(new_w)
+                w[:, mixing_cutoff:] = new_w[:, mixing_cutoff:]
+                # 前半部分的 W 空间不变，后半部分的 W 空间进行了替换
+
+        wp = self.truncation(w, trunc_psi, trunc_layers)
+        # wp 也进行了截断。
+        # 形状变化  ：
+        # 输入 w: [batch_size, w_space_dim] = [B, 512]
+        # 输出 wp: [batch_size, num_layers, w_space_dim] = [B, num_layers, 512]
+        synthesis_results = self.synthesis(wp, lod, randomize_noise)
+
+        return {**mapping_results, **synthesis_results}
+</code></pre>
+<p>generator 分成几个步骤</p>
+<h4 id="1-mapping-network">1. 映射网络 (Mapping Network)<a class="headerlink" href="#1-mapping-network" title="Permanent link">&para;</a></h4>
+<pre><code>mapping_results = self.mapping(z, label) # label 是用于条件生成的标签
+w = mapping_results['w']
+</code></pre>
+<p><strong>输入</strong> :</p>
+<ul>
+<li><span class="arithmatex">\(z\)</span>: 潜在向量，通常是从标准正态分布中采样，形状为 <span class="arithmatex">\([B, z\_dim]\)</span></li>
+<li><span class="arithmatex">\(\text{label}\)</span>: 条件生成的标签，可选，用于控制生成内容。</li>
+<li><strong>过程</strong> :</li>
+<li>
+<p>使用一个多层感知机 (MLP) 将潜在向量 <span class="arithmatex">\(z\)</span> 映射到样式空间 <span class="arithmatex">\(w\)</span>：</p>
+<div class="arithmatex">\[w = f(z) \]</div>
+<p>其中 <span class="arithmatex">\(f\)</span> 是映射网络，输出 <span class="arithmatex">\(w\)</span> 的形状为 <span class="arithmatex">\([B, w\_dim]\)</span>，  通常 <span class="arithmatex">\(w\_dim = 512\)</span>。
+- <strong>输出</strong> :
+  - <span class="arithmatex">\(w\)</span>: 样式向量，作为后续生成过程中的特征控制参数。</p>
+</li>
+</ul>
+<h4 id="2-w">2. W 空间均值的移动平均更新<a class="headerlink" href="#2-w" title="Permanent link">&para;</a></h4>
+<pre><code class="language-python">if self.training and w_moving_decay &lt; 1:
+    batch_w_avg = all_gather(w).mean(dim=0)
+    self.truncation.w_avg.copy_(
+        self.truncation.w_avg * w_moving_decay +
+        batch_w_avg * (1 - w_moving_decay))
+</code></pre>
+<ul>
+<li><strong>目的</strong> :</li>
+<li>
+<p>在训练阶段，计算 <span class="arithmatex">\(w\)</span> 的均值并进行移动平均更新，得到样式空间的中心点 <span class="arithmatex">\(w_{avg}\)</span>。</p>
+</li>
+<li>
+<p><span class="arithmatex">\(w_{avg}\)</span> 用于后续的截断操作（truncation trick），以控制生成内容的多样性和平衡性。</p>
+</li>
+<li>
+<p><strong>过程</strong> :</p>
+</li>
+<li>
+<p>计算当前批次的样式向量平均值 <span class="arithmatex">\(\text{batch\_w\_avg}\)</span>。</p>
+</li>
+<li>
+<p>使用指数移动平均 (EMA) 更新全局样式均值 <span class="arithmatex">\(w\_avg\)</span>:</p>
+<div class="arithmatex">\[
+w_{avg} \gets w_{avg} \cdot \text{decay} + \text{batch-w-avg} \cdot (1 - \text{decay})
+\]</div>
+</li>
+</ul>
+<h4 id="3-style-mixing">3. 样式混合 (Style Mixing)<a class="headerlink" href="#3-style-mixing" title="Permanent link">&para;</a></h4>
+<pre><code class="language-python">if self.training and style_mixing_prob &gt; 0:
+    new_z = torch.randn_like(z)
+    new_w = self.mapping(new_z, label)['w']
+    lod = self.synthesis.lod.cpu().tolist() if lod is None else lod
+    current_layers = self.num_layers - int(lod) * 2
+    if np.random.uniform() &lt; style_mixing_prob:
+        mixing_cutoff = np.random.randint(1, current_layers)
+        # 前面的current_layers 表示当前的分辨率级别
+        # 后面的 mixing_cutoff 表示截断点
+        # 这里的 np.random.randint(1, current_layers) 表示随机选择一个截断点
+
+        w = self.truncation(w)
+        new_w = self.truncation(new_w)
+        w[:, mixing_cutoff:] = new_w[:, mixing_cutoff:]
+        # 前半部分的 W 空间不变，后半部分的 W 空间进行了替换
+
+        # 问题：同一个batch里的mixing_point是一样的。如果对同一个batch里的不同样本做不一样的样式混合，会不会有问题？
+
+#### 4. 截断操作 (Truncation Trick)
+```python
+wp = self.truncation(w, trunc_psi, trunc_layers)
+</code></pre>
+<p>在self.truncation里面 会先对<span class="arithmatex">\(w\)</span>进行复制，复制后的shape 为 <span class="arithmatex">\([B, \text{num\_layers}, w\_dim]\)</span>，
+每一层的样式向量都是相同的。
+然后再进行截断操作.</p>
+<pre><code>#self traucation
+if w.ndim == 2:
+    if self.repeat_w and w.shape[1] == self.w_space_dim:
+        w = w.view(-1, 1, self.w_space_dim)
+        wp = w.repeat(1, self.num_layers, 1)
+    else:
+        assert w.shape[1] == self.w_space_dim * self.num_layers
+        wp = w.view(-1, self.num_layers, self.w_space_dim)
+</code></pre>
+<ul>
+<li><strong>目的</strong> :</li>
+<li>
+<p>控制生成内容的多样性与稳定性。</p>
+</li>
+<li>
+<p><strong>过程</strong> :</p>
+</li>
+<li>
+<p>使用样式空间的中心点 <span class="arithmatex">\(w\_avg\)</span> 和截断因子 <span class="arithmatex">\(\psi\)</span> 对样式向量 <span class="arithmatex">\(w\)</span> 进行缩放：</p>
+<div class="arithmatex">\[
+w'_i = w_{avg} + \psi \cdot (w_i - w_{avg}), \quad \text{for layers } i &lt; \text{trunclayers}
+\]</div>
+</li>
+<li>
+<p>截断操作可以减小样式空间中样式向量的偏离程度，从而生成更稳定的图像。</p>
+</li>
+<li><strong>输出</strong> :</li>
+<li><span class="arithmatex">\(wp\)</span>: 每一层的样式向量，形状为 <span class="arithmatex">\([B, \text{num\_layers}, w\_dim]\)</span>。</li>
+<li>
+<p><strong>问题</strong> : 严格来说，这个操作确实更接近于 <strong>缩放 (scaling)</strong>  而不是传统意义上的 <strong>截断 (truncation)</strong> ，尽管在 StyleGAN 的术语中被称为 "truncation trick"。</p>
+<p><strong>为什么是缩放？</strong>
+截断操作的公式为：</p>
+<div class="arithmatex">\[
+wp = w_{avg} + (wp - w_{avg}) \cdot \text{trunc-psi}
+\]</div>
+<p>观察公式可以看出：
+1. 样式向量 <span class="arithmatex">\(wp\)</span> 被重新调整到一个以 <span class="arithmatex">\(w_{avg}\)</span> 为中心的范围内。</p>
+<ol>
+<li><span class="arithmatex">\(\text{trunc-psi}\)</span> 是一个缩放因子，决定了 <span class="arithmatex">\(wp\)</span> 偏离 <span class="arithmatex">\(w_{avg}\)</span> 的程度。</li>
+</ol>
+<p><strong>物理意义</strong> ：
+  - 如果 <span class="arithmatex">\(\text{trunc-psi} &lt; 1\)</span>，样式向量的偏离被缩小，生成的图像更接近于全局样式的“平均值”。</p>
+</li>
+<li>
+<p>如果 <span class="arithmatex">\(\text{trunc-psi} &gt; 1\)</span>，样式向量的偏离被放大，生成的图像会更极端，更偏离平均风格。</p>
+<p><strong>传统截断 (Clipping)</strong> 在传统的“截断”概念中，我们会将某些超出指定范围的值 <strong>直接限制</strong>  在这个范围内，例如：$
+x = \max(\min(x, \text{upper_bound}), \text{lower_bound})
+$</p>
+<p>leGAN 的这个实现中：</p>
+</li>
+<li>
+<p>过缩放操作调整样式向量的幅度。</p>
+</li>
+<li>
+<p>这种方式不会完全去除多样性，而是控制多样性的幅度。
+    因此，StyleGAN 的“截断技巧”实际上是一种动态的 <strong>样式向量缩放操作</strong> 。</p>
+<p><strong>为什么称为截断？</strong>
+尽管操作本质是缩放，但被称为截断可能有以下原因：</p>
+<ol>
+<li><strong>结果上的类似性</strong> ：</li>
+<li>缩放操作和传统截断在减少生成样式的多样性上有相似效果。</li>
+</ol>
+</li>
+<li>
+<p>当 <span class="arithmatex">\(\text{trunc\_psi}\)</span> 接近 0 时，样式向量趋近 <span class="arithmatex">\(w\_avg\)</span>，此时的行为类似于将所有样式向量“截断”到一个狭窄的范围。</p>
+<ol>
+<li><strong>术语沿袭</strong> ：</li>
+<li>在 GAN 社区，"truncation trick" 是一个广泛使用的术语，尽管具体实现可能会有所不同。</li>
+</ol>
+</li>
+</ul>
+<p><strong>总结</strong></p>
+<ol>
+<li>
+<p><strong>StyleGAN 的操作是缩放</strong> ：</p>
+</li>
+<li>
+<p>它根据 <span class="arithmatex">\(w\_avg\)</span> 动态调整样式向量 <span class="arithmatex">\(wp\)</span> 的幅度，而不是简单地对其值进行裁剪(缩放)。</p>
+</li>
+<li>
+<p><strong>称为截断的原因</strong> ：</p>
+</li>
+<li>
+<p>结果上类似传统截断，能有效减少生成样式的多样性。</p>
+</li>
+<li>
+<p>术语延续了 GAN 社区的习惯用法。</p>
+</li>
+<li>
+<p><strong>本质</strong> ：</p>
+</li>
+<li>
+<p>它是 <strong>样式向量的幅度缩放</strong> ，调控生成图像的多样性与稳定性之间的权衡。</p>
+</li>
+</ol>
+<h4 id="5">5. 图像生成<a class="headerlink" href="#5" title="Permanent link">&para;</a></h4>
+<pre><code class="language-python">synthesis_results = self.synthesis(wp, lod, randomize_noise)
+</code></pre>
+<ul>
+<li><strong>输入</strong> :</li>
+<li><span class="arithmatex">\(wp\)</span>: 分层样式向量。</li>
+<li><span class="arithmatex">\(\text{lod}\)</span>: 分辨率级别（Level of Detail），用于控制生成图像的细节层次。</li>
+<li><span class="arithmatex">\(\text{randomize\_noise}\)</span>: 是否在生成过程中随机化噪声。</li>
+<li><strong>过程</strong> :</li>
+<li>
+<p>使用样式向量 <span class="arithmatex">\(wp\)</span> 和噪声控制图像的生成过程。</p>
+</li>
+<li>
+<p><span class="arithmatex">\(\text{lod}\)</span> 可以调整生成图像的分辨率，支持逐步增加细节（渐进式生成）。</p>
+</li>
+<li><em>输出</em> :</li>
+<li>生成的图像及其相关特征。</li>
+</ul>
+<h3 id="2-synthesis-network">2. synthesis network<a class="headerlink" href="#2-synthesis-network" title="Permanent link">&para;</a></h3>
+<p>synthesis network 定义在class SynthesisModule 里面，是一个生成器的主要部分，负责生成图像的过程。
+它的参数意义</p>
+<pre><code>resolution (默认1024): 生成图像的最终输出分辨率。例如设置为1024时，最终生成1024x1024像素的图像。
+init_resolution (默认4): 生成器的初始特征图分辨率。StyleGAN从这个低分辨率(通常是4或8)开始，然后通过一系列上采样层逐步增加分辨率直到达到目标分辨率。
+w_space_dim (默认512): W潜在空间的维度。这是StyleGAN的一个关键特征，它是将输入的Z空间通过映射网络转换后的中间潜在空间，用于更好地控制不同尺度的图像特征。
+image_channels (默认3): 输出图像的颜色通道数，对于RGB彩色图像是3。
+final_tanh (默认False): 是否在网络最后一层使用tanh激活函数。使用tanh可以将输出严格限制在[-1, 1]范围内。
+const_input (默认True): 是否使用常量输入。StyleGAN的一个创新是使用学习的常量作为生成器的起点，而不是随机噪声。
+fused_scale (默认'auto'): 控制是否使用融合的上采样卷积操作。融合操作可以提高计算效率。
+use_wscale (默认True): 是否使用权重缩放。这是一种训练技巧，通过对权重进行适当的缩放来帮助训练稳定性。
+noise_type (默认'spatial'): 控制添加到每一层的随机噪声的类型。空间噪声可以帮助生成更多的细节变化。
+fmaps_base (默认16&lt;&lt;10): 基础特征图数量，用于控制网络各层的通道数。默认值是16384。
+fmaps_max (默认512): 限制网络中任何层的最大特征图数量，防止网络变得过大。
+</code></pre>
+<p>forward 步骤</p>
+<pre><code>    def forward(self, wp, lod=None, randomize_noise=False):
+        # wp 代表经过映射网络处理后的风格向量（style vector）。
+        # Z 空间（初始潜在空间）
+        # 这是输入的随机噪声向量
+        # 通常是从标准正态分布采样得到
+        # W 空间（中间潜在空间）
+        # 通过映射网络(Mapping Network)将 Z 空间向量转换得到
+        # 相比 Z 空间，W 空间具有更好的解耦特性
+        # W+ 空间（扩展的 W 空间）
+        # 这就是代码中的 wp（w plus）
+        # 它是将 W 空间的向量扩展到每一层都有一个独立的风格向量
+        # 如果网络有 n 层，那么 wp 的形状就是 [batch_size, n, w_dim]
+        lod = self.lod.cpu().tolist() if lod is None else lod
+        # lod 的计算过程：
+        # 基于已训练的图像数量（total_img）计算
+        # 每个分辨率级别的持续时间 = 训练图像数 + 过渡图像数
+        # 当前的 lod 值决定了生成图像的分辨率
+        # 例如，对于512x512的最终分辨率：
+        # 分辨率序列：8 → 16 → 32 → 64 → 128 → 256 → 512
+        # LOD序列：6 → 5 → 4 → 3 → 2 → 1 → 0
+        if lod + self.init_res_log2 &gt; self.final_res_log2: # lod 异常
+            raise ValueError(f'Maximum level-of-detail (lod) is '
+                             f'{self.final_res_log2 - self.init_res_log2}, '
+                             f'but `{lod}` is received!')
+
+        results = {'wp': wp}
+        for res_log2 in range(self.init_res_log2, self.final_res_log2 + 1):
+            current_lod = self.final_res_log2 - res_log2
+            if lod &lt; current_lod + 1:
+                block_idx = res_log2 - self.init_res_log2
+                if block_idx == 0: # 最低分辨率
+                    if self.const_input:
+                        x, style = self.layer0(None, wp[:, 0], randomize_noise)
+                    else:
+                        x = wp[:, 0].view(-1, self.w_space_dim, 1, 1)
+                        x, style = self.layer0(x, wp[:, 0], randomize_noise)
+                else:
+                    x, style = self.__getattr__(f'layer{2 * block_idx}')(
+                        x, wp[:, 2 * block_idx], randomize_noise)
+                    results[f'style{2 * block_idx:02d}'] = style
+                    x, style = self.__getattr__(f'layer{2 * block_idx + 1}')(
+                        x, wp[:, 2 * block_idx + 1], randomize_noise)
+                    results[f'style{2 * block_idx + 1:02d}'] = style
+            if current_lod - 1 &lt; lod &lt;= current_lod:
+                image = self.__getattr__(f'output{block_idx}')(x, None)
+            elif current_lod &lt; lod &lt; current_lod + 1:
+                alpha = np.ceil(lod) - lod
+                image = (self.__getattr__(f'output{block_idx}')(x, None) * alpha
+                         + self.upsample(image) * (1 - alpha))
+            elif lod &gt;= current_lod + 1:
+                image = self.upsample(image)
+        results['image'] = self.final_activate(image)
+        return results
+</code></pre>
+<p>lod 表示 level of details.表示分辨率。</p>
+<pre><code>        # Compute level-of-details.
+        phase, subphase = divmod(runner.seen_img, self.lod_duration)
+        lod = self.init_lod - phase
+        if self.lod_transition_img:
+            transition_img = max(subphase - self.lod_training_img, 0)
+            lod = lod - transition_img / self.lod_transition_img
+        lod = max(lod, 0.0)
+        resolution = self.init_res * (2 ** int(np.ceil(self.init_lod - lod)))
+        return lod, resolution
+</code></pre>
+<p>lod 详细计算过程。假设
+其中，init_res 是初始分辨率（通常是4或8）。
+举例说明：</p>
+<blockquote>
+<pre><code>假设 init_lod = 8（从8x8到2048x2048）
+lod_duration = 600,000（每个分辨率级别60万张图像）,
+lod_training_img = 300,000（稳定阶段30万张图像）这个阶段lod一直保持为8,分辨率为8x8,
+lod_transition_img = 300,000（过渡阶段30万张图像）,
+到了这个阶段之后, lod 从 8.0 逐渐降低到 7.0，分辨率一直是16x16。,
+直观上看 每个分辨率训练分成两个阶段，第一阶段训练当前分辨率的稳定阶段，第二阶段训练下一个分辨率的过渡阶段，lod线性递减到下一个分辨率对应的lod。
+</code></pre>
+</blockquote>
+<p>synthesis 网络的每一个分辨率层都有两个卷积层。初始分辨率的第一个卷积层有所区别。</p>
+<h4 id="_4">第一个分辨率层<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h4>
+<h5 id="layer0">layer0<a class="headerlink" href="#layer0" title="Permanent link">&para;</a></h5>
+<p>layer0 的网络定义为</p>
+<pre><code>self.layer0 =ConvBlock(
+    in_channels=self.get_nf(res),
+    out_channels=self.get_nf(res),
+    resolution=self.init_res,
+    w_space_dim=self.w_space_dim,
+    position='const_init', # 标记为const_init
+    use_wscale=self.use_wscale,
+    noise_type=self.noise_type)
+</code></pre>
+<p>输入为</p>
+<pre><code>x, style = self.layer0(None, wp[:, 0], randomize_noise)
+</code></pre>
+<p>第一个分辨率只有一个convblock，将原始的输入4x4x512 转化为 4x4x512</p>
+<h4 id="k">第k个分辨率层<a class="headerlink" href="#k" title="Permanent link">&para;</a></h4>
+<p>次后的每个分辨率层包含两个convblock
+第一个convblock 增加了上采样的操作。其余的一样。
+最后一个分辨率只有一个convblock，将512x512x32 转化为 1024x1024x16
+分辨率增加一倍，output channel 减半，保持卷积整体的参数量每一层一致。</p>
+<pre><code>self.layer{2k-1} =  ConvBlock(
+    in_channels=self.get_nf(res // 2),
+    out_channels=self.get_nf(res),
+    resolution=res,
+    w_space_dim=self.w_space_dim,
+    upsample=True,
+    fused_scale=fused_scale,
+    use_wscale=self.use_wscale,
+    noise_type=self.noise_type
+)
+
+self.layer{2k} =ConvBlock(
+    in_channels=self.w_space_dim,
+    out_channels=self.get_nf(res),
+    resolution=self.init_res,
+    w_space_dim=self.w_space_dim,
+    kernel_size=self.init_res,
+    padding=self.init_res - 1,
+    use_wscale=self.use_wscale,
+    noise_type=self.noise_type
+)
+
+</code></pre>
+<p>输入</p>
+<pre><code>x, style = f&quot;self.layer{2k-11}&quot;(x, wp[:, 2 * block_idx - 1], randomize_noise)
+x, style = f&quot;self.layer{2k}&quot;(x, wp[:, 2 * block_idx],randomize_noise)
+</code></pre>
+<p>每个convblock 的输入都包含上一层的输入,本层的风格向量，以及是否需要添加噪声。</p>
+<p>每一个分辨率的第一个卷积层和第二个卷积层区别在于第二个会加入上采样。</p>
+<h3 id="3-convblock">3. ConvBlock<a class="headerlink" href="#3-convblock" title="Permanent link">&para;</a></h3>
+<pre><code class="language-python">    def forward(self, x, w, randomize_noise=False):
+        if self.position != 'const_init':
+            x = self.upsample(x)
+            weight = self.weight * self.wscale
+            x = F.conv2d(x,
+                             weight=weight,
+                             bias=None,
+                             stride=self.stride,
+                             padding=self.padding)
+            x = self.blur(x)
+        else:
+            x = self.const.repeat(w.shape[0], 1, 1, 1)  # 初始输入
+
+        bias = self.bias * self.bscale if self.bias is not None else None
+
+        if self.position == 'last':
+            if bias is not None:
+                x = x + bias.view(1, -1, 1, 1)
+            return x
+
+        x = self.apply_noise(x, randomize_noise)
+        if bias is not None:
+            x = x + bias.view(1, -1, 1, 1)
+        x = self.activate(x)
+        x = self.normalize(x)
+        x, style = self.style(x, w)
+        return x, style
+</code></pre>
+<p>具体步骤</p>
+<ol>
+<li>
+<p>上采样和卷积。只在每一个分辨率的第一层进行上采样。使用的上采样是</p>
+<p><code>python
+return F.interpolate(x, scale_factor=self.scale_factor, mode='nearest')</code></p>
+<p>卷积的过程中会利用可学习的一个<span class="arithmatex">\(w_{scale}\)</span>对卷积的权重进行缩放。这个想法来自于
+<a href="../3.2pggan/paper.md">progressive growing of gan</a>中。</p>
+<p>其中，如果是init 输入 只会将可以学习的init在batch 维度进行复制
+2. 增加bias
+可学习的一个bias。这个应该不重要。
+3. 增加噪声</p>
+</li>
+</ol>
+<pre><code>if randomize_noise:
+    if self.noise_type == 'spatial':
+        noise = torch.randn(x.shape[0], 1, self.res, self.res).to(x)
+    elif self.noise_type == 'channel':
+        noise = torch.randn(x.shape[0], self.channels, 1, 1).to(x)
+else:
+    noise = self.noise
+if self.noise_type == 'spatial':
+    x = x + noise * self.weight.view(1, self.channels, 1, 1)
+elif self.noise_type == 'channel':
+    x = x + noise * self.weight.view(1, 1, self.res, self.res)
+</code></pre>
+<p>噪音的增加有两种法案。一个是增加在空间上，一个是增加在channel 上。
+4. 非线性激活函数</p>
+<pre><code>self.activate = nn.LeakyReLU(negative_slope=0.2, inplace=True)
+</code></pre>
+<p><img alt="alt text" src="../../../../images/image-15.png" />
+LeakyReLU 的好处主要体现在以下几个方面：</p>
+<ul>
+<li>防止神经元死亡：负值区域的斜率使得神经元不会完全失活。</li>
+<li>改善梯度流动：减少梯度消失问题，支持更深层网络的训练。</li>
+<li>适应数据分布：捕捉负值区域的信息，更好地处理具有负值特征的数据。</li>
+<li>训练稳定性：提升训练过程的稳定性和收敛性。</li>
+<li>
+<p>通用性：在图像生成任务和深度学习网络中表现优异，成为许多模型的默认选择。</p>
+</li>
+<li>
+<p>instance normalization
+<img alt="alt text" src="../../../../images/image-16.png" />
+标准instance normalization。 使得每个样本的每个通道的featuremap的均值为0， 方差为1.</p>
+</li>
+<li>风格化</li>
+</ul>
+<pre><code>def forward(self, x, w):
+    style = self.forward_style(w)
+    style_split = style.view(-1, 2, self.out_channels, 1, 1)
+    x = x * (style_split[:, 0] + 1) + style_split[:, 1]
+    return x, style
+</code></pre>
+<p>对featuremap的每一层利用学习到的风格向量进行风格调制。具体来说style_split 每个channel 包含一个学习到的标准差和均值</p>
+<pre><code>x = x * (style_split[:, 0] + 1) + style_split[:, 1]
+</code></pre>
+<p>意味最每一个channel 的feature map显式得调节方差和标准差。一般得，featuremap的方差和均值表示图片的风格。</p>
+<p>```</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "toc.integrate"], "search": "../../../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.60a45f97.min.js"></script>
+      
+        <script src="../../../../javascripts/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

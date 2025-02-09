@@ -1,0 +1,2370 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../score_function/">
+      
+      
+        <link rel="next" href="../cd/">
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.50">
+    
+    
+      
+        <title>Sampling Methods - Generative AI: From Start to Surrender</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.a40c8224.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#sampling-from-a-distribution" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Generative AI: From Start to Surrender" class="md-header__button md-logo" aria-label="Generative AI: From Start to Surrender" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Generative AI: From Start to Surrender
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Sampling Methods
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../chapter1_Introduction/1.1terminology/" class="md-tabs__link">
+          
+  
+  Introduction
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../chapter2_generation_theory/5.1MLE/" class="md-tabs__link">
+          
+  
+  Generation Theory
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../introduction/" class="md-tabs__link">
+          
+  
+  Energy Based Models
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../chapter6_VAE/2.1introduction/" class="md-tabs__link">
+          
+  
+  VAE
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../chapter5_GAN/3.1from_gan_to_stylegan/paper/" class="md-tabs__link">
+          
+  
+  GANs
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../chapter7_diffusion/Introduction_diffusion/" class="md-tabs__link">
+          
+  
+  Diffusion Models
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../chapter9_flow_matching/introduction/" class="md-tabs__link">
+          
+  
+  Flow Matching
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../chapter11_hybrid_sota_models/hybrid_methods/" class="md-tabs__link">
+          
+  
+  Hybrid SOTA Models
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Generative AI: From Start to Surrender" class="md-nav__button md-logo" aria-label="Generative AI: From Start to Surrender" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Generative AI: From Start to Surrender
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Introduction
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter1_Introduction/1.1terminology/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Terms
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter1_Introduction/1.2fourier_transform/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Fourier Transform
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter1_Introduction/1.3signal_processing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Signal Processing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter1_Introduction/1.4statistics/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Statistics
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter1_Introduction/tutorials/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Tutorials
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Generation Theory
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Generation Theory
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter2_generation_theory/5.1MLE/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Maximal Likelihood
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter2_generation_theory/manifold_hypothesis/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Manifold Hypothesis
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Energy Based Models
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Energy Based Models
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../introduction/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../score_function/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Score Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Sampling Methods
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Sampling Methods
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#key-concepts-in-sampling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Concepts in Sampling
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sample-from-a-simple-gaussian-distribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      sample from a simple gaussian distribution
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#markov-chain-monte-carlo-mcmc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Markov Chain Monte Carlo (MCMC)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hamiltonian-monte-carlo-hmc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hamiltonian Monte Carlo (HMC)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#langevin-dynamics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Langevin Dynamics
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#theoretical-basis-of-dynamics-based-probability-flow-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      Theoretical Basis of Dynamics-Based Probability Flow Models
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#details-of-annealed-langevin-dynamics-sampling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Details of Annealed Langevin Dynamics Sampling
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cd/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Contrastive Divergence
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../score_matching/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Score Matching
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    VAE
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            VAE
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter6_VAE/2.1introduction/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    GANs
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            GANs
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter5_GAN/3.1from_gan_to_stylegan/paper/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    From GAN to StyleGAN
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    StyleGAN Variants
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            StyleGAN Variants
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter5_GAN/3.3stylegan/paper/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    StyleGAN
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter5_GAN/3.4stylegan2/paper/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    StyleGAN2
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter5_GAN/3.5stylegan3/paper/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    StyleGAN3
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter5_GAN/3.6styleganT/paper/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    StyleGAN-T
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter5_GAN/3.7R3Gan/paper/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    R3GAN
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Diffusion Models
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Diffusion Models
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_1" id="__nav_7_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Discrete Diffusion
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_1">
+            <span class="md-nav__icon md-icon"></span>
+            Discrete Diffusion
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter7_diffusion/Introduction_diffusion/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_2" id="__nav_7_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Continuous Diffusion
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_2">
+            <span class="md-nav__icon md-icon"></span>
+            Continuous Diffusion
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter7_diffusion/introduction_sde/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SDE Fundamentals
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter7_diffusion/SDE4_DDPM_DSM/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SDE for DDPM
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter7_diffusion/probability_flow_ode/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Probability Flow ODE
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Flow Matching
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            Flow Matching
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter9_flow_matching/introduction/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter9_flow_matching/probability_with_velocity_field/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Velocity Fields
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Hybrid SOTA Models
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            Hybrid SOTA Models
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter11_hybrid_sota_models/hybrid_methods/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hybrid Methods
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter11_hybrid_sota_models/sota_closed_models/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Closed Models
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter11_hybrid_sota_models/sota_open_models/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Open Models
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter11_hybrid_sota_models/trends_future/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Future Trends
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="sampling-from-a-distribution">Sampling from a Distribution<a class="headerlink" href="#sampling-from-a-distribution" title="Permanent link">&para;</a></h1>
+<p>Understanding the process of sampling is crucial in probability and statistics. Sampling is not merely picking random points in space; it involves generating samples that statistically resemble a given probability distribution. This is essential for tasks such as Monte Carlo simulations, statistical modeling, and machine learning.</p>
+<h2 id="key-concepts-in-sampling">Key Concepts in Sampling<a class="headerlink" href="#key-concepts-in-sampling" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p><strong>Representation of the Distribution</strong>: The samples should reflect the underlying probability distribution. For example, if a distribution has a high density in a specific region, more samples should appear in that region.</p>
+</li>
+<li>
+<p><strong>Convergence to the Distribution</strong>: As the number of samples increases, the empirical distribution (e.g., a histogram) should converge to the theoretical probability distribution.</p>
+</li>
+<li>
+<p><strong>Applications</strong>: Accurate sampling is vital for simulations and models where results depend on how well samples represent the true distribution.</p>
+</li>
+</ol>
+<p><img alt="image" src="https://cdn.cognitiveseo.com/blog/wp-content/uploads/2014/03/b79459f12030f5efb4c24f44ab1178db2.png" /></p>
+<p>That is to say, we want to give higher priority to sample that have higher probability.</p>
+<p>Next, if given a density function, how to sample it.
+Unlike the VAE, Gan which directed generated an example. In the energy based model, we only have the probability density function (precisely, we have the unnormalized probability density function), how can we sample from it?</p>
+<p>Generally, sample from a probability distribution can be done in this way</p>
+<ol>
+<li>sample from a uniform distribution</li>
+<li>map the sample to the inverse of the CDF function</li>
+</ol>
+<p>than we obtained the samples that follow the given probability distribution.
+Here CDF is the cumulative distribution function, that is</p>
+<div class="arithmatex">\[ CDF(x) = \int_{-\infty}^x p(z) \, dz \]</div>
+<h2 id="sample-from-a-simple-gaussian-distribution">sample from a simple gaussian distribution<a class="headerlink" href="#sample-from-a-simple-gaussian-distribution" title="Permanent link">&para;</a></h2>
+<p>In python, sample the gussian distribution maybe simple as the following.</p>
+<pre><code class="language-python">import torch
+import torch.distributions as dist
+
+# Sample from a standard normal distribution
+sample = dist.Normal(0, 1).sample()
+print(sample)
+</code></pre>
+<h3 id="transformations-from-uniform-distributions">Transformations from Uniform Distributions<a class="headerlink" href="#transformations-from-uniform-distributions" title="Permanent link">&para;</a></h3>
+<p>While Gaussian distributions can be sampled directly, they can also be derived from uniform distributions using transformations like the Box-Muller method:</p>
+<pre><code class="language-python">import numpy as np
+
+# Box-Muller transform: sampling normal distribution from uniform
+u1 = np.random.uniform(0, 1)
+u2 = np.random.uniform(0, 1)
+z1 = np.sqrt(-2 * np.log(u1)) * np.cos(2 * np.pi * u2)
+z2 = np.sqrt(-2 * np.log(u1)) * np.sin(2 * np.pi * u2)
+print(f&quot;Samples: {z1}, {z2}&quot;)
+</code></pre>
+<p>This method is efficient because it avoids the need for the inverse CDF, which does not have a closed form for Gaussian distributions.</p>
+<h3 id="sampling-from-complex-distributions">Sampling from Complex Distributions<a class="headerlink" href="#sampling-from-complex-distributions" title="Permanent link">&para;</a></h3>
+<p>For complex distributions, especially with unnormalized probability density functions (as in Energy-Based Models), sophisticated methods are needed:</p>
+<ol>
+<li><strong>Markov Chain Monte Carlo (MCMC)</strong>: A broad class of algorithms for sampling from complex distributions.</li>
+<li><strong>Langevin Dynamics</strong>: Combines gradient descent with noise to explore probability spaces.</li>
+<li><strong>Hamiltonian Monte Carlo (HMC)</strong>: Uses physical dynamics to efficiently sample from high-dimensional distributions.</li>
+</ol>
+<h2 id="markov-chain-monte-carlo-mcmc">Markov Chain Monte Carlo (MCMC)<a class="headerlink" href="#markov-chain-monte-carlo-mcmc" title="Permanent link">&para;</a></h2>
+<p>MCMC is a broad class of algorithms used to draw samples from complex probability distributions, especially when direct sampling or classical numerical integration is difficult. The main idea behind MCMC is:</p>
+<ol>
+<li><strong>We want samples from a target distribution</strong>
+Suppose we have a probability distribution <span class="arithmatex">\(\pi(x)\)</span> (often given up to a normalization constant, e.g., <span class="arithmatex">\(\pi(x)\propto e^{-U(x)}\)</span>), and we want to estimate expectations like</li>
+</ol>
+<div class="arithmatex">\[
+ \mathbb{E}_{x\sim \pi}[f(x)] \;=\; \int f(x)\,\pi(x)\,dx.
+\]</div>
+<p>In many applications (e.g., Bayesian inference), <span class="arithmatex">\(\pi\)</span> may be high‐dimensional or have no closed‐form normalizing constant, making direct sampling infeasible.</p>
+<ol>
+<li>
+<p><strong>Construct a Markov Chain whose stationary distribution is <span class="arithmatex">\(\pi\)</span></strong>
+MCMC methods build a Markov chain <span class="arithmatex">\(X_0, X_1, X_2,\dots\)</span> with a <em>transition rule</em> <span class="arithmatex">\(X_{t+1}\sim T(\cdot\mid X_t)\)</span>. The key is to design <span class="arithmatex">\(T\)</span> so that if <span class="arithmatex">\(X_t\)</span> <em>is distributed</em> according to <span class="arithmatex">\(\pi\)</span>, then <span class="arithmatex">\(X_{t+1}\)</span> is also distributed according to <span class="arithmatex">\(\pi\)</span>. Under suitable conditions (ergodicity), the chain then <em>converges</em> to <span class="arithmatex">\(\pi\)</span> from a wide range of initial states, and the samples <span class="arithmatex">\(X_0, X_1, \dots\)</span> “mix” throughout the support of <span class="arithmatex">\(\pi\)</span>.</p>
+</li>
+<li>
+<p><strong>Samples from the chain approximate samples from <span class="arithmatex">\(\pi\)</span></strong>
+If the Markov chain is <em>ergodic</em> and <em>aperiodic</em>, then for large <span class="arithmatex">\(t\)</span>, the distribution of <span class="arithmatex">\(X_t\)</span> is close to <span class="arithmatex">\(\pi\)</span>. We can compute empirical averages using$
+ \frac{1}{N}\sum_{t=1}^N f(X_t)
+$
+to estimate <span class="arithmatex">\(\mathbb{E}_{\pi}[f]\)</span>. The law of large numbers for Markov chains implies that, as <span class="arithmatex">\(N\to\infty\)</span>, these empirical averages converge to the true expectation (under mild regularity conditions).</p>
+</li>
+</ol>
+<p>Popular MCMC approaches include:</p>
+<ul>
+<li>
+<p><strong>Metropolis–Hastings (MH)</strong> : Propose a new sample from a proposal distribution <span class="arithmatex">\(q(\cdot\mid X_t)\)</span> and accept or reject it based on a <em>Metropolis acceptance probability</em> that ensures <span class="arithmatex">\(\pi\)</span> is the stationary distribution.</p>
+</li>
+<li>
+<p><strong>Gibbs sampling</strong> : Update each component in turn from its conditional distribution, often used when conditionals of <span class="arithmatex">\(\pi\)</span> are simpler than the joint.</p>
+</li>
+</ul>
+<h2 id="hamiltonian-monte-carlo-hmc">Hamiltonian Monte Carlo (HMC)<a class="headerlink" href="#hamiltonian-monte-carlo-hmc" title="Permanent link">&para;</a></h2>
+<p><strong>Hamiltonian Monte Carlo (HMC)</strong>  is a specialized MCMC method designed to tackle high‐dimensional sampling problems more efficiently than basic Metropolis–Hastings or Gibbs sampling, especially when <span class="arithmatex">\(\pi(x)\propto e^{-U(x)}\)</span> for some smooth potential <span class="arithmatex">\(U(x)\)</span>. Its key ingredients:</p>
+<ol>
+<li><strong>Incorporate “physical” dynamics</strong>
+HMC treats the target variable <span class="arithmatex">\(x\)</span> as a <em>position</em> in a physical system and introduces an auxiliary <em>momentum</em> variable <span class="arithmatex">\(p\)</span>. Together, <span class="arithmatex">\((x,p)\)</span> evolve according to (fictitious) Hamiltonian dynamics governed by a Hamiltonian function</li>
+</ol>
+<div class="arithmatex">\[H(x,p) = U(x) + \frac{1}{2}p^\top M^{-1} p\]</div>
+<p>where <span class="arithmatex">\(M\)</span> is a mass matrix (often the identity).</p>
+<ol>
+<li><strong>Hamiltonian flow</strong>
+Starting from <span class="arithmatex">\((x,p)\)</span>, HMC simulates the continuous‐time Hamiltonian equations:</li>
+</ol>
+<div class="arithmatex">\[
+ \begin{cases}
+\dot{x} \;=\; M^{-1} p,\\
+\dot{p} \;=\; -\,\nabla U(x).
+\end{cases}
+\]</div>
+<p>These flow equations conserve the Hamiltonian <span class="arithmatex">\(H(x,p)\)</span>. In practice, one discretizes this flow via a <em>symplectic integrator</em> (e.g., leapfrog method), which approximates the true continuous trajectory but still preserves many beneficial geometry properties.</p>
+<ol>
+<li><strong>Metropolis correction</strong>
+After simulating the Hamiltonian system for a certain number of leapfrog steps, HMC performs a <em>Metropolis acceptance/rejection step</em>:</li>
+<li>
+<p>Propose a new state <span class="arithmatex">\((x^\star,p^\star)\)</span> by integrating from <span class="arithmatex">\((x,p)\)</span>.</p>
+</li>
+<li>
+<p>Accept or reject based on the Metropolis probability involving the change in Hamiltonian:</p>
+</li>
+</ol>
+<div class="arithmatex">\[
+ \alpha \;=\; \min\Bigl(1,\;\exp\bigl[-(H(x^\star,p^\star)-H(x,p))\bigr]\Bigr).
+\]</div>
+<p>This ensures the Markov chain has <span class="arithmatex">\(\pi(x)\cdot\mathcal{N}(p\mid 0,M)\)</span> as its invariant distribution in the extended space.</p>
+<ol>
+<li><strong>Efficient exploration</strong>
+Because Hamiltonian trajectories can travel <em>long distances</em> in the state space without random walk behavior, HMC reduces the <em>random walk</em> inefficiency often seen in simpler MCMC methods. This often leads to better <em>mixing</em> and more <em>decorrelated</em> samples, especially in high dimensions.</li>
+</ol>
+<p><strong>Summary of HMC steps</strong></p>
+<ol>
+<li>
+<p><strong>Sample momentum</strong>  <span class="arithmatex">\(p\sim \mathcal{N}(0,M)\)</span> to get <span class="arithmatex">\((x,p)\)</span>.</p>
+</li>
+<li>
+<p><strong>Simulate Hamiltonian flow</strong>  with a symplectic integrator (e.g., leapfrog) for a chosen number of steps <span class="arithmatex">\(L\)</span> and step size <span class="arithmatex">\(\epsilon\)</span>. This yields a proposal <span class="arithmatex">\((x^\star, p^\star)\)</span>.</p>
+</li>
+<li>
+<p><strong>Accept/Reject</strong>  <span class="arithmatex">\((x^\star,p^\star)\)</span> using the Metropolis probability <span class="arithmatex">\(\alpha\)</span>. If accepted, set <span class="arithmatex">\(X_{t+1}=x^\star\)</span>; else remain at <span class="arithmatex">\(X_{t+1}=x\)</span>.</p>
+</li>
+<li>
+<p><strong>Repeat</strong>  for many iterations.</p>
+</li>
+</ol>
+<h3 id="references-further-reading">References &amp; Further Reading<a class="headerlink" href="#references-further-reading" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>MCMC in general</strong> :</li>
+<li>
+<p>Chib, S. and Greenberg, E. (1995). <em>Understanding the Metropolis–Hastings Algorithm.</em> The American Statistician.</p>
+</li>
+<li>
+<p>Gilks, W. R., Richardson, S., &amp; Spiegelhalter, D. J. (1995). <em>Markov Chain Monte Carlo in Practice.</em> Chapman &amp; Hall.</p>
+</li>
+<li>
+<p><strong>Hamiltonian Monte Carlo</strong> :</p>
+</li>
+<li>
+<p>Duane, S., Kennedy, A. D., Pendleton, B. J., &amp; Roweth, D. (1987). <em>Hybrid Monte Carlo.</em> Physics Letters B.</p>
+</li>
+<li>
+<p>Neal, R. M. (2011). <em>MCMC Using Hamiltonian Dynamics.</em> In <em>Handbook of Markov Chain Monte Carlo</em> (eds S. Brooks, et al.).</p>
+</li>
+<li>
+<p>Betancourt, M. (2018). <em>A Conceptual Introduction to Hamiltonian Monte Carlo.</em></p>
+</li>
+</ul>
+<p>In short, MCMC is the backbone of <em>sampling from complicated distributions</em> when direct sampling is infeasible. Hamiltonian Monte Carlo refines this idea by incorporating physical dynamics to <em>move quickly</em> through the space, often yielding more efficient sampling in high‐dimensional problems.</p>
+<h2 id="langevin-dynamics">Langevin Dynamics<a class="headerlink" href="#langevin-dynamics" title="Permanent link">&para;</a></h2>
+<h4 id="1-definition">1. Definition<a class="headerlink" href="#1-definition" title="Permanent link">&para;</a></h4>
+<p>Langevin Dynamics Sampling is a sampling method based on Stochastic Differential Equations (SDE). It is used to sample from high-dimensional probability distributions <span class="arithmatex">\(p(x) \propto e^{-U(x)}\)</span>. The core idea is to add stochastic noise to the deterministic gradient descent process, ensuring a balance between exploration and exploitation, ultimately achieving the desired distribution.</p>
+<hr />
+<h4 id="2-core-principles">2. Core Principles<a class="headerlink" href="#2-core-principles" title="Permanent link">&para;</a></h4>
+<ul>
+<li>
+<p><strong>Physical Perspective</strong> : Derived from particle motion, where <span class="arithmatex">\(U(x)\)</span> represents the particle's potential energy (drift term), and random thermal noise (diffusion term) drives its movement.</p>
+</li>
+<li>
+<p><strong>Mathematical Perspective</strong> : Designed as a random process to enable samples to converge to the target distribution <span class="arithmatex">\(p(x)\)</span>.</p>
+</li>
+<li>
+<p><strong>Key Components</strong> :</p>
+</li>
+<li>
+<p><strong>Gradient Descent</strong> : Following the negative gradient of <span class="arithmatex">\(U(x)\)</span>, which guides the particle toward areas of lower energy (higher probability density).</p>
+</li>
+<li>
+<p><strong>Random Noise</strong> : Adding stochastic perturbations to prevent the algorithm from getting stuck and ensure sufficient exploration.</p>
+</li>
+</ul>
+<h4 id="3-discrete-formulation">3. Discrete Formulation<a class="headerlink" href="#3-discrete-formulation" title="Permanent link">&para;</a></h4>
+<p><strong>Continuous Langevin Dynamics</strong></p>
+<div class="arithmatex">\[
+ dx_t = -\nabla U(x_t)dt + \sqrt{2}dW_t
+\]</div>
+<p>Where:</p>
+<ul>
+<li>
+<p><span class="arithmatex">\(x_t\)</span>: Position of the particle at time <span class="arithmatex">\(t\)</span>.</p>
+</li>
+<li>
+<p><span class="arithmatex">\(W_t\)</span>: Standard Wiener process (Brownian motion), satisfying <span class="arithmatex">\(W_t \sim \mathcal{N}(0, t)\)</span>.</p>
+</li>
+</ul>
+<p><strong>Discrete Update Rule</strong>  (Practical Implementation):</p>
+<div class="arithmatex">\[
+ x_{k+1} = x_k - \epsilon \nabla U(x_k) + \sqrt{2\epsilon} \xi_k, \, \xi_k \sim \mathcal{N}(0, I)
+\]</div>
+<p>Where <span class="arithmatex">\(\epsilon\)</span> is the step size, controlling the trade-off between convergence speed and accuracy.</p>
+<hr />
+<h4 id="4-proof-target-distribution-as-the-stationary-distribution">4. Proof: Target Distribution as the Stationary Distribution<a class="headerlink" href="#4-proof-target-distribution-as-the-stationary-distribution" title="Permanent link">&para;</a></h4>
+<p><strong>Goal</strong> : Prove that the stationary distribution of Langevin Dynamics is <span class="arithmatex">\(p(x) \propto e^{-U(x)}\)</span>.</p>
+<p><strong>Tool</strong> : Fokker-Planck Equation (Describes the evolution of probability density under a stochastic process).</p>
+<ul>
+<li>
+<p><strong>Fokker-Planck Equation</strong> :
+$$
+ \frac{\partial \rho(x, t)}{\partial t} = \nabla \cdot \left( \rho \nabla U(x) \right) + \nabla^2 \rho
+$$</p>
+</li>
+<li>
+<p><strong>Stationary State</strong> : When <span class="arithmatex">\(\frac{\partial \rho(x, t)}{\partial t} = 0\)</span>, solving <span class="arithmatex">\(\rho(x) \propto e^{-U(x)}\)</span> proves the stationary distribution is the target distribution.</p>
+</li>
+</ul>
+<hr />
+<h4 id="5-application-scenarios">5. Application Scenarios<a class="headerlink" href="#5-application-scenarios" title="Permanent link">&para;</a></h4>
+<ol>
+<li>
+<p><strong>Statistical Sampling</strong> : Simulates sampling from high-dimensional distributions.</p>
+</li>
+<li>
+<p><strong>Bayesian Inference</strong> : Samples from posterior distributions <span class="arithmatex">\(p(\theta|D)\)</span> in Bayesian models.</p>
+</li>
+<li>
+<p><strong>Generative Models</strong> : Used in methods like DDPM (Denoising Diffusion Probabilistic Models) for image synthesis.</p>
+</li>
+<li>
+<p><strong>Optimization</strong> : Combines stochastic noise with gradient-based optimization (e.g., Stochastic Gradient Langevin Dynamics, SGLD).</p>
+</li>
+</ol>
+<h4 id="6-implementation-steps-and-hyperparameter-tuning">6. Implementation Steps and Hyperparameter Tuning<a class="headerlink" href="#6-implementation-steps-and-hyperparameter-tuning" title="Permanent link">&para;</a></h4>
+<p><strong>Implementation Process</strong> :</p>
+<ol>
+<li>
+<p><strong>Initialization</strong> : Start with a random initial point <span class="arithmatex">\(x_0\)</span>.</p>
+</li>
+<li>
+<p><strong>Iterative Updates</strong> :</p>
+</li>
+</ol>
+<div class="arithmatex">\[
+ x_{k+1} = x_k - \epsilon \nabla \log p(x) + \sqrt{2\epsilon} \xi_k
+\]</div>
+<ol>
+<li><strong>Stopping Criterion</strong> : Stop when the algorithm converges or sufficient samples are collected.</li>
+</ol>
+<p><strong>Hyperparameter Tuning</strong> :</p>
+<ol>
+<li>
+<p><strong>Step Size (<span class="arithmatex">\(\epsilon\)</span>)</strong> : Should ensure convergence while balancing efficiency and stability (commonly uses an annealing strategy).</p>
+</li>
+<li>
+<p><strong>Noise Level</strong> : Increase <span class="arithmatex">\(\sqrt{2\epsilon}\)</span> to improve exploration but avoid excessively large variances.</p>
+</li>
+<li>
+<p><strong>Regularization</strong> : Use adaptive methods (e.g., SGLD) to accelerate convergence.</p>
+</li>
+</ol>
+<p><strong>Notes</strong> :</p>
+<ul>
+<li>
+<p>May fail for ill-conditioned cases; alternative methods like Metropolis-Hastings or MALA can be used.</p>
+</li>
+<li>
+<p>Works under smoothness assumptions of the target distribution <span class="arithmatex">\(U(x)\)</span> (requires Lipschitz continuous gradients).</p>
+</li>
+</ul>
+<h4 id="7-example-code-python-code">7. Example Code (Python Code)<a class="headerlink" href="#7-example-code-python-code" title="Permanent link">&para;</a></h4>
+<pre><code class="language-python">import numpy as np
+
+def langevin_sampling(grad_log_p, x0, epsilon, n_steps):
+    samples = [x0]
+    x = x0.copy()
+    for _ in range(n_steps):
+        noise = np.random.randn(*x.shape) * np.sqrt(2 * epsilon)
+        x += -epsilon * grad_log_p(x) + noise
+        samples.append(x)
+    return np.array(samples)
+
+# Example: Sampling from \( p(x) \propto e^{-x^2/2}, \, \text{grad_log_p}(x) = -x \)
+grad_log_p = lambda x: -x  # Gradient of log-p(x)
+samples = langevin_sampling(grad_log_p, x0=np.random.randn(), epsilon=0.01, n_steps=1000)
+</code></pre>
+<ul>
+<li>Code <code>experiment/langevin_dynamics_simulation.ipynb</code>
+<img alt="LD sampling process" src="../../../images/image-34.png" /></li>
+</ul>
+<h4 id="8-comparison-with-other-sampling-methods">8. Comparison with Other Sampling Methods<a class="headerlink" href="#8-comparison-with-other-sampling-methods" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Requires Gradients</th>
+<th>Accept/Reject Step</th>
+<th>Applicable Scenarios</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Metropolis-Hastings</td>
+<td>No</td>
+<td>Yes</td>
+<td>General-purpose, less efficient</td>
+</tr>
+<tr>
+<td>HMC (Hamiltonian MC)</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>High efficiency for correlated distributions</td>
+</tr>
+<tr>
+<td>Langevin Dynamics</td>
+<td>Yes (Pure SDE)</td>
+<td>No</td>
+<td>Efficient for high-dimensional sampling</td>
+</tr>
+</tbody>
+</table>
+<h4 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">&para;</a></h4>
+<p>Langevin Dynamics Sampling introduces stochasticity guided by gradients, enabling efficient sampling from high-dimensional distributions. It is a powerful tool in generative modeling, Bayesian inference, and optimization algorithms. The theoretical guarantee relies on the Fokker-Planck Equation ensuring the target distribution, while practical tuning of step size and noise level balances convergence and efficiency.</p>
+<p>This simulation starts from a uniform distribution and converges to a Gaussian mixture, illustrating the effectiveness of Langevin dynamics in sampling from complex distributions.</p>
+<h2 id="theoretical-basis-of-dynamics-based-probability-flow-models">Theoretical Basis of Dynamics-Based Probability Flow Models<a class="headerlink" href="#theoretical-basis-of-dynamics-based-probability-flow-models" title="Permanent link">&para;</a></h2>
+<p>A question is that, why should we sample from <span class="arithmatex">\(p(x)\)</span> should follow LD ? Is there any other way?</p>
+<p>He we introduce various stochastic differential equations (SDEs) designed to generate the steady-state distribution <span class="arithmatex">\(p(x) \propto e^{-U(x)}\)</span>. By learning the appropriate potential <span class="arithmatex">\(U(x)\)</span>, these SDE-based methods can model the target distribution, making them suitable for generative tasks, optimization, and more. Below are common dynamics and SDE models:</p>
+<h3 id="1-underdamped-langevin-dynamics">1. Underdamped Langevin Dynamics<a class="headerlink" href="#1-underdamped-langevin-dynamics" title="Permanent link">&para;</a></h3>
+<p><strong>Definition</strong> :</p>
+<p>Introduces momentum <span class="arithmatex">\(v\)</span>, modeling the dynamics of particles in a potential field. The equations are:</p>
+<div class="arithmatex">\[
+ dx = v dt, \quad dv = -\eta v dt - \nabla U(x) dt + \sqrt{2\eta} dW_v,
+\]</div>
+<p>where <span class="arithmatex">\(\eta &gt; 0\)</span> is the friction coefficient.</p>
+<p><strong>Features</strong> :</p>
+<ul>
+<li>
+<p>Momentum introduces inertia, counteracting the "random walk" effect of overdamped Langevin dynamics.</p>
+</li>
+<li>
+<p>Converges to the stationary distribution <span class="arithmatex">\(p(x) \propto e^{-U(x)}\)</span>.</p>
+</li>
+</ul>
+<p><strong>Applications</strong> :</p>
+<ul>
+<li>
+<p>Sampling methods like Hamiltonian Monte Carlo (HMC).</p>
+</li>
+<li>
+<p>Simulating particle dynamics in physical systems.</p>
+</li>
+</ul>
+<h3 id="2-regularized-x-sde">2. Regularized X-SDE<a class="headerlink" href="#2-regularized-x-sde" title="Permanent link">&para;</a></h3>
+<p><strong>Definition</strong> :</p>
+<p>For a smooth potential <span class="arithmatex">\(U(x)\)</span>, introduces regularization terms. The SDE is:</p>
+<p>$$
+ dx = b(x) dt + \sigma(x) dW_x,
+$$
+where <span class="arithmatex">\(p(x) \propto e^{-U(x)}\)</span>.</p>
+<p><strong>Common Settings</strong> :</p>
+<ul>
+<li>
+<p>Adjust drift <span class="arithmatex">\(b(x)\)</span> and diffusion <span class="arithmatex">\(\sigma(x)\)</span> to incorporate prior knowledge or regularization.</p>
+</li>
+<li>
+<p>Extensions include introducing auxiliary variables (e.g., Metropolis-adjusted Langevin Algorithm, MALA).</p>
+</li>
+</ul>
+<h3 id="3-time-reversal-sde-reverse-diffusion-process">3. Time-Reversal SDE (Reverse Diffusion Process)<a class="headerlink" href="#3-time-reversal-sde-reverse-diffusion-process" title="Permanent link">&para;</a></h3>
+<p><strong>Definition</strong> :</p>
+<p>Given a forward SDE:</p>
+<div class="arithmatex">\[
+ dx = f(x, t) dt + g(x) dW_x,
+\]</div>
+<p>the reverse-time SDE has the form:</p>
+<div class="arithmatex">\[
+ dx_r = f(x, t) - g(x)^2 \nabla \log p(x, t) + g(x) dW_x,
+\]</div>
+<p>where <span class="arithmatex">\(p(x, t)\)</span> is the time-dependent probability density.</p>
+<p><strong>Applications</strong> :</p>
+<ul>
+<li>
+<p>Generative models (e.g., DDPM, score-based models).</p>
+</li>
+<li>
+<p>Denoising diffusion models for approximating <span class="arithmatex">\(\log p(x)\)</span>.</p>
+</li>
+</ul>
+<h3 id="4-preconditioned-langevin-dynamics">4. Preconditioned Langevin Dynamics<a class="headerlink" href="#4-preconditioned-langevin-dynamics" title="Permanent link">&para;</a></h3>
+<p><strong>Definition</strong> :</p>
+<p>Introduces a preconditioning matrix <span class="arithmatex">\(P(x)\)</span> to accelerate convergence. The SDE is:</p>
+<div class="arithmatex">\[
+ dx = -P(x) \nabla U(x) dt + \sqrt{2P(x)} dW_x,
+\]</div>
+<p>where <span class="arithmatex">\(P(x)\)</span> is symmetric and positive definite.</p>
+<p><strong>Features</strong> :</p>
+<ul>
+<li>
+<p>Efficient sampling when <span class="arithmatex">\(P(x)\)</span> adapts to the geometry of <span class="arithmatex">\(U(x)\)</span>.</p>
+</li>
+<li>
+<p>Extends to include Riemannian manifold-based methods.</p>
+</li>
+</ul>
+<h4 id="5-coupled-sde-and-deterministic-flow">5. Coupled SDE and Deterministic Flow<a class="headerlink" href="#5-coupled-sde-and-deterministic-flow" title="Permanent link">&para;</a></h4>
+<p><strong>Definition</strong> :</p>
+<p>Combines SDE with ordinary differential equations (ODEs):</p>
+<div class="arithmatex">\[
+ dx = -\nabla U(x) dt + \sqrt{2} dW_x.
+\]</div>
+<p><strong>Features</strong> :</p>
+<ul>
+<li>
+<p>Balance between randomness (SDE) and determinism (ODE).</p>
+</li>
+<li>
+<p>Stationary distribution <span class="arithmatex">\(p(x) \propto e^{-U(x)}\)</span>.</p>
+</li>
+</ul>
+<p><strong>Applications</strong> :</p>
+<ul>
+<li>
+<p>Probabilistic Flow ODE (PF-ODE).</p>
+</li>
+<li>
+<p>Hybrid optimization-sampling methods.</p>
+</li>
+</ul>
+<h4 id="6-variants-of-stochastic-sdes">6. Variants of Stochastic SDEs<a class="headerlink" href="#6-variants-of-stochastic-sdes" title="Permanent link">&para;</a></h4>
+<ol>
+<li>
+<p><strong>Adaptive Step SDE</strong> :
+Adjusts step size to improve stability and convergence.</p>
+</li>
+<li>
+<p><strong>Augmented SDE</strong> :
+Introduces auxiliary dimensions to simplify sampling.</p>
+</li>
+</ol>
+<h3 id="summary-of-sde-models">Summary of SDE Models<a class="headerlink" href="#summary-of-sde-models" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>SDE Type</th>
+<th>Core Concept</th>
+<th>Advantages</th>
+<th>Applications</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>General Langevin Dynamics</td>
+<td>Basic diffusion model</td>
+<td>Theoretical clarity</td>
+<td>Generative modeling</td>
+</tr>
+<tr>
+<td>Underdamped Langevin Dynamics</td>
+<td>Adds momentum</td>
+<td>Faster convergence</td>
+<td>Sampling, optimization</td>
+</tr>
+<tr>
+<td>Preconditioned Langevin Dynamics</td>
+<td>Preconditioning matrix for geometry</td>
+<td>Accelerates convergence</td>
+<td>Bayesian inference</td>
+</tr>
+<tr>
+<td>Coupled SDE-ODE</td>
+<td>Balance of stochastic/deterministic</td>
+<td>Stable dynamics</td>
+<td>Scientific computing</td>
+</tr>
+<tr>
+<td>Reverse-Time SDE</td>
+<td>Diffusion process reversal</td>
+<td>High-quality generation</td>
+<td>Generative models</td>
+</tr>
+</tbody>
+</table>
+<h3 id="learning-objectives">Learning Objectives<a class="headerlink" href="#learning-objectives" title="Permanent link">&para;</a></h3>
+<p>Why do different SDE formulations yield the same equilibrium distribution?</p>
+<p><strong>Mathematical Tool</strong> :</p>
+<p>Fokker-Planck equation.For the SDE <span class="arithmatex">\(dx = b(x) dt + \sigma(x) dW_x\)</span>, the Fokker-Planck equation is:</p>
+<div class="arithmatex">\[
+ \frac{\partial p}{\partial t} = -\nabla \cdot (p b) + \frac{1}{2} \nabla^2 : (p \sigma \sigma^\top),
+\]</div>
+<p>where <span class="arithmatex">\(p(x, t)\)</span> is the probability density, <span class="arithmatex">\(b(x)\)</span> the drift term, and <span class="arithmatex">\(\sigma(x)\)</span> the diffusion term.Stationary solution <span class="arithmatex">\(p(x)\)</span> satisfies:</p>
+<div class="arithmatex">\[
+ \nabla \cdot (p b) = \frac{1}{2} \nabla^2 : (p \sigma \sigma^\top).
+\]</div>
+<p>By adjusting <span class="arithmatex">\(b(x)\)</span> and <span class="arithmatex">\(\sigma(x)\)</span>, one can achieve the desired stationary distribution.</p>
+<h3 id="practical-recommendations">Practical Recommendations<a class="headerlink" href="#practical-recommendations" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p>Choose the SDE based on your specific problem and computational constraints.</p>
+</li>
+<li>
+<p>For generative tasks, consider time-reversal SDEs or preconditioned Langevin dynamics.</p>
+</li>
+<li>
+<p>When optimizing, balance between exploration (stochastic) and exploitation (deterministic).</p>
+</li>
+</ol>
+<h2 id="details-of-annealed-langevin-dynamics-sampling">Details of Annealed Langevin Dynamics Sampling<a class="headerlink" href="#details-of-annealed-langevin-dynamics-sampling" title="Permanent link">&para;</a></h2>
+<h3 id="1-definition_1">1. Definition<a class="headerlink" href="#1-definition_1" title="Permanent link">&para;</a></h3>
+<p>Annealed Langevin Dynamics Sampling is a stochastic sampling method that incorporates temperature annealing. It enhances the system's ability to explore the target space, balancing between exploration (searching globally) and exploitation (refining locally).</p>
+<h3 id="2-core-principles_1">2. Core Principles<a class="headerlink" href="#2-core-principles_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p><strong>Annealing</strong> : Introduces a temperature schedule <span class="arithmatex">\(T(t)\)</span>, which controls the degree of randomness (higher temperatures lead to larger noise, encouraging exploration; lower temperatures reduce noise for refined optimization).</p>
+</li>
+<li>
+<p><strong>Stationary Distribution</strong> : Gradually transitions the sampling distribution towards the target distribution <span class="arithmatex">\(p(x) \propto e^{-U(x)}\)</span> by reducing the temperature.</p>
+</li>
+</ul>
+<h3 id="3-mathematical-formulation-and-derivation">3. Mathematical Formulation and Derivation<a class="headerlink" href="#3-mathematical-formulation-and-derivation" title="Permanent link">&para;</a></h3>
+<p>The dynamic form of Annealed Langevin Dynamics is:</p>
+<div class="arithmatex">\[
+ dx_t = -\nabla U(x_t) dt + \sqrt{2 T(t)} dW_t,
+\]</div>
+<p>where:</p>
+<ul>
+<li>
+<p><span class="arithmatex">\(T(t)\)</span>: Temperature schedule (e.g., exponential decay <span class="arithmatex">\(T(t) = T_0 e^{-\beta t}\)</span>, or other schedules like polynomial decay <span class="arithmatex">\(T_k = T_0 / (1 + k)\)</span>).</p>
+</li>
+<li>
+<p>Noise term: <span class="arithmatex">\(\sqrt{2 T(t)} dW_t\)</span> ensures randomness at each step.</p>
+</li>
+</ul>
+<p>The discrete iteration formula becomes:</p>
+<div class="arithmatex">\[
+ x_{k+1} = x_k - \epsilon \nabla U(x_k) + \sqrt{2 \epsilon T_k} \xi_k, \quad \xi_k \sim \mathcal{N}(0, I),
+\]</div>
+<p>where <span class="arithmatex">\(\epsilon\)</span> is the step size, and <span class="arithmatex">\(\xi_k\)</span> is Gaussian noise.</p>
+<h3 id="4-temperature-scheduling-design">4. Temperature Scheduling Design<a class="headerlink" href="#4-temperature-scheduling-design" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p><strong>Exponential Decay</strong> : <span class="arithmatex">\(T_k = T_0 \cdot \gamma^k\)</span>, where <span class="arithmatex">\(0 &lt; \gamma &lt; 1\)</span>.</p>
+</li>
+<li>
+<p><strong>Polynomial Decay</strong> : <span class="arithmatex">\(T_k = T_0 / (1 + k)^\alpha\)</span>, where <span class="arithmatex">\(\alpha &gt; 0\)</span>.</p>
+</li>
+<li>
+<p><strong>Adaptive Scheduling</strong> : Adjust <span class="arithmatex">\(T_k\)</span> based on the sampling performance (e.g., adaptively reduce noise if the acceptance rate decreases).</p>
+</li>
+</ul>
+<p>Key parameters:</p>
+<ul>
+<li>
+<p><strong>Initial Temperature</strong>  <span class="arithmatex">\(T_0\)</span> : Chosen high enough to explore the search space widely.</p>
+</li>
+<li>
+<p><strong>Final Temperature</strong> : Chosen low enough to focus on the target distribution.</p>
+</li>
+<li>
+<p><strong>Step Size</strong>  <span class="arithmatex">\(\epsilon\)</span> : Adjusted to balance accuracy and computational cost.</p>
+</li>
+</ul>
+<hr />
+<h3 id="5-theoretical-analysis">5. Theoretical Analysis<a class="headerlink" href="#5-theoretical-analysis" title="Permanent link">&para;</a></h3>
+<p>In the presence of temperature <span class="arithmatex">\(T\)</span>, the stationary distribution of Langevin Dynamics becomes:</p>
+<div class="arithmatex">\[
+ p_T(x) \propto e^{-U(x)/T}.
+\]</div>
+<p>As <span class="arithmatex">\(T \to 0\)</span>, the distribution transitions to <span class="arithmatex">\(p(x) \propto e^{-U(x)}\)</span> (i.e., the target distribution).</p>
+<p><strong>Convergence Analysis</strong> :</p>
+<ul>
+<li>
+<p><strong>Exploration</strong> : High temperatures help explore distant regions of the space.</p>
+</li>
+<li>
+<p><strong>Exploitation</strong> : Gradual cooling refines the search towards the target distribution.</p>
+</li>
+</ul>
+<h3 id="6-applications">6. Applications<a class="headerlink" href="#6-applications" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p><strong>Generative Models</strong> : Used in training and optimization tasks for high-dimensional data.</p>
+</li>
+<li>
+<p><strong>Non-Convex Optimization</strong> : Combines annealing and dynamics for escaping local minima.</p>
+</li>
+</ul>
+<h3 id="7-practical-steps">7. Practical Steps<a class="headerlink" href="#7-practical-steps" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Initialization</strong> :</li>
+<li>
+<p>Set the initial temperature <span class="arithmatex">\(T_0\)</span>, annealing schedule, step size <span class="arithmatex">\(\epsilon\)</span>, and random initialization of <span class="arithmatex">\(x_0\)</span>.</p>
+</li>
+<li>
+<p><strong>Iteration</strong> :</p>
+</li>
+<li>
+<p>Compute <span class="arithmatex">\(\nabla U(x_k)\)</span>.</p>
+</li>
+<li>
+<p>Update <span class="arithmatex">\(T_k\)</span> based on the annealing schedule.</p>
+</li>
+<li>
+<p>Perform the update:</p>
+</li>
+</ol>
+<div class="arithmatex">\[
+ x_{k+1} = x_k - \epsilon \nabla U(x_k) + \sqrt{2 \epsilon T_k} \xi_k.
+\]</div>
+<ol>
+<li>
+<p><strong>Convergence</strong> :</p>
+</li>
+<li>
+<p>Stop when the temperature reaches a specified threshold or convergence criteria are met.</p>
+</li>
+</ol>
+<p><strong>Python Code Example</strong> :</p>
+<pre><code class="language-python">import numpy as np
+
+def annealed_langevin(grad_U, x0, T0, epsilon, n_steps, schedule='exponential', gamma=0.99):
+    x = x0.copy()
+    samples = [x0]
+    T = T0
+    for k in range(n_steps):
+        if schedule == 'exponential':
+            T = T0 * gamma ** k
+        elif schedule == 'polynomial':
+            T = T0 / (1 + k)
+        noise = np.random.randn(x.shape) * np.sqrt(2 * epsilon * T)
+        x = x - epsilon * grad_U(x) + noise
+        samples.append(x)
+    return np.array(samples)
+</code></pre>
+<h3 id="8-comparison-with-other-methods">8. Comparison with Other Methods<a class="headerlink" href="#8-comparison-with-other-methods" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Annealing Strategy</th>
+<th>Noise Term</th>
+<th>Suitable Scenarios</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Standard Langevin Dynamics</td>
+<td>None</td>
+<td>Yes</td>
+<td>Single-mode stationary distributions</td>
+</tr>
+<tr>
+<td>Annealed Langevin Dynamics</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Multi-modal distributions, generative models</td>
+</tr>
+<tr>
+<td>Simulated Annealing</td>
+<td>Yes</td>
+<td>No</td>
+<td>Combinatorial optimization, discrete space</td>
+</tr>
+<tr>
+<td>Hamiltonian Monte Carlo (HMC)</td>
+<td>None</td>
+<td>No</td>
+<td>High-dimensional, parametric distributions</td>
+</tr>
+</tbody>
+</table>
+<h3 id="9-advanced-extensions">9. Advanced Extensions<a class="headerlink" href="#9-advanced-extensions" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p><strong>SGLD with Annealing</strong> :
+Combines stochastic gradient Langevin dynamics with annealing for large-scale datasets.</p>
+</li>
+<li>
+<p><strong>Adaptive Annealing</strong> :
+Dynamically adjusts the annealing schedule based on feedback (e.g., acceptance rate, energy variance).</p>
+</li>
+</ul>
+<hr />
+<h3 id="10-key-considerations">10. Key Considerations<a class="headerlink" href="#10-key-considerations" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p><strong>Temperature Schedule</strong> : Improper schedules (e.g., too rapid cooling) may lead to poor convergence.</p>
+</li>
+<li>
+<p><strong>Step Size Selection</strong> : Balances convergence speed with numerical stability.</p>
+</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "toc.integrate"], "search": "../../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.60a45f97.min.js"></script>
+      
+        <script src="../../../javascripts/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

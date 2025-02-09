@@ -1,0 +1,2321 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../Introduction_diffusion/">
+      
+      
+        <link rel="next" href="../SDE4_DDPM_DSM/">
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.50">
+    
+    
+      
+        <title>SDE Fundamentals - Generative AI: From Start to Surrender</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.a40c8224.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#sde" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Generative AI: From Start to Surrender" class="md-header__button md-logo" aria-label="Generative AI: From Start to Surrender" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Generative AI: From Start to Surrender
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              SDE Fundamentals
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../chapter1_Introduction/1.1terminology/" class="md-tabs__link">
+          
+  
+  Introduction
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../chapter2_generation_theory/5.1MLE/" class="md-tabs__link">
+          
+  
+  Generation Theory
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../chapter3_energy_based_model/introduction/" class="md-tabs__link">
+          
+  
+  Energy Based Models
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../chapter6_VAE/2.1introduction/" class="md-tabs__link">
+          
+  
+  VAE
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../chapter5_GAN/3.1from_gan_to_stylegan/paper/" class="md-tabs__link">
+          
+  
+  GANs
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../Introduction_diffusion/" class="md-tabs__link">
+          
+  
+  Diffusion Models
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../chapter9_flow_matching/introduction/" class="md-tabs__link">
+          
+  
+  Flow Matching
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../chapter11_hybrid_sota_models/hybrid_methods/" class="md-tabs__link">
+          
+  
+  Hybrid SOTA Models
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Generative AI: From Start to Surrender" class="md-nav__button md-logo" aria-label="Generative AI: From Start to Surrender" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Generative AI: From Start to Surrender
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Introduction
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter1_Introduction/1.1terminology/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Terms
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter1_Introduction/1.2fourier_transform/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Fourier Transform
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter1_Introduction/1.3signal_processing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Signal Processing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter1_Introduction/1.4statistics/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Statistics
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter1_Introduction/tutorials/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Tutorials
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Generation Theory
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Generation Theory
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter2_generation_theory/5.1MLE/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Maximal Likelihood
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter2_generation_theory/manifold_hypothesis/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Manifold Hypothesis
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Energy Based Models
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Energy Based Models
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter3_energy_based_model/introduction/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter3_energy_based_model/score_function/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Score Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter3_energy_based_model/sampling/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Sampling Methods
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter3_energy_based_model/cd/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Contrastive Divergence
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter3_energy_based_model/score_matching/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Score Matching
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    VAE
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            VAE
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter6_VAE/2.1introduction/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    GANs
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            GANs
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter5_GAN/3.1from_gan_to_stylegan/paper/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    From GAN to StyleGAN
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    StyleGAN Variants
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            StyleGAN Variants
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter5_GAN/3.3stylegan/paper/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    StyleGAN
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter5_GAN/3.4stylegan2/paper/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    StyleGAN2
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter5_GAN/3.5stylegan3/paper/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    StyleGAN3
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter5_GAN/3.6styleganT/paper/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    StyleGAN-T
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter5_GAN/3.7R3Gan/paper/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    R3GAN
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Diffusion Models
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Diffusion Models
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_1" id="__nav_7_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Discrete Diffusion
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_1">
+            <span class="md-nav__icon md-icon"></span>
+            Discrete Diffusion
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Introduction_diffusion/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_7_2" id="__nav_7_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Continuous Diffusion
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_7_2">
+            <span class="md-nav__icon md-icon"></span>
+            Continuous Diffusion
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    SDE Fundamentals
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    SDE Fundamentals
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      Prerequisites
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-makes-sdes-different" class="md-nav__link">
+    <span class="md-ellipsis">
+      What Makes SDEs Different?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-building-blocks-of-sdes" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Building Blocks of SDEs
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#solving-sdes-why-its-tricky" class="md-nav__link">
+    <span class="md-ellipsis">
+      Solving SDEs: Why It’s Tricky
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#properties-of-the-wiener-process-w_t-in-the-ito-integral" class="md-nav__link">
+    <span class="md-ellipsis">
+      Properties of the Wiener Process \(W_t\) in the Itô Integral
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numerical-solutions-of-sde" class="md-nav__link">
+    <span class="md-ellipsis">
+      Numerical Solutions of SDE
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#refered-book" class="md-nav__link">
+    <span class="md-ellipsis">
+      refered book
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      reference
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SDE4_DDPM_DSM/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SDE for DDPM
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../probability_flow_ode/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Probability Flow ODE
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Flow Matching
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            Flow Matching
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter9_flow_matching/introduction/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter9_flow_matching/probability_with_velocity_field/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Velocity Fields
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Hybrid SOTA Models
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            Hybrid SOTA Models
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter11_hybrid_sota_models/hybrid_methods/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hybrid Methods
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter11_hybrid_sota_models/sota_closed_models/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Closed Models
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter11_hybrid_sota_models/sota_open_models/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Open Models
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter11_hybrid_sota_models/trends_future/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Future Trends
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="sde">SDE<a class="headerlink" href="#sde" title="Permanent link">&para;</a></h1>
+<p>Welcome to the world of <strong>Stochastic Differential Equations (SDEs)</strong>! If you’ve ever wondered how to model systems that involve randomness—like stock prices, particle motion, or population growth with unpredictable fluctuations—SDEs are the key. This blog will break down the basics, no advanced math required. Let’s dive in!</p>
+<hr />
+<h2 id="prerequisites"><strong>Prerequisites</strong><a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<p>To follow along, you’ll need:
+- Basic calculus (derivatives and integrals).
+- Familiarity with ordinary differential equations (ODEs).
+- A grasp of probability (random variables, mean, variance).</p>
+<p>Don’t worry—we’ll keep things intuitive!</p>
+<hr />
+<h2 id="what-makes-sdes-different"><strong>What Makes SDEs Different?</strong><a class="headerlink" href="#what-makes-sdes-different" title="Permanent link">&para;</a></h2>
+<p>Ordinary Differential Equations (ODEs) model deterministic systems, where the future is entirely predictable from the present (e.g., a swinging pendulum). <strong>SDEs</strong>, on the other hand, model systems with <strong>randomness</strong>. Think of them as ODEs with a “noise” term to account for uncertainty.</p>
+<hr />
+<h2 id="the-building-blocks-of-sdes"><strong>The Building Blocks of SDEs</strong><a class="headerlink" href="#the-building-blocks-of-sdes" title="Permanent link">&para;</a></h2>
+<h3 id="1-stochastic-processes">1. <strong>Stochastic Processes</strong><a class="headerlink" href="#1-stochastic-processes" title="Permanent link">&para;</a></h3>
+<p>A stochastic process is a collection of random variables evolving over time. The most famous example is <strong>Brownian motion</strong> (or <em>Wiener process</em>), which describes random movement, like pollen jiggling in water. Key properties:
+- <strong>Continuous paths</strong> (no jumps).
+- <strong>Independent increments</strong>: Future movements don’t depend on the past.
+- <strong>Normally distributed</strong> changes: Over time <span class="arithmatex">\(\Delta t\)</span>, the displacement <span class="arithmatex">\(\Delta W \sim N(0, \Delta t)\)</span>.</p>
+<p>that is</p>
+<div class="arithmatex">\[
+W_t - W_s \sim \mathbf{N}(0, t-s) \quad \forall t&gt;s
+\]</div>
+<video width="320" height="240" controls>
+  <source src="https://vdn3.vzuu.com/SD/a4669c08-2340-11eb-826e-be7830fcb65c.mp4?auth_key=1736996318-0-0-8ab5de9bde1ba841ab4f42b5ba1d3d47&bu=078babd7&c=avc.0.0&disable_local_cache=1&expiration=1736996318&f=mp4&pu=078babd7&v=tx" type="video/mp4">
+</video>
+
+<h3 id="2-structure-of-an-sde">2. <strong>Structure of an SDE</strong><a class="headerlink" href="#2-structure-of-an-sde" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Difference Between ODEs and SDEs**</li>
+</ol>
+<p><strong>Ordinary Differential Equations (ODEs)</strong></p>
+<p>An ODE is an equation involving a function and its derivatives <span class="arithmatex">\(\frac{dx}{dt} = f(x,t)\)</span>
+where <span class="arithmatex">\(x(t)\)</span> is the unknown function, and <span class="arithmatex">\(f(x,t)\)</span> is a known deterministic function.Example:</p>
+<p><strong>Exponential Growth</strong></p>
+<div class="arithmatex">\[
+ \frac{dx}{dt} = \lambda x
+\]</div>
+<p>Solution:</p>
+<div class="arithmatex">\[x(t) = x_0 e^{\lambda t}\]</div>
+<p>where <span class="arithmatex">\(x_0\)</span> is the initial condition.</p>
+<p><strong>Stochastic Differential Equations (SDEs)</strong></p>
+<p>An SDE extends an ODE by adding a <strong>stochastic (random) component</strong> :</p>
+<div class="arithmatex">\[
+\frac{d x}{dt} = f(x,t) + g(x, t)\xi(t)
+\]</div>
+<p>Not that the above form is just a similar notion from ODE, which help to understand. In fact, cause the Brownian motion is nowhere differentiable.</p>
+<h4 id="standard-formulation-of-sde"><strong>Standard formulation of SDE</strong><a class="headerlink" href="#standard-formulation-of-sde" title="Permanent link">&para;</a></h4>
+<div class="arithmatex">\[
+ dX_t = f(X_t, t) dt + g(X_t, t) dW_t
+\]</div>
+<p>where:</p>
+<ul>
+<li>
+<p><span class="arithmatex">\(dX_t\)</span> represents the infinitesimal change in <span class="arithmatex">\(X_t\)</span>.</p>
+</li>
+<li>
+<p><span class="arithmatex">\(f(X_t, t)dt\)</span> is the <strong>drift term</strong> , describing deterministic motion.</p>
+</li>
+<li>
+<p><span class="arithmatex">\(g(X_t, t)dW_t\)</span> is the <strong>diffusion term</strong> , incorporating randomness via a Wiener process <span class="arithmatex">\(W_t\)</span> (also called Brownian  motion).</p>
+</li>
+</ul>
+<p>By the random term, we know that the randomniness is independent of the <span class="arithmatex">\(x\)</span>.</p>
+<p>Example:
+<strong>Geometric Brownian Motion (GBM)</strong></p>
+<p>$$
+ dX_t = \mu X_t dt + \sigma X_t dW_t
+$$
+used to model stock prices in the <strong>Black-Scholes model</strong> .</p>
+<h4 id="why-the-derivative-formulation-of-sdes-is-invalid">Why the Derivative Formulation of SDEs is Invalid<a class="headerlink" href="#why-the-derivative-formulation-of-sdes-is-invalid" title="Permanent link">&para;</a></h4>
+<p>The equation
+<span class="arithmatex">\(<span class="arithmatex">\(\frac{dx(t)}{dt} = f(t, \mathbf{x}) + g(t, \mathbf{x})\xi(t), \quad \text{where} \quad \xi(t) \sim \mathcal{N}(0, \mathbf{I})\)</span>\)</span>
+is mathematically problematic for defining a stochastic differential equation (SDE). Below are the key reasons:</p>
+<h5 id="1-white-noise-as-a-generalized-function">1. <strong>White Noise as a Generalized Function</strong><a class="headerlink" href="#1-white-noise-as-a-generalized-function" title="Permanent link">&para;</a></h5>
+<ul>
+<li><span class="arithmatex">\(\xi(t)\)</span> represents "white noise," which is not a classical function but a generalized stochastic process.</li>
+<li>Rigorously, <span class="arithmatex">\(\xi(t)\)</span> is interpreted as the <strong>formal derivative of a Wiener process</strong> <span class="arithmatex">\(W(t)\)</span> (Brownian motion).</li>
+<li>However, <span class="arithmatex">\(W(t)\)</span> is nowhere differentiable with probability 1, so <span class="arithmatex">\(\xi(t) = \frac{dW}{dt}\)</span> does not exist in the classical sense.</li>
+</ul>
+<h5 id="2-stochastic-integrals-vs-derivatives">2. <strong>Stochastic Integrals vs. Derivatives</strong><a class="headerlink" href="#2-stochastic-integrals-vs-derivatives" title="Permanent link">&para;</a></h5>
+<ul>
+<li>SDEs are properly defined using <strong>stochastic integrals</strong> (Itô or Stratonovich), not derivatives.</li>
+<li>The standard SDE formulation is:
+     <span class="arithmatex">\(<span class="arithmatex">\(dx(t) = f(t, \mathbf{x})dt + g(t, \mathbf{x})dW(t),\)</span>\)</span>
+     where <span class="arithmatex">\(dW(t)\)</span> is the increment of a Wiener process.</li>
+<li>This avoids differentiating <span class="arithmatex">\(W(t)\)</span> and instead uses integration to handle its irregular paths.</li>
+</ul>
+<h5 id="3-path-regularity">3. <strong>Path Regularity</strong><a class="headerlink" href="#3-path-regularity" title="Permanent link">&para;</a></h5>
+<ul>
+<li>Solutions to SDEs are typically <strong>nowhere differentiable</strong> due to the roughness of <span class="arithmatex">\(W(t)\)</span>.</li>
+<li>Writing <span class="arithmatex">\(\frac{dx(t)}{dt}\)</span> implicitly assumes <span class="arithmatex">\(x(t)\)</span> is differentiable, which contradicts the nature of stochastic processes driven by white noise.</li>
+</ul>
+<h5 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">&para;</a></h5>
+<p>The derivative form <span class="arithmatex">\(\frac{dx(t)}{dt}\)</span> is invalid for SDEs because:
+1. White noise (<span class="arithmatex">\(\xi(t)\)</span>) is not a classical function.
+2. The rigorous framework requires stochastic integrals with <span class="arithmatex">\(dW(t)\)</span>, not <span class="arithmatex">\(\xi(t)dt\)</span>.
+3. Solutions to SDEs lack the regularity needed for classical derivatives.</p>
+<p>The standard SDE formulation resolves these issues by using differentials (<span class="arithmatex">\(dx(t)\)</span>, <span class="arithmatex">\(dW(t)\)</span>) instead of derivatives.</p>
+<h2 id="solving-sdes-why-its-tricky"><strong>Solving SDEs: Why It’s Tricky</strong><a class="headerlink" href="#solving-sdes-why-its-tricky" title="Permanent link">&para;</a></h2>
+<p>In ODEs, you integrate to find solutions. But in SDEs, the noise term <span class="arithmatex">\(dW_t\)</span> isn’t smooth—it’s wildly erratic! Traditional calculus fails, so we use <strong>stochastic calculus</strong>. Two key tools:
+1. <strong>Itô’s Lemma</strong>: A “chain rule” for stochastic processes.
+2. <strong>Itô Integral</strong>: A way to integrate with respect to Brownian motion.</p>
+<div class="arithmatex">\[
+ \mathbf{x}(t, \omega) = \mathbf{x}_0 + \int_0^t f(s, \mathbf{x}(s, \omega)) ds + \int_0^t g(s, \mathbf{x}(s, \omega)) d\mathbf{w}(s, \omega)
+\]</div>
+<h3 id="what-is-the-ito-integral">What is the Itô Integral?<a class="headerlink" href="#what-is-the-ito-integral" title="Permanent link">&para;</a></h3>
+<p>The Itô Integral is a way to integrate stochastic processes with respect to Brownian motion (a Wiener process, denoted $ W_t $). Formally, for a stochastic process $ H_t $ adapted to the filtration of $ W_t $, the Itô Integral is defined as:</p>
+<div class="arithmatex">\[
+\int_{0}^{T} H_t \, dW_t = \lim_{\Delta t \to 0} \sum_{i=0}^{n-1} H_{t_i} (W_{t_{i+1}} - W_{t_i}),
+\]</div>
+<p>where the integrand $ H_t $ is evaluated at the <strong>left endpoint</strong> of each subinterval <span class="arithmatex">\([t_i, t_{i+1}]\)</span>. This "non-anticipating" property ensures the integral is a <strong>martingale</strong>.</p>
+<h3 id="key-properties">Key Properties<a class="headerlink" href="#key-properties" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Adaptedness</strong>: $ H_t $ must depend only on information up to time $ t $.</li>
+<li><strong>Itô Isometry</strong>:</li>
+</ol>
+<p>$$
+   \mathbb{E}\left[ \left( \int_{0}^{T} H_t \, dW_t \right)^2 \right] = \mathbb{E}\left[ \int_{0}^{T} H_t^2 \, dt \right].
+   $$</p>
+<ol>
+<li><strong>Zero Mean</strong>:</li>
+</ol>
+<p>$$ \mathbb{E}\left[ \int_{0}^{T} H_t \, dW_t \right] = 0 $$</p>
+<p>By the first part, we can solve it according to the method used in ODE, but the last term is tricky.</p>
+<p>Classical integration fails because Brownian motion has <strong>infinite total variation</strong> but <strong>finite quadratic variation</strong>:</p>
+<p>$$
+\lim_{\Delta t \to 0} \sum_{i=0}^{n-1} |W_{t_{i+1}} - W_{t_i}|^2 = T.
+$$
+This irregularity forces a new calculus.</p>
+<h3 id="itos-lemma">Itô’s Lemma<a class="headerlink" href="#itos-lemma" title="Permanent link">&para;</a></h3>
+<h4 id="the-stochastic-chain-rule">The Stochastic Chain Rule<a class="headerlink" href="#the-stochastic-chain-rule" title="Permanent link">&para;</a></h4>
+<p>Itô’s Lemma is the stochastic counterpart to the chain rule in calculus. It allows us to differentiate functions of stochastic processes. Let $ X_t $ follow the Itô process:
+$$
+dX_t = \mu(t, X_t) dt + \sigma(t, X_t) dW_t.
+$$
+For a twice-differentiable function $ f(t, X_t) $, Itô’s Lemma states:
+$$
+df = \left( \frac{\partial f}{\partial t} + \mu \frac{\partial f}{\partial x} + \frac{1}{2} \sigma^2 \frac{\partial^2 f}{\partial x^2} \right) dt + \sigma \frac{\partial f}{\partial x} dW_t.
+$$</p>
+<h4 id="intuition-behind-the-extra-term">Intuition Behind the Extra Term<a class="headerlink" href="#intuition-behind-the-extra-term" title="Permanent link">&para;</a></h4>
+<p>The term $ \frac{1}{2} \sigma^2 \frac{\partial^2 f}{\partial x^2} $ arises from the quadratic variation of $ W_t $. In Taylor expansions, $ (dW_t)^2 \approx dt $, which introduces a "correction" absent in classical calculus.</p>
+<hr />
+<h3 id="geometric-brownian-motion">Geometric Brownian Motion<a class="headerlink" href="#geometric-brownian-motion" title="Permanent link">&para;</a></h3>
+<p>Consider a stock price $ S_t $ modeled by:
+$$
+dS_t = \mu S_t dt + \sigma S_t dW_t.
+$$
+<strong>Goal</strong>: Find $ d(\ln S_t) $.</p>
+<p>Applying Itô’s Lemma with $ f(t, S_t) = \ln S_t $:
+1. Compute partial derivatives:
+   - $ \frac{\partial f}{\partial t} = 0 $,
+   - $ \frac{\partial f}{\partial S} = \frac{1}{S} $,
+   - $ \frac{\partial^2 f}{\partial S^2} = -\frac{1}{S^2} $.</p>
+<ol>
+<li>Substitute into Itô’s formula:
+$$
+d(\ln S_t) = \left( \mu - \frac{1}{2} \sigma^2 \right) dt + \sigma dW_t.
+$$</li>
+</ol>
+<p>Integrating this gives the solution:
+$$
+\ln S_t = \ln S_0 + \left( \mu - \frac{1}{2} \sigma^2 \right) t + \sigma W_t.
+$$</p>
+<h3 id="analytical-solutions">Analytical Solutions<a class="headerlink" href="#analytical-solutions" title="Permanent link">&para;</a></h3>
+<p>For simple SDEs, explicit solutions exist.</p>
+<p><strong>Example: Linear SDE</strong></p>
+<div class="arithmatex">\[
+ dX_t = \lambda X_t dt + \sigma dW_t
+\]</div>
+<p>Using <strong>Itô's Lemma</strong> , the solution is:</p>
+<div class="arithmatex">\[
+ X_t = X_0 e^{\lambda t} + \sigma \int_0^t e^{\lambda (t-s)} dW_s
+\]</div>
+<p>This solution includes a deterministic exponential growth term and a stochastic integral.</p>
+<h2 id="properties-of-the-wiener-process-w_t-in-the-ito-integral">Properties of the Wiener Process <span class="arithmatex">\(W_t\)</span> in the Itô Integral<a class="headerlink" href="#properties-of-the-wiener-process-w_t-in-the-ito-integral" title="Permanent link">&para;</a></h2>
+<p>The Itô integral is defined with respect to the <strong>Wiener process</strong> (or Brownian motion), denoted as <span class="arithmatex">\(W_t\)</span>. This process is central to stochastic calculus due to its unique properties, which enable rigorous integration in noisy systems. Below are key properties of <span class="arithmatex">\(W_t\)</span> that underpin the Itô integral:</p>
+<hr />
+<h3 id="1-continuity-of-paths">1. <strong>Continuity of Paths</strong><a class="headerlink" href="#1-continuity-of-paths" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Property</strong>: <span class="arithmatex">\(W_t\)</span> is almost surely (a.s.) continuous.</li>
+<li><strong>Implication</strong>: While <span class="arithmatex">\(W_t\)</span> has no jumps, its paths are nowhere differentiable, necessitating integral-based formulations (e.g., <span class="arithmatex">\(\int H_t \, dW_t\)</span>) instead of derivatives.</li>
+</ul>
+<hr />
+<h3 id="2-independent-increments">2. <strong>Independent Increments</strong><a class="headerlink" href="#2-independent-increments" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Property</strong>: For <span class="arithmatex">\(s &lt; t\)</span>, the increment <span class="arithmatex">\(W_t - W_s\)</span> is independent of the history <span class="arithmatex">\(\mathcal{F}_s\)</span> (the filtration up to time <span class="arithmatex">\(s\)</span>).</li>
+<li>
+<p><strong>Mathematically</strong>:</p>
+<p>$$
+ W_t - W_s \perp !!! \perp \mathcal{F}_s.
+ $$</p>
+</li>
+<li>
+<p><strong>Implication</strong>: Integrands in the Itô integral must be <strong>adapted</strong> (i.e., <span class="arithmatex">\(H_t\)</span> depends only on information up to <span class="arithmatex">\(t\)</span>). This ensures no "peeking into the future."</p>
+</li>
+</ul>
+<hr />
+<h3 id="3-gaussian-increments">3. <strong>Gaussian Increments</strong><a class="headerlink" href="#3-gaussian-increments" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Property</strong>: Increments <span class="arithmatex">\(W_t - W_s\)</span> follow a normal distribution:
+     $$
+     W_t - W_s \sim \mathcal{N}(0, t-s).
+     $$</li>
+<li><strong>Implication</strong>: The Itô integral inherits Gaussian structure, making it analytically tractable.</li>
+</ul>
+<hr />
+<h3 id="4-quadratic-variation">4. <strong>Quadratic Variation</strong><a class="headerlink" href="#4-quadratic-variation" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Property</strong>: The quadratic variation of <span class="arithmatex">\(W_t\)</span> over <span class="arithmatex">\([0, T]\)</span> is <span class="arithmatex">\(T\)</span>:
+     $$
+     \langle W \rangle_T = \lim_{\Delta t \to 0} \sum_{i=0}^{n-1} |W_{t_{i+1}} - W_{t_i}|^2 = T.
+     $$</li>
+<li><strong>Heuristic Rule</strong>: <span class="arithmatex">\((dW_t)^2 = dt\)</span> in stochastic calculus.</li>
+<li><strong>Implication</strong>: This drives the "extra term" in Itô’s Lemma (e.g., <span class="arithmatex">\(\frac{1}{2} \sigma^2 \frac{\partial^2 f}{\partial x^2} dt\)</span>).</li>
+</ul>
+<h3 id="5-martingale-property">5. <strong>Martingale Property</strong><a class="headerlink" href="#5-martingale-property" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Property</strong>: <span class="arithmatex">\(W_t\)</span> is a martingale: <span class="arithmatex">\(\mathbb{E}[W_t | \mathcal{F}_s] = W_s\)</span> for <span class="arithmatex">\(s &lt; t\)</span>.</li>
+<li><strong>Extension</strong>: The Itô integral <span class="arithmatex">\(\int_0^t H_s \, dW_s\)</span> is also a martingale if <span class="arithmatex">\(H_t\)</span> is adapted and square-integrable.</li>
+<li><strong>Implication</strong>: No arbitrage in financial models, as future expectations are unbiased.</li>
+</ul>
+<hr />
+<h3 id="6-ito-isometry">6. <strong>Itô Isometry</strong><a class="headerlink" href="#6-ito-isometry" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p><strong>Property</strong>: For adapted <span class="arithmatex">\(H_t\)</span>,</p>
+<p>$$
+ \mathbb{E}\left[ \left( \int_0^T H_t \, dW_t \right)^2 \right] = \mathbb{E}\left[ \int_0^T H_t^2 \, dt \right].
+ $$</p>
+</li>
+<li>
+<p><strong>Implication</strong>: Provides a link between the <span class="arithmatex">\(L^2\)</span>-norms of the integral and the integrand, critical for proving convergence.</p>
+</li>
+</ul>
+<hr />
+<h3 id="7-zero-expectation">7. <strong>Zero Expectation</strong><a class="headerlink" href="#7-zero-expectation" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p><strong>Property</strong>: The Itô integral has zero mean:</p>
+<p>$$
+ \mathbb{E}\left[ \int_0^T H_t \, dW_t \right] = 0.
+ $$</p>
+</li>
+<li>
+<p><strong>Reason</strong>: Martingale increments have zero expected value.</p>
+</li>
+</ul>
+<h2 id="numerical-solutions-of-sde">Numerical Solutions of SDE<a class="headerlink" href="#numerical-solutions-of-sde" title="Permanent link">&para;</a></h2>
+<p>One thing need to note is that</p>
+<div class="arithmatex">\[dW_t \sim \sqrt{dt}\]</div>
+<p>when using Talay expansion</p>
+<h3 id="euler-maruyama-discretization">Euler-Maruyama Discretization<a class="headerlink" href="#euler-maruyama-discretization" title="Permanent link">&para;</a></h3>
+<p>For a time step <span class="arithmatex">\(\Delta t\)</span>, the numerical approximation is:</p>
+<div class="arithmatex">\[
+ X_{t+\Delta t} = X_t + f(X_t, t) \Delta t + g(X_t, t) \Delta W_t
+\]</div>
+<p>where</p>
+<p><span class="arithmatex">\(\Delta W_t \sim \mathcal{N}(0, \Delta t)\)</span> is a normally distributed random variable.</p>
+<pre><code class="language-python">def euler_maruyama(f, g, X0, T, dt):
+    N = int(T / dt)
+    X = np.zeros(N + 1)
+    t = np.linspace(0, T, N + 1)
+    X[0] = X0
+
+    for i in range(N):
+        dW = np.sqrt(dt) * np.random.randn()
+        X[i+1] = X[i] + f(X[i], t[i]) * dt + g(X[i], t[i]) * dW
+
+    return t, X
+</code></pre>
+<p><strong>Pros &amp; Cons</strong>
+✅ Simple and easy to implement
+✅ Works well for small time steps
+❌ Low accuracy (converges at order <span class="arithmatex">\(O(\sqrt{\Delta t})\)</span>)
+❌ Poor stability for stiff problems</p>
+<hr />
+<h3 id="milstein-method">Milstein Method<a class="headerlink" href="#milstein-method" title="Permanent link">&para;</a></h3>
+<p>The <strong>Milstein method</strong>  improves upon Euler-Maruyama by adding a higher-order correction term from Itô calculus.<strong>Milstein Discretization</strong></p>
+<div class="arithmatex">\[
+ X_{t+\Delta t} = X_t + f(X_t, t) \Delta t + g(X_t, t) \Delta W_t + \frac{1}{2} g(X_t, t) g'(X_t, t) \left((\Delta W_t)^2 - \Delta t \right)
+\]</div>
+<p>where <span class="arithmatex">\(g'(X_t, t)\)</span> is the derivative of <span class="arithmatex">\(g(X_t, t)\)</span>.</p>
+<pre><code class="language-python">def milstein(f, g, X0, T, dt):
+    N = int(T / dt)
+    X = np.zeros(N + 1)
+    t = np.linspace(0, T, N + 1)
+    X[0] = X0
+
+    for i in range(N):
+        dW = np.sqrt(dt) * np.random.randn()
+        g_prime = (g(X[i] + 1e-5, t[i]) - g(X[i], t[i])) / 1e-5  # Numerical derivative
+        X[i+1] = X[i] + f(X[i], t[i]) * dt + g(X[i], t[i]) * dW + 0.5 * g(X[i], t[i]) * g_prime * (dW**2 - dt)
+
+    return t, X
+</code></pre>
+<p><strong>Pros &amp; Cons</strong>
+✅ Higher accuracy than Euler-Maruyama (<span class="arithmatex">\(O(\Delta t)\)</span>)
+✅ Useful when the diffusion term <span class="arithmatex">\(g(X_t, t)\)</span> is non-constant
+❌ More complex to implement than Euler-Maruyama</p>
+<h3 id="proof-of-the-iteration-step">Proof of the iteration step<a class="headerlink" href="#proof-of-the-iteration-step" title="Permanent link">&para;</a></h3>
+<h4 id="1-the-goal">1. The Goal<a class="headerlink" href="#1-the-goal" title="Permanent link">&para;</a></h4>
+<p>We want to approximate <span class="arithmatex">\(X_{t_{n+1}}\)</span> given <span class="arithmatex">\(X_{t_n} = X_n\)</span> for a small step <span class="arithmatex">\(\Delta t = t_{n+1} - t_n\)</span>. We write</p>
+<div class="arithmatex">\[
+ X_{t_{n+1}}
+\;=\; X_{t_n} \;+\;\int_{t_n}^{t_{n+1}} f\bigl(X_{s},s\bigr)\,ds
+\;+\;\int_{t_n}^{t_{n+1}} g\bigl(X_{s},s\bigr)\,dW_{s}.
+\]</div>
+<p>The Milstein scheme refines the simpler <strong>Euler–Maruyama</strong>  scheme by adding a correction term that captures more information about how <span class="arithmatex">\(g(x)\)</span> varies with <span class="arithmatex">\(x\)</span>. This provides higher-order accuracy in a single Brownian dimension.</p>
+<hr />
+<h4 id="2-intuition-via-local-expansion">2. Intuition via Local Expansion<a class="headerlink" href="#2-intuition-via-local-expansion" title="Permanent link">&para;</a></h4>
+<h5 id="21-breaking-down-the-integrals">2.1. Breaking down the integrals<a class="headerlink" href="#21-breaking-down-the-integrals" title="Permanent link">&para;</a></h5>
+<p>We have:</p>
+<ol>
+<li><strong>Drift integral</strong> :</li>
+</ol>
+<div class="arithmatex">\[ \int_{t_n}^{t_{n+1}} f\bigl(X_{s},s\bigr)\,ds\]</div>
+<ol>
+<li><strong>Diffusion integral</strong> :</li>
+</ol>
+<div class="arithmatex">\[\int_{t_n}^{t_{n+1}} g\bigl(X_{s},s\bigr)\,dW_{s}\]</div>
+<p>Over a small step <span class="arithmatex">\(\Delta t\)</span>, a first approximation uses <span class="arithmatex">\(f(X_{s}, s) \approx f(X_n, t_n)\)</span> and <span class="arithmatex">\(g(X_{s}, s) \approx g(X_n, t_n)\)</span>.</p>
+<p>This yields:</p>
+<div class="arithmatex">\[
+ \int_{t_n}^{t_{n+1}} f\bigl(X_{n}, t_n\bigr)\,ds
+\;\approx\; f(X_{n}, t_n)\,\Delta t,
+\]</div>
+<div class="arithmatex">\[
+ \int_{t_n}^{t_{n+1}} g\bigl(X_{n}, t_n\bigr)\,dW_{s}
+\;\approx\; g(X_{n}, t_n)\,\bigl(W_{t_{n+1}} - W_{t_n}\bigr)
+\;=\; g(X_{n}, t_n)\,\Delta W_{n}.
+\]</div>
+<p>This is precisely the <strong>Euler–Maruyama</strong>  step. However, Euler–Maruyama does <strong>not</strong>  capture the effect of how <span class="arithmatex">\(g\)</span> changes when <span class="arithmatex">\(X_s\)</span> itself changes over the interval. Milstein’s idea is to expand <span class="arithmatex">\(g(X_{s}, s)\)</span> around <span class="arithmatex">\(X_{n}\)</span> and keep enough terms in the expansion so that the variance structure (Itô’s isometry) is better approximated.</p>
+<h5 id="22-local-linearization-of-gx">2.2. Local linearization of <span class="arithmatex">\(g(x)\)</span><a class="headerlink" href="#22-local-linearization-of-gx" title="Permanent link">&para;</a></h5>
+<p>Consider the diffusion function <span class="arithmatex">\(g(x)\)</span> at times <span class="arithmatex">\(s \in [t_n, t_{n+1}]\)</span>. Over that short time, <span class="arithmatex">\(X_s\)</span> changes from <span class="arithmatex">\(X_n\)</span>. We can do a Taylor expansion:</p>
+<div class="arithmatex">\[
+ g\bigl(X_{s}\bigr)
+\;\approx\;
+g\bigl(X_{n}\bigr)
+\;+\; \frac{\partial g}{\partial x}\bigl(X_{n}\bigr)\,\bigl(X_{s} - X_{n}\bigr),
+\]</div>
+<p>suppressing explicit time arguments for brevity and focusing on the dependence on <span class="arithmatex">\(x\)</span>. Then:</p>
+<div class="arithmatex">\[
+ \int_{t_n}^{t_{n+1}} g\bigl(X_{s}\bigr)\,dW_{s}
+\;\approx\;
+\int_{t_n}^{t_{n+1}} \Bigl[g(X_n)
+\;+\; g'(X_n)\,\bigl(X_{s} - X_{n}\bigr)\Bigr]\,dW_{s}.
+\]</div>
+<p>The term <span class="arithmatex">\(X_{s} - X_{n}\)</span> can be approximated by the <strong>leading-order</strong>  contributions from the SDE:</p>
+<div class="arithmatex">\[
+ X_{s} - X_{n}
+\;\approx\;
+\int_{t_n}^{s} f(X_{n}) \,du
+\;+\;
+\int_{t_n}^{s} g(X_{n}) \,dW_{u}
+\;\approx\;
+f(X_{n})\,(s - t_{n})
+\;+\;
+g(X_{n})\,(W_{s} - W_{t_n}).
+\]</div>
+<p>Hence,</p>
+<div class="arithmatex">\[
+ g'(X_n)\,\bigl(X_{s} - X_{n}\bigr)
+\;\approx\;
+g'(X_n) \,\Bigl[ f(X_{n})\,(s - t_{n})
+\;+\;
+g(X_{n})\,\bigl(W_{s} - W_{t_n}\bigr) \Bigr].
+\]</div>
+<p>Substitute back inside the stochastic integral:</p>
+<div class="arithmatex">\[
+ \int_{t_n}^{t_{n+1}} g\bigl(X_{s}\bigr)\,dW_{s}
+\;\approx\;
+\int_{t_n}^{t_{n+1}} g(X_n)\,dW_{s}
+\;+\;
+\int_{t_n}^{t_{n+1}}
+g'(X_n)\,g(X_{n})\,\bigl(W_{s} - W_{t_n}\bigr)\,dW_{s}
+\;+\;
+\text{(terms involving \(\,f\))}.
+\]</div>
+<p>However, for the one-dimensional Milstein method <strong>in the Itô sense</strong> , the primary correction stems from</p>
+<div class="arithmatex">\[
+ \int_{t_n}^{t_{n+1}}
+g'(X_n)\,g(X_{n})\,\bigl(W_{s} - W_{t_n}\bigr)\,dW_{s},
+\]</div>
+<p>because the <span class="arithmatex">\(\,f\)</span>-related terms contribute at a higher order in <span class="arithmatex">\(\Delta t\)</span>.</p>
+<h5 id="23-evaluating-the-second-stochastic-integral">2.3. Evaluating the second stochastic integral<a class="headerlink" href="#23-evaluating-the-second-stochastic-integral" title="Permanent link">&para;</a></h5>
+<p>The integral
+$$
+ \int_{t_n}^{t_{n+1}} (W_{s} - W_{t_n})\,dW_{s}
+$$</p>
+<p>in the Itô sense is well-known to satisfy:</p>
+<div class="arithmatex">\[
+ \int_{t_n}^{t_{n+1}} (W_{s} - W_{t_n})\,dW_{s}
+\;=\;
+\tfrac12 \Bigl[(W_{t_{n+1}} - W_{t_n})^2 - (t_{n+1} - t_n)\Bigr].
+\]</div>
+<p>This identity follows from an Itô integration by parts or can be seen from Itô’s formula applied to <span class="arithmatex">\(\frac12 (W_s - W_{t_n})^2\)</span>.
+Hence,</p>
+<div class="arithmatex">\[
+ \int_{t_n}^{t_{n+1}}
+g'(X_n)\,g(X_{n})\,\bigl(W_{s} - W_{t_n}\bigr)\,dW_{s}
+\;=\;
+g'(X_n)\,g(X_{n})
+\;\times\;
+\tfrac12 \Bigl[(\Delta W_{n})^2 - \Delta t\Bigr].
+\]</div>
+<p>Thus the <strong>additional correction</strong>  to the usual Euler–Maruyama term is:</p>
+<div class="arithmatex">\[
+ \tfrac12\,g\bigl(X_{n}\bigr)\,\frac{\partial\,g\bigl(X_{n}\bigr)}{\partial x}
+\bigl((\Delta W_{n})^2 - \Delta t \bigr).
+\]</div>
+<hr />
+<h4 id="3-collecting-all-terms">3. Collecting All Terms<a class="headerlink" href="#3-collecting-all-terms" title="Permanent link">&para;</a></h4>
+<p>Putting everything together for a single step from <span class="arithmatex">\((t_n, X_n)\)</span> to <span class="arithmatex">\((t_{n+1}, X_{n+1})\)</span>:</p>
+<ol>
+<li><strong>Euler–Maruyama “drift”</strong> :</li>
+</ol>
+<div class="arithmatex">\[
+ f\bigl(X_{n}, t_n\bigr)\,\Delta t,
+\]</div>
+<ol>
+<li><strong>Euler–Maruyama “diffusion”</strong> :</li>
+</ol>
+<div class="arithmatex">\[
+ g\bigl(X_{n}, t_n\bigr)\,\Delta W_{n},
+\]</div>
+<ol>
+<li><strong>Milstein correction</strong> :</li>
+</ol>
+<div class="arithmatex">\[
+ \tfrac{1}{2}\,g\bigl(X_{n}, t_n\bigr)\,\frac{\partial\,g\bigl(X_{n}, t_n\bigr)}{\partial x}
+\Bigl((\Delta W_{n})^2 - \Delta t\Bigr).
+\]</div>
+<p>Hence, the Milstein update is</p>
+<div class="arithmatex">\[
+ \boxed{
+X_{n+1}
+= X_{n}
+\;+\; f\bigl(X_{n}, t_n\bigr)\,\Delta t
+\;+\; g\bigl(X_{n}, t_n\bigr)\,\Delta W_{n}
+\;+\; \tfrac{1}{2}\,g\bigl(X_{n}, t_n\bigr)\,\frac{\partial\,g\bigl(X_{n}, t_n\bigr)}{\partial x}
+\Bigl((\Delta W_{n})^2 - \Delta t\Bigr).
+}
+\]</div>
+<h5 id="4-key-points-in-the-derivation">4. Key Points in the Derivation<a class="headerlink" href="#4-key-points-in-the-derivation" title="Permanent link">&para;</a></h5>
+<ul>
+<li>
+<p><strong>Itô–Taylor expansion</strong> : You can view Milstein’s method as keeping all terms up to order <span class="arithmatex">\(\Delta t\)</span> in an Itô–Taylor series expansion of the solution <span class="arithmatex">\(X_{t+\Delta t}\)</span> around <span class="arithmatex">\(t\)</span>.</p>
+</li>
+<li>
+<p><strong>Quadratic variation</strong> : In Itô calculus, <span class="arithmatex">\((\Delta W_n)^2 \approx \Delta t\)</span>. This leads to the specific form of the correction <span class="arithmatex">\(\bigl((\Delta W_n)^2 - \Delta t\bigr)\)</span>.</p>
+</li>
+<li>
+<p><strong>One Brownian dimension</strong> : In higher dimensions or with multiple Brownian motions, additional cross-terms appear, and the method’s generalization involves partial derivatives and a (possibly) more complex correction term.</p>
+</li>
+</ul>
+<h3 id="runge-kutta-methods-for-sdes">Runge-Kutta Methods for SDEs<a class="headerlink" href="#runge-kutta-methods-for-sdes" title="Permanent link">&para;</a></h3>
+<p>Just like in ODEs, Runge-Kutta methods can be adapted for SDEs. However, their stochastic versions require modifications.</p>
+<ul>
+<li>
+<p><strong>Stochastic Runge-Kutta (SRK) Methods:</strong>  These include additional terms to handle randomness effectively.</p>
+</li>
+<li>
+<p><strong>Order-1.5 SRK Schemes:</strong>  Higher-order convergence but computationally expensive.</p>
+</li>
+</ul>
+<pre><code>def runge_kutta_sde(f, g, X0, T, dt):
+    N = int(T / dt)
+    X = np.zeros(N + 1)
+    t = np.linspace(0, T, N + 1)
+    X[0] = X0
+
+    for i in range(N):
+        dW = np.sqrt(dt) * np.random.randn()
+        K1 = f(X[i], t[i]) * dt + g(X[i], t[i]) * dW
+        K2 = f(X[i] + K1, t[i] + dt) * dt + g(X[i] + K1, t[i] + dt) * dW
+        X[i+1] = X[i] + 0.5 * (K1 + K2)
+
+    return t, X
+</code></pre>
+<p>✅ More accurate than Milstein
+❌ Complex derivation and implementation</p>
+<hr />
+<p><strong>4. Implicit Methods for Stiff SDEs</strong>
+When dealing with stiff SDEs (e.g., financial models with mean-reverting processes), explicit methods may require very small time steps. Implicit methods improve stability.</p>
+<ul>
+<li><strong>Implicit Euler Method:</strong>
+$$
+ X_{t+\Delta t} = X_t + f(X_{t+\Delta t}, t+\Delta t) \Delta t + g(X_t, t) \Delta W_t
+$$</li>
+</ul>
+<pre><code>def implicit_euler(f, g, X0, T, dt):
+    N = int(T / dt)
+    X = np.zeros(N + 1)
+    t = np.linspace(0, T, N + 1)
+    X[0] = X0
+
+    for i in range(N):
+        dW = np.sqrt(dt) * np.random.randn()
+        def F(X_next):  # Implicit equation
+            return X_next - X[i] - f(X_next, t[i] + dt) * dt - g(X[i], t[i]) * dW
+        X[i+1] = fsolve(F, X[i])  # Solve for X_next
+
+    return t, X
+</code></pre>
+<p>This requires solving an implicit equation at each step.
+✅ Stable for stiff equations
+❌ Requires solving nonlinear equations at each step</p>
+<hr />
+<p><strong>Conclusion</strong>
+- <strong>Euler-Maruyama</strong> : Simple but low accuracy</p>
+<ul>
+<li>
+<p><strong>Milstein</strong> : Higher accuracy, useful when <span class="arithmatex">\(<span class="arithmatex">\(g(X_t, t)\)</span>\)</span> is non-constant</p>
+</li>
+<li>
+<p><strong>Runge-Kutta for SDEs</strong> : More accurate but complex</p>
+</li>
+<li>
+<p><strong>Implicit Methods</strong> : Needed for stiff SDEs</p>
+</li>
+</ul>
+<p><strong>Summary</strong></p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Order of Convergence</th>
+<th>Pros</th>
+<th>Cons</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Euler-Maruyama</td>
+<td><span class="arithmatex">\(O(\sqrt{\Delta t})\)</span></td>
+<td>Simple, easy to implement</td>
+<td>Low accuracy</td>
+</tr>
+<tr>
+<td>Milstein</td>
+<td><span class="arithmatex">\(O(\Delta t)\)</span></td>
+<td>More accurate than Euler-Maruyama</td>
+<td>Requires derivative of g(x,t)g(x,t)g(x,t)</td>
+</tr>
+<tr>
+<td>Runge-Kutta (SDE)</td>
+<td><span class="arithmatex">\(O(\Delta t^{1.5})\)</span></td>
+<td>High accuracy</td>
+<td>Computationally expensive</td>
+</tr>
+<tr>
+<td>Implicit Euler</td>
+<td><span class="arithmatex">\(O(\Delta t)\)</span></td>
+<td>Good for stiff problems</td>
+<td>Needs a nonlinear solver</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="applications-of-sdes"><strong>Applications of SDEs</strong><a class="headerlink" href="#applications-of-sdes" title="Permanent link">&para;</a></h3>
+<p>SDEs are everywhere:
+- <strong>Finance</strong>: Modeling stock prices (Black-Scholes equation).
+- <strong>Physics</strong>: Describing thermal fluctuations.
+- <strong>Biology</strong>: Population dynamics in random environments.
+- <strong>Engineering</strong>: Signal processing with noise.</p>
+<hr />
+<h3 id="simulating-an-sde-a-hands-on-example"><strong>Simulating an SDE: A Hands-On Example</strong><a class="headerlink" href="#simulating-an-sde-a-hands-on-example" title="Permanent link">&para;</a></h3>
+<p>Let’s simulate geometric Brownian motion in Python. We’ll use the <strong>Euler-Maruyama method</strong>, a numerical scheme for SDEs.</p>
+<pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+
+# Parameters
+mu = 0.1      # Drift
+sigma = 0.2   # Volatility
+X0 = 100      # Initial value
+T = 1         # Time horizon
+N = 1000      # Number of steps
+dt = T / N    # Time step
+
+# Initialize
+t = np.linspace(0, T, N+1)
+X = np.zeros(N+1)
+X[0] = X0
+
+# Simulate
+for i in range(N):
+    dW = np.random.normal(0, np.sqrt(dt))  # Brownian increment
+    X[i+1] = X[i] + mu * X[i] * dt + sigma * X[i] * dW
+
+# Plot
+plt.plot(t, X)
+plt.xlabel('Time')
+plt.ylabel('X(t)')
+plt.title('Geometric Brownian Motion')
+plt.show()
+</code></pre>
+<p>Run this code to see a sample path of <span class="arithmatex">\(x(t)\)</span>. Each run will give a different result due to randomness!</p>
+<table>
+<tr>
+<td><img src="../../images/image-35.png" alt="alt text"></td>
+<td><img src="../../images/image-36.png" alt="alt text"></td>
+</tr>
+</table>
+<p><strong>Final Thoughts</strong></p>
+<p>SDEs are a powerful tool for modeling uncertainty in dynamic systems. While the math can get deep (look up Itô calculus next!), the core idea is simple: combine deterministic trends with random noise.</p>
+<p>Where to go from here:</p>
+<ul>
+<li>
+<p>Explore famous SDEs like the Ornstein-Uhlenbeck process.</p>
+</li>
+<li>
+<p>Dive into stochastic calculus.</p>
+</li>
+<li>
+<p>Apply SDEs to real-world problems in your field.</p>
+</li>
+</ul>
+<p>Remember: The beauty of SDEs lies in their ability to embrace chaos. Happy modeling! 🎲</p>
+<h2 id="refered-book">refered book<a class="headerlink" href="#refered-book" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://www.cmor-faculty.rice.edu/~cox/stoch/SDE.course.pdf">AN INTRODUCTION TO STOCHASTIC DIFFERENTIAL EQUATIONS</a></li>
+</ul>
+<p>下图模拟了花粉(黄色)收到大量水分子的撞击进行随机的布朗运动的情形。</p>
+<h2 id="reference">reference<a class="headerlink" href="#reference" title="Permanent link">&para;</a></h2>
+<ol>
+<li><a href="https://www.cmor-faculty.rice.edu/~cox/stoch/SDE.course.pdf">AN INTRODUCTION TO STOCHASTIC DIFFERENTIAL EQUATIONS</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/38293827">扩散模型中布朗运动</a></li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "toc.integrate"], "search": "../../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.60a45f97.min.js"></script>
+      
+        <script src="../../../javascripts/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
