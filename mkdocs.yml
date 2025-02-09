@@ -1,51 +1,65 @@
 site_name: "Generative AI: From Start to Surrender"
 nav:
-  - "Home": index.md
+  - "Home": index.html
   - Introduction:
       - Terms: "book/chapter1_Introduction/1.1terminology.md"
       - Fourier Transform: "book/chapter1_Introduction/1.2fourier_transform.md"
       - Signal Processing: "book/chapter1_Introduction/1.3signal_processing.md"
       - Statistics: "book/chapter1_Introduction/1.4statistics.md"
       - Tutorials: "book/chapter1_Introduction/tutorials.md"
-  - VAE:
-      - Introduction: "book/chapter2_VAE/2.1introduction.md"
-  - GANs:
-      - From GAN to PGGAN: "book/chapter3_GAN/3.1from_gan_to_stylegan/paper.md"
-      - StyleGAN: "book/chapter3_GAN/3.3stylegan/paper.md"
-      - StyleGAN2: "book/chapter3_GAN/3.4stylegan2/paper.md"
-      - StyleGAN3: "book/chapter3_GAN/3.5stylegan3/paper.md"
-      - StyleGAN T: "book/chapter3_GAN/3.6styleganT/paper.md"
-      - R3GAN: "book/chapter3_GAN/3.7R3Gan/paper.md"
-  - Diffusion:
-      - Introduction: "book/chapter4_diffusion/4.1introduction.md"
-      - DDPM: "book/chapter4_diffusion/4.2DDPM.md"
   - Generation Theory:
-      - Maximal Likelihood: "book/chapter5_generation_theory/5.1MLE.md"
-      - Manifold Hypothesis: "book/chapter5_generation_theory/manifold_hypothesis.md"
+      - Maximal Likelihood: "book/chapter2_generation_theory/5.1MLE.md"
+      - Manifold Hypothesis: "book/chapter2_generation_theory/manifold_hypothesis.md"
   - Energy Based Models:
-      - Introduction: "book/chapter6_ebm/introduction.md"
-      - Score Function: "book/chapter6_ebm/score_function.md"
-      - Sampling: "book/chapter6_ebm/sampling.md"
-      - Contrastive Divergence: "book/chapter6_ebm/cd.md"
-      - Score Matching: "book/chapter6_ebm/score_matching.md"
-  - SDE Based Models:
-      - Introduction: "book/chapter6_SDE_based/introduction_sde.md"
-      - SDE with DDPM: "book/chapter6_SDE_based/SDE4_DDPM_DSM.md"
-      - Probability Flow ODE: "book/chapter6_SDE_based/probability_flow_ode.md"
+      - Introduction: "book/chapter3_energy_based_model/introduction.md"
+      - Score Functions: "book/chapter3_energy_based_model/score_function.md"
+      - Sampling Methods: "book/chapter3_energy_based_model/sampling.md"
+      - Contrastive Divergence: "book/chapter3_energy_based_model/cd.md"
+      - Score Matching: "book/chapter3_energy_based_model/score_matching.md"
+  - VAE:
+      - Introduction: "book/chapter6_VAE/2.1introduction.md"
+  - GANs:
+      - From GAN to StyleGAN: "book/chapter5_GAN/3.1from_gan_to_stylegan/paper.md"
+      - StyleGAN Variants:
+          - StyleGAN: "book/chapter5_GAN/3.3stylegan/paper.md"
+          - StyleGAN2: "book/chapter5_GAN/3.4stylegan2/paper.md"
+          - StyleGAN3: "book/chapter5_GAN/3.5stylegan3/paper.md"
+          - StyleGAN-T: "book/chapter5_GAN/3.6styleganT/paper.md"
+      - R3GAN: "book/chapter5_GAN/3.7R3Gan/paper.md"
+
+  - Diffusion Models:
+      - Discrete Diffusion:
+          - Introduction: "book/chapter7_diffusion/Introduction_diffusion.md"
+      - Continuous Diffusion:
+          - SDE Fundamentals: "book/chapter7_diffusion/introduction_sde.md"
+          - SDE for DDPM: "book/chapter7_diffusion/SDE4_DDPM_DSM.md"
+          - Probability Flow ODE: "book/chapter7_diffusion/probability_flow_ode.md"
   - Flow Matching:
-      - Introduction: "book/chapter8_flow_matching/introduction.md"
+      - Introduction: "book/chapter9_flow_matching/introduction.md"
+      - Velocity Fields: "book/chapter9_flow_matching/probability_with_velocity_field.md"
+  - Hybrid SOTA Models:
+      - Hybrid Methods: "book/chapter11_hybrid_sota_models/hybrid_methods.md"
+      - Closed Models: "book/chapter11_hybrid_sota_models/sota_closed_models.md"
+      - Open Models: "book/chapter11_hybrid_sota_models/sota_open_models.md"
+      - Future Trends: "book/chapter11_hybrid_sota_models/trends_future.md"
 
 theme:
   name: material
   features:
     - navigation.tabs
     - toc.integrate  # 集成页内目录
+extra_css:
+  - assets/custom.css
+# extra:
+#   navigation:
+#     collapse: true  # 左侧导航可折叠
+#   toc:
+#     placement: right  # 将目录放在右侧
 extra:
-  navigation:
-    collapse: true  # 左侧导航可折叠
-  toc:
-    placement: right  # 将目录放在右侧
-
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/tsiendragon/learning
+  generator: false
 # theme:
 #   name: gitbook
 # extra_css:
@@ -53,14 +67,46 @@ extra:
 plugins:
   - search
 
+# markdown_extensions:
+#   - pymdownx.arithmatex:
+#       generic: true
+#   - toc:
+#       permalink: true   # 在标题旁添加可点击的链接
+#       toc_depth: 2      # 设置目录深度，例如只显示 h2 和 h3
+
+
 markdown_extensions:
   - pymdownx.arithmatex:
       generic: true
   - toc:
       permalink: true   # 在标题旁添加可点击的链接
       toc_depth: 2      # 设置目录深度，例如只显示 h2 和 h3
+  - meta
+  - def_list
+  - attr_list
+  - md_in_html
+  - tables
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.keys
+  - pymdownx.tabbed:
+      alternate_style: true
 
 extra_javascript:
   - javascripts/mathjax.js
   - https://polyfill.io/v3/polyfill.min.js?features=es6
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+  - assets/custom.js

@@ -1,0 +1,11 @@
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll("details").forEach(details => {
+            details.addEventListener("toggle", () => {
+                if (details.open) {
+                    MathJax.typeset();
+                }
+            });
+        });
+    });
+</script>

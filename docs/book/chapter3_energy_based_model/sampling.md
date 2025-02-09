@@ -93,7 +93,6 @@ Popular MCMC approaches include:
 
 - **Gibbs sampling** : Update each component in turn from its conditional distribution, often used when conditionals of $\pi$ are simpler than the joint.
 
-
 ## Hamiltonian Monte Carlo (HMC)
 
 **Hamiltonian Monte Carlo (HMC)**  is a specialized MCMC method designed to tackle high‐dimensional sampling problems more efficiently than basic Metropolis–Hastings or Gibbs sampling, especially when $\pi(x)\propto e^{-U(x)}$ for some smooth potential $U(x)$. Its key ingredients:
@@ -119,9 +118,10 @@ These flow equations conserve the Hamiltonian $H(x,p)$. In practice, one discret
 
 3. **Metropolis correction**
 After simulating the Hamiltonian system for a certain number of leapfrog steps, HMC performs a *Metropolis acceptance/rejection step*:
-  - Propose a new state $(x^\star,p^\star)$ by integrating from $(x,p)$.
 
-  - Accept or reject based on the Metropolis probability involving the change in Hamiltonian:
+- Propose a new state $(x^\star,p^\star)$ by integrating from $(x,p)$.
+
+- Accept or reject based on the Metropolis probability involving the change in Hamiltonian:
 
 $$
  \alpha \;=\; \min\Bigl(1,\;\exp\bigl[-(H(x^\star,p^\star)-H(x,p))\bigr]\Bigr).
@@ -160,13 +160,11 @@ In short, MCMC is the backbone of *sampling from complicated distributions* when
 
 ## Langevin Dynamics
 
-
 #### 1. Definition
 
 Langevin Dynamics Sampling is a sampling method based on Stochastic Differential Equations (SDE). It is used to sample from high-dimensional probability distributions $p(x) \propto e^{-U(x)}$. The core idea is to add stochastic noise to the deterministic gradient descent process, ensuring a balance between exploration and exploitation, ultimately achieving the desired distribution.
 
 ---
-
 
 #### 2. Core Principles
 
@@ -179,7 +177,6 @@ Langevin Dynamics Sampling is a sampling method based on Stochastic Differential
   1. **Gradient Descent** : Following the negative gradient of $U(x)$, which guides the particle toward areas of lower energy (higher probability density).
 
   2. **Random Noise** : Adding stochastic perturbations to prevent the algorithm from getting stuck and ensure sufficient exploration.
-
 
 #### 3. Discrete Formulation
 
@@ -205,7 +202,6 @@ Where $\epsilon$ is the step size, controlling the trade-off between convergence
 
 ---
 
-
 #### 4. Proof: Target Distribution as the Stationary Distribution
 
 **Goal** : Prove that the stationary distribution of Langevin Dynamics is $p(x) \propto e^{-U(x)}$.
@@ -213,15 +209,14 @@ Where $\epsilon$ is the step size, controlling the trade-off between convergence
 **Tool** : Fokker-Planck Equation (Describes the evolution of probability density under a stochastic process).
 
 - **Fokker-Planck Equation** :
+
 $$
  \frac{\partial \rho(x, t)}{\partial t} = \nabla \cdot \left( \rho \nabla U(x) \right) + \nabla^2 \rho
 $$
 
 - **Stationary State** : When $\frac{\partial \rho(x, t)}{\partial t} = 0$, solving $\rho(x) \propto e^{-U(x)}$ proves the stationary distribution is the target distribution.
 
-
 ---
-
 
 #### 5. Application Scenarios
 
@@ -263,7 +258,6 @@ $$
 
 #### 7. Example Code (Python Code)
 
-
 ```python
 import numpy as np
 
@@ -281,7 +275,6 @@ grad_log_p = lambda x: -x  # Gradient of log-p(x)
 samples = langevin_sampling(grad_log_p, x0=np.random.randn(), epsilon=0.01, n_steps=1000)
 ```
 
-
 - Code ```experiment/langevin_dynamics_simulation.ipynb```
 ![LD sampling process](../../images/image-34.png)
 
@@ -293,22 +286,17 @@ samples = langevin_sampling(grad_log_p, x0=np.random.randn(), epsilon=0.01, n_st
 | HMC (Hamiltonian MC) | Yes | Yes | High efficiency for correlated distributions |
 | Langevin Dynamics | Yes (Pure SDE) | No | Efficient for high-dimensional sampling |
 
-
 #### Conclusion
 
 Langevin Dynamics Sampling introduces stochasticity guided by gradients, enabling efficient sampling from high-dimensional distributions. It is a powerful tool in generative modeling, Bayesian inference, and optimization algorithms. The theoretical guarantee relies on the Fokker-Planck Equation ensuring the target distribution, while practical tuning of step size and noise level balances convergence and efficiency.
 
-
 This simulation starts from a uniform distribution and converges to a Gaussian mixture, illustrating the effectiveness of Langevin dynamics in sampling from complex distributions.
-
-
 
 ## Theoretical Basis of Dynamics-Based Probability Flow Models
 
 A question is that, why should we sample from $p(x)$ should follow LD ? Is there any other way?
 
 He we introduce various stochastic differential equations (SDEs) designed to generate the steady-state distribution $p(x) \propto e^{-U(x)}$. By learning the appropriate potential $U(x)$, these SDE-based methods can model the target distribution, making them suitable for generative tasks, optimization, and more. Below are common dynamics and SDE models:
-
 
 ### 1. Underdamped Langevin Dynamics
 
@@ -334,10 +322,6 @@ where $\eta > 0$ is the friction coefficient.
 
 - Simulating particle dynamics in physical systems.
 
-
-
-
-
 ### 2. Regularized X-SDE
 
 **Definition** :
@@ -354,7 +338,6 @@ where $p(x) \propto e^{-U(x)}$.
 - Adjust drift $b(x)$ and diffusion $\sigma(x)$ to incorporate prior knowledge or regularization.
 
 - Extensions include introducing auxiliary variables (e.g., Metropolis-adjusted Langevin Algorithm, MALA).
-
 
 ### 3. Time-Reversal SDE (Reverse Diffusion Process)
 
@@ -379,7 +362,6 @@ where $p(x, t)$ is the time-dependent probability density.
 - Generative models (e.g., DDPM, score-based models).
 
 - Denoising diffusion models for approximating $\log p(x)$.
-
 
 ### 4. Preconditioned Langevin Dynamics
 
@@ -421,7 +403,6 @@ $$
 
 - Hybrid optimization-sampling methods.
 
-
 #### 6. Variants of Stochastic SDEs
 
 1. **Adaptive Step SDE** :
@@ -431,6 +412,7 @@ Adjusts step size to improve stability and convergence.
 Introduces auxiliary dimensions to simplify sampling.
 
 ### Summary of SDE Models
+
 | SDE Type | Core Concept | Advantages | Applications |
 | --- | --- | --- | --- |
 | General Langevin Dynamics | Basic diffusion model | Theoretical clarity | Generative modeling |
@@ -445,16 +427,18 @@ Why do different SDE formulations yield the same equilibrium distribution?
 
 **Mathematical Tool** :
 
-Fokker-Planck equation.For the SDE $dx = b(x) dt + \sigma(x) dW_x$, the Fokker-Planck equation is:
+**Fokker-Planck equation**
+
+For the SDE $dx = b(x) dt + \sigma(x) dW_x$, the Fokker-Planck equation is:
 
 $$
- \frac{\partial p}{\partial t} = -\nabla \cdot (p b) + \frac{1}{2} \nabla^2 : (p \sigma \sigma^\top),
+ \frac{\partial p}{\partial t} = -\nabla \cdot (p b) + \frac{1}{2} \nabla^2(p \sigma \sigma^\top),
 $$
 
-where $p(x, t)$ is the probability density, $b(x)$ the drift term, and $\sigma(x)$ the diffusion term.Stationary solution $p(x)$ satisfies:
+where $p(x, t)$ is the probability density, $b(x)$ the drift term, and $\sigma(x)$ the diffusion term. Stationary solution $p(x)$ satisfies:
 
 $$
- \nabla \cdot (p b) = \frac{1}{2} \nabla^2 : (p \sigma \sigma^\top).
+ \nabla \cdot (p b) = \frac{1}{2} \nabla^2(p \sigma \sigma^\top).
 $$
 
 By adjusting $b(x)$ and $\sigma(x)$, one can achieve the desired stationary distribution.
@@ -466,8 +450,6 @@ By adjusting $b(x)$ and $\sigma(x)$, one can achieve the desired stationary dist
 2. For generative tasks, consider time-reversal SDEs or preconditioned Langevin dynamics.
 
 3. When optimizing, balance between exploration (stochastic) and exploitation (deterministic).
-
-
 
 ## Details of Annealed Langevin Dynamics Sampling
 
@@ -519,9 +501,7 @@ Key parameters:
 
 - **Step Size**  $\epsilon$ : Adjusted to balance accuracy and computational cost.
 
-
 ---
-
 
 ### 5. Theoretical Analysis
 In the presence of temperature $T$, the stationary distribution of Langevin Dynamics becomes:
@@ -547,14 +527,16 @@ As $T \to 0$, the distribution transitions to $p(x) \propto e^{-U(x)}$ (i.e., th
 ### 7. Practical Steps
 
 1. **Initialization** :
-  - Set the initial temperature $T_0$, annealing schedule, step size $\epsilon$, and random initialization of $x_0$.
+
+- Set the initial temperature $T_0$, annealing schedule, step size $\epsilon$, and random initialization of $x_0$.
 
 2. **Iteration** :
-  - Compute $\nabla U(x_k)$.
 
-  - Update $T_k$ based on the annealing schedule.
+- Compute $\nabla U(x_k)$.
 
-  - Perform the update:
+- Update $T_k$ based on the annealing schedule.
+
+- Perform the update:
 
 $$
  x_{k+1} = x_k - \epsilon \nabla U(x_k) + \sqrt{2 \epsilon T_k} \xi_k.
@@ -562,7 +544,7 @@ $$
 
 3. **Convergence** :
 
-  - Stop when the temperature reaches a specified threshold or convergence criteria are met.
+- Stop when the temperature reaches a specified threshold or convergence criteria are met.
 
 **Python Code Example** :
 
@@ -593,8 +575,6 @@ def annealed_langevin(grad_U, x0, T0, epsilon, n_steps, schedule='exponential', 
 | Simulated Annealing | Yes | No | Combinatorial optimization, discrete space |
 | Hamiltonian Monte Carlo (HMC) | None | No | High-dimensional, parametric distributions |
 
-
-
 ### 9. Advanced Extensions
 
 - **SGLD with Annealing** :
@@ -603,13 +583,10 @@ Combines stochastic gradient Langevin dynamics with annealing for large-scale da
 - **Adaptive Annealing** :
 Dynamically adjusts the annealing schedule based on feedback (e.g., acceptance rate, energy variance).
 
-
 ---
-
 
 ### 10. Key Considerations
 
 - **Temperature Schedule** : Improper schedules (e.g., too rapid cooling) may lead to poor convergence.
 
 - **Step Size Selection** : Balances convergence speed with numerical stability.
-

@@ -17,7 +17,6 @@ This post will:
 
 - **Give a Python implementation for deterministic sampling**
 
-
 ---
 
 ## What is an SDE-Based Generative Model?
@@ -41,7 +40,7 @@ Since SDEs include **random noise** , different samples follow different traject
 
 ## The Fokker-Planck Equation
 
-The Key to Probability Density Evolution** Although each sample follows a **random trajectory** , the probability density function $p_t(x)$**  follows a deterministic evolution governed by the **Fokker-Planck equation (FPE)** :
+The Key to Probability Density Evolution**Although each sample follows a **random trajectory** , the probability density function $p_t(x)$**  follows a deterministic evolution governed by the **Fokker-Planck equation (FPE)** :
 $$
  \frac{\partial p_t(x)}{\partial t} = -\nabla \cdot (f(x, t) p_t(x)) + \frac{1}{2} g^2(t) \nabla^2 p_t(x)
 $$
@@ -71,50 +70,48 @@ $$
 
 where $s_t(x) = \nabla_x \log p_t(x)$ is the **score function**  (gradient of the log density).
 
----
+<div class="theorem-box">
+Proof: Convert SDE to Probability Flow ODE
 
-<details>
-<summary> Proof: Convert SDE to Probability Flow ODE</summary>
 Using the continuity equation  from fluid mechanics, the deterministic probability flow should satisfy:
 
 $$
- \frac{\partial p_t(x)}{\partial t} = -\nabla \cdot (v(x, t) p_t(x))
+\frac{\partial p_t(x)}{\partial t} = -\nabla \cdot (v(x, t) p_t(x))
 $$
 
 For this to be **equivalent to the Fokker-Planck equation** , we set:
 
 $$
- -\nabla \cdot (v(x, t) p_t(x)) = -\nabla \cdot (f(x, t) p_t(x)) + \frac{1}{2} g^2(t) \nabla^2 p_t(x)
+-\nabla \cdot (v(x, t) p_t(x)) = -\nabla \cdot (f(x, t) p_t(x)) + \frac{1}{2} g^2(t) \nabla^2 p_t(x)
 $$
 
 Rearranging:
 
 $$
- v(x, t) p_t(x) = f(x, t) p_t(x) - \frac{1}{2} g^2(t) \nabla p_t(x)
+v(x, t) p_t(x) = f(x, t) p_t(x) - \frac{1}{2} g^2(t) \nabla p_t(x)
 $$
 
 Dividing by $p_t(x)$ (assuming $p_t(x) > 0$):
 
 $$
- v(x, t) = f(x, t) - \frac{1}{2} g^2(t) \frac{\nabla p_t(x)}{p_t(x)}
+v(x, t) = f(x, t) - \frac{1}{2} g^2(t) \frac{\nabla p_t(x)}{p_t(x)}
 $$
 
 Since the **score function**  is:
 
 $$
- s_t(x) = \nabla_x \log p_t(x) = \frac{\nabla_x p_t(x)}{p_t(x)}
+s_t(x) = \nabla_x \log p_t(x) = \frac{\nabla_x p_t(x)}{p_t(x)}
 $$
 
 we obtain the **Probability Flow ODE** :
 
 $$
- dx = \left[ f(x, t) - \frac{1}{2} g^2(t) s_t(x) \right] dt
+dx = \left[ f(x, t) - \frac{1}{2} g^2(t) s_t(x) \right] dt
 $$
 
 Thus, we have converted the original SDE into an equivalent deterministic ODE that preserves the same probability density evolution!
-</details>
 
----
+</div>
 
 ## Intuition: Why Does This Work?
 
@@ -122,9 +119,7 @@ Thus, we have converted the original SDE into an equivalent deterministic ODE th
 
 - **ODE**  = Particles move deterministically in a way that ensures the density evolves the same way.
 
-
 Thus, we can **replace SDE sampling with Probability Flow ODE sampling**  without changing the generated distribution!
-
 
 ## Implementing Probability Flow ODE Sampling
 
@@ -148,9 +143,7 @@ x_generated = odeint(probability_flow_ode, x_init, t_space)
 
   - Faster sampling → Fewer steps needed than stochastic diffusion.
 
-
 ## Existence Condition and Uniqueness Condition
-
 
 **Existence Conditions**
 
@@ -173,9 +166,6 @@ For $v(x, t)$ to **exist** , the following conditions must hold:
 | $p_t(x)$ is strictly positive and smooth | Avoids singularities and undefined score function regions. |
 | Drift term $f(x, t)$ is uniquely defined | Ensures a single solution to the continuity equation. |
 
-
-
-
 ## Conclusion
 
 - **Every SDE can be converted into a Probability Flow ODE.**
@@ -187,8 +177,6 @@ For $v(x, t)$ to **exist** , the following conditions must hold:
 - **ODE solvers can be used instead of SDE solvers for generative modeling.**
 By leveraging Probability Flow ODE, **we gain a powerful tool for deterministic yet efficient sampling in deep generative models** . 🚀
 
-
-
 ## Further Reading
 
 - **Song et al., "Score-Based Generative Modeling through Stochastic Differential Equations," NeurIPS 2021**
@@ -196,9 +184,6 @@ By leveraging Probability Flow ODE, **we gain a powerful tool for deterministic 
 - **Chen et al., "Neural ODEs," NeurIPS 2018**
 
 - **Fluid mechanics: Continuity equation and probability flow**
-
-
-
 
 - **"The Probability Flow ODE is Provably Fast"**
 *Authors:* Sitan Chen, Sinho Chewi, Holden Lee, Yuanzhi Li, Jianfeng Lu, Adil Salim

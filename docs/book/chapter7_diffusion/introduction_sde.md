@@ -6,6 +6,7 @@ Welcome to the world of **Stochastic Differential Equations (SDEs)**! If you’v
 
 ## **Prerequisites**
 To follow along, you’ll need:
+
 - Basic calculus (derivatives and integrals).
 - Familiarity with ordinary differential equations (ODEs).
 - A grasp of probability (random variables, mean, variance).
@@ -24,6 +25,7 @@ Ordinary Differential Equations (ODEs) model deterministic systems, where the fu
 ### 1. **Stochastic Processes**
 
 A stochastic process is a collection of random variables evolving over time. The most famous example is **Brownian motion** (or *Wiener process*), which describes random movement, like pollen jiggling in water. Key properties:
+
 - **Continuous paths** (no jumps).
 - **Independent increments**: Future movements don’t depend on the past.
 - **Normally distributed** changes: Over time $\Delta t$, the displacement $\Delta W \sim N(0, \Delta t)$.
@@ -38,8 +40,8 @@ $$
   <source src="https://vdn3.vzuu.com/SD/a4669c08-2340-11eb-826e-be7830fcb65c.mp4?auth_key=1736996318-0-0-8ab5de9bde1ba841ab4f42b5ba1d3d47&bu=078babd7&c=avc.0.0&disable_local_cache=1&expiration=1736996318&f=mp4&pu=078babd7&v=tx" type="video/mp4">
 </video>
 
-
 ### 2. **Structure of an SDE**
+
 1. Difference Between ODEs and SDEs**
 
 **Ordinary Differential Equations (ODEs)**
@@ -83,56 +85,62 @@ where:
 
 - $g(X_t, t)dW_t$ is the **diffusion term** , incorporating randomness via a Wiener process $W_t$ (also called Brownian  motion).
 
-
 By the random term, we know that the randomniness is independent of the $x$.
 
 Example:
 **Geometric Brownian Motion (GBM)**
 
 $$
- dX_t = \mu X_t dt + \sigma X_t dW_t
+dX_t = \mu X_t dt + \sigma X_t dW_t
 $$
+
 used to model stock prices in the **Black-Scholes model** .
 
 #### Why the Derivative Formulation of SDEs is Invalid
 
 The equation
-$$\frac{dx(t)}{dt} = f(t, \mathbf{x}) + g(t, \mathbf{x})\xi(t), \quad \text{where} \quad \xi(t) \sim \mathcal{N}(0, \mathbf{I})$$
+
+$$\frac{dx(t)}{dt} = f(t, \mathbf{x}) + g(t, \mathbf{x})\xi(t), \quad \text{where} \quad \xi(t) \sim \mathcal{N}(0, \mathbf{I})
+$$
+
 is mathematically problematic for defining a stochastic differential equation (SDE). Below are the key reasons:
 
 ##### 1. **White Noise as a Generalized Function**
-   - $\xi(t)$ represents "white noise," which is not a classical function but a generalized stochastic process.
-   - Rigorously, $\xi(t)$ is interpreted as the **formal derivative of a Wiener process** $W(t)$ (Brownian motion).
-   - However, $W(t)$ is nowhere differentiable with probability 1, so $\xi(t) = \frac{dW}{dt}$ does not exist in the classical sense.
+
+- $\xi(t)$ represents "white noise," which is not a classical function but a generalized stochastic process.
+- Rigorously, $\xi(t)$ is interpreted as the **formal derivative of a Wiener process** $W(t)$ (Brownian motion).
+- However, $W(t)$ is nowhere differentiable with probability 1, so $\xi(t) = \frac{dW}{dt}$ does not exist in the classical sense.
 
 ##### 2. **Stochastic Integrals vs. Derivatives**
-   - SDEs are properly defined using **stochastic integrals** (Itô or Stratonovich), not derivatives.
-   - The standard SDE formulation is:
+
+- SDEs are properly defined using **stochastic integrals** (Itô or Stratonovich), not derivatives.
+- The standard SDE formulation is:
      $$dx(t) = f(t, \mathbf{x})dt + g(t, \mathbf{x})dW(t),$$
      where $dW(t)$ is the increment of a Wiener process.
-   - This avoids differentiating $W(t)$ and instead uses integration to handle its irregular paths.
+- This avoids differentiating $W(t)$ and instead uses integration to handle its irregular paths.
 
 ##### 3. **Path Regularity**
-   - Solutions to SDEs are typically **nowhere differentiable** due to the roughness of $W(t)$.
-   - Writing $\frac{dx(t)}{dt}$ implicitly assumes $x(t)$ is differentiable, which contradicts the nature of stochastic processes driven by white noise.
+
+- Solutions to SDEs are typically **nowhere differentiable** due to the roughness of $W(t)$.
+- Writing $\frac{dx(t)}{dt}$ implicitly assumes $x(t)$ is differentiable, which contradicts the nature of stochastic processes driven by white noise.
 
 ##### Conclusion
 The derivative form $\frac{dx(t)}{dt}$ is invalid for SDEs because:
+
 1. White noise ($\xi(t)$) is not a classical function.
 2. The rigorous framework requires stochastic integrals with $dW(t)$, not $\xi(t)dt$.
 3. Solutions to SDEs lack the regularity needed for classical derivatives.
 
 The standard SDE formulation resolves these issues by using differentials ($dx(t)$, $dW(t)$) instead of derivatives.
 
-
-
 ## **Solving SDEs: Why It’s Tricky**
 In ODEs, you integrate to find solutions. But in SDEs, the noise term $dW_t$ isn’t smooth—it’s wildly erratic! Traditional calculus fails, so we use **stochastic calculus**. Two key tools:
+
 1. **Itô’s Lemma**: A “chain rule” for stochastic processes.
 2. **Itô Integral**: A way to integrate with respect to Brownian motion.
 
 $$
- \mathbf{x}(t, \omega) = \mathbf{x}_0 + \int_0^t f(s, \mathbf{x}(s, \omega)) ds + \int_0^t g(s, \mathbf{x}(s, \omega)) d\mathbf{w}(s, \omega)
+\mathbf{x}(t, \omega) = \mathbf{x}_0 + \int_0^t f(s, \mathbf{x}(s, \omega)) ds + \int_0^t g(s, \mathbf{x}(s, \omega)) d\mathbf{w}(s, \omega)
 $$
 
 ### What is the Itô Integral?
@@ -145,17 +153,17 @@ $$
 where the integrand $ H_t $ is evaluated at the **left endpoint** of each subinterval $[t_i, t_{i+1}]$. This "non-anticipating" property ensures the integral is a **martingale**.
 
 ### Key Properties
+
 1. **Adaptedness**: $ H_t $ must depend only on information up to time $ t $.
 2. **Itô Isometry**:
 
-   $$
-   \mathbb{E}\left[ \left( \int_{0}^{T} H_t \, dW_t \right)^2 \right] = \mathbb{E}\left[ \int_{0}^{T} H_t^2 \, dt \right].
-   $$
+$$
+\mathbb{E}\left[ \left( \int_{0}^{T} H_t \, dW_t \right)^2 \right] = \mathbb{E}\left[ \int_{0}^{T} H_t^2 \, dt \right].
+$$
 
 3. **Zero Mean**:
 
-  $$ \mathbb{E}\left[ \int_{0}^{T} H_t \, dW_t \right] = 0 $$
-
+$$ \mathbb{E}\left[ \int_{0}^{T} H_t \, dW_t \right] = 0 $$
 
 By the first part, we can solve it according to the method used in ODE, but the last term is tricky.
 
@@ -164,51 +172,58 @@ Classical integration fails because Brownian motion has **infinite total variati
 $$
 \lim_{\Delta t \to 0} \sum_{i=0}^{n-1} |W_{t_{i+1}} - W_{t_i}|^2 = T.
 $$
-This irregularity forces a new calculus.
 
+This irregularity forces a new calculus.
 
 ### Itô’s Lemma
 
 #### The Stochastic Chain Rule
 
 Itô’s Lemma is the stochastic counterpart to the chain rule in calculus. It allows us to differentiate functions of stochastic processes. Let $ X_t $ follow the Itô process:
+
 $$
 dX_t = \mu(t, X_t) dt + \sigma(t, X_t) dW_t.
 $$
+
 For a twice-differentiable function $ f(t, X_t) $, Itô’s Lemma states:
+
 $$
 df = \left( \frac{\partial f}{\partial t} + \mu \frac{\partial f}{\partial x} + \frac{1}{2} \sigma^2 \frac{\partial^2 f}{\partial x^2} \right) dt + \sigma \frac{\partial f}{\partial x} dW_t.
 $$
 
 #### Intuition Behind the Extra Term
-The term $ \frac{1}{2} \sigma^2 \frac{\partial^2 f}{\partial x^2} $ arises from the quadratic variation of $ W_t $. In Taylor expansions, $ (dW_t)^2 \approx dt $, which introduces a "correction" absent in classical calculus.
+The term $\frac{1}{2} \sigma^2 \frac{\partial^2 f}{\partial x^2}$ arises from the quadratic variation of $W_t$. In Taylor expansions, $(dW_t)^2 \approx dt$, which introduces a "correction" absent in classical calculus.
 
 ---
 
 ### Geometric Brownian Motion
 
 Consider a stock price $ S_t $ modeled by:
+
 $$
 dS_t = \mu S_t dt + \sigma S_t dW_t.
 $$
-**Goal**: Find $ d(\ln S_t) $.
 
-Applying Itô’s Lemma with $ f(t, S_t) = \ln S_t $:
+**Goal**: Find $d(\ln S_t)$.
+
+Applying Itô’s Lemma with $f(t, S_t) = \ln S_t$:
+
 1. Compute partial derivatives:
-   - $ \frac{\partial f}{\partial t} = 0 $,
-   - $ \frac{\partial f}{\partial S} = \frac{1}{S} $,
-   - $ \frac{\partial^2 f}{\partial S^2} = -\frac{1}{S^2} $.
+   - $\frac{\partial f}{\partial t} = 0$,
+   - $\frac{\partial f}{\partial S} = \frac{1}{S}$,
+   - $\frac{\partial^2 f}{\partial S^2} = -\frac{1}{S^2}$.
 
 2. Substitute into Itô’s formula:
+
 $$
 d(\ln S_t) = \left( \mu - \frac{1}{2} \sigma^2 \right) dt + \sigma dW_t.
 $$
 
 Integrating this gives the solution:
+
 $$
 \ln S_t = \ln S_0 + \left( \mu - \frac{1}{2} \sigma^2 \right) t + \sigma W_t.
 $$
-
 
 ### Analytical Solutions
 
@@ -217,13 +232,13 @@ For simple SDEs, explicit solutions exist.
 **Example: Linear SDE**
 
 $$
- dX_t = \lambda X_t dt + \sigma dW_t
+dX_t = \lambda X_t dt + \sigma dW_t
 $$
 
 Using **Itô's Lemma** , the solution is:
 
 $$
- X_t = X_0 e^{\lambda t} + \sigma \int_0^t e^{\lambda (t-s)} dW_s
+X_t = X_0 e^{\lambda t} + \sigma \int_0^t e^{\lambda (t-s)} dW_s
 $$
 
 This solution includes a deterministic exponential growth term and a stochastic integral.
@@ -235,69 +250,73 @@ The Itô integral is defined with respect to the **Wiener process** (or Brownian
 ---
 
 ### 1. **Continuity of Paths**
-   - **Property**: $W_t$ is almost surely (a.s.) continuous.
-   - **Implication**: While $W_t$ has no jumps, its paths are nowhere differentiable, necessitating integral-based formulations (e.g., $\int H_t \, dW_t$) instead of derivatives.
+
+- **Property**: $W_t$ is almost surely (a.s.) continuous.
+- **Implication**: While $W_t$ has no jumps, its paths are nowhere differentiable, necessitating integral-based formulations (e.g., $\int H_t \, dW_t$) instead of derivatives.
 
 ---
 
 ### 2. **Independent Increments**
-   - **Property**: For $s < t$, the increment $W_t - W_s$ is independent of the history $\mathcal{F}_s$ (the filtration up to time $s$).
-   - **Mathematically**:
+
+- **Property**: For $s < t$, the increment $W_t - W_s$ is independent of the history $\mathcal{F}_s$ (the filtration up to time $s$).
+- **Mathematically**:
 
      $$
      W_t - W_s \perp \!\!\! \perp \mathcal{F}_s.
      $$
 
-   - **Implication**: Integrands in the Itô integral must be **adapted** (i.e., $H_t$ depends only on information up to $t$). This ensures no "peeking into the future."
+- **Implication**: Integrands in the Itô integral must be **adapted** (i.e., $H_t$ depends only on information up to $t$). This ensures no "peeking into the future."
 
 ---
 
 ### 3. **Gaussian Increments**
-   - **Property**: Increments $W_t - W_s$ follow a normal distribution:
+
+- **Property**: Increments $W_t - W_s$ follow a normal distribution:
      $$
      W_t - W_s \sim \mathcal{N}(0, t-s).
      $$
-   - **Implication**: The Itô integral inherits Gaussian structure, making it analytically tractable.
+- **Implication**: The Itô integral inherits Gaussian structure, making it analytically tractable.
 
 ---
 
 ### 4. **Quadratic Variation**
-   - **Property**: The quadratic variation of $W_t$ over $[0, T]$ is $T$:
+
+- **Property**: The quadratic variation of $W_t$ over $[0, T]$ is $T$:
      $$
      \langle W \rangle_T = \lim_{\Delta t \to 0} \sum_{i=0}^{n-1} |W_{t_{i+1}} - W_{t_i}|^2 = T.
      $$
-   - **Heuristic Rule**: $(dW_t)^2 = dt$ in stochastic calculus.
-   - **Implication**: This drives the "extra term" in Itô’s Lemma (e.g., $\frac{1}{2} \sigma^2 \frac{\partial^2 f}{\partial x^2} dt$).
-
+- **Heuristic Rule**: $(dW_t)^2 = dt$ in stochastic calculus.
+- **Implication**: This drives the "extra term" in Itô’s Lemma (e.g., $\frac{1}{2} \sigma^2 \frac{\partial^2 f}{\partial x^2} dt$).
 
 ### 5. **Martingale Property**
-   - **Property**: $W_t$ is a martingale: $\mathbb{E}[W_t | \mathcal{F}_s] = W_s$ for $s < t$.
-   - **Extension**: The Itô integral $\int_0^t H_s \, dW_s$ is also a martingale if $H_t$ is adapted and square-integrable.
-   - **Implication**: No arbitrage in financial models, as future expectations are unbiased.
+
+- **Property**: $W_t$ is a martingale: $\mathbb{E}[W_t | \mathcal{F}_s] = W_s$ for $s < t$.
+- **Extension**: The Itô integral $\int_0^t H_s \, dW_s$ is also a martingale if $H_t$ is adapted and square-integrable.
+- **Implication**: No arbitrage in financial models, as future expectations are unbiased.
 
 ---
 
 ### 6. **Itô Isometry**
-   - **Property**: For adapted $H_t$,
 
-     $$
-     \mathbb{E}\left[ \left( \int_0^T H_t \, dW_t \right)^2 \right] = \mathbb{E}\left[ \int_0^T H_t^2 \, dt \right].
-     $$
+- **Property**: For adapted $H_t$,
 
-   - **Implication**: Provides a link between the $L^2$-norms of the integral and the integrand, critical for proving convergence.
+$$
+\mathbb{E}\left[ \left( \int_0^T H_t \, dW_t \right)^2 \right] = \mathbb{E}\left[ \int_0^T H_t^2 \, dt \right].
+$$
+
+- **Implication**: Provides a link between the $L^2$-norms of the integral and the integrand, critical for proving convergence.
 
 ---
 
 ### 7. **Zero Expectation**
-   - **Property**: The Itô integral has zero mean:
 
-     $$
-     \mathbb{E}\left[ \int_0^T H_t \, dW_t \right] = 0.
-     $$
+- **Property**: The Itô integral has zero mean:
 
-   - **Reason**: Martingale increments have zero expected value.
+$$
+\mathbb{E}\left[ \int_0^T H_t \, dW_t \right] = 0.
+$$
 
-
+- **Reason**: Martingale increments have zero expected value.
 
 ## Numerical Solutions of SDE
 
@@ -373,8 +392,7 @@ def milstein(f, g, X0, T, dt):
 
 ### Proof of the iteration step
 
-
-####  1. The Goal
+#### 1. The Goal
 We want to approximate $X_{t_{n+1}}$ given $X_{t_n} = X_n$ for a small step $\Delta t = t_{n+1} - t_n$. We write
 
 $$
@@ -386,7 +404,6 @@ $$
 The Milstein scheme refines the simpler **Euler–Maruyama**  scheme by adding a correction term that captures more information about how $g(x)$ varies with $x$. This provides higher-order accuracy in a single Brownian dimension.
 
 ---
-
 
 #### 2. Intuition via Local Expansion
 
@@ -519,9 +536,7 @@ $$
 \bigl((\Delta W_{n})^2 - \Delta t \bigr).
 $$
 
-
 ---
-
 
 #### 3. Collecting All Terms
 Putting everything together for a single step from $(t_n, X_n)$ to $(t_{n+1}, X_{n+1})$:
@@ -558,7 +573,6 @@ X_{n+1}
 }
 $$
 
-
 ##### 4. Key Points in the Derivation
 
 - **Itô–Taylor expansion** : You can view Milstein’s method as keeping all terms up to order $\Delta t$ in an Itô–Taylor series expansion of the solution $X_{t+\Delta t}$ around $t$.
@@ -566,7 +580,6 @@ $$
 - **Quadratic variation** : In Itô calculus, $(\Delta W_n)^2 \approx \Delta t$. This leads to the specific form of the correction $\bigl((\Delta W_n)^2 - \Delta t\bigr)$.
 
 - **One Brownian dimension** : In higher dimensions or with multiple Brownian motions, additional cross-terms appear, and the method’s generalization involves partial derivatives and a (possibly) more complex correction term.
-
 
 ### Runge-Kutta Methods for SDEs
 
@@ -601,6 +614,7 @@ def runge_kutta_sde(f, g, X0, T, dt):
 When dealing with stiff SDEs (e.g., financial models with mean-reverting processes), explicit methods may require very small time steps. Implicit methods improve stability.
 
 - **Implicit Euler Method:**
+
 $$
  X_{t+\Delta t} = X_t + f(X_{t+\Delta t}, t+\Delta t) \Delta t + g(X_t, t) \Delta W_t
 $$
@@ -625,11 +639,10 @@ This requires solving an implicit equation at each step.
 ✅ Stable for stiff equations
 ❌ Requires solving nonlinear equations at each step
 
-
-
 ---
 
 **Conclusion**
+
 - **Euler-Maruyama** : Simple but low accuracy
 
 - **Milstein** : Higher accuracy, useful when $$g(X_t, t)$$ is non-constant
@@ -637,7 +650,6 @@ This requires solving an implicit equation at each step.
 - **Runge-Kutta for SDEs** : More accurate but complex
 
 - **Implicit Methods** : Needed for stiff SDEs
-
 
 **Summary**
 
@@ -648,12 +660,11 @@ This requires solving an implicit equation at each step.
 | Runge-Kutta (SDE) | $O(\Delta t^{1.5})$ | High accuracy | Computationally expensive |
 | Implicit Euler | $O(\Delta t)$ | Good for stiff problems | Needs a nonlinear solver |
 
-
-
 ---
 
 ### **Applications of SDEs**
 SDEs are everywhere:
+
 - **Finance**: Modeling stock prices (Black-Scholes equation).
 - **Physics**: Describing thermal fluctuations.
 - **Biology**: Population dynamics in random environments.
@@ -693,35 +704,34 @@ plt.ylabel('X(t)')
 plt.title('Geometric Brownian Motion')
 plt.show()
 ```
+
 Run this code to see a sample path of $x(t)$. Each run will give a different result due to randomness!
-<table>
-<tr>
-<td><img src="../../images/image-35.png" alt="alt text"></td>
-<td><img src="../../images/image-36.png" alt="alt text"></td>
-</tr>
-</table>
+
+![](../../images/image-35.png)
+
+![](../../images/image-36.png)
+
 **Final Thoughts**
 
 SDEs are a powerful tool for modeling uncertainty in dynamic systems. While the math can get deep (look up Itô calculus next!), the core idea is simple: combine deterministic trends with random noise.
 
 Where to go from here:
 
-  - Explore famous SDEs like the Ornstein-Uhlenbeck process.
+- Explore famous SDEs like the Ornstein-Uhlenbeck process.
 
-  - Dive into stochastic calculus.
+- Dive into stochastic calculus.
 
-  - Apply SDEs to real-world problems in your field.
+- Apply SDEs to real-world problems in your field.
 
 Remember: The beauty of SDEs lies in their ability to embrace chaos. Happy modeling! 🎲
 
 ## refered book
-* [AN INTRODUCTION TO STOCHASTIC DIFFERENTIAL EQUATIONS](https://www.cmor-faculty.rice.edu/~cox/stoch/SDE.course.pdf)
 
+- [AN INTRODUCTION TO STOCHASTIC DIFFERENTIAL EQUATIONS](https://www.cmor-faculty.rice.edu/~cox/stoch/SDE.course.pdf)
 
 下图模拟了花粉(黄色)收到大量水分子的撞击进行随机的布朗运动的情形。
 
-
-
 ## reference
+
 1. [AN INTRODUCTION TO STOCHASTIC DIFFERENTIAL EQUATIONS](https://www.cmor-faculty.rice.edu/~cox/stoch/SDE.course.pdf)
 2. [扩散模型中布朗运动](https://zhuanlan.zhihu.com/p/38293827)
