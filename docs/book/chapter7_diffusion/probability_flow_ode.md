@@ -70,7 +70,6 @@ $$
 
 where $s_t(x) = \nabla_x \log p_t(x)$ is the **score function**  (gradient of the log density).
 
-<div class="theorem-box">
 Proof: Convert SDE to Probability Flow ODE
 
 Using the continuity equation  from fluid mechanics, the deterministic probability flow should satisfy:
@@ -110,8 +109,6 @@ dx = \left[ f(x, t) - \frac{1}{2} g^2(t) s_t(x) \right] dt
 $$
 
 Thus, we have converted the original SDE into an equivalent deterministic ODE that preserves the same probability density evolution!
-
-</div>
 
 ## Intuition: Why Does This Work?
 

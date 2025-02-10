@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Generative AI Start To Surrender</title>
+    <title>Generative AI: From start to surrender</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -163,8 +163,6 @@
             justify-content: center;
             align-items: center;
             gap: 0.5rem;
-            color: #FF4500;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         .hero h1 span {
@@ -172,19 +170,39 @@
         }
 
         .word1 {
-            animation: bounce 2s infinite alternate;
+            color: #FF4500;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: bounce 2s infinite alternate, colorChange 5s infinite alternate;
         }
 
         .word2 {
-            animation: rotate 3s infinite linear;
+            color: #34A85A;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: rotate 3s infinite linear, pulse 5s infinite alternate;
         }
 
         .word3 {
-            animation: scale 2.5s infinite alternate;
+            color: #8E44AD;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: scale 2.5s infinite alternate, colorChange 5s infinite alternate;
         }
 
         .word4 {
-            animation: skew 3s infinite alternate;
+            color: #FFC107;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: skew 3s infinite alternate, pulse 5s infinite alternate;
+        }
+
+        .word5 {
+            color: #2196F3;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: slide 3s infinite alternate, colorChange 5s infinite alternate;
+        }
+
+        .word6 {
+            color: #9C27B0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: fade 3s infinite alternate, pulse 5s infinite alternate;
         }
 
         @keyframes bounce {
@@ -207,6 +225,24 @@
             100% { transform: skewX(10deg); }
         }
 
+        @keyframes slide {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(10px);
+            }
+        }
+
+        @keyframes fade {
+            0% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0.5;
+            }
+        }
+
         @keyframes fadeInScale {
             0% {
                 opacity: 0;
@@ -218,6 +254,27 @@
             }
             100% {
                 opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes colorChange {
+            0% {
+                filter: hue-rotate(0deg);
+            }
+            100% {
+                filter: hue-rotate(360deg);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
                 transform: scale(1);
             }
         }
@@ -604,7 +661,7 @@
 
     <div class="hero fade-in">
         <div id="particles-js"></div>
-        <h1><span class="word1">Generative</span> <span class="word2">AI</span> <span class="word3">Start</span> <span class="word4">To</span> <span class="word1">Surrender</span></h1>
+        <h1><span class="word1"> Generative </span> <span class="word2"> AI </span> <span class="word3">From</span> <span class="word4">start</span> <span class="word5">to</span> <span class="word6">surrender</span></h1>
         <p>A comprehensive guide to modern generative models, from mathematical foundations to practical implementations</p>
     </div>
 
