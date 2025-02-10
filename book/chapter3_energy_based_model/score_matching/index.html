@@ -833,6 +833,24 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#statement" class="md-nav__link">
+    <span class="md-ellipsis">
+      Statement
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#coordinatelevel-proof" class="md-nav__link">
+    <span class="md-ellipsis">
+      Coordinate‐Level Proof
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#denoising-score-matching" class="md-nav__link">
     <span class="md-ellipsis">
       Denoising Score Matching
@@ -1741,7 +1759,7 @@ T_2 = 2 \sum_{i=1}^d \mathbb{E}_{p} \left[ \partial_i^2 \log q \right] = 2 \math
 \]</div>
 <p>其中 <span class="arithmatex">\(\text{tr}(\nabla_{\mathbf{x}}^2 \log q)\)</span> 表示Hessian矩阵的迹。</p>
 <h3 id="4-fisher">4. 重组Fisher散度<a class="headerlink" href="#4-fisher" title="Permanent link">&para;</a></h3>
-<p>将 $ T_1, T_2, T_3 $ 代入原式：</p>
+<p>将 <span class="arithmatex">\(T_1, T_2, T_3\)</span> 代入原式：</p>
 <div class="arithmatex">\[
 D_F = \mathbb{E}_{p} \left[ \| \nabla \log p \|^2 \right] + \mathbb{E}_{p} \left[ \| \nabla \log q \|^2 + 2 \, \text{tr}(\nabla^2 \log q) \right].
 \]</div>
@@ -1757,7 +1775,7 @@ J(\theta) = \mathbb{E}_{p(\mathbf{x})} \left[ \frac{1}{2} \| \nabla_{\mathbf{x}}
 <h3 id="6">6. 隐式性分析<a class="headerlink" href="#6" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>显式匹配项</strong>：<span class="arithmatex">\(\frac{1}{2} \| \nabla \log q \|^2\)</span> 直接约束分数模长。</li>
-<li><strong>隐式正则项</strong>：<span class="arithmatex">\(\text{tr}(\nabla^2 \log q)\)</span> 通过二阶导数隐式约束分数方向，避免依赖 $ \nabla \log p $。</li>
+<li><strong>隐式正则项</strong>：<span class="arithmatex">\(\text{tr}(\nabla^2 \log q)\)</span> 通过二阶导数隐式约束分数方向，避免依赖 <span class="arithmatex">\(\nabla \log p\)</span>。</li>
 </ul>
 <hr />
 <h4 id="7">7. 最终形式<a class="headerlink" href="#7" title="Permanent link">&para;</a></h4>
@@ -1812,13 +1830,13 @@ Fisher 散度衡量真实分布 <span class="arithmatex">\(p(x)\)</span> 与模�
 <div class="arithmatex">\[
 J_{\text{ISM}}(\theta) = \mathbb{E}_{p(x)} \left[ \operatorname{Tr}(\nabla_x \mathbf{s}_\theta(x)) + \frac{1}{2} \| \mathbf{s}_\theta(x) \|^2 \right],
 \]</div>
-<p>其中 <span class="arithmatex">\(\mathbf{s}_\theta(x)\)</span> 是模型预测的 score function。
-<strong>关键等式</strong>：当 <span class="arithmatex">\(\mathbf{s}_\theta(x) = \nabla_x \log p(x)\)</span> 时，ISM 损失达到最小值，此时 <span class="arithmatex">\(\mathcal{D}_{\text{Fisher}} = 0\)</span>。</p>
+<p>其中 <span class="arithmatex">\(\mathbf{s}_\theta(x)\)</span> 是模型预测的 score function。</p>
+<p><strong>关键等式</strong>：当 <span class="arithmatex">\(\mathbf{s}_\theta(x) = \nabla_x \log p_\theta(x)\)</span> 时，ISM 损失达到最小值，此时 <span class="arithmatex">\(\mathcal{D}_{\text{Fisher}} = 0\)</span>。</p>
 <p><strong>3. Sliced Score Matching 的动机</strong>
 ISM 的瓶颈在于计算 Jacobian 矩阵的迹 <span class="arithmatex">\(\operatorname{Tr}(\nabla_x \mathbf{s}_\theta(x))\)</span>，其复杂度为 <span class="arithmatex">\(O(d^2)\)</span>（<span class="arithmatex">\(d\)</span> 为数据维度）。
 <strong>核心思想</strong>：利用随机投影技术将迹的计算复杂度降至 <span class="arithmatex">\(O(d)\)</span>。</p>
 <p><strong>4. 随机投影近似迹</strong></p>
-<p>根据 Hutchinson 迹估计器，任意矩阵 $ A \in \mathbb{R}^{d \times d} $ 的迹可表示为：</p>
+<p>根据 Hutchinson 迹估计器，任意矩阵 <span class="arithmatex">\(A \in \mathbb{R}^{d \times d}\)</span> 的迹可表示为：</p>
 <div class="arithmatex">\[
 \operatorname{Tr}(A) = \mathbb{E}_{\mathbf{v} \sim \mathcal{N}(0, I)} \left[ \mathbf{v}^\top A \mathbf{v} \right],
 \]</div>
@@ -1851,7 +1869,7 @@ J_{\text{SSM}}(\theta) \approx \frac{1}{N} \sum_{i=1}^N \left[ \frac{1}{K} \sum_
 \mathcal{D}_{\text{Fisher}} \xrightarrow{\text{Stein 恒等式}} J_{\text{ISM}} \xrightarrow{\text{随机投影近似}} J_{\text{SSM}}.
 \]</div>
 <ul>
-<li><strong>SSM 的优势</strong>：将计算复杂度从 $ O(d^2) $ 降低至 $ O(Kd) $，适用于高维数据（如图像、文本）。</li>
+<li><strong>SSM 的优势</strong>：将计算复杂度从 <span class="arithmatex">\(O(d^2)\)</span> 降低至 <span class="arithmatex">\(O(Kd)\)</span>，适用于高维数据（如图像、文本）。</li>
 <li>
 <p><strong>适用场景</strong>：生成模型（如扩散模型）、无需显式概率密度的梯度估计。</p>
 </li>
@@ -1879,35 +1897,184 @@ J_{\text{SSM}}(\theta) = \mathbb{E}_{p(\mathbf{x})} \mathbb{E}_{\mathbf{v} \sim 
 <div class="arithmatex">\[
 \operatorname{Tr}(\nabla_{\mathbf{x}}\mathbf{s}_\theta(\mathbf{x})) = \mathbb{E}_{\mathbf{v}} \left[ \mathbf{v}^\top \nabla_{\mathbf{x}} \mathbf{s}_\theta(\mathbf{x}) \mathbf{v} \right].
 \]</div>
-<p>这一技巧将复杂度从 <span class="arithmatex">\(O(d^2)\)</span>（直接计算Jacobian）降低到 <span class="arithmatex">\(O(d)\)</span>（仅需计算向量-矩阵-向量乘积）。</p>
-<h4 id="_9"><strong>优势与意义</strong><a class="headerlink" href="#_9" title="Permanent link">&para;</a></h4>
+<h4 id="complexity-analysis">Complexity Analysis<a class="headerlink" href="#complexity-analysis" title="Permanent link">&para;</a></h4>
+<p>Consider the case</p>
+<div class="arithmatex">\[
+\operatorname{Tr}(\nabla_{x} \nabla_x \log p_\theta (x) )) = \mathbb{E}_{\mathbf{v}} \left[ \mathbf{v}^\top \nabla_{x} \nabla_x \log p_\theta(x) \mathbf{v} \right].
+\]</div>
+<h5 id="gradient-computation">Gradient Computation<a class="headerlink" href="#gradient-computation" title="Permanent link">&para;</a></h5>
+<p>For a scalar function <span class="arithmatex">\(f: \mathbb{R}^n \to \mathbb{R}\)</span>, <strong>reverse-mode AD</strong> (backpropagation) computes all partial derivatives <span class="arithmatex">\(\frac{\partial f}{\partial x_1}, \ldots, \frac{\partial f}{\partial x_n}\)</span> in a single backward pass. Its cost is on the same order as one or two forward evaluations of <span class="arithmatex">\(f\)</span>. We denote this by <span class="arithmatex">\(\mathbf{C}_\nabla\)</span>. Thus:</p>
+<div class="arithmatex">\[
+\text{Cost of computing } \nabla f(x) \;\approx\; O(\mathbf{C}_\nabla).
+\]</div>
+<p><strong>Key note</strong>: Requesting a single partial <span class="arithmatex">\(\frac{\partial f}{\partial x[i]}\)</span> doesn’t save much computation in practice; the backward pass still traverses the entire graph.</p>
+<h5 id="hessian-trace-computation">Hessian Trace Computation<a class="headerlink" href="#hessian-trace-computation" title="Permanent link">&para;</a></h5>
+<p>The Hessian <span class="arithmatex">\(\nabla^2 f(x)\)</span> is an <span class="arithmatex">\(n \times n\)</span> matrix. Its trace is</p>
+<div class="arithmatex">\[
+\mathrm{trace}(\nabla^2 f(x)) \;=\; \sum_{i=1}^n \frac{\partial^2 f}{\partial x_i^2}.
+\]</div>
+<p>A standard AD procedure to get each diagonal entry <span class="arithmatex">\(\frac{\partial^2 f}{\partial x_i^2}\)</span> involves one <strong>forward-mode</strong> pass (perturbing only <span class="arithmatex">\(x_i\)</span>) plus one <strong>reverse-mode</strong> pass. Doing this for all <span class="arithmatex">\(n\)</span> coordinates requires roughly <span class="arithmatex">\(n\)</span> times the gradient cost:</p>
+<div class="arithmatex">\[
+\text{Cost of computing } \mathrm{trace}(\nabla^2 f) \;\approx\; O\bigl(n \times \mathbf{C}_\nabla\bigr).
+\]</div>
+<h5 id="hessian-vector-product-computation">Hessian Vector Product Computation<a class="headerlink" href="#hessian-vector-product-computation" title="Permanent link">&para;</a></h5>
+<p>To calculate the <span class="arithmatex">\(v^TH\cdot v\)</span>, we have</p>
 <ol>
-<li><strong>计算高效性</strong></li>
-<li>避免显式计算高维Jacobian矩阵，尤其适合深度神经网络等参数化模型。</li>
-<li>
-<p>通过蒙特卡洛采样少量投影方向 <span class="arithmatex">\(\mathbf{v}\)</span>，即可近似真实迹值。</p>
-</li>
-<li>
-<p><strong>理论保证</strong></p>
-</li>
-<li>在投影方向足够多时，损失函数与Implicit Score Matching等价。</li>
-<li>
-<p>保留了梯度匹配的一致性，即最小化损失等价于匹配真实score function。</p>
-</li>
-<li>
-<p><strong>适用场景</strong></p>
-</li>
-<li>高维数据（如图像、文本）。</li>
-<li>生成模型（如扩散模型）、密度估计任务。</li>
+<li>Calculate <span class="arithmatex">\(\nabla f(x)\)</span> from the backward and keep the graph</li>
+<li>Calculate the product <span class="arithmatex">\(\nabla f(x) v\)</span>, which is a scalar, and then do another backward to get its derivative <span class="arithmatex">\(\nabla \bigl[\nabla f(x)\cdot v\bigr]\)</span></li>
+<li>Calcualte <span class="arithmatex">\(v^T \nabla \bigl[\nabla f(x)\cdot v\bigr]\)</span> which can be ignored compared with the computation with the first two steps</li>
 </ol>
-<h4 id="_10"><strong>示例说明</strong><a class="headerlink" href="#_10" title="Permanent link">&para;</a></h4>
-<p>假设数据维度 <span class="arithmatex">\(d=1000\)</span>，直接计算Jacobian矩阵的迹需要 <span class="arithmatex">\(10^6\)</span> 次操作，而Sliced Score Matching仅需：</p>
+<p>Hence, totally, the computation of <span class="arithmatex">\(v^TH\cdot v\)</span> is around <span class="arithmatex">\(2\times \mathbf{C}_\nabla\)</span>.</p>
+<p>Below is a <strong>coordinate‐level proof</strong> that</p>
+<div class="arithmatex">\[
+\nabla \bigl[\nabla f(x)\cdot v\bigr]
+\;=\;
+\nabla^2 f(x)\,v,
+\]</div>
+<p>which justifies the standard PyTorch implementation for the Hessian–vector product:</p>
+<hr />
+<h2 id="statement">Statement<a class="headerlink" href="#statement" title="Permanent link">&para;</a></h2>
+<p>Let <span class="arithmatex">\(f:\mathbb{R}^n \to \mathbb{R}\)</span> be twice continuously differentiable, and let <span class="arithmatex">\(v \in \mathbb{R}^n\)</span>. Define the scalar function</p>
+<div class="arithmatex">\[
+g(x)\;=\;\nabla f(x)\,\cdot\,v \;=\; \sum_{i=1}^n \frac{\partial f}{\partial x_i}(x)\,v_i.
+\]</div>
+<p>Then</p>
+<div class="arithmatex">\[
+\nabla g(x)
+\;=\;
+\nabla^2 f(x)\,v.
+\]</div>
+<p>In other words, if <span class="arithmatex">\(H = \nabla^2 f(x)\)</span> is the Hessian of <span class="arithmatex">\(f\)</span> at <span class="arithmatex">\(x\)</span>, then</p>
+<div class="arithmatex">\[
+\frac{\partial}{\partial x_j} \bigl[\nabla f(x)\cdot v\bigr]
+\;=\;
+\bigl(H\,v\bigr)_j
+\quad
+\text{for each }j=1,\dots,n.
+\]</div>
+<hr />
+<h2 id="coordinatelevel-proof">Coordinate‐Level Proof<a class="headerlink" href="#coordinatelevel-proof" title="Permanent link">&para;</a></h2>
 <ol>
-<li>采样随机向量 <span class="arithmatex">\(\mathbf{v} \in \mathbb{R}^{1000}\)</span>。</li>
-<li>计算 <span class="arithmatex">\(\mathbf{v}^\top \nabla_{\mathbf{x}} \mathbf{s}_\theta(\mathbf{x}) \mathbf{v}\)</span>，仅需 <span class="arithmatex">\(O(1000)\)</span> 次操作。</li>
-<li>对多个 <span class="arithmatex">\(\mathbf{v}\)</span> 取平均，近似迹值。</li>
+<li><strong>Expand the definition of <span class="arithmatex">\(g(x)\)</span></strong>:</li>
 </ol>
-<h4 id="_11"><strong>对比其他方法</strong><a class="headerlink" href="#_11" title="Permanent link">&para;</a></h4>
+<div class="arithmatex">\[
+g(x)\;=\;  \nabla f(x)\,\cdot\,v  \;=\;  \sum_{i=1}^n  \frac{\partial f}{\partial x_i}(x)\,v_i.
+\]</div>
+<ol>
+<li><strong>Compute the partial derivative w.r.t.\ <span class="arithmatex">\(x_j\)</span></strong>:</li>
+</ol>
+<div class="arithmatex">\[
+\frac{\partial g}{\partial x_j}(x)
+\;=\;
+\frac{\partial}{\partial x_j}
+\Bigl[\,
+  \sum_{i=1}^n
+  \frac{\partial f}{\partial x_i}(x)\,v_i
+\Bigr].
+\]</div>
+<ol>
+<li><strong>Bring the partial derivative inside the sum</strong> (assuming sufficient smoothness of <span class="arithmatex">\(f\)</span>):</li>
+</ol>
+<div class="arithmatex">\[
+\frac{\partial g}{\partial x_j}(x)\;=\;\sum_{i=1}^n v_i\,\frac{\partial}{\partial x_j} \Bigl(\frac{\partial f}{\partial x_i}(x)\Bigr).
+\]</div>
+<ol>
+<li><strong>Recognize the second partial derivative</strong>:</li>
+</ol>
+<div class="arithmatex">\[
+\frac{\partial}{\partial x_j}\Bigl(\frac{\partial f}{\partial x_i}(x)\Bigr)\;=\;   \frac{\partial^2 f}{\partial x_j \,\partial x_i}(x).
+\]</div>
+<p>If <span class="arithmatex">\(f\)</span> is <span class="arithmatex">\(C^2\)</span> and the Hessian is symmetric, <span class="arithmatex">\(\partial^2 f/\partial x_j \partial x_i = \partial^2 f/\partial x_i \partial x_j\)</span>. Then</p>
+<div class="arithmatex">\[
+\frac{\partial g}{\partial x_j}(x) \;=\;\sum_{i=1}^nv_i\,\frac{\partial^2 f}{\partial x_i \,\partial x_j}(x).
+\]</div>
+<ol>
+<li><strong>Interpret as the <span class="arithmatex">\(j\)</span>-th component of <span class="arithmatex">\(H\,v\)</span></strong>:</li>
+<li>The matrix <span class="arithmatex">\(H = \bigl[\frac{\partial^2 f}{\partial x_i \,\partial x_j}(x)\bigr]\)</span> is <span class="arithmatex">\(n\times n\)</span>.</li>
+<li>
+<p>The product <span class="arithmatex">\((H\,v)_j\)</span> is</p>
+<div class="arithmatex">\[
+(H\,v)_j
+\;=\;
+\sum_{i=1}^n
+\frac{\partial^2 f}{\partial x_j\,\partial x_i}(x)\;v_i,
+\]</div>
+<p>which, by symmetry of second derivatives, equals
+ <span class="arithmatex">\(\sum_{i=1}^n v_i \,\frac{\partial^2 f}{\partial x_i\,\partial x_j}(x)\)</span>.</p>
+</li>
+</ol>
+<p>Therefore,</p>
+<div class="arithmatex">\[
+\frac{\partial g}{\partial x_j}(x)
+\;=\;
+(H\,v)_j,
+\quad
+\forall\,j.
+\]</div>
+<p>Hence, <span class="arithmatex">\(\nabla g(x) = H\,v = \nabla^2 f(x)\,v\)</span>.</p>
+<h3 id="4-summary">4. Summary<a class="headerlink" href="#4-summary" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Full Gradient</strong>: One reverse-mode pass yields <span class="arithmatex">\(\nabla f(x)\)</span> at cost <span class="arithmatex">\(\mathbf{C}_\nabla\)</span>.</li>
+<li><strong>Hessian Trace</strong>: Exact computation requires about <span class="arithmatex">\(n+1\)</span> times that cost.</li>
+<li><strong>Hessin vector product</strong>: Requires about <span class="arithmatex">\(2\)</span> times of the cost of gradient.</li>
+<li><strong>Single Partial vs. Full Gradient</strong>: In reverse-mode AD for scalar outputs, both cost nearly the same. that is <code>grad(f,x)</code> has almost the same complexity of <code>grad(f,x[i])</code>.</li>
+</ul>
+<p>See the code here</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">def</span> <span class="nf">gradient</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="sd">    Compute the gradient of the scalar function f w.r.t. x.</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="sd">    f: a scalar PyTorch tensor (the output of some function of x)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="sd">    x: a PyTorch tensor of shape (n,) with requires_grad=True</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="c1"># create_graph=True allows further differentiation</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    <span class="n">grad_f</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">autograd</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">create_graph</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    <span class="k">return</span> <span class="n">grad_f</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="k">def</span> <span class="nf">hessian_trace</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="sd">    Compute the trace of the Hessian of the scalar function f w.r.t. x.</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="sd">    i.e., sum(d^2 f / d x_i^2).</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="sd">    f: scalar value (output of some function of x)</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="sd">    x: torch.tensor shape (n,), requires_grad=True</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>    <span class="c1"># First get the gradient. We need create_graph=True so we can differentiate again.</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>    <span class="n">grad_f</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">autograd</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">create_graph</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>    <span class="c1"># Sum of second derivatives w.r.t each x[i]</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>    <span class="c1"># We&#39;ll accumulate each d(grad_f[i]) / d x[i].</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>    <span class="n">trace_val</span> <span class="o">=</span> <span class="mf">0.0</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">numel</span><span class="p">()):</span>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>        <span class="c1"># grad of grad_f[i] w.r.t x gives a vector; we take [i] component</span>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>        <span class="n">second_deriv_i</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">autograd</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">grad_f</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">x</span><span class="p">,</span> <span class="n">retain_graph</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>        <span class="n">trace_val</span> <span class="o">+=</span> <span class="n">second_deriv_i</span>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>    <span class="k">return</span> <span class="n">trace_val</span>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="k">def</span> <span class="nf">hvp</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="sd">    Compute Hessian-vector product H * v, where H = ∇^2 f(x).</span>
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="sd">    f: 标量，网络/函数对 x 的输出</span>
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a><span class="sd">    x: 参数或输入向量 (requires_grad=True)</span>
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a><span class="sd">    v: 一个和 x 形状相同的向量，用作方向</span>
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>    <span class="c1"># 第一步：求一阶梯度，保留计算图</span>
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>    <span class="n">grad_f</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">autograd</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">create_graph</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>    <span class="c1"># grad_f 是和 x 同 shape 的张量</span>
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>    <span class="c1"># 第二步：对 (grad_f 和 v 的内积) 再求一次梯度</span>
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>    <span class="c1"># 这相当于对 g(x)^T * v 做一次 backprop，得出 H*v</span>
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>    <span class="n">hv</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">autograd</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">grad_f</span> <span class="o">@</span> <span class="n">v</span><span class="p">,</span> <span class="n">x</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>    <span class="k">return</span> <span class="n">hv</span>
+</code></pre></div>
+<p><strong>References</strong></p>
+<ul>
+<li>A. Griewank &amp; A. Walther, <em>Evaluating Derivatives.</em></li>
+<li>B. A. Pearlmutter, <em>Fast Exact Multiplication by the Hessian,</em> 1994.</li>
+<li>Hutchinson, <em>A Stochastic Estimator of the Trace,</em> 1990.</li>
+</ul>
+<h3 id="_9"><strong>对比其他方法</strong><a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -1935,34 +2102,34 @@ J_{\text{SSM}}(\theta) = \mathbb{E}_{p(\mathbf{x})} \mathbb{E}_{\mathbf{v} \sim 
 </tbody>
 </table>
 <hr />
-<h4 id="_12"><strong>代码实现（伪代码）</strong><a class="headerlink" href="#_12" title="Permanent link">&para;</a></h4>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">import</span> <span class="nn">torch</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="k">def</span> <span class="nf">sliced_score_matching_loss</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">num_projections</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="sd">    model: 预测score function的神经网络</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="sd">    data: 输入数据样本</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="sd">    num_projections: 随机投影方向的数量</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    <span class="n">scores</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>  <span class="c1"># 模型预测的score [batch_size, d]</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    <span class="n">loss</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">scores</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>  <span class="c1"># 1/2 ||s_θ(x)||^2</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_projections</span><span class="p">):</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>        <span class="n">v</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn_like</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>  <span class="c1"># 随机投影向量 [batch_size, d]</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>        <span class="n">v</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>        <span class="c1"># 计算 v^T ∇s_θ(x) v</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>        <span class="n">v_scores</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">v</span> <span class="o">*</span> <span class="n">scores</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># [batch_size]</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>        <span class="n">jvp</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">autograd</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>            <span class="n">outputs</span><span class="o">=</span><span class="n">v_scores</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>            <span class="n">grad_outputs</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">v_scores</span><span class="p">),</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>            <span class="n">create_graph</span><span class="o">=</span><span class="kc">True</span>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>        <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># ∇(v^T s_θ(x)) = v^T ∇s_θ(x)</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>        <span class="n">trace_estimate</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">v</span> <span class="o">*</span> <span class="n">jvp</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># v^T ∇s_θ(x) v</span>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>        <span class="n">loss</span> <span class="o">+=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">trace_estimate</span><span class="p">)</span> <span class="o">/</span> <span class="n">num_projections</span>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>    <span class="k">return</span> <span class="n">loss</span>
+<h4 id="_10"><strong>代码实现（伪代码）</strong><a class="headerlink" href="#_10" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">import</span> <span class="nn">torch</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">def</span> <span class="nf">sliced_score_matching_loss</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">num_projections</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="sd">    model: 预测score function的神经网络</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="sd">    data: 输入数据样本</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="sd">    num_projections: 随机投影方向的数量</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="n">scores</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>  <span class="c1"># 模型预测的score [batch_size, d]</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="n">loss</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">scores</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>  <span class="c1"># 1/2 ||s_θ(x)||^2</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_projections</span><span class="p">):</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>        <span class="n">v</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn_like</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>  <span class="c1"># 随机投影向量 [batch_size, d]</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>        <span class="n">v</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>        <span class="c1"># 计算 v^T ∇s_θ(x) v</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>        <span class="n">v_scores</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">v</span> <span class="o">*</span> <span class="n">scores</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># [batch_size]</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>        <span class="n">jvp</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">autograd</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>            <span class="n">outputs</span><span class="o">=</span><span class="n">v_scores</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>            <span class="n">grad_outputs</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">v_scores</span><span class="p">),</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>            <span class="n">create_graph</span><span class="o">=</span><span class="kc">True</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>        <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># ∇(v^T s_θ(x)) = v^T ∇s_θ(x)</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>        <span class="n">trace_estimate</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">v</span> <span class="o">*</span> <span class="n">jvp</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># v^T ∇s_θ(x) v</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>        <span class="n">loss</span> <span class="o">+=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">trace_estimate</span><span class="p">)</span> <span class="o">/</span> <span class="n">num_projections</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>    <span class="k">return</span> <span class="n">loss</span>
 </code></pre></div>
 <h3 id="experiment_1">experiment<a class="headerlink" href="#experiment_1" title="Permanent link">&para;</a></h3>
 <p>We also tried with the mixture og gaussian distribution, it performs well.</p>
@@ -1987,7 +2154,7 @@ J_{\text{SSM}}(\theta) = \mathbb{E}_{p(\mathbf{x})} \mathbb{E}_{\mathbf{v} \sim 
 Instead of learning <span class="arithmatex">\(\nabla_x \log p(x)\)</span> directly (hard!), learn to <em>denoise</em> perturbed data. The denoising direction aligns with the score of the <em>noise-augmented</em> distribution.</p>
 <h3 id="2-derivation-connecting-noise-to-the-score">2. Derivation: Connecting Noise to the Score<a class="headerlink" href="#2-derivation-connecting-noise-to-the-score" title="Permanent link">&para;</a></h3>
 <h4 id="step-1-define-the-noisy-distribution">Step 1: Define the Noisy Distribution<a class="headerlink" href="#step-1-define-the-noisy-distribution" title="Permanent link">&para;</a></h4>
-<p>Corrupt a data point $ x $ with Gaussian noise:</p>
+<p>Corrupt a data point <span class="arithmatex">\(x\)</span> with Gaussian noise:</p>
 <div class="arithmatex">\[ \tilde{x} = x + \epsilon, \quad \epsilon \sim \mathcal{N}(0, \sigma^2 I) \]</div>
 <p>The conditional distribution is:</p>
 <div class="arithmatex">\[ q(\tilde{x}|x) = \mathcal{N}(x, \sigma^2 I) \]</div>
@@ -2018,17 +2185,17 @@ q_\sigma(\tilde{\mathbf{x}}) \approx p_{\text{data}}(\tilde{\mathbf{x}}).
 <ul>
 <li>
 <p><strong>Behavior of <span class="arithmatex">\(q(\tilde{\mathbf{x}} \mid \mathbf{x})\)</span>:</strong>
-  The Gaussian acts as a smoothing kernel with width proportional to $ \sigma $.</p>
+  The Gaussian acts as a smoothing kernel with width proportional to <span class="arithmatex">\(\sigma\)</span>.</p>
 </li>
 <li>
-<p><strong>Effect on $q(\tilde{\mathbf{x}}) $:</strong></p>
+<p><strong>Effect on <span class="arithmatex">\(q(\tilde{\mathbf{x}})\)</span>:</strong>
+  The convolution introduces controlled blurring, creating a smoothed version of <span class="arithmatex">\(p_{\text{data}}(\mathbf{x})\)</span>. Fine details are averaged, but the global structure remains recognizable.</p>
+</li>
+<li>
+<p><strong>Interpretation:</strong> Useful for regularization or generating "softened" data samples.</p>
 </li>
 </ul>
-<p>The convolution introduces controlled blurring, creating a smoothed version of <span class="arithmatex">\(p_{\text{data}}(\mathbf{x})\)</span>. Fine details are averaged, but the global structure remains recognizable.</p>
-<ul>
-<li><strong>Interpretation:</strong> Useful for regularization or generating "softened" data samples.</li>
-</ul>
-<h4 id="3-large-noise-sigma-to-infty">3. Large Noise $\sigma \to \infty $**<a class="headerlink" href="#3-large-noise-sigma-to-infty" title="Permanent link">&para;</a></h4>
+<h4 id="3-large-noise-sigma-to-infty">3. Large Noise <span class="arithmatex">\(\sigma \to \infty\)</span><a class="headerlink" href="#3-large-noise-sigma-to-infty" title="Permanent link">&para;</a></h4>
 <ul>
 <li>
 <p><strong>Behavior of <span class="arithmatex">\(q_\sigma(\tilde{\mathbf{x}} \mid \mathbf{x})\)</span>:</strong>
@@ -2045,17 +2212,17 @@ q_\sigma(\tilde{\mathbf{x}}) \approx p_{\text{data}}(\tilde{\mathbf{x}}).
 <h4 id="step-2-score-of-the-noisy-distribution">Step 2: Score of the Noisy Distribution<a class="headerlink" href="#step-2-score-of-the-noisy-distribution" title="Permanent link">&para;</a></h4>
 <p>The score of <span class="arithmatex">\(q(\tilde{x}|x)\)</span> is:</p>
 <div class="arithmatex">\[\nabla_{\tilde{x}} \log q(\tilde{x}|x) = \frac{x - \tilde{x}}{\sigma^2}\]</div>
-<p><strong>Why?</strong>
-For a Gaussian $ \mathcal{N}(x, \sigma^2 I) $, the gradient of the log-density with respect to $ \tilde{x} $ points toward the mean $ x $. The term $ (x - \tilde{x})/\sigma^2 $ is the "denoising direction" that corrects $ \tilde{x} $ back to $ x $.</p>
+<p><strong>Why?</strong></p>
+<p>For a Gaussian <span class="arithmatex">\(\mathcal{N}(x, \sigma^2 I)\)</span>, the gradient of the log-density with respect to <span class="arithmatex">\(\tilde{x}\)</span> points toward the mean <span class="arithmatex">\(x\)</span>. The term <span class="arithmatex">\((x - \tilde{x})/\sigma^2\)</span> is the "denoising direction" that corrects <span class="arithmatex">\(\tilde{x}\)</span> back to <span class="arithmatex">\(x\)</span>.</p>
 <h4 id="step-3-the-dsm-objective">Step 3: The DSM Objective<a class="headerlink" href="#step-3-the-dsm-objective" title="Permanent link">&para;</a></h4>
-<p>Train a model $ s_\theta(\tilde{x}) $ to match this score:</p>
+<p>Train a model <span class="arithmatex">\(s_\theta(\tilde{x})\)</span> to match this score:</p>
 <div class="arithmatex">\[ J(\theta) = \mathbb{E}_{q(\tilde{x},x)}\left[ \| s_\theta(\tilde{x}) - \frac{x - \tilde{x}}{\sigma^2} \|^2 \right] \]</div>
 <p><strong>Why This Works</strong>:</p>
-<p>Minimizing this loss forces <span class="arithmatex">\(s_\theta(\tilde{x})\)</span> to approximate <span class="arithmatex">\(\nabla_{\tilde{x}} \log q(\tilde{x})\)</span>, the score of the <em>marginal</em> noisy distribution $ q(\tilde{x}) = \int q(\tilde{x}|x)p_{\text{data}}(x)dx$,  which has been proved in the above section.
+<p>Minimizing this loss forces <span class="arithmatex">\(s_\theta(\tilde{x})\)</span> to approximate <span class="arithmatex">\(\nabla_{\tilde{x}} \log q(\tilde{x})\)</span>, the score of the <em>marginal</em> noisy distribution <span class="arithmatex">\(q(\tilde{x}) = \int q(\tilde{x}|x)p_{\text{data}}(x)dx\)</span>,  which has been proved in the above section.
 As illustrated above, this is equivalent to learning the score of the <em>true</em> data distribution <span class="arithmatex">\(p_{\text{data}}(x)\)</span> as <span class="arithmatex">\(\sigma \to 0\)</span>.</p>
 <h3 id="3-training-process-step-by-step">3. Training Process: Step-by-Step<a class="headerlink" href="#3-training-process-step-by-step" title="Permanent link">&para;</a></h3>
 <h4 id="step-1-add-noise-to-data">Step 1: Add Noise to Data<a class="headerlink" href="#step-1-add-noise-to-data" title="Permanent link">&para;</a></h4>
-<p>For each clean data point $ x $, generate a noisy version:</p>
+<p>For each clean data point <span class="arithmatex">\(x\)</span>, generate a noisy version:</p>
 <div class="arithmatex">\[ \tilde{x} = x + \epsilon, \quad \epsilon \sim \mathcal{N}(0, \sigma^2 I) \]</div>
 <p><strong>Why Add Noise?</strong></p>
 <ul>
@@ -2111,11 +2278,11 @@ As illustrated above, this is equivalent to learning the score of the <em>true</
 <h3 id="4-sampling-with-langevin-dynamics">4. Sampling with Langevin Dynamics<a class="headerlink" href="#4-sampling-with-langevin-dynamics" title="Permanent link">&para;</a></h3>
 <p>Once trained, we use <strong>Langevin dynamics</strong> to generate samples by "walking" along the learned score.</p>
 <h4 id="the-update-rule">The Update Rule<a class="headerlink" href="#the-update-rule" title="Permanent link">&para;</a></h4>
-<div class="arithmatex">\[ x_{t+1} = x_t + \epsilon \cdot s_\theta(x_t) + \sqrt{2\epsilon} \cdot z_t, \quad z_t \sim \mathcal{N}(0, I) \]</div>
+<div class="arithmatex">\[ x_{t+1} = x_t + \epsilon \cdot s_\theta(x_t) + \sqrt{2\epsilon} \cdot z_t, \quad z_t \sim \mathcal{N}(0, I)\]</div>
 <p><strong>Breaking It Down</strong>:</p>
 <ol>
-<li><strong>Score term <span class="arithmatex">\(\epsilon \cdot s_\theta(x_t)\)</span></strong>: Guides $ x_t $ toward high-density regions (denoising).</li>
-<li><strong>Noise term $\sqrt{2\epsilon} \cdot z_t</strong>: Adds randomness to escape local minima and explore the distribution.</li>
+<li><strong>Score term <span class="arithmatex">\(\epsilon \cdot s_\theta(x_t)\)</span></strong>: Guides <span class="arithmatex">\(x_t\)</span> toward high-density regions (denoising).</li>
+<li><strong>Noise term <span class="arithmatex">\(\sqrt{2\epsilon} \cdot z_t\)</span></strong>: Adds randomness to escape local minima and explore the distribution.</li>
 </ol>
 <p><strong>Why This Works</strong>:
 Langevin dynamics is a Markov Chain Monte Carlo (MCMC) method that uses the score to perform gradient ascent on <span class="arithmatex">\(\log p(x)\)</span>. The noise ensures ergodicity, allowing the chain to converge to the true distribution.</p>
@@ -2145,11 +2312,11 @@ Langevin dynamics is a Markov Chain Monte Carlo (MCMC) method that uses the scor
 <li><strong>Low noise (small <span class="arithmatex">\(\sigma\)</span>)</strong>: Captures fine details (e.g., textures).</li>
 <li><strong>High noise (large <span class="arithmatex">\(\sigma\)</span>)</strong>: Captures coarse structure (e.g., shapes).</li>
 </ul>
-<p>Training with a single $ \sigma $ limits the model’s ability to generalize across scales.</p>
+<p>Training with a single <span class="arithmatex">\(\sigma\)</span> limits the model’s ability to generalize across scales.</p>
 <h4 id="training-process">Training Process<a class="headerlink" href="#training-process" title="Permanent link">&para;</a></h4>
 <ol>
-<li><strong>Noise Sampling</strong>: For each batch, randomly pick $ \sigma_i $ from a set <span class="arithmatex">\(\{\sigma_1, ..., \sigma_L\}\)</span>.</li>
-<li><strong>Loss Adjustment</strong>: Scale the loss by $ \sigma_i^2 $ to prevent larger $ \sigma $ from dominating:</li>
+<li><strong>Noise Sampling</strong>: For each batch, randomly pick <span class="arithmatex">\(\sigma_i\)</span> from a set <span class="arithmatex">\(\{\sigma_1, ..., \sigma_L\}\)</span>.</li>
+<li><strong>Loss Adjustment</strong>: Scale the loss by <span class="arithmatex">\(\sigma_i^2\)</span> to prevent larger <span class="arithmatex">\(\sigma\)</span> from dominating:</li>
 </ol>
 <div class="arithmatex">\[ \mathcal{L} = \frac{1}{L} \sum_{i=1}^L \mathbb{E}\left[ \sigma_i^2 \| s_\theta(\tilde{x}, \sigma_i) - \frac{x - \tilde{x}}{\sigma_i^2} \|^2 \right] \]</div>
 <h4 id="sampling">Sampling<a class="headerlink" href="#sampling" title="Permanent link">&para;</a></h4>
@@ -2162,7 +2329,7 @@ Langevin dynamics is a Markov Chain Monte Carlo (MCMC) method that uses the scor
 Like sketching a painting—first outline shapes (high noise), then add details (low noise).</p>
 <h3 id="6-continuous-noise-levels">6. Continuous Noise Levels<a class="headerlink" href="#6-continuous-noise-levels" title="Permanent link">&para;</a></h3>
 <h4 id="why-go-continuous">Why Go Continuous?<a class="headerlink" href="#why-go-continuous" title="Permanent link">&para;</a></h4>
-<p>Discrete noise scales are rigid and computationally costly for large $ L $. A continuous approach:</p>
+<p>Discrete noise scales are rigid and computationally costly for large <span class="arithmatex">\(L\)</span>. A continuous approach:</p>
 <ul>
 <li>Smoothly interpolates between noise levels.</li>
 <li>Connects to differential equations for efficient sampling.</li>
@@ -2173,7 +2340,7 @@ Like sketching a painting—first outline shapes (high noise), then add details 
 <p><strong>Noise Sampling</strong>: Sample <span class="arithmatex">\(t \sim \mathcal{U}(0,1)\)</span>, compute <span class="arithmatex">\(\sigma(t)\)</span> (e.g., <span class="arithmatex">\(\sigma(t) = \sigma_{\text{min}} + t(\sigma_{\text{max}} - \sigma_{\text{min}})\)</span>).</p>
 </li>
 <li>
-<p><strong>Condition the Model</strong>: Feed $ t $ to <span class="arithmatex">\(s_\theta\)</span> via time embeddings (e.g., sinusoidal features).</p>
+<p><strong>Condition the Model</strong>: Feed <span class="arithmatex">\(t\)</span> to <span class="arithmatex">\(s_\theta\)</span> via time embeddings (e.g., sinusoidal features).</p>
 </li>
 </ol>
 <h4 id="sampling-with-stochastic-differential-equations-sdes">Sampling with Stochastic Differential Equations (SDEs)<a class="headerlink" href="#sampling-with-stochastic-differential-equations-sdes" title="Permanent link">&para;</a></h4>
