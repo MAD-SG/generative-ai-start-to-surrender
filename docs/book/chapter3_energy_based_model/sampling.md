@@ -70,7 +70,7 @@ For complex distributions, especially with unnormalized probability density func
 MCMC is a broad class of algorithms used to draw samples from complex probability distributions, especially when direct sampling or classical numerical integration is difficult. The main idea behind MCMC is:
 
 1. **We want samples from a target distribution**
-Suppose we have a probability distribution $\pi(x)$ (often given up to a normalization constant, e.g., $\pi(x)\propto e^{-U(x)}$), and we want to estimate expectations like
+Suppose we have a probability distribution $\pi(x)$ (often given up to a normalization constant, e.g., $\pi(x)\propto e^{-E(x)}$), and we want to estimate expectations like
 
 $$
  \mathbb{E}_{x\sim \pi}[f(x)] \;=\; \int f(x)\,\pi(x)\,dx.
@@ -82,9 +82,8 @@ In many applications (e.g., Bayesian inference), $\pi$ may be high‐dimensional
 MCMC methods build a Markov chain $X_0, X_1, X_2,\dots$ with a *transition rule* $X_{t+1}\sim T(\cdot\mid X_t)$. The key is to design $T$ so that if $X_t$ *is distributed* according to $\pi$, then $X_{t+1}$ is also distributed according to $\pi$. Under suitable conditions (ergodicity), the chain then *converges* to $\pi$ from a wide range of initial states, and the samples $X_0, X_1, \dots$ “mix” throughout the support of $\pi$.
 
 3. **Samples from the chain approximate samples from $\pi$**
-If the Markov chain is *ergodic* and *aperiodic*, then for large $t$, the distribution of $X_t$ is close to $\pi$. We can compute empirical averages using$
- \frac{1}{N}\sum_{t=1}^N f(X_t)
-$
+
+If the Markov chain is *ergodic* and *aperiodic*, then for large $t$, the distribution of $X_t$ is close to $\pi$. We can compute empirical averages using $\frac{1}{N}\sum_{t=1}^N f(X_t)$
 to estimate $\mathbb{E}_{\pi}[f]$. The law of large numbers for Markov chains implies that, as $N\to\infty$, these empirical averages converge to the true expectation (under mild regularity conditions).
 
 Popular MCMC approaches include:
@@ -95,12 +94,12 @@ Popular MCMC approaches include:
 
 ## Hamiltonian Monte Carlo (HMC)
 
-**Hamiltonian Monte Carlo (HMC)**  is a specialized MCMC method designed to tackle high‐dimensional sampling problems more efficiently than basic Metropolis–Hastings or Gibbs sampling, especially when $\pi(x)\propto e^{-U(x)}$ for some smooth potential $U(x)$. Its key ingredients:
+**Hamiltonian Monte Carlo (HMC)**  is a specialized MCMC method designed to tackle high‐dimensional sampling problems more efficiently than basic Metropolis–Hastings or Gibbs sampling, especially when $\pi(x)\propto e^{-E(x)}$ for some smooth potential $E(x)$. Its key ingredients:
 
 1. **Incorporate “physical” dynamics**
 HMC treats the target variable $x$ as a *position* in a physical system and introduces an auxiliary *momentum* variable $p$. Together, $(x,p)$ evolve according to (fictitious) Hamiltonian dynamics governed by a Hamiltonian function
 
-$$H(x,p) = U(x) + \frac{1}{2}p^\top M^{-1} p$$
+$$H(x,p) = E(x) + \frac{1}{2}p^\top M^{-1} p$$
 
 where $M$ is a mass matrix (often the identity).
 
@@ -110,7 +109,7 @@ Starting from $(x,p)$, HMC simulates the continuous‐time Hamiltonian equations
 $$
  \begin{cases}
 \dot{x} \;=\; M^{-1} p,\\
-\dot{p} \;=\; -\,\nabla U(x).
+\dot{p} \;=\; -\,\nabla E(x).
 \end{cases}
 $$
 
@@ -162,28 +161,30 @@ In short, MCMC is the backbone of *sampling from complicated distributions* when
 
 #### 1. Definition
 
-Langevin Dynamics Sampling is a sampling method based on Stochastic Differential Equations (SDE). It is used to sample from high-dimensional probability distributions $p(x) \propto e^{-U(x)}$. The core idea is to add stochastic noise to the deterministic gradient descent process, ensuring a balance between exploration and exploitation, ultimately achieving the desired distribution.
+Langevin Dynamics Sampling is a sampling method based on Stochastic Differential Equations (SDE). It is used to sample from high-dimensional probability distributions $p(x) \propto e^{-E(x)}$. The core idea is to add stochastic noise to the deterministic gradient descent process, ensuring a balance between exploration and exploitation, ultimately achieving the desired distribution.
 
 ---
 
 #### 2. Core Principles
 
-- **Physical Perspective** : Derived from particle motion, where $U(x)$ represents the particle's potential energy (drift term), and random thermal noise (diffusion term) drives its movement.
+- **Physical Perspective** : Derived from particle motion, where $E(x)$ represents the particle's potential energy (drift term), and random thermal noise (diffusion term) drives its movement.
 
 - **Mathematical Perspective** : Designed as a random process to enable samples to converge to the target distribution $p(x)$.
 
 - **Key Components** :
 
-  1. **Gradient Descent** : Following the negative gradient of $U(x)$, which guides the particle toward areas of lower energy (higher probability density).
+  1. **Gradient Descent** : Following the negative gradient of $E(x)$, which guides the particle toward areas of lower energy (higher probability density).
 
   2. **Random Noise** : Adding stochastic perturbations to prevent the algorithm from getting stuck and ensure sufficient exploration.
+
+One also need to note that the converge to the final target distribution is not depended on the initial status, that means we can sample the initial status from any distribution.
 
 #### 3. Discrete Formulation
 
 **Continuous Langevin Dynamics**
 
 $$
- dx_t = -\nabla U(x_t)dt + \sqrt{2}dW_t
+ dx_t = -\nabla E(x_t)dt + \sqrt{2}dW_t
 $$
 
 Where:
@@ -195,7 +196,7 @@ Where:
 **Discrete Update Rule**  (Practical Implementation):
 
 $$
- x_{k+1} = x_k - \epsilon \nabla U(x_k) + \sqrt{2\epsilon} \xi_k, \, \xi_k \sim \mathcal{N}(0, I)
+ x_{k+1} = x_k - \epsilon \nabla E(x_k) + \sqrt{2\epsilon} \xi_k, \, \xi_k \sim \mathcal{N}(0, I)
 $$
 
 Where $\epsilon$ is the step size, controlling the trade-off between convergence speed and accuracy.
@@ -204,19 +205,44 @@ Where $\epsilon$ is the step size, controlling the trade-off between convergence
 
 #### 4. Proof: Target Distribution as the Stationary Distribution
 
-**Goal** : Prove that the stationary distribution of Langevin Dynamics is $p(x) \propto e^{-U(x)}$.
+**Goal** : Prove that the stationary distribution of Langevin Dynamics is $p(x) \propto e^{-E(x)}$.
 
 **Tool** : Fokker-Planck Equation (Describes the evolution of probability density under a stochastic process).
 
-- **Fokker-Planck Equation** :
+1. $p(x)$ is a stationary solution
+
+According to Fokker-Planck Equation:
 
 $$
- \frac{\partial \rho(x, t)}{\partial t} = \nabla \cdot \left( \rho \nabla U(x) \right) + \nabla^2 \rho
+\begin{aligned}
+\frac{\partial p(x, t)}{\partial t} |_{p(x,t)=p(x)}  &= \nabla \cdot \left( p \nabla E(x) \right) + \nabla^2 p \\
+& = \nabla \cdot ( p \nabla E + \nabla p) \\
+& = \nabla \cdot ( p \nabla E - p \nabla E)\\
+& = 0
+\end{aligned}
 $$
 
-- **Stationary State** : When $\frac{\partial \rho(x, t)}{\partial t} = 0$, solving $\rho(x) \propto e^{-U(x)}$ proves the stationary distribution is the target distribution.
+the last second equation comes from
 
----
+$$
+\nabla p = \nabla_x \frac{e^{-E}}{Z}= \frac{1}{Z} \nabla e^{-E} = - \frac{e^-E}{Z} \nabla E= -p\nabla E
+$$
+
+2. Prove $p(x)$ is a unique stationary distribution
+
+Define the relative entropy
+
+$$
+H(t) = \int p(x,t) \log \frac{p(x,t)}{p(x)} d x
+$$
+
+where $p(x,t)$ is the density function in time $t$ according to the Langevin Dynamics.
+
+Compute its time derivative, we have
+
+$$\frac{d H}{d t} = - \int p \left| \nabla log \frac{p(x,t)}{p(x)}\right|^2 d x \leq 0$$
+
+This shows $p(x,t)$ decreases monotonically and is zero only when $p(x,t) = p(x)$.
 
 #### 5. Application Scenarios
 
@@ -254,7 +280,7 @@ $$
 
 - May fail for ill-conditioned cases; alternative methods like Metropolis-Hastings or MALA can be used.
 
-- Works under smoothness assumptions of the target distribution $U(x)$ (requires Lipschitz continuous gradients).
+- Works under smoothness assumptions of the target distribution $E(x)$ (requires Lipschitz continuous gradients).
 
 #### 7. Example Code (Python Code)
 
@@ -292,11 +318,11 @@ Langevin Dynamics Sampling introduces stochasticity guided by gradients, enablin
 
 This simulation starts from a uniform distribution and converges to a Gaussian mixture, illustrating the effectiveness of Langevin dynamics in sampling from complex distributions.
 
-## Theoretical Basis of Dynamics-Based Probability Flow Models
+## Alternative Sampling Dynamics
 
 A question is that, why should we sample from $p(x)$ should follow LD ? Is there any other way?
 
-He we introduce various stochastic differential equations (SDEs) designed to generate the steady-state distribution $p(x) \propto e^{-U(x)}$. By learning the appropriate potential $U(x)$, these SDE-based methods can model the target distribution, making them suitable for generative tasks, optimization, and more. Below are common dynamics and SDE models:
+He we introduce various stochastic differential equations (SDEs) designed to generate the steady-state distribution $p(x) \propto e^{-E(x)}$. By learning the appropriate potential $E(x)$, these SDE-based methods can model the target distribution, making them suitable for generative tasks, optimization, and more. Below are common dynamics and SDE models:
 
 ### 1. Underdamped Langevin Dynamics
 
@@ -305,7 +331,7 @@ He we introduce various stochastic differential equations (SDEs) designed to gen
 Introduces momentum $v$, modeling the dynamics of particles in a potential field. The equations are:
 
 $$
- dx = v dt, \quad dv = -\eta v dt - \nabla U(x) dt + \sqrt{2\eta} dW_v,
+ dx = v dt, \quad dv = -\eta v dt - \nabla E(x) dt + \sqrt{2\eta} dW_v,
 $$
 
 where $\eta > 0$ is the friction coefficient.
@@ -314,7 +340,7 @@ where $\eta > 0$ is the friction coefficient.
 
 - Momentum introduces inertia, counteracting the "random walk" effect of overdamped Langevin dynamics.
 
-- Converges to the stationary distribution $p(x) \propto e^{-U(x)}$.
+- Converges to the stationary distribution $p(x) \propto e^{-E(x)}$.
 
 **Applications** :
 
@@ -326,18 +352,137 @@ where $\eta > 0$ is the friction coefficient.
 
 **Definition** :
 
-For a smooth potential $U(x)$, introduces regularization terms. The SDE is:
+For a smooth potential $E(x)$, introduces regularization terms. The SDE is:
 
 $$
- dx = b(x) dt + \sigma(x) dW_x,
+dx = b(x) dt + g(x) dW_x,
 $$
-where $p(x) \propto e^{-U(x)}$.
 
-**Common Settings** :
+where $p(x) \propto e^{-E(x)}$.
 
-- Adjust drift $b(x)$ and diffusion $\sigma(x)$ to incorporate prior knowledge or regularization.
+In the **Regularized X-SDE**  framework, the drift term $b(x)$ and diffusion term $g(x)$ are typically designed based on the energy function $E(x)$ to ensure that the process samples from the desired probability distribution $p(x) \propto e^{-E(x)}$. Their relationships are as follows:
 
-- Extensions include introducing auxiliary variables (e.g., Metropolis-adjusted Langevin Algorithm, MALA).
+#### 2.1. Drift Term $b(x)$
+
+- The drift term $b(x)$ represents the deterministic component that drives the system towards lower-energy regions.
+
+- In standard **Langevin Dynamics** , the drift is given by:
+
+$$
+ b(x) = -\nabla E(x)
+$$
+
+- However, in **Regularized X-SDE** , $b(x)$ can be modified to incorporate additional prior knowledge, regularization, or auxiliary variables to improve sampling efficiency.
+
+#### 2.2. Diffusion Term $g(x)$
+
+- The diffusion term $g(x)$ controls the stochasticity of the process.
+
+- In standard Langevin Dynamics, the noise term follows:
+
+$$
+ g(x) = \sqrt{2} I
+$$
+
+where $I$ is the identity matrix.
+
+- In **Regularized X-SDE** , $g(x)$ can be spatially varying, meaning:
+
+$$
+ g(x) = g(x)
+$$
+
+where $g(x)$ is a function that may depend on the energy landscape $E(x)$, allowing for **adaptive noise scaling** .
+
+### 2.3. Generalized Regularized X-SDE Form
+
+ A common form of the **Regularized X-SDE**  is
+
+$$
+ dx = -\nabla E(x) dt + g(x) dW_x
+$$
+
+where:
+
+- $-\nabla E(x)$ ensures the process moves towards lower-energy regions.
+
+- $g(x)$ can be tuned to balance exploration and exploitation, helping to escape local minima.
+
+### 2.4. **Practical Adjustments**
+
+- **Preconditioned Langevin Dynamics (PLD):**  $b(x)$ is modified as:
+
+$$
+ b(x) = - M(x) \nabla E(x)
+$$
+
+where $M(x)$ is a preconditioning matrix, improving convergence speed.
+
+- **Adaptive Noise Scaling:**  $g(x)$ can be chosen to control the amount of stochasticity, improving mixing properties.
+
+There are few main popular choise of $g(x)$,
+
+#### 2.4.1 Constant Diffusion (Standard Langevin Dynamics)
+
+$$g(x) = \sqrt(2)I$$
+
+#### 2.4.2 Preconditioned Diffusion
+
+$$ g(x) = \sqrt{2P(x)}$$
+
+where $P(x)$ is a preconditioning matrix (positive definite). Some choices of $P(x)$
+
+- Diagonal Preconditioning $P(x) = \text{diag} (\gamma_1, \gamma_2, ...,\gamma_d)$ depends on the local curvature of $E(x)$
+- Inverse Hession Approximation: $P(x) \approx \left( \nabla^2 E(x) + \epsilon I \right)^{-1}$,(helps navigate high-curvature regions).
+
+#### 2.4.3  Energy-Based Diffusion (Gradient Magnitude Scaling)
+
+$$
+ g(x) = \alpha \cdot (1 + \|\nabla E(x)\|^\beta)
+$$
+
+where $\alpha$ and $\beta$ are hyperparameters.
+
+- **Intuition:**  Increases noise in high-energy regions, encouraging exploration.
+
+- **Use Case:**  Helps escape local minima in multi-modal distributions.
+
+#### 2.4.4 Annealed Langevin Dynamics (Temperature-Based Diffusion)
+
+$$
+g(x) = \sqrt{2 T(x)}
+$$
+
+where $T(x)$ is a temperature schedule such as:
+
+$$
+T(x) = \frac{T_0}{1 + \lambda t}
+$$
+
+- **Effect:**  Decreases noise over time, allowing for exploration in early iterations and exploitation in later iterations.
+
+- **Use Case:**  Useful in Bayesian inference and generative modeling.
+
+#### 2.4.5. Score-Based SDE (Diffusion Models)
+
+$$
+g(x) = \sigma(t)
+$$
+
+where $$\sigma(t)$$ follows a decreasing function, such as:
+
+$$
+ \sigma(t) = \sigma_{\max} \left( \frac{t}{T} \right)^{\gamma}
+$$
+
+- **Use Case:**  Used in diffusion models for generative modeling.
+
+**Summary Table**
+
+| Term | Standard Langevin Dynamics | Regularized X-SDE |
+| --- | --- | --- |
+| b(x) | $-\nabla E(x)$ | Can include regularization, preconditioning |
+| $g(x)$ | $\sqrt{2} I$ | Adaptive function $b(x)$, may depend on xxx |
 
 ### 3. Time-Reversal SDE (Reverse Diffusion Process)
 
@@ -363,53 +508,106 @@ where $p(x, t)$ is the time-dependent probability density.
 
 - Denoising diffusion models for approximating $\log p(x)$.
 
+In this method, we need to construct a path that maps from the original data distribution to some easy distribution, and then use the revserse process (as defined in the SDE) to sample from target data distribution.
+
 ### 4. Preconditioned Langevin Dynamics
 
 **Definition** :
 
-Introduces a preconditioning matrix $P(x)$ to accelerate convergence. The SDE is:
+Introduces a preconditioning matrix $P(x)$ to accelerate convergence which is a special case of regularized X-SDE. The SDE is:
 
 $$
- dx = -P(x) \nabla U(x) dt + \sqrt{2P(x)} dW_x,
+ dx = -P(x) \nabla E(x) dt + \sqrt{2P(x)} dW_x,
 $$
 
 where $P(x)$ is symmetric and positive definite.
 
 **Features** :
 
-- Efficient sampling when $P(x)$ adapts to the geometry of $U(x)$.
+- Efficient sampling when $P(x)$ adapts to the geometry of $E(x)$.
 
 - Extends to include Riemannian manifold-based methods.
 
-#### 5. Coupled SDE and Deterministic Flow
+Preconditioned SDE (or Preconditioned Langevin Dynamics) is used to improve **sampling efficiency**  and **convergence speed**  in stochastic optimization and generative modeling. The main idea is to introduce a preconditioning matrix $P(x)$  that adapts the sampling dynamics to the local geometry of the energy function $E(x)$. This helps navigate complex landscapes more effectively, especially when different directions in the space have different scales of variation.
 
-**Definition** :
-
-Combines SDE with ordinary differential equations (ODEs):
+**Where Does the Idea Come From?** The idea comes from **natural gradient methods**  and **Riemannian manifold-based optimization** , where the **metric tensor**  is used to adapt learning rates per dimension. In standard Langevin dynamics:
 
 $$
- dx = -\nabla U(x) dt + \sqrt{2} dW_x.
+dx = -\nabla E(x) dt + \sqrt{2} dW_x
 $$
 
-**Features** :
+- The step size in each direction is **uniform** , which can lead to slow mixing if the energy landscape has anisotropic (different scaling in different directions) curvature.
 
-- Balance between randomness (SDE) and determinism (ODE).
+- In high-dimensional spaces, some directions have strong gradients, while others are almost flat, causing inefficient exploration.
+By introducing $P(x)$ , we scale the gradient and noise adaptively:
 
-- Stationary distribution $p(x) \propto e^{-U(x)}$.
+$$
+dx = -P(x) \nabla E(x) dt + \sqrt{2P(x)} dW_x
+$$
 
-**Applications** :
+where $P(x)$ is a positive definite symmetric matrix that **scales updates differently in each direction** .
 
-- Probabilistic Flow ODE (PF-ODE).
+**Usage and Simple Example**
 
-- Hybrid optimization-sampling methods.
+Let’s consider a simple case where:
 
-#### 6. Variants of Stochastic SDEs
+$$
+ P(x) = \text{diag}(p_1, p_2, ..., p_n)
+$$
 
-1. **Adaptive Step SDE** :
-Adjusts step size to improve stability and convergence.
+This means that we scale each coordinate **independently** .
 
-2. **Augmented SDE** :
-Introduces auxiliary dimensions to simplify sampling.
+**Example: Sampling from an Anisotropic Gaussian**
+
+Consider an energy function for a Gaussian distribution:
+
+$$
+ E(x) = \frac{1}{2} x^T A x
+$$
+
+where $A$ is a diagonal matrix:
+
+$$
+A = \begin{bmatrix} 10 & 0 \\ 0 & 1 \end{bmatrix}
+$$
+
+This means:
+
+- The first dimension has **stronger curvature**  (steeper gradient).
+
+- The second dimension has **weaker curvature**  (flatter gradient).
+
+Using standard Langevin dynamics:
+
+$$
+dx = -A x dt + \sqrt{2} dW_x
+$$
+
+- The first component moves very slowly due to large gradients.
+
+- The second component moves faster, leading to inefficient exploration.
+
+**Applying Preconditioning**
+
+Now, we apply a preconditioner:
+
+$$
+P(x) = A^{-1} = \begin{bmatrix} 0.1 & 0 \\ 0 & 1 \end{bmatrix}
+$$
+
+which leads to:
+
+$$
+dx = - P(x) A x dt + \sqrt{2P(x)} dW_x
+$$
+
+Since $P(x) A = I$, the dynamics become:
+
+$$
+dx = - x dt + \sqrt{2P(x)} dW_x
+$$
+
+which **normalizes the scales in all directions** , making the sampling **more efficient**
 
 ### Summary of SDE Models
 
@@ -461,7 +659,7 @@ Annealed Langevin Dynamics Sampling is a stochastic sampling method that incorpo
 
 - **Annealing** : Introduces a temperature schedule $T(t)$, which controls the degree of randomness (higher temperatures lead to larger noise, encouraging exploration; lower temperatures reduce noise for refined optimization).
 
-- **Stationary Distribution** : Gradually transitions the sampling distribution towards the target distribution $p(x) \propto e^{-U(x)}$ by reducing the temperature.
+- **Stationary Distribution** : Gradually transitions the sampling distribution towards the target distribution $p(x) \propto e^{-E(x)}$ by reducing the temperature.
 
 ### 3. Mathematical Formulation and Derivation
 
@@ -507,10 +705,10 @@ Key parameters:
 In the presence of temperature $T$, the stationary distribution of Langevin Dynamics becomes:
 
 $$
- p_T(x) \propto e^{-U(x)/T}.
+ p_T(x) \propto e^{-E(x)/T}.
 $$
 
-As $T \to 0$, the distribution transitions to $p(x) \propto e^{-U(x)}$ (i.e., the target distribution).
+As $T \to 0$, the distribution transitions to $p(x) \propto e^{-E(x)}$ (i.e., the target distribution).
 
 **Convergence Analysis** :
 
@@ -561,7 +759,7 @@ def annealed_langevin(grad_U, x0, T0, epsilon, n_steps, schedule='exponential', 
         elif schedule == 'polynomial':
             T = T0 / (1 + k)
         noise = np.random.randn(x.shape) * np.sqrt(2 * epsilon * T)
-        x = x - epsilon * grad_U(x) + noise
+        x = x - epsilon * grad_E(x) + noise
         samples.append(x)
     return np.array(samples)
 ```
