@@ -1527,15 +1527,25 @@
 
 
 <h1 id="score-function">Score Function<a class="headerlink" href="#score-function" title="Permanent link">&para;</a></h1>
-<p>In the context of Langevin dynamics and the underlying Fokker-Planck equation, a key component is the gradient of the log-likelihood function <span class="arithmatex">\(\nabla_x \log p(x)\)</span>. This gradient is formally known as the <strong>Stein's score function</strong>, denoted by:</p>
-<div class="arithmatex">\[
+<p>In the context of the energy based model, we have the two types of score function:</p>
+<ol>
+<li>
+<p><strong>Stein's score function</strong></p>
+<div class="arithmatex">\[\tag{1}
 s_\theta(x) \overset{\text{def}}{=} \nabla_x \log p_\theta(x).
 \]</div>
-<p>It's important to distinguish Stein's score function from the <strong>ordinary score function</strong>, defined as:</p>
+</li>
+<li>
+<p><strong>ordinary score function</strong></p>
 <div class="arithmatex">\[
+\tag{2}
 s_x(\theta) \overset{\text{def}}{=} \nabla_\theta \log p_\theta(x).
 \]</div>
-<p>The ordinary score function is the gradient with respect to the parameter <span class="arithmatex">\(\theta\)</span> of the log-likelihood, commonly used in maximum likelihood estimation. In contrast, Stein's score function is the gradient with respect to the data point <span class="arithmatex">\(x\)</span>, utilized in Langevin dynamics. Despite the naming conventions, in diffusion literature, Stein's score function is often simply referred to as the score function, and we will adopt this terminology here.</p>
+</li>
+</ol>
+<p>In the context of Langevin dynamics and the underlying Fokker-Planck equation, a key component is the gradient of the log-likelihood function <span class="arithmatex">\(\nabla_x \log p(x)\)</span>, which is called <strong>ordinary score function</strong> in equation (2).</p>
+<p>On the other hand, the derivative of the log density with respect to the sample variable <span class="arithmatex">\(x\)</span> is called <strong>Stein's score function</strong> in equation (1).</p>
+<p>Despite the naming conventions, in diffusion literature, Stein's score function is often simply referred to as the score function, and we will adopt this terminology here.</p>
 <p>In the context of contrastive divergence (CD), the ordinary score function is used to directly calculate the derivative of <span class="arithmatex">\(p_\theta\)</span> and update the network parameters.</p>
 <p>In score matching methods, Stein's score function is employed, where the loss is defined as the divergence between the gradient of the learned score function and the true gradient of the log-likelihood function.</p>
 <p>Suppose <span class="arithmatex">\(p_\theta\)</span> is a mixture of two Gaussian distributions in one and two dimensions. We can visualize the score function of <span class="arithmatex">\(p_\theta\)</span> in the following figures:</p>

@@ -1622,8 +1622,8 @@
 <div class="arithmatex">\[
 \mathcal{L}(\theta) = \mathbb{E}_{x \sim p(x)} \left[ \| s_\theta(x) - \nabla_x \log p(x) \|^2 \right]
 \]</div>
-<p>但问题在于：<strong>真实分布 $ p(x) $ 未知</strong>，因此无法直接计算真实的梯度。
-<strong>解决方案</strong>：先用 <strong>核密度估计（KDE）</strong> 近似 $ p(x) $，再用 KDE 的结果训练模型。</p>
+<p>但问题在于：<strong>真实分布 <span class="arithmatex">\(p(x)\)</span> 未知</strong>，因此无法直接计算真实的梯度。
+<strong>解决方案</strong>：先用 <strong>核密度估计（KDE）</strong> 近似 <span class="arithmatex">\(p(x)\)</span>，再用 KDE 的结果训练模型。</p>
 <hr />
 <h3 id="step-1kde"><strong>Step 1：用核密度估计（KDE）近似数据分布</strong><a class="headerlink" href="#step-1kde" title="Permanent link">&para;</a></h3>
 <p>KDE 是一种非参数方法，通过数据点周围的“平滑小山丘”（核函数）叠加来估计分布。例如，对于数据点 $ {x_1, x_2, ..., x_N} $，KDE 的公式为：</p>
