@@ -1707,49 +1707,32 @@ Even though each particle moves randomly, the overall probability distribution <
 dx = \left[ f(x, t) - \frac{1}{2} g^2(t) s_t(x) \right] dt
 \]</div>
 <p>where <span class="arithmatex">\(s_t(x) = \nabla_x \log p_t(x)\)</span> is the <strong>score function</strong>  (gradient of the log density).</p>
-<div class="theorem-box">
-Proof: Convert SDE to Probability Flow ODE
-
-Using the continuity equation  from fluid mechanics, the deterministic probability flow should satisfy:
-
-$$
+<p>Proof: Convert SDE to Probability Flow ODE</p>
+<p>Using the continuity equation  from fluid mechanics, the deterministic probability flow should satisfy:</p>
+<div class="arithmatex">\[
 \frac{\partial p_t(x)}{\partial t} = -\nabla \cdot (v(x, t) p_t(x))
-$$
-
-For this to be **equivalent to the Fokker-Planck equation** , we set:
-
-$$
+\]</div>
+<p>For this to be <strong>equivalent to the Fokker-Planck equation</strong> , we set:</p>
+<div class="arithmatex">\[
 -\nabla \cdot (v(x, t) p_t(x)) = -\nabla \cdot (f(x, t) p_t(x)) + \frac{1}{2} g^2(t) \nabla^2 p_t(x)
-$$
-
-Rearranging:
-
-$$
+\]</div>
+<p>Rearranging:</p>
+<div class="arithmatex">\[
 v(x, t) p_t(x) = f(x, t) p_t(x) - \frac{1}{2} g^2(t) \nabla p_t(x)
-$$
-
-Dividing by $p_t(x)$ (assuming $p_t(x) > 0$):
-
-$$
+\]</div>
+<p>Dividing by <span class="arithmatex">\(p_t(x)\)</span> (assuming <span class="arithmatex">\(p_t(x) &gt; 0\)</span>):</p>
+<div class="arithmatex">\[
 v(x, t) = f(x, t) - \frac{1}{2} g^2(t) \frac{\nabla p_t(x)}{p_t(x)}
-$$
-
-Since the **score function**  is:
-
-$$
+\]</div>
+<p>Since the <strong>score function</strong>  is:</p>
+<div class="arithmatex">\[
 s_t(x) = \nabla_x \log p_t(x) = \frac{\nabla_x p_t(x)}{p_t(x)}
-$$
-
-we obtain the **Probability Flow ODE** :
-
-$$
+\]</div>
+<p>we obtain the <strong>Probability Flow ODE</strong> :</p>
+<div class="arithmatex">\[
 dx = \left[ f(x, t) - \frac{1}{2} g^2(t) s_t(x) \right] dt
-$$
-
-Thus, we have converted the original SDE into an equivalent deterministic ODE that preserves the same probability density evolution!
-
-</div>
-
+\]</div>
+<p>Thus, we have converted the original SDE into an equivalent deterministic ODE that preserves the same probability density evolution!</p>
 <h2 id="intuition-why-does-this-work">Intuition: Why Does This Work?<a class="headerlink" href="#intuition-why-does-this-work" title="Permanent link">&para;</a></h2>
 <ul>
 <li>
