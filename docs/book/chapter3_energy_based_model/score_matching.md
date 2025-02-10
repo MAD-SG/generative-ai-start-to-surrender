@@ -184,7 +184,8 @@ $$
 其中 $\text{tr}(\nabla_{\mathbf{x}}^2 \log q)$ 表示Hessian矩阵的迹。
 
 ### 4. 重组Fisher散度
-将 $ T_1, T_2, T_3 $ 代入原式：
+
+将 $T_1, T_2, T_3$ 代入原式：
 
 $$
 D_F = \mathbb{E}_{p} \left[ \| \nabla \log p \|^2 \right] + \mathbb{E}_{p} \left[ \| \nabla \log q \|^2 + 2 \, \text{tr}(\nabla^2 \log q) \right].
@@ -206,7 +207,7 @@ $$
 ### 6. 隐式性分析
 
 - **显式匹配项**：$\frac{1}{2} \| \nabla \log q \|^2$ 直接约束分数模长。
-- **隐式正则项**：$\text{tr}(\nabla^2 \log q)$ 通过二阶导数隐式约束分数方向，避免依赖 $ \nabla \log p $。
+- **隐式正则项**：$\text{tr}(\nabla^2 \log q)$ 通过二阶导数隐式约束分数方向，避免依赖 $\nabla \log p$。
 
 ---
 
@@ -282,7 +283,8 @@ J_{\text{ISM}}(\theta) = \mathbb{E}_{p(x)} \left[ \operatorname{Tr}(\nabla_x \ma
 $$
 
 其中 $\mathbf{s}_\theta(x)$ 是模型预测的 score function。
-**关键等式**：当 $\mathbf{s}_\theta(x) = \nabla_x \log p(x)$ 时，ISM 损失达到最小值，此时 $\mathcal{D}_{\text{Fisher}} = 0$。
+
+**关键等式**：当 $\mathbf{s}_\theta(x) = \nabla_x \log p_\theta(x)$ 时，ISM 损失达到最小值，此时 $\mathcal{D}_{\text{Fisher}} = 0$。
 
 **3. Sliced Score Matching 的动机**
 ISM 的瓶颈在于计算 Jacobian 矩阵的迹 $\operatorname{Tr}(\nabla_x \mathbf{s}_\theta(x))$，其复杂度为 $O(d^2)$（$d$ 为数据维度）。
@@ -290,7 +292,7 @@ ISM 的瓶颈在于计算 Jacobian 矩阵的迹 $\operatorname{Tr}(\nabla_x \mat
 
 **4. 随机投影近似迹**
 
-根据 Hutchinson 迹估计器，任意矩阵 $ A \in \mathbb{R}^{d \times d} $ 的迹可表示为：
+根据 Hutchinson 迹估计器，任意矩阵 $A \in \mathbb{R}^{d \times d}$ 的迹可表示为：
 
 $$
 \operatorname{Tr}(A) = \mathbb{E}_{\mathbf{v} \sim \mathcal{N}(0, I)} \left[ \mathbf{v}^\top A \mathbf{v} \right],
@@ -337,7 +339,7 @@ $$
 \mathcal{D}_{\text{Fisher}} \xrightarrow{\text{Stein 恒等式}} J_{\text{ISM}} \xrightarrow{\text{随机投影近似}} J_{\text{SSM}}.
 $$
 
-- **SSM 的优势**：将计算复杂度从 $ O(d^2) $ 降低至 $ O(Kd) $，适用于高维数据（如图像、文本）。
+- **SSM 的优势**：将计算复杂度从 $O(d^2)$ 降低至 $O(Kd)$，适用于高维数据（如图像、文本）。
 - **适用场景**：生成模型（如扩散模型）、无需显式概率密度的梯度估计。
 
 - **基础公式**
@@ -360,30 +362,218 @@ $$
 \operatorname{Tr}(\nabla_{\mathbf{x}}\mathbf{s}_\theta(\mathbf{x})) = \mathbb{E}_{\mathbf{v}} \left[ \mathbf{v}^\top \nabla_{\mathbf{x}} \mathbf{s}_\theta(\mathbf{x}) \mathbf{v} \right].
 $$
 
-这一技巧将复杂度从 $O(d^2)$（直接计算Jacobian）降低到 $O(d)$（仅需计算向量-矩阵-向量乘积）。
+#### Complexity Analysis
 
-#### **优势与意义**
+Consider the case
 
-1. **计算高效性**
-   - 避免显式计算高维Jacobian矩阵，尤其适合深度神经网络等参数化模型。
-   - 通过蒙特卡洛采样少量投影方向 $\mathbf{v}$，即可近似真实迹值。
+$$
+\operatorname{Tr}(\nabla_{x} \nabla_x \log p_\theta (x) )) = \mathbb{E}_{\mathbf{v}} \left[ \mathbf{v}^\top \nabla_{x} \nabla_x \log p_\theta(x) \mathbf{v} \right].
+$$
 
-2. **理论保证**
-   - 在投影方向足够多时，损失函数与Implicit Score Matching等价。
-   - 保留了梯度匹配的一致性，即最小化损失等价于匹配真实score function。
+##### Gradient Computation
 
-3. **适用场景**
-   - 高维数据（如图像、文本）。
-   - 生成模型（如扩散模型）、密度估计任务。
+  For a scalar function $f: \mathbb{R}^n \to \mathbb{R}$, **reverse-mode AD** (backpropagation) computes all partial derivatives $\frac{\partial f}{\partial x_1}, \ldots, \frac{\partial f}{\partial x_n}$ in a single backward pass. Its cost is on the same order as one or two forward evaluations of $f$. We denote this by $\mathbf{C}_\nabla$. Thus:
 
-#### **示例说明**
-假设数据维度 $d=1000$，直接计算Jacobian矩阵的迹需要 $10^6$ 次操作，而Sliced Score Matching仅需：
+$$
+\text{Cost of computing } \nabla f(x) \;\approx\; O(\mathbf{C}_\nabla).
+$$
 
-1. 采样随机向量 $\mathbf{v} \in \mathbb{R}^{1000}$。
-2. 计算 $\mathbf{v}^\top \nabla_{\mathbf{x}} \mathbf{s}_\theta(\mathbf{x}) \mathbf{v}$，仅需 $O(1000)$ 次操作。
-3. 对多个 $\mathbf{v}$ 取平均，近似迹值。
+**Key note**: Requesting a single partial $\frac{\partial f}{\partial x[i]}$ doesn’t save much computation in practice; the backward pass still traverses the entire graph.
 
-#### **对比其他方法**
+##### Hessian Trace Computation
+
+The Hessian $\nabla^2 f(x)$ is an $n \times n$ matrix. Its trace is
+
+$$
+\mathrm{trace}(\nabla^2 f(x)) \;=\; \sum_{i=1}^n \frac{\partial^2 f}{\partial x_i^2}.
+$$
+
+A standard AD procedure to get each diagonal entry $\frac{\partial^2 f}{\partial x_i^2}$ involves one **forward-mode** pass (perturbing only $x_i$) plus one **reverse-mode** pass. Doing this for all $n$ coordinates requires roughly $n$ times the gradient cost:
+
+$$
+\text{Cost of computing } \mathrm{trace}(\nabla^2 f) \;\approx\; O\bigl(n \times \mathbf{C}_\nabla\bigr).
+$$
+
+##### Hessian Vector Product Computation
+
+To calculate the $v^TH\cdot v$, we have
+
+1. Calculate $\nabla f(x)$ from the backward and keep the graph
+2. Calculate the product $\nabla f(x) v$, which is a scalar, and then do another backward to get its derivative $\nabla \bigl[\nabla f(x)\cdot v\bigr]$
+3. Calcualte $v^T \nabla \bigl[\nabla f(x)\cdot v\bigr]$ which can be ignored compared with the computation with the first two steps
+
+Hence, totally, the computation of $v^TH\cdot v$ is around $2\times \mathbf{C}_\nabla$.
+
+Below is a **coordinate‐level proof** that
+
+$$
+\nabla \bigl[\nabla f(x)\cdot v\bigr]
+\;=\;
+\nabla^2 f(x)\,v,
+$$
+
+which justifies the standard PyTorch implementation for the Hessian–vector product:
+
+---
+
+## Statement
+
+Let $f:\mathbb{R}^n \to \mathbb{R}$ be twice continuously differentiable, and let $v \in \mathbb{R}^n$. Define the scalar function
+
+$$
+g(x)\;=\;\nabla f(x)\,\cdot\,v \;=\; \sum_{i=1}^n \frac{\partial f}{\partial x_i}(x)\,v_i.
+$$
+
+Then
+
+$$
+\nabla g(x)
+\;=\;
+\nabla^2 f(x)\,v.
+$$
+
+In other words, if $H = \nabla^2 f(x)$ is the Hessian of $f$ at $x$, then
+
+$$
+\frac{\partial}{\partial x_j} \bigl[\nabla f(x)\cdot v\bigr]
+\;=\;
+\bigl(H\,v\bigr)_j
+\quad
+\text{for each }j=1,\dots,n.
+$$
+
+---
+
+## Coordinate‐Level Proof
+
+1. **Expand the definition of $g(x)$**:
+
+$$
+g(x)\;=\;  \nabla f(x)\,\cdot\,v  \;=\;  \sum_{i=1}^n  \frac{\partial f}{\partial x_i}(x)\,v_i.
+$$
+
+2. **Compute the partial derivative w.r.t.\ $x_j$**:
+
+$$
+\frac{\partial g}{\partial x_j}(x)
+\;=\;
+\frac{\partial}{\partial x_j}
+\Bigl[\,
+  \sum_{i=1}^n
+  \frac{\partial f}{\partial x_i}(x)\,v_i
+\Bigr].
+$$
+
+3. **Bring the partial derivative inside the sum** (assuming sufficient smoothness of $f$):
+
+$$
+\frac{\partial g}{\partial x_j}(x)\;=\;\sum_{i=1}^n v_i\,\frac{\partial}{\partial x_j} \Bigl(\frac{\partial f}{\partial x_i}(x)\Bigr).
+$$
+
+4. **Recognize the second partial derivative**:
+
+$$
+\frac{\partial}{\partial x_j}\Bigl(\frac{\partial f}{\partial x_i}(x)\Bigr)\;=\;   \frac{\partial^2 f}{\partial x_j \,\partial x_i}(x).
+$$
+
+   If $f$ is $C^2$ and the Hessian is symmetric, $\partial^2 f/\partial x_j \partial x_i = \partial^2 f/\partial x_i \partial x_j$. Then
+
+$$
+\frac{\partial g}{\partial x_j}(x) \;=\;\sum_{i=1}^nv_i\,\frac{\partial^2 f}{\partial x_i \,\partial x_j}(x).
+$$
+
+5. **Interpret as the $j$-th component of $H\,v$**:
+   - The matrix $H = \bigl[\frac{\partial^2 f}{\partial x_i \,\partial x_j}(x)\bigr]$ is $n\times n$.
+   - The product $(H\,v)_j$ is
+
+    $$
+    (H\,v)_j
+    \;=\;
+    \sum_{i=1}^n
+    \frac{\partial^2 f}{\partial x_j\,\partial x_i}(x)\;v_i,
+    $$
+
+     which, by symmetry of second derivatives, equals
+     $\sum_{i=1}^n v_i \,\frac{\partial^2 f}{\partial x_i\,\partial x_j}(x)$.
+
+Therefore,
+
+$$
+\frac{\partial g}{\partial x_j}(x)
+\;=\;
+(H\,v)_j,
+\quad
+\forall\,j.
+$$
+
+Hence, $\nabla g(x) = H\,v = \nabla^2 f(x)\,v$.
+
+### 4. Summary
+
+- **Full Gradient**: One reverse-mode pass yields $\nabla f(x)$ at cost $\mathbf{C}_\nabla$.
+- **Hessian Trace**: Exact computation requires about $n+1$ times that cost.
+- **Hessin vector product**: Requires about $2$ times of the cost of gradient.
+- **Single Partial vs. Full Gradient**: In reverse-mode AD for scalar outputs, both cost nearly the same. that is `grad(f,x)` has almost the same complexity of `grad(f,x[i])`.
+
+See the code here
+
+```python
+def gradient(f, x):
+    """
+    Compute the gradient of the scalar function f w.r.t. x.
+
+    f: a scalar PyTorch tensor (the output of some function of x)
+    x: a PyTorch tensor of shape (n,) with requires_grad=True
+    """
+    # create_graph=True allows further differentiation
+    grad_f = torch.autograd.grad(f, x, create_graph=True)[0]
+    return grad_f
+
+def hessian_trace(f, x):
+    """
+    Compute the trace of the Hessian of the scalar function f w.r.t. x.
+    i.e., sum(d^2 f / d x_i^2).
+
+    f: scalar value (output of some function of x)
+    x: torch.tensor shape (n,), requires_grad=True
+    """
+    # First get the gradient. We need create_graph=True so we can differentiate again.
+    grad_f = torch.autograd.grad(f, x, create_graph=True)[0]
+
+    # Sum of second derivatives w.r.t each x[i]
+    # We'll accumulate each d(grad_f[i]) / d x[i].
+    trace_val = 0.0
+    for i in range(x.numel()):
+        # grad of grad_f[i] w.r.t x gives a vector; we take [i] component
+        second_deriv_i = torch.autograd.grad(grad_f[i], x, retain_graph=True)[0][i]
+        trace_val += second_deriv_i
+
+    return trace_val
+
+def hvp(f, x, v):
+    """
+    Compute Hessian-vector product H * v, where H = ∇^2 f(x).
+    f: 标量，网络/函数对 x 的输出
+    x: 参数或输入向量 (requires_grad=True)
+    v: 一个和 x 形状相同的向量，用作方向
+    """
+    # 第一步：求一阶梯度，保留计算图
+    grad_f = torch.autograd.grad(f, x, create_graph=True)[0]
+    # grad_f 是和 x 同 shape 的张量
+
+    # 第二步：对 (grad_f 和 v 的内积) 再求一次梯度
+    # 这相当于对 g(x)^T * v 做一次 backprop，得出 H*v
+    hv = torch.autograd.grad(grad_f @ v, x)[0]
+    return hv
+```
+
+**References**
+
+- A. Griewank & A. Walther, *Evaluating Derivatives.*
+- B. A. Pearlmutter, *Fast Exact Multiplication by the Hessian,* 1994.
+- Hutchinson, *A Stochastic Estimator of the Trace,* 1990.
+
+### **对比其他方法**
 
 | **方法**                | **计算复杂度** | **主要挑战**                     |
 |-------------------------|----------------|----------------------------------|
@@ -458,7 +648,8 @@ Instead of learning $\nabla_x \log p(x)$ directly (hard!), learn to *denoise* pe
 
 ### 2. Derivation: Connecting Noise to the Score
 #### Step 1: Define the Noisy Distribution
-Corrupt a data point $ x $ with Gaussian noise:
+
+Corrupt a data point $x$ with Gaussian noise:
 
 $$ \tilde{x} = x + \epsilon, \quad \epsilon \sim \mathcal{N}(0, \sigma^2 I) $$
 
@@ -497,15 +688,14 @@ $$
 #### 2. Moderate Noise $\sigma > 0$
 
 - **Behavior of $q(\tilde{\mathbf{x}} \mid \mathbf{x})$:**
-  The Gaussian acts as a smoothing kernel with width proportional to $ \sigma $.
+  The Gaussian acts as a smoothing kernel with width proportional to $\sigma$.
 
-- **Effect on $q(\tilde{\mathbf{x}}) $:**
-
+- **Effect on $q(\tilde{\mathbf{x}})$:**
   The convolution introduces controlled blurring, creating a smoothed version of $p_{\text{data}}(\mathbf{x})$. Fine details are averaged, but the global structure remains recognizable.
 
 - **Interpretation:** Useful for regularization or generating "softened" data samples.
 
-#### 3. Large Noise $\sigma \to \infty $**
+#### 3. Large Noise $\sigma \to \infty$
 
 - **Behavior of $q_\sigma(\tilde{\mathbf{x}} \mid \mathbf{x})$:**
   The Gaussian becomes extremely wide and flat, approximating a uniform distribution over the domain.
@@ -517,26 +707,29 @@ $$
 - **Interpretation:** Severe distortion; the original distribution is lost.
 
 #### Step 2: Score of the Noisy Distribution
+
 The score of $q(\tilde{x}|x)$ is:
 
 $$\nabla_{\tilde{x}} \log q(\tilde{x}|x) = \frac{x - \tilde{x}}{\sigma^2}$$
 
 **Why?**
-For a Gaussian $ \mathcal{N}(x, \sigma^2 I) $, the gradient of the log-density with respect to $ \tilde{x} $ points toward the mean $ x $. The term $ (x - \tilde{x})/\sigma^2 $ is the "denoising direction" that corrects $ \tilde{x} $ back to $ x $.
+
+For a Gaussian $\mathcal{N}(x, \sigma^2 I)$, the gradient of the log-density with respect to $\tilde{x}$ points toward the mean $x$. The term $(x - \tilde{x})/\sigma^2$ is the "denoising direction" that corrects $\tilde{x}$ back to $x$.
 
 #### Step 3: The DSM Objective
-Train a model $ s_\theta(\tilde{x}) $ to match this score:
+
+Train a model $s_\theta(\tilde{x})$ to match this score:
 
 $$ J(\theta) = \mathbb{E}_{q(\tilde{x},x)}\left[ \| s_\theta(\tilde{x}) - \frac{x - \tilde{x}}{\sigma^2} \|^2 \right] $$
 
 **Why This Works**:
 
-Minimizing this loss forces $s_\theta(\tilde{x})$ to approximate $\nabla_{\tilde{x}} \log q(\tilde{x})$, the score of the *marginal* noisy distribution $ q(\tilde{x}) = \int q(\tilde{x}|x)p_{\text{data}}(x)dx$,  which has been proved in the above section.
+Minimizing this loss forces $s_\theta(\tilde{x})$ to approximate $\nabla_{\tilde{x}} \log q(\tilde{x})$, the score of the *marginal* noisy distribution $q(\tilde{x}) = \int q(\tilde{x}|x)p_{\text{data}}(x)dx$,  which has been proved in the above section.
 As illustrated above, this is equivalent to learning the score of the *true* data distribution $p_{\text{data}}(x)$ as $\sigma \to 0$.
 
 ### 3. Training Process: Step-by-Step
 #### Step 1: Add Noise to Data
-For each clean data point $ x $, generate a noisy version:
+For each clean data point $x$, generate a noisy version:
 
 $$ \tilde{x} = x + \epsilon, \quad \epsilon \sim \mathcal{N}(0, \sigma^2 I) $$
 
@@ -597,12 +790,12 @@ Once trained, we use **Langevin dynamics** to generate samples by "walking" alon
 
 #### The Update Rule
 
-$$ x_{t+1} = x_t + \epsilon \cdot s_\theta(x_t) + \sqrt{2\epsilon} \cdot z_t, \quad z_t \sim \mathcal{N}(0, I) $$
+$$ x_{t+1} = x_t + \epsilon \cdot s_\theta(x_t) + \sqrt{2\epsilon} \cdot z_t, \quad z_t \sim \mathcal{N}(0, I)$$
 
 **Breaking It Down**:
 
-1. **Score term $\epsilon \cdot s_\theta(x_t)$**: Guides $ x_t $ toward high-density regions (denoising).
-2. **Noise term $\sqrt{2\epsilon} \cdot z_t**: Adds randomness to escape local minima and explore the distribution.
+1. **Score term $\epsilon \cdot s_\theta(x_t)$**: Guides $x_t$ toward high-density regions (denoising).
+2. **Noise term $\sqrt{2\epsilon} \cdot z_t$**: Adds randomness to escape local minima and explore the distribution.
 
 **Why This Works**:
 Langevin dynamics is a Markov Chain Monte Carlo (MCMC) method that uses the score to perform gradient ascent on $\log p(x)$. The noise ensures ergodicity, allowing the chain to converge to the true distribution.
@@ -641,12 +834,12 @@ Real-world data (e.g., images) has structure at multiple resolutions:
 - **Low noise (small $\sigma$)**: Captures fine details (e.g., textures).
 - **High noise (large $\sigma$)**: Captures coarse structure (e.g., shapes).
 
-Training with a single $ \sigma $ limits the model’s ability to generalize across scales.
+Training with a single $\sigma$ limits the model’s ability to generalize across scales.
 
 #### Training Process
 
-1. **Noise Sampling**: For each batch, randomly pick $ \sigma_i $ from a set $\{\sigma_1, ..., \sigma_L\}$.
-2. **Loss Adjustment**: Scale the loss by $ \sigma_i^2 $ to prevent larger $ \sigma $ from dominating:
+1. **Noise Sampling**: For each batch, randomly pick $\sigma_i$ from a set $\{\sigma_1, ..., \sigma_L\}$.
+2. **Loss Adjustment**: Scale the loss by $\sigma_i^2$ to prevent larger $\sigma$ from dominating:
 
 $$ \mathcal{L} = \frac{1}{L} \sum_{i=1}^L \mathbb{E}\left[ \sigma_i^2 \| s_\theta(\tilde{x}, \sigma_i) - \frac{x - \tilde{x}}{\sigma_i^2} \|^2 \right] $$
 
@@ -664,7 +857,7 @@ Like sketching a painting—first outline shapes (high noise), then add details 
 
 #### Why Go Continuous?
 
-Discrete noise scales are rigid and computationally costly for large $ L $. A continuous approach:
+Discrete noise scales are rigid and computationally costly for large $L$. A continuous approach:
 
 - Smoothly interpolates between noise levels.
 - Connects to differential equations for efficient sampling.
@@ -673,7 +866,7 @@ Discrete noise scales are rigid and computationally costly for large $ L $. A co
 
 1. **Noise Sampling**: Sample $t \sim \mathcal{U}(0,1)$, compute $\sigma(t)$ (e.g., $\sigma(t) = \sigma_{\text{min}} + t(\sigma_{\text{max}} - \sigma_{\text{min}})$).
 
-2. **Condition the Model**: Feed $ t $ to $s_\theta$ via time embeddings (e.g., sinusoidal features).
+2. **Condition the Model**: Feed $t$ to $s_\theta$ via time embeddings (e.g., sinusoidal features).
 
 #### Sampling with Stochastic Differential Equations (SDEs)
 
