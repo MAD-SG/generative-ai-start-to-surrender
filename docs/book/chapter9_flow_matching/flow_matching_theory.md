@@ -38,7 +38,7 @@ where $\delta_{x_1}$ is the delta measure centered at $x_1$.
 
 If we consider the independent data coupling, then
 
-$$\pi_{0|1}(x_0|x_1) = \pi_{0,1}{x_0,x_1}/q(x_1)$$
+$$\pi_{0|1}(x_0|x_1) = \pi_{0,1}(x_0,x_1)/q(x_1)$$
 
 The constrains becomes $p_{0|1}(x|x_1) = p(x)$.
 
@@ -47,3 +47,13 @@ The second condition could also be written as
 $$\int p_{t|1}(x|y) f(y) d y \rightarrow f(x)$$
 
 as $t\rightarrow 1$ for any continuous function $f$ since $\delta$ has no density function.
+
+### Conditional Velocity Field
+
+Let $u_t(\cdot|x_1)$ generates $p_{t|1}(\cdot | x_1)$
+
+Thus we have
+
+$$u_t(x) = \int u_t(x|x_1) p_{x_1|x} d x_1$$
+
+This can be viewed as a weighted average of the conditional velocities.

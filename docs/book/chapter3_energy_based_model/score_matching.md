@@ -212,6 +212,7 @@ $$
 ---
 
 #### 7. 最终形式
+
 隐式分数匹配的目标函数为：
 
 $$
@@ -229,7 +230,7 @@ J_{\text{ISM}}(\theta) \approx \frac{1}{M} \sum_{m=1}^{M} \sum_{i} \left( \parti
 $$
 
 where $\partial_i \mathbf{s}_{\theta}(\mathbf{x}^{(m)}) = \frac{\partial}{\partial x_i} [\mathbf{s}_{\theta}(\mathbf{x})]_i = \frac{\partial^2}{\partial x_i^2} \log p(\mathbf{x})$. If the model for the score function is realized by a deep neural network, the trace operator can be difficult to compute, hence making the implicit score matching not scalable [40].
-
+    
 **Refenrence**
 
 - Aapo Hyv¨arinen. Estimation of non-normalized statistical models by score matching. Journal
@@ -318,8 +319,6 @@ $$
 $$
 J_{\text{SSM}}(\theta) \approx \frac{1}{N} \sum_{i=1}^N \left[ \frac{1}{K} \sum_{k=1}^K \mathbf{v}_k^\top \nabla_x \mathbf{s}_\theta(x_i) \mathbf{v}_k + \frac{1}{2} \| \mathbf{s}_\theta(x_i) \|^2 \right].
 $$
-
----
 
 **6. 等价性证明**
 
