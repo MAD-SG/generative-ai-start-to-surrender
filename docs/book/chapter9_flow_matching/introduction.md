@@ -103,6 +103,11 @@ Although we haven't known how to build a path from $p$ to $q$, just assume we ha
 
 Let's say $v_\theta(x,t)$ is the estimated velocity field from the network with parameters $\theta$. Then how to find the loss function?
 
+!!! def "Generative Flow model"
+    A generative flow model is to find a flow $\psi(x,t)$ such that
+
+    $$X_1 = \psi(X_0,t=1)\sim q$$
+
 There are two main ways to find the loss function:
 
 1. Maximal log likelihood (MLL)
@@ -124,32 +129,29 @@ $$
 
 Which requires us to know the exact velocity field $v^*(x,t)$ at any time $t$ and position $x$.
 
-<div class="definition">
-<strong>Definition: Flow Matching </strong>
+!!! def "Flow Matching"
 
-Let $\{p_t(x)\}_{t\in[0,T]}$ be a family of distributions interpolating between a base distribution $p_0(x)$ and a target distribution $p_T(x)$. Suppose there exists an ideal, time-dependent velocity field $v(x,t)$ that satisfies the continuity equation
+    Let $\{p_t(x)\}_{t\in[0,T]}$ be a family of distributions interpolating between a base distribution $p_0(x)$ and a target distribution $p_T(x)$. Suppose there exists an ideal, time-dependent velocity field $v(x,t)$ that satisfies the continuity equation
 
-$$
-\frac{\partial p_t(x)}{\partial t} + \nabla \cdot \Bigl(p_t(x) \, v(x,t)\Bigr) = 0.
-$$
+    $$
+    \frac{\partial p_t(x)}{\partial t} + \nabla \cdot \Bigl(p_t(x) \, v(x,t)\Bigr) = 0.
+    $$
 
-**Flow Matching** trains a neural network $v_\theta(x,t)$ to approximate $v(x,t)$ by minimizing the distance:
+    **Flow Matching** trains a neural network $v_\theta(x,t)$ to approximate $v(x,t)$ by minimizing the distance:
 
-$$
- \mathcal{L}(\theta) = \mathbb{E}_{t\sim \mathcal{U}(0,T),\, x\sim p_t(x)} D(v_\theta(x,t), v(x,t))
-$$
+    $$
+    \mathcal{L}(\theta) = \mathbb{E}_{t\sim \mathcal{U}(0,T),\, x\sim p_t(x)} D(v_\theta(x,t), v(x,t))
+    $$
 
-where $D$ is the metric (distance function) of the distance between $v_\theta(x,t)$ and $v(x,t)$ and is usually chosen as the mean squared error (MSE).
+    where $D$ is the metric (distance function) of the distance between $v_\theta(x,t)$ and $v(x,t)$ and is usually chosen as the mean squared error (MSE).
 
-Once trained, the learned velocity field defines a deterministic flow via the ODE
+    Once trained, the learned velocity field defines a deterministic flow via the ODE
 
-$$
- \frac{dx(t)}{dt} = v_\theta(x(t),t), \quad x(0) \sim p_0(x),
-$$
+    $$
+    \frac{dx(t)}{dt} = v_\theta(x(t),t), \quad x(0) \sim p_0(x),
+    $$
 
-which, upon integration from $t=0$ to $t=T$, transports samples from the base distribution $p_0(x)$ to approximate the target distribution $p_T(x)$.
-
-</div>
+    which, upon integration from $t=0$ to $t=T$, transports samples from the base distribution $p_0(x)$ to approximate the target distribution $p_T(x)$.
 
 Now we have defined what is the flow matching method. One thing that is not solved yet is
 
@@ -188,10 +190,10 @@ $$
 
 It is too hard for us to find the ground truth of the velocity field $v(x,t)$. We introduce the **conditional velocity field** $v(x|x_1,t)$ by condition $X_1 = x_1$.
 
-And we have the loss **conditional flow matching loss**
+And we have the  **conditional flow matching loss**
 
 $$
-L_{CFM}(\theta) = \mathbb{E}_{t\sim \mathcal{U}(0,T),\, x_0\sim X_0,x_1\sim X_1} ||v_\theta(x,t) - (x_1-x_0)||
+L_{\text{CMF}}(\theta) = \mathbb{E}_{t, X_0, X_1} ||v_\theta(x,t) - (x_1-x_0)||
 $$
 
 That is the target of the conditional flow matching. One may be confused why this conditional flow matching is equivalent to the original flow matching, we will give further explanation in the next sections.

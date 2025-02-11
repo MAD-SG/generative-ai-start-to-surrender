@@ -36,7 +36,8 @@ nav:
           - Probability Flow ODE: "book/chapter7_diffusion/probability_flow_ode.md"
   - Flow Matching:
       - Introduction: "book/chapter9_flow_matching/introduction.md"
-      - Velocity Fields: "book/chapter9_flow_matching/probability_with_velocity_field.md"
+      - Probability Path and Velocity Fields: "book/chapter9_flow_matching/probability_with_velocity_field.md"
+      - Flow Matching Theorem: "book/chapter9_flow_matching/flow_matching_theory.md"
   - Hybrid SOTA Models:
       - Hybrid Methods: "book/chapter11_hybrid_sota_models/hybrid_methods.md"
       - Closed Models: "book/chapter11_hybrid_sota_models/sota_closed_models.md"
@@ -48,31 +49,85 @@ theme:
   features:
     - navigation.tabs
     - toc.integrate  # 集成页内目录
+    - content.code.copy
+    - content.code.select
+    - content.code.annotate
+    - content.tabs.link
+    - content.footnote.tooltips
+    - content.tooltips
+    - navigation.tracking # 导航栏跟踪
+    - search.highlight # 搜索高亮
+    - search.share # 搜索分享
+    - search.suggest # 搜索建议
+    - toc.follow # 目录跟踪-页面右侧的小目录
+    - announce.dismiss
+    - content.action.edit
+    - content.action.view
+    - content.code.annotate
+    # - content.code.select
+    # - content.footnote.tooltips
+    # - content.tabs.link
+    # - header.autohide
+    # - navigation.expand
+    - navigation.footer
+    - navigation.indexes
+    # - navigation.instant
+    # - navigation.instant.prefetch
+    # - navigation.instant.progress
+    # - navigation.prune
+    - navigation.sections
+    - navigation.tabs
+    # - navigation.tabs.sticky
+    - navigation.top
+    - search.share
+    - search.suggest
+  palette:
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/link
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      accent: indigo
+      toggle:
+        icon: material/toggle-switch-off
+        name: Switch to system preference
 extra_css:
-  - assets/custom.css
-# extra:
-#   navigation:
-#     collapse: true  # 左侧导航可折叠
-#   toc:
-#     placement: right  # 将目录放在右侧
+  - stylesheets/extra.css
+  - https://unpkg.com/katex@0/dist/katex.min.css
 extra:
+  status:
+    new: Recently added
+    deprecated: Deprecated
+  analytics:
+    provider: google
+    property: !ENV GOOGLE_ANALYTICS_KEY
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/tsiendragon/learning
-  generator: false
-# theme:
-#   name: gitbook
-# extra_css:
-#   - styles/custom.css
+      link: https://mad-sg.github.io/generative-ai-start-to-surrender/
+    - icon: fontawesome/brands/docker
+      link: https://hub.docker.com/r/squidfunk/mkdocs-material/
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/mkdocs-material/
+    - icon: fontawesome/brands/bluesky
+      link: https://bsky.app/profile/squidfunk.bsky.social
+    - icon: fontawesome/brands/mastodon
+      link: https://fosstodon.org/@squidfunk
+    - icon: fontawesome/brands/x-twitter
+      link: https://x.com/squidfunk
+
 plugins:
   - search
-
-# markdown_extensions:
-#   - pymdownx.arithmatex:
-#       generic: true
-#   - toc:
-#       permalink: true   # 在标题旁添加可点击的链接
-#       toc_depth: 2      # 设置目录深度，例如只显示 h2 和 h3
+  - glightbox
+  - blog # 博客功能插件
 
 
 markdown_extensions:
@@ -81,21 +136,34 @@ markdown_extensions:
   - toc:
       permalink: true   # 在标题旁添加可点击的链接
       toc_depth: 2      # 设置目录深度，例如只显示 h2 和 h3
+  - abbr
   - meta
   - def_list
   - attr_list
   - md_in_html
+  - fenced_code  # 代码块高亮
   - tables
+  - footnotes
   - pymdownx.highlight:
       anchor_linenums: true
+      linenums: true  # 启用行号
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
+  - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.tilde
+  - pymdownx.blocks.caption
   - pymdownx.emoji:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - admonition
+#   - pymdownx.admonition
   - pymdownx.details
+  - pymdownx.tasklist:
+      custom_checkbox: true
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid
@@ -104,9 +172,23 @@ markdown_extensions:
   - pymdownx.keys
   - pymdownx.tabbed:
       alternate_style: true
+  - pymdownx.snippets
+  - pymdownx.emoji
+  - pymdownx.superfences
+  - pymdownx.snippets:
+      auto_append:
+        - docs/includes/abbreviations.md
+        - docs/includes/definitions.md
+        - docs/includes/formulas.md
+
+# extra_javascript:
+#   - https://unpkg.com/katex@0/dist/katex.min.js
+#   - https://unpkg.com/katex@0/dist/contrib/auto-render.min.js
+#   - javascripts/katex-init.js  # Custom script to initialize KaTeX
 
 extra_javascript:
   - javascripts/mathjax.js
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
   - https://polyfill.io/v3/polyfill.min.js?features=es6
-  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
-  - assets/custom.js
+watch:
+  - docs/includes
