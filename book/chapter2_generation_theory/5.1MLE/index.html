@@ -368,7 +368,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../chapter7_diffusion/Introduction_diffusion/" class="md-tabs__link">
+        <a href="../../chapter7_diffusion/ddpm/" class="md-tabs__link">
           
   
     
@@ -510,7 +510,9 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
         
           
           <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
@@ -747,72 +749,120 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
+  <a href="#1" class="md-nav__link">
     <span class="md-ellipsis">
-      生成模型可以根据其目标和方法分类
+      1. 生成模型可以根据其目标和方法分类
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#1-mlp" class="md-nav__link">
+  <a href="#2-1-mlp" class="md-nav__link">
     <span class="md-ellipsis">
-      定理1. MLP 是最小化分布差异的特定形式
+      2. 定理1. MLP 是最小化分布差异的特定形式
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#2gan" class="md-nav__link">
+  <a href="#3-2gan" class="md-nav__link">
     <span class="md-ellipsis">
-      定理2：gan的优化目标等价最小化分布距离
+      3. 定理2：gan的优化目标等价最小化分布距离
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. 定理2：gan的优化目标等价最小化分布距离">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.1 广泛含义上的分布之间的衡量设计
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-3-vae" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. 定理3: VAE 是对最大似然的优化
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-vae" class="md-nav__link">
+  <a href="#5-normalize-flow-nf" class="md-nav__link">
     <span class="md-ellipsis">
-      定理3: VAE 是对最大似然的优化
+      5. normalize flow （NF）
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. normalize flow （NF）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.1 最大似然估计
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-loss" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.2 Loss 的公式直观拆解
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.3 用日常比喻直观理解
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-diffusion-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Diffusion Model
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#normalize-flow-nf" class="md-nav__link">
+  <a href="#7" class="md-nav__link">
     <span class="md-ellipsis">
-      normalize flow （NF）
+      7. 自回归模型
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#diffusion-model" class="md-nav__link">
+  <a href="#8-refenrence" class="md-nav__link">
     <span class="md-ellipsis">
-      Diffusion Model
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_6" class="md-nav__link">
-    <span class="md-ellipsis">
-      自回归模型
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#refenrence" class="md-nav__link">
-    <span class="md-ellipsis">
-      Refenrence
+      8. Refenrence
     </span>
   </a>
   
@@ -886,7 +936,9 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
         
           
           <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
@@ -1030,6 +1082,8 @@
       
         
       
+        
+      
     
     
       
@@ -1042,7 +1096,9 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
         
           
           <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
@@ -1084,6 +1140,27 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter6_VAE/vq_vae/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    VA-VAE
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1106,6 +1183,8 @@
       
         
       
+        
+      
     
     
       
@@ -1118,7 +1197,9 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
         
           
           <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
@@ -1189,7 +1270,9 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_2" >
         
           
           <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
@@ -1323,6 +1406,27 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter5_GAN/vq_gan/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    VQ-GAN
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1355,7 +1459,9 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
         
           
           <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
@@ -1399,7 +1505,9 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_1" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7_1" >
         
           
           <label class="md-nav__link" for="__nav_7_1" id="__nav_7_1_label" tabindex="0">
@@ -1427,11 +1535,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../chapter7_diffusion/Introduction_diffusion/" class="md-nav__link">
+      <a href="../../chapter7_diffusion/ddpm/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Introduction
+    DDPM
   </span>
   
 
@@ -1476,7 +1584,9 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_2" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7_2" >
         
           
           <label class="md-nav__link" for="__nav_7_2" id="__nav_7_2_label" tabindex="0">
@@ -1602,7 +1712,9 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
         
           
           <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
@@ -1722,7 +1834,9 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
         
           
           <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
@@ -1852,7 +1966,7 @@
 
 
 <h1 id="_1">最大似然估计<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
-<h2 id="_2">生成模型可以根据其目标和方法分类<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h2 id="1">1. 生成模型可以根据其目标和方法分类<a class="headerlink" href="#1" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -1966,7 +2080,7 @@
  \sum_{x\sim p_{\text {data }}}  \log p_{\theta}(x)
 \]</div>
 <hr />
-<h2 id="1-mlp">定理1. MLP 是最小化分布差异的特定形式<a class="headerlink" href="#1-mlp" title="Permanent link">&para;</a></h2>
+<h2 id="2-1-mlp">2. 定理1. MLP 是最小化分布差异的特定形式<a class="headerlink" href="#2-1-mlp" title="Permanent link">&para;</a></h2>
 <p><strong>证明</strong>:
 先说明结论：两个分布间的“距离”可以用不同的指标来衡量（如 KL 散度、Jensen-Shannon 散度、Wasserstein 距离等）。MLE 的目标是最小化 KL 散度：</p>
 <div class="arithmatex">\[
@@ -1988,7 +2102,7 @@ D_{\text{KL}}(p_{\text{data}} || p_\theta)
 <hr />
 <p>从这个角度从新不同的生成模型，包括VAE, GAN, Diffusion等等，它们的目标都是最小化生成分布和原始数据分布的差异(距离)的最小化。</p>
 <hr />
-<h2 id="2gan">定理2：gan的优化目标等价最小化分布距离<a class="headerlink" href="#2gan" title="Permanent link">&para;</a></h2>
+<h2 id="3-2gan">3. 定理2：gan的优化目标等价最小化分布距离<a class="headerlink" href="#3-2gan" title="Permanent link">&para;</a></h2>
 <p>GAN的目的是最小化分布差异，其中vanila GAN的目的是最小化两个分布之间的JSD散度, WGAN的目的是最小化连个分布之前的Wasserstein距离</p>
 <p><strong>证明</strong>：</p>
 <hr />
@@ -2083,7 +2197,7 @@ Vanilla GAN 的优化目标是最小化生成分布和数据分布之间的 Jens
 <p>从而KL散度对应的loss 则为</p>
 <div class="arithmatex">\[E_{x\sim P}\left[\log D(x)\right]-E_{x\sim Q_\theta}\left[\log D(x)\right]\]</div>
 <p>参考这个论文 <a href="https://arxiv.org/pdf/1606.00709">https://arxiv.org/pdf/1606.00709</a> 了解更多散度对应的loss</p>
-<h3 id="_3">广泛含义上的分布之间的衡量设计<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<h3 id="31">3.1 广泛含义上的分布之间的衡量设计<a class="headerlink" href="#31" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -2140,7 +2254,7 @@ Vanilla GAN 的优化目标是最小化生成分布和数据分布之间的 Jens
 </tbody>
 </table>
 <hr />
-<h2 id="3-vae">定理3: VAE 是对最大似然的优化<a class="headerlink" href="#3-vae" title="Permanent link">&para;</a></h2>
+<h2 id="4-3-vae">4. 定理3: VAE 是对最大似然的优化<a class="headerlink" href="#4-3-vae" title="Permanent link">&para;</a></h2>
 <p>证明</p>
 <ol>
 <li>连续分布的最大似然估计目标</li>
@@ -2338,11 +2452,11 @@ z = \mu_\phi(x) + \sigma_\phi(x) \odot \epsilon, \quad \epsilon \sim \mathcal{N}
 </li>
 </ul>
 <p>对于不同的假设条件，可以得出不同的实现方案。</p>
-<h2 id="normalize-flow-nf">normalize flow （NF）<a class="headerlink" href="#normalize-flow-nf" title="Permanent link">&para;</a></h2>
+<h2 id="5-normalize-flow-nf">5. normalize flow （NF）<a class="headerlink" href="#5-normalize-flow-nf" title="Permanent link">&para;</a></h2>
 <p>如果映射是可逆的，那么我们就可以直接计算出生成样本的密度函数(分布), 这个时候直接优化最大似然就行了。
 <a class="glightbox" href="../../../images/image-20.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="alt text" src="../../../images/image-20.png" /></a></p>
 <p>归一化流（Normalizing Flow）是一种概率密度估计方法，其核心思想是通过一系列可逆的变换，将一个复杂分布映射到一个简单分布（通常是标准正态分布），这些变换是由具有可微参数的函数定义的，因此可以通过最大似然估计对模型进行训练。以下是从最大似然的角度详细解释归一化流的原理：</p>
-<h3 id="_4">最大似然估计<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<h3 id="51">5.1 最大似然估计<a class="headerlink" href="#51" title="Permanent link">&para;</a></h3>
 <ol>
 <li><strong>目标：通过最大似然估计复杂分布的概率密度</strong> 给定一个数据集 <span class="arithmatex">\(\{x_1, x_2, \dots, x_N\}\)</span>，我们希望拟合一个概率分布 <span class="arithmatex">\(p_X(x)\)</span> 来描述数据的生成过程。通过最大似然估计（MLE)),目标是最大化模型分布对数据的对数似然：<span class="arithmatex">\(\mathcal{L} = \sum_{i=1}^N \log p_X(x_i)\)</span>.</li>
 </ol>
@@ -2406,7 +2520,7 @@ z = \mu_\phi(x) + \sigma_\phi(x) \odot \epsilon, \quad \epsilon \sim \mathcal{N}
 <p><strong>RealNVP</strong>  和 <strong>Glow</strong> ：利用特定的结构设计高效的变换。</p>
 </li>
 </ol>
-<h3 id="loss">Loss 的公式直观拆解<a class="headerlink" href="#loss" title="Permanent link">&para;</a></h3>
+<h3 id="52-loss">5.2 Loss 的公式直观拆解<a class="headerlink" href="#52-loss" title="Permanent link">&para;</a></h3>
 <p>在归一化流中，对数似然可以写为：</p>
 <div class="arithmatex">\[
  \log p_X(x) = \log p_Z(f^{-1}(x)) - \log \left| \det \frac{\partial f(x)}{\partial x} \right|.
@@ -2443,7 +2557,7 @@ z = \mu_\phi(x) + \sigma_\phi(x) \odot \epsilon, \quad \epsilon \sim \mathcal{N}
 </li>
 </ol>
 <hr />
-<h3 id="_5">用日常比喻直观理解<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<h3 id="53">5.3 用日常比喻直观理解<a class="headerlink" href="#53" title="Permanent link">&para;</a></h3>
 <p>可以将 Loss 的两个部分类比为：</p>
 <ol>
 <li>
@@ -2464,7 +2578,7 @@ z = \mu_\phi(x) + \sigma_\phi(x) \odot \epsilon, \quad \epsilon \sim \mathcal{N}
 </ol>
 <p>最终，Loss 就是这两者的加权总成本：既希望布能很好地覆盖地形，又希望变形的过程不要过于复杂。</p>
 <p>实际实现的时候，normalize flow 可以设计为可逆映射的复合。</p>
-<h2 id="diffusion-model">Diffusion Model<a class="headerlink" href="#diffusion-model" title="Permanent link">&para;</a></h2>
+<h2 id="6-diffusion-model">6. Diffusion Model<a class="headerlink" href="#6-diffusion-model" title="Permanent link">&para;</a></h2>
 <p>我们也可以从最大似然的角度推到出 Diffusion model 的优化目标。类似于VAE，不过这里的<span class="arithmatex">\(z\)</span> 要看做为 <span class="arithmatex">\(X_{1:T}\)</span>, <span class="arithmatex">\(x\)</span> 为 <span class="arithmatex">\(X_0\)</span>。同样利用变分得到ELBO.</p>
 <p><strong>1. 最大似然目标</strong></p>
 <p>最大化数据分布的对数似然 <span class="arithmatex">\(\log p_\theta(x_0)\)</span>。根据变分原理，引入中间变量 <span class="arithmatex">\(x_{1:T}\)</span>，得到：</p>
@@ -2536,7 +2650,7 @@ z = \mu_\phi(x) + \sigma_\phi(x) \odot \epsilon, \quad \epsilon \sim \mathcal{N}
 <div class="arithmatex">\[
  \mathcal{L}_{\text{DDPM}} = \mathbb{E}_{x_0, \epsilon, t} \Big[ \| \epsilon - \epsilon_\theta(x_t, t) \|^2 \Big].
 \]</div>
-<h2 id="_6">自回归模型<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<h2 id="7">7. 自回归模型<a class="headerlink" href="#7" title="Permanent link">&para;</a></h2>
 <ol>
 <li><strong>图片表示与最大似然目标</strong></li>
 </ol>
@@ -2624,7 +2738,7 @@ P(x_t | x_1, x_2, \ldots, x_{t-1}, \theta) = \mathcal{N}(x_t | \mu_\theta, \sigm
 </li>
 </ul>
 <p>通过对每个像素的条件概率进行优化，模型能够学习生成图片的复杂分布。</p>
-<h2 id="refenrence">Refenrence<a class="headerlink" href="#refenrence" title="Permanent link">&para;</a></h2>
+<h2 id="8-refenrence">8. Refenrence<a class="headerlink" href="#8-refenrence" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="https://chatgpt.com/c/6788e69d-7f1c-8001-a4e2-f6c8abda90db">normalize flow</a></li>
 <li><a href="https://www.cnblogs.com/Meloniala/p/18285101">Diffusion 综述阅读笔记</a></li>
@@ -2797,16 +2911,16 @@ P(x_t | x_1, x_2, \ldots, x_{t-1}, \theta) = \mathcal{N}(x_t | \mu_\theta, \sigm
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "toc.integrate", "content.code.copy", "content.code.select", "content.code.annotate", "content.tabs.link", "content.footnote.tooltips", "content.tooltips", "navigation.tracking", "search.highlight", "search.share", "search.suggest", "toc.follow", "announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "search.share", "search.suggest"], "search": "../../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "toc.integrate", "content.code.copy", "content.code.select", "content.code.annotate", "content.tabs.link", "content.footnote.tooltips", "content.tooltips", "navigation.tracking", "search.highlight", "search.share", "search.suggest", "toc.follow", "announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.expand", "search.share", "search.suggest"], "search": "../../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
       <script src="../../../assets/javascripts/bundle.60a45f97.min.js"></script>
       
-        <script src="../../../javascripts/mathjax.js"></script>
-      
-        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
-      
         <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+      
+        <script src="../../../javascripts/mathjax.js"></script>
       
     
   <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});

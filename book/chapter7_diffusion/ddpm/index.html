@@ -9,10 +9,10 @@
       
       
       
-        <link rel="prev" href="../../chapter2_generation_theory/manifold_hypothesis/">
+        <link rel="prev" href="../../chapter5_GAN/vq_gan/">
       
       
-        <link rel="next" href="../score_function/">
+        <link rel="next" href="../introduction_sde/">
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
@@ -20,7 +20,7 @@
     
     
       
-        <title>Introduction - Generative AI: From Start to Surrender</title>
+        <title>DDPM - Generative AI: From Start to Surrender</title>
       
     
     
@@ -95,7 +95,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#_1" class="md-skip">
+        <a href="#diffusion-models" class="md-skip">
           Skip to content
         </a>
       
@@ -129,7 +129,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Introduction
+              DDPM
             
           </span>
         </div>
@@ -296,13 +296,11 @@
         
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="./" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../chapter3_energy_based_model/introduction/" class="md-tabs__link">
           
   
     
@@ -358,17 +356,21 @@
         
   
   
+    
+  
   
     
     
       
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../chapter7_diffusion/ddpm/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
           
   
     
@@ -746,10 +748,8 @@
       
   
   
-    
   
   
-  
     
     
       
@@ -766,22 +766,21 @@
     
     
       
-        
-        
-      
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -792,7 +791,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             Energy Based Models
@@ -803,30 +802,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    Introduction
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../chapter3_energy_based_model/introduction/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -835,287 +814,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#1" class="md-nav__link">
-    <span class="md-ellipsis">
-      1. 引言
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#2-1" class="md-nav__link">
-    <span class="md-ellipsis">
-      2. 1. 能量模型的基础理论
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="2. 1. 能量模型的基础理论">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#21-11" class="md-nav__link">
-    <span class="md-ellipsis">
-      2.1 1.1. 定义与数学形式
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#22-12" class="md-nav__link">
-    <span class="md-ellipsis">
-      2.2 1.2. 核心假设与条件
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#3-2" class="md-nav__link">
-    <span class="md-ellipsis">
-      3. 2. 能量模型的核心挑战
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="3. 2. 能量模型的核心挑战">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#31-21-p_textdatax" class="md-nav__link">
-    <span class="md-ellipsis">
-      3.1 2.1. 估计真实数据分布 \(p_{\text{data}}(x)\)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#32-22" class="md-nav__link">
-    <span class="md-ellipsis">
-      3.2 2.2. 高效采样
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#4-3-ebm-vs-sbm" class="md-nav__link">
-    <span class="md-ellipsis">
-      4. 3. EBM vs SBM
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#5-4" class="md-nav__link">
-    <span class="md-ellipsis">
-      5. 4. 能量模型的主流流派
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="5. 4. 能量模型的主流流派">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#51-41-contrastive-divergence" class="md-nav__link">
-    <span class="md-ellipsis">
-      5.1 4.1. Contrastive Divergence
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#52-42" class="md-nav__link">
-    <span class="md-ellipsis">
-      5.2 4.2. 分数匹配
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#53-43" class="md-nav__link">
-    <span class="md-ellipsis">
-      5.3 4.3. 对抗训练派
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#54-44" class="md-nav__link">
-    <span class="md-ellipsis">
-      5.4 4.4. 结构化能量模型
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#6-5" class="md-nav__link">
-    <span class="md-ellipsis">
-      6. 5.能量模型的扩展方法
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="6. 5.能量模型的扩展方法">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#61-51" class="md-nav__link">
-    <span class="md-ellipsis">
-      6.1 5.1. 条件能量模型
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#62-52" class="md-nav__link">
-    <span class="md-ellipsis">
-      6.2 5.2. 隐变量能量模型
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#63-53" class="md-nav__link">
-    <span class="md-ellipsis">
-      6.3 5.3. 能量引导的扩散模型
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#7-6" class="md-nav__link">
-    <span class="md-ellipsis">
-      7. 6. 能量模型与其他生成模型的关系
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="7. 6. 能量模型与其他生成模型的关系">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#71-61-vae" class="md-nav__link">
-    <span class="md-ellipsis">
-      7.1 6.1. VAE：隐变量能量模型的变分实现
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#72-62-gan" class="md-nav__link">
-    <span class="md-ellipsis">
-      7.2 6.2. GAN：对抗式能量模型
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#73-63" class="md-nav__link">
-    <span class="md-ellipsis">
-      7.3 6.3. 扩散模型：动态能量模型
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#74-64" class="md-nav__link">
-    <span class="md-ellipsis">
-      7.4 6.4. 标准化流：显式归一化的特例
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#8-7" class="md-nav__link">
-    <span class="md-ellipsis">
-      8. 7.挑战与未来方向
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="8. 7.挑战与未来方向">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#81-71" class="md-nav__link">
-    <span class="md-ellipsis">
-      8.1 7.1. 核心挑战
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#82-72" class="md-nav__link">
-    <span class="md-ellipsis">
-      8.2 7.2. 未来趋势
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1128,7 +826,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../score_function/" class="md-nav__link">
+      <a href="../../chapter3_energy_based_model/score_function/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1149,7 +847,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sampling/" class="md-nav__link">
+      <a href="../../chapter3_energy_based_model/sampling/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1170,7 +868,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cd/" class="md-nav__link">
+      <a href="../../chapter3_energy_based_model/cd/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1191,7 +889,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../score_matching/" class="md-nav__link">
+      <a href="../../chapter3_energy_based_model/score_matching/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1579,8 +1277,10 @@
       
   
   
+    
   
   
+  
     
     
       
@@ -1591,21 +1291,22 @@
     
     
       
+        
+        
+      
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
         
           
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
-        
-          
-          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
             
   
   <span class="md-ellipsis">
@@ -1616,7 +1317,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             Diffusion Models
@@ -1627,8 +1328,10 @@
                 
   
   
+    
   
   
+  
     
     
       
@@ -1638,20 +1341,21 @@
     
       
       
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
         
           
+          
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7_1" >
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_1" checked>
         
           
-          <label class="md-nav__link" for="__nav_7_1" id="__nav_7_1_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_1" id="__nav_7_1_label" tabindex="">
             
   
   <span class="md-ellipsis">
@@ -1662,7 +1366,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_1_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_1_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_7_1">
             <span class="md-nav__icon md-icon"></span>
             Discrete Diffusion
@@ -1673,10 +1377,30 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../chapter7_diffusion/ddpm/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    DDPM
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -1685,6 +1409,131 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-understanding-denoising-diffusion-probabilistic-models-ddpm" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Understanding Denoising Diffusion Probabilistic Models (DDPM)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Understanding Denoising Diffusion Probabilistic Models (DDPM)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-what-is-a-diffusion-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.1 What is a Diffusion Model?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-the-forward-process-gradually-adding-noise" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.2 The Forward Process: Gradually Adding Noise
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-the-reverse-process-learning-to-denoise" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.3 The Reverse Process: Learning to Denoise
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-training-objective-variational-bound" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.4 Training Objective: Variational Bound
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-intuition-behind-ddpm" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.5 Intuition Behind DDPM
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#16-sampling-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.6 Sampling (Generation)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#17-why-ddpms-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.7 Why DDPMs Work
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#18-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.8 Limitations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#19-summarization" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.9 Summarization
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. References
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1718,10 +1567,13 @@
       
       
         
+          
+          
+        
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
@@ -1730,7 +1582,7 @@
         <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7_2" >
         
           
-          <label class="md-nav__link" for="__nav_7_2" id="__nav_7_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_2" id="__nav_7_2_label" tabindex="">
             
   
   <span class="md-ellipsis">
@@ -1755,7 +1607,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../chapter7_diffusion/introduction_sde/" class="md-nav__link">
+      <a href="../introduction_sde/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1776,7 +1628,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../chapter7_diffusion/SDE4_DDPM_DSM/" class="md-nav__link">
+      <a href="../SDE4_DDPM_DSM/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1797,7 +1649,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../chapter7_diffusion/probability_flow_ode/" class="md-nav__link">
+      <a href="../probability_flow_ode/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2106,184 +1958,192 @@
                   
 
 
-<h1 id="_1">能量模型：理论与应用全景解读<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<h1 id="diffusion-models">Diffusion Models<a class="headerlink" href="#diffusion-models" title="Permanent link">&para;</a></h1>
+<div class="admonition note">
+<p class="admonition-title">preliminary</p>
+<p>In order to have a fully understand of the diffusion model, it is recommend to have the knowledges of the following
+- Math
+  - derivatives
+  - partial derivatives
+  - chain rule
+  - multi variable function optimization
+-  Diffential Equation
+   -  Ordinary Differential Equation
+   -  SDE
+   -  Itô Integra and Itô Lemma</p>
+</div>
+<h2 id="1-understanding-denoising-diffusion-probabilistic-models-ddpm">1. Understanding Denoising Diffusion Probabilistic Models (DDPM)<a class="headerlink" href="#1-understanding-denoising-diffusion-probabilistic-models-ddpm" title="Permanent link">&para;</a></h2>
+<p>Generative models have revolutionized machine learning by enabling the creation of realistic data, from images to audio. Among these, <strong>Denoising Diffusion Probabilistic Models (DDPM)</strong> stand out for their simplicity, stability, and high-quality outputs. In this blog, we’ll break down the theory behind DDPMs, their training process, and the intuition that makes them work.</p>
 <hr />
-<h2 id="1">1. <strong>引言</strong><a class="headerlink" href="#1" title="Permanent link">&para;</a></h2>
-<p>能量模型（Energy-Based Models, EBMs）是机器学习领域的一类重要生成模型，其核心思想是通过能量函数隐式定义数据分布。与显式建模概率密度的模型（如标准化流、VAE）不同，能量模型通过“能量值”衡量样本的合理性，低能量对应高概率区域。这种灵活性使其在图像生成、多模态学习、科学计算等任务中展现出独特优势。
-本文将系统解析能量模型的<strong>数学基础</strong>、<strong>核心流派</strong>、<strong>扩展方法</strong>及其与主流生成模型（如GAN、扩散模型）的联系，并探讨其未来发展方向。</p>
-<hr />
-<h2 id="2-1">2. 1. 能量模型的基础理论<a class="headerlink" href="#2-1" title="Permanent link">&para;</a></h2>
-<h3 id="21-11">2.1 1.1. 定义与数学形式<a class="headerlink" href="#21-11" title="Permanent link">&para;</a></h3>
-<p>能量模型通过能量函数 <span class="arithmatex">\(E_\theta(x)\)</span> 隐式定义概率分布：</p>
-<div class="arithmatex">\[
-P_\theta(x) = \frac{e^{-E_\theta(x)}}{Z(\theta)}, \quad Z(\theta) = \int e^{-E_\theta(x)} dx
-\]</div>
+<h3 id="11-what-is-a-diffusion-model">1.1 What is a Diffusion Model?<a class="headerlink" href="#11-what-is-a-diffusion-model" title="Permanent link">&para;</a></h3>
+<p>Diffusion models are inspired by non-equilibrium thermodynamics. The core idea is simple: gradually destroy data by adding noise (forward process), then learn to reverse this process to generate new data (reverse process). DDPMs formalize this intuition into a probabilistic framework.</p>
+<h3 id="12-the-forward-process-gradually-adding-noise">1.2 The Forward Process: Gradually Adding Noise<a class="headerlink" href="#12-the-forward-process-gradually-adding-noise" title="Permanent link">&para;</a></h3>
+<p>The forward process is a fixed Markov chain that slowly corrupts data over <span class="arithmatex">\( T \)</span> timesteps. Given an input <span class="arithmatex">\( x_0 \)</span> (e.g., an image), we define a sequence <span class="arithmatex">\( x_1, x_2, \dots, x_T \)</span>, where each step adds Gaussian noise according to a schedule <span class="arithmatex">\( \beta_1, \beta_2, \dots, \beta_T \)</span>.</p>
+<h4 id="121-mathematically">1.2.1 Mathematically<a class="headerlink" href="#121-mathematically" title="Permanent link">&para;</a></h4>
+<p>At each timestep <span class="arithmatex">\( t \)</span>,
+$$
+q(x_t | x_{t-1}) = \mathcal{N}(x_t; \sqrt{1-\beta_t} x_{t-1}, \beta_t \mathbf{I})
+$$
+This means <span class="arithmatex">\( x_t \)</span> is a noisy version of <span class="arithmatex">\( x_{t-1} \)</span>, with variance <span class="arithmatex">\( \beta_t \)</span>.</p>
+<h4 id="122-reparameterization-trick">1.2.2 Reparameterization Trick<a class="headerlink" href="#122-reparameterization-trick" title="Permanent link">&para;</a></h4>
+<p>We can directly compute <span class="arithmatex">\( x_t \)</span> from <span class="arithmatex">\( x_0 \)</span> in closed form:
+$$
+x_t = \sqrt{\alpha_t} x_0 + \sqrt{1 - \alpha_t} \epsilon, \quad \epsilon \sim \mathcal{N}(0, \mathbf{I})
+$$
+where <span class="arithmatex">\( \alpha_t = \prod_{i=1}^t (1 - \beta_i) \)</span>. This accelerates training by avoiding iterative sampling.</p>
+<h3 id="13-the-reverse-process-learning-to-denoise">1.3 The Reverse Process: Learning to Denoise<a class="headerlink" href="#13-the-reverse-process-learning-to-denoise" title="Permanent link">&para;</a></h3>
+<p>The goal is to learn a neural network <span class="arithmatex">\( \theta \)</span> that reverses the forward process. Starting from noise <span class="arithmatex">\( x_T \sim \mathcal{N}(0, \mathbf{I}) \)</span>, the model iteratively denoises <span class="arithmatex">\( x_t \)</span> to <span class="arithmatex">\( x_{t-1} \)</span>.</p>
+<h4 id="131-reverse-distribution">1.3.1 Reverse Distribution<a class="headerlink" href="#131-reverse-distribution" title="Permanent link">&para;</a></h4>
+<p>$$
+p_\theta(x_{t-1} | x_t) = \mathcal{N}(x_{t-1}; \mu_\theta(x_t, t), \Sigma_\theta(x_t, t))
+$$
+In practice, <span class="arithmatex">\( \Sigma_\theta \)</span> is often fixed to <span class="arithmatex">\( \sigma_t^2 \mathbf{I} \)</span>, and the network predicts the mean <span class="arithmatex">\( \mu_\theta \)</span>.</p>
+<h4 id="132-key-insight">1.3.2 Key Insight<a class="headerlink" href="#132-key-insight" title="Permanent link">&para;</a></h4>
+<p>Instead of directly predicting <span class="arithmatex">\( x_{t-1} \)</span>, the network predicts the noise <span class="arithmatex">\( \epsilon \)</span> added at each step. This simplifies training and improves stability.</p>
+<h3 id="14-training-objective-variational-bound">1.4 Training Objective: Variational Bound<a class="headerlink" href="#14-training-objective-variational-bound" title="Permanent link">&para;</a></h3>
+<p>The loss function is derived from the variational lower bound (ELBO) of the log-likelihood:
+$$
+\mathbb{E}<em 1:T="1:T">{q(x</em> \right]
+$$
+After simplification, the objective reduces to:
+$$
+\mathcal{L} = \mathbb{E}}|x_0)} \left[ \log \frac{q(x_{1:T}|x_0)}{p_\theta(x_{0:T})<em>{t, x_0, \epsilon} \left[ | \epsilon - \epsilon</em>\theta(x_t, t) |^2 \right]
+$$
+where <span class="arithmatex">\( \epsilon_\theta \)</span> is the network predicting noise. Minimizing this loss trains the model to reverse the diffusion process.</p>
+<h3 id="15-intuition-behind-ddpm">1.5 Intuition Behind DDPM<a class="headerlink" href="#15-intuition-behind-ddpm" title="Permanent link">&para;</a></h3>
+<h4 id="151-noise-as-a-scaffold">1.5.1 Noise as a Scaffold<a class="headerlink" href="#151-noise-as-a-scaffold" title="Permanent link">&para;</a></h4>
+<p>By iteratively removing noise, the model refines its output from coarse to fine details, akin to an artist sketching and refining a painting.</p>
+<h4 id="152-stability-via-small-steps">1.5.2 Stability via Small Steps<a class="headerlink" href="#152-stability-via-small-steps" title="Permanent link">&para;</a></h4>
+<p>Unlike GANs, which can suffer from mode collapse, DDPMs break generation into many small, stable denoising steps.</p>
+<h4 id="153-connection-to-score-matching">1.5.3 Connection to Score Matching<a class="headerlink" href="#153-connection-to-score-matching" title="Permanent link">&para;</a></h4>
+<p>DDPMs implicitly learn the gradient of the data distribution (score function), guiding the denoising process toward high-probability regions.</p>
+<h3 id="16-sampling-generation">1.6 Sampling (Generation)<a class="headerlink" href="#16-sampling-generation" title="Permanent link">&para;</a></h3>
+<p>To generate data:</p>
+<ol>
+<li>Sample <span class="arithmatex">\( x_T \sim \mathcal{N}(0, \mathbf{I}) \)</span>.</li>
+<li>For <span class="arithmatex">\( t = T, \dots, 1 \)</span>:</li>
+<li>Predict <span class="arithmatex">\( \epsilon_\theta(x_t, t) \)</span>.</li>
+<li>Compute <span class="arithmatex">\( x_{t-1} = \frac{1}{\sqrt{\alpha_t}} \left( x_t - \frac{\beta_t}{\sqrt{1 - \alpha_t}} \epsilon_\theta \right) + \sigma_t z \)</span>, where <span class="arithmatex">\( z \sim \mathcal{N}(0, \mathbf{I}) \)</span>.</li>
+</ol>
+<h3 id="17-why-ddpms-work">1.7 Why DDPMs Work<a class="headerlink" href="#17-why-ddpms-work" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>能量函数 <span class="arithmatex">\(E_\theta(x)\)</span></strong>：衡量样本 <span class="arithmatex">\(x\)</span> 的“不合理性”，通常由神经网络参数化。</li>
-<li><strong>归一化因子 <span class="arithmatex">\(Z(\theta)\)</span></strong>：确保概率积分为1，但在高维空间中难以直接计算。</li>
+<li><strong>Robust Training:</strong> The per-timestep noise prediction task is easier to learn than modeling the full data distribution at once.</li>
+<li><strong>High Flexibility:</strong> The iterative process allows capturing complex dependencies in data.</li>
+<li><strong>No Adversarial Training:</strong> Unlike GANs, DDPMs avoid unstable min-max optimization.</li>
 </ul>
-<p>类比物理系统</p>
+<h3 id="18-limitations">1.8 Limitations<a class="headerlink" href="#18-limitations" title="Permanent link">&para;</a></h3>
 <ul>
-<li>物理势能：在物理学中，势能越低的状态越稳定（如小球在谷底）。</li>
-<li>能量模型：能量函数E(x) 扮演类似势能的角色，低能量区域对应数据分布的高概率区域（即真实数据集中出现可能性大的样本）。</li>
+<li><strong>Slow Sampling:</strong> Generating samples requires <span class="arithmatex">\( T \)</span> steps (often <span class="arithmatex">\( T \sim 1000 \)</span>).</li>
+<li><strong>Fixed Noise Schedule:</strong> Poorly chosen <span class="arithmatex">\( \beta_t \)</span> can harm performance.</li>
 </ul>
-<p>能量函数本质是一个评分函数：</p>
+<h3 id="19-summarization">1.9 Summarization<a class="headerlink" href="#19-summarization" title="Permanent link">&para;</a></h3>
+<p>Here’s a concise summary of the <strong>key formulas</strong> in Denoising Diffusion Probabilistic Models (DDPM), focusing on the forward/reverse processes, noise schedules, and critical relationships:</p>
+<h4 id="191-1-forward-process-noise-addition">1.9.1 <strong>1. Forward Process (Noise Addition)</strong><a class="headerlink" href="#191-1-forward-process-noise-addition" title="Permanent link">&para;</a></h4>
+<p>Gradually corrupts data <span class="arithmatex">\( x_0 \)</span> over <span class="arithmatex">\( T \)</span> steps via a fixed Markov chain.</p>
 <ul>
-<li>对合理的样本（如训练数据）赋予低能量值;</li>
-<li>对不合理的样本（如噪声、异常值）赋予高能量值。</li>
+<li><strong>Conditional distribution</strong>:</li>
 </ul>
-<p>示例：</p>
-<ul>
-<li>在图像生成任务中，清晰的图片能量低，模糊或混乱的图片能量高;</li>
-<li>在文本生成中，语法正确的句子能量低，语义矛盾的句子能量高。</li>
-</ul>
-<p>这里大家可能会有困惑，虽然定义了一个能量，但是这个能量到底怎么使用？使用能量模型有两个核心要解决的问题，一个是学习出能量函数和目标数据分布一致，另外一个是从能量函数中采样出数据，这是能量模型的核心挑战。后续我们会讲到怎么学习能量函数，又怎么从能量函数中采样。直观上讲，假设我们有了一个能量函数，那采样意味着我们按照能量函数给出的分布概率进行采样。</p>
-<h3 id="22-12">2.2 1.2. 核心假设与条件<a class="headerlink" href="#22-12" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong>低能量对应高概率</strong>：真实数据样本位于能量函数的低能区域。</li>
-<li><strong>数学条件</strong>：</li>
-<li><strong>可积性</strong>：保证 <span class="arithmatex">\(Z(\theta)\)</span> 存在（积分收敛）。</li>
-<li><strong>可微分性</strong>：能量函数需对输入 <span class="arithmatex">\(x\)</span> 和参数 <span class="arithmatex">\(\theta\)</span> 可导，以支持梯度优化。</li>
-<li><strong>训练假设</strong>：</li>
-<li><strong>对比学习</strong>：通过区分真实样本（低能量）与噪声样本（高能量）优化能量函数。</li>
-<li><strong>采样可行性</strong>：依赖高效采样方法（如MCMC）生成负样本。</li>
-</ul>
-<h2 id="3-2">3. 2. 能量模型的核心挑战<a class="headerlink" href="#3-2" title="Permanent link">&para;</a></h2>
-<h3 id="31-21-p_textdatax">3.1 2.1. 估计真实数据分布 <span class="arithmatex">\(p_{\text{data}}(x)\)</span><a class="headerlink" href="#31-21-p_textdatax" title="Permanent link">&para;</a></h3>
-<p>直接计算归一化因子 <span class="arithmatex">\(Z(\theta)\)</span> 不可行，需绕过显式积分：</p>
-<ul>
-<li><strong>对比散度（CD）</strong>：用少量MCMC步骤生成负样本，对比优化能量函数（如受限玻尔兹曼机）。</li>
-<li><strong>分数匹配（Score Matching）</strong>：直接匹配数据分布的梯度 <span class="arithmatex">\(\nabla_x \log p_{\text{data}}(x)\)</span>（即能量函数的负梯度）。</li>
-<li><strong>对抗训练</strong>：将生成器作为采样器，判别器作为能量函数（如EBGAN）。</li>
-</ul>
-<h3 id="32-22">3.2 2.2. 高效采样<a class="headerlink" href="#32-22" title="Permanent link">&para;</a></h3>
-<p>从 <span class="arithmatex">\(P_\theta(x) \propto e^{-E_\theta(x)}\)</span> 中采样需探索低能量区域：</p>
-<ul>
-<li><strong>马尔可夫链蒙特卡洛（MCMC）</strong>：</li>
-<li><strong>Langevin动力学</strong>：通过梯度下降与噪声扰动迭代采样：</li>
-</ul>
-<div class="arithmatex">\[
-x_{t+1} = x_t - \eta \nabla_x E_\theta(x_t) + \sqrt{2\eta} \epsilon_t, \quad \epsilon_t \sim \mathcal{N}(0, I)
-\]</div>
-<ul>
-<li><strong>Gibbs采样</strong>：适用于具有局部依赖性的模型（如玻尔兹曼机）。</li>
-<li><strong>隐式生成器</strong>：如GAN的生成器直接学习从简单分布到数据分布的映射。</li>
-<li><strong>扩散模型</strong>：在去噪过程中结合能量梯度引导采样。</li>
-</ul>
-<p>采样时一般都需要能量函数的梯度，这个梯度我们也叫做"score function", 是一个向量场，表示能量变化的方向和强度。</p>
-<h2 id="4-3-ebm-vs-sbm">4. 3. EBM vs SBM<a class="headerlink" href="#4-3-ebm-vs-sbm" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong>预测能量函数的模型</strong>, 模型输出一个标量值, 我们叫 "EBM", energy-based model</li>
-<li><strong>直接预测score function 的模型</strong>, 模型输出为一个向量场, 我们叫做 "SBM", score based model</li>
-</ul>
-<h2 id="5-4">5. 4. 能量模型的主流流派<a class="headerlink" href="#5-4" title="Permanent link">&para;</a></h2>
-<h3 id="51-41-contrastive-divergence">5.1 4.1. Contrastive Divergence<a class="headerlink" href="#51-41-contrastive-divergence" title="Permanent link">&para;</a></h3>
+<p>$$
+  q(x_t | x_{t-1}) = \mathcal{N}\left(x_t; \sqrt{1-\beta_t} x_{t-1}, \beta_t \mathbf{I}\right)
+  $$</p>
 <ul>
 <li>
-<p><strong>核心</strong>：正常迭代模型，需要计算<span class="arithmatex">\(\theta\)</span> 的梯度，那我们是不是可以直接计算出 <span class="arithmatex">\(p_\theta(x)\)</span> 的梯度, 然后按照梯度方向去更新梯度。 根据这个方法我们就得到了对比散度（CD）方法。</p>
+<p><span class="arithmatex">\( \beta_t \)</span>: Predefined noise schedule (small values increasing with <span class="arithmatex">\( t \)</span>).</p>
 </li>
 <li>
-<p><strong>代表模型</strong>：受限玻尔兹曼机（RBM）、Deep Belief Networks。</p>
+<p><strong>Reparameterization (direct sampling from <span class="arithmatex">\( x_0 \)</span>)</strong>:
+  $$
+  x_t = \sqrt{\alpha_t} x_0 + \sqrt{1 - \alpha_t} \epsilon, \quad \epsilon \sim \mathcal{N}(0, \mathbf{I})
+  $$</p>
 </li>
-<li><strong>特点</strong>：训练稳定，但MCMC采样效率低。</li>
+<li><span class="arithmatex">\( \alpha_t = \prod_{i=1}^t (1-\beta_i) \)</span>: Cumulative product of <span class="arithmatex">\( 1-\beta_i \)</span>.</li>
+<li><span class="arithmatex">\( \sqrt{\alpha_t} \)</span>: Signal retention coefficient.</li>
+<li><span class="arithmatex">\( \sqrt{1-\alpha_t} \)</span>: Noise scaling coefficient.</li>
 </ul>
-<h3 id="52-42">5.2 4.2. 分数匹配<a class="headerlink" href="#52-42" title="Permanent link">&para;</a></h3>
+<h4 id="192-2-reverse-process-denoising">1.9.2 <strong>2. Reverse Process (Denoising)</strong><a class="headerlink" href="#192-2-reverse-process-denoising" title="Permanent link">&para;</a></h4>
+<p>Learns to invert the forward process using a neural network <span class="arithmatex">\( \epsilon_\theta \)</span>.</p>
 <ul>
-<li><strong>核心</strong>： 直接计算两个分布之间的距离会比较难，但是计算两个分布的梯度的差异会容易一些。同时利用分部积分，可以绕过原始分布的梯度计算。这就是所谓的 <strong>score matching</strong> 方法。这里的‘score’ 就是梯度。</li>
+<li><strong>Reverse distribution</strong>:</li>
 </ul>
+<p>$$
+  p_\theta(x_{t-1} | x_t) = \mathcal{N}\left(x_{t-1}; \mu_\theta(x_t, t), \sigma_t^2 \mathbf{I}\right)
+  $$</p>
+<ul>
+<li><span class="arithmatex">\( \mu_\theta \)</span>: Predicted mean, derived from noise estimate <span class="arithmatex">\( \epsilon_\theta \)</span>.</li>
+<li>
+<p><span class="arithmatex">\( \sigma_t^2 \)</span>: Fixed to <span class="arithmatex">\( \beta_t \)</span> (original DDPM) or <span class="arithmatex">\( \frac{1-\alpha_{t-1}}{1-\alpha_t}\beta_t \)</span>.</p>
+</li>
+<li>
+<p><strong>Mean prediction</strong>:</p>
+</li>
+</ul>
+<p>$$
+  \mu_\theta(x_t, t) = \frac{1}{\sqrt{\alpha_t}} \left( x_t - \frac{\beta_t}{\sqrt{1-\alpha_t}} \epsilon_\theta(x_t, t) \right)
+  $$</p>
+<h4 id="193-3-training-objective">1.9.3 <strong>3. Training Objective</strong><a class="headerlink" href="#193-3-training-objective" title="Permanent link">&para;</a></h4>
+<p>Simplified loss derived from variational bound (ELBO):</p>
 <div class="arithmatex">\[
- J(\theta) = \frac{1}{2} \mathbb{E}_{p(x)} \left[ \| \nabla_x \log q_\theta(x) - \nabla_x \log p(x) \|^2 \right].
+\mathcal{L} = \mathbb{E}_{t, x_0, \epsilon} \left[ \| \epsilon - \epsilon_\theta(x_t, t) \|^2 \right]
 \]</div>
-<p>它等价于优化</p>
-<div class="arithmatex">\[
- \min_\theta\mathbb{E}_{p(x)} \left[ \text{trace} \left( \nabla_x^2 \log q_\theta(x) \right) + \frac{1}{2} \| \nabla_x \log q_\theta(x) \|^2 \right].
-\]</div>
-<p>因为二阶导的计算通常比较复杂，因此在这个方向上会有不同的实践方法，常见的有sliced score matching 和 denosing score matching</p>
 <ul>
-<li><strong>代表模型</strong>：常见的score matching 有 sliced score matching和denosing score matching</li>
-<li><strong>特点</strong>：生成质量高，但计算成本大。</li>
+<li><span class="arithmatex">\( \epsilon \sim \mathcal{N}(0, \mathbf{I}) \)</span>: Ground-truth noise added at step <span class="arithmatex">\( t \)</span>.</li>
+<li><span class="arithmatex">\( \epsilon_\theta \)</span>: Neural network predicting noise in <span class="arithmatex">\( x_t \)</span>.</li>
 </ul>
-<h3 id="53-43">5.3 4.3. 对抗训练派<a class="headerlink" href="#53-43" title="Permanent link">&para;</a></h3>
+<h4 id="194-4-sampling-generation">1.9.4 <strong>4. Sampling (Generation)</strong><a class="headerlink" href="#194-4-sampling-generation" title="Permanent link">&para;</a></h4>
+<p>Starts from <span class="arithmatex">\( x_T \sim \mathcal{N}(0, \mathbf{I}) \)</span> and iteratively denoises:
+$$
+x_{t-1} = \frac{1}{\sqrt{\alpha_t}} \left( x_t - \frac{\beta_t}{\sqrt{1-\alpha_t}} \epsilon_\theta(x_t, t) \right) + \sigma_t z, \quad z \sim \mathcal{N}(0, \mathbf{I})
+$$</p>
 <ul>
-<li><strong>核心</strong>：判别器作为能量函数，生成器作为采样器。</li>
-<li><strong>代表模型</strong>：EBGAN、BEGAN。</li>
-<li><strong>特点</strong>：生成高效，但易模式崩溃。</li>
-</ul>
-<h3 id="54-44">5.4 4.4. 结构化能量模型<a class="headerlink" href="#54-44" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong>核心</strong>：引入领域知识（如图结构、物理约束）设计能量函数。</li>
-<li><strong>代表模型</strong>：GraphEBM（分子生成）、CRF（条件随机场）。</li>
-<li><strong>特点</strong>：可解释性强，泛化性弱。</li>
+<li><span class="arithmatex">\( \sigma_t = \sqrt{\beta_t} \)</span>: Controls stochasticity (set to 0 for deterministic sampling in DDIM).</li>
+<li>At <span class="arithmatex">\( t=1 \)</span>, the <span class="arithmatex">\( \sigma_t z \)</span> term is omitted.</li>
 </ul>
 <hr />
-<h2 id="6-5">6. 5.能量模型的扩展方法<a class="headerlink" href="#6-5" title="Permanent link">&para;</a></h2>
-<h3 id="61-51">6.1 5.1. 条件能量模型<a class="headerlink" href="#61-51" title="Permanent link">&para;</a></h3>
-<p>通过条件变量 <span class="arithmatex">\(c\)</span>（如文本、标签）建模条件分布 <span class="arithmatex">\(p(x \mid c)\)</span>：</p>
+<h4 id="195-5-key-relationships">1.9.5 <strong>5. Key Relationships</strong><a class="headerlink" href="#195-5-key-relationships" title="Permanent link">&para;</a></h4>
 <ul>
-<li><strong>能量函数</strong>：<span class="arithmatex">\(E_\theta(x, c)\)</span>，概率分布为</li>
-</ul>
-<div class="arithmatex">\[
-p(x \mid c) = \frac{e^{-E_\theta(x, c)}}{Z(c)}, \quad Z(c) = \int e^{-E_\theta(x, c)} dx
-\]</div>
-<ul>
-<li><strong>应用场景</strong>：文本到图像生成、可控生成（如DALL·E 2）。</li>
-</ul>
-<h3 id="62-52">6.2 5.2. 隐变量能量模型<a class="headerlink" href="#62-52" title="Permanent link">&para;</a></h3>
-<p>引入隐变量 <span class="arithmatex">\(z\)</span> 建模联合分布 <span class="arithmatex">\(p(x, z)\)</span>，提升表达能力：</p>
-<ul>
-<li><strong>变分能量模型（VAE-EBM）</strong>：结合VAE的变分推断与能量函数约束。</li>
-</ul>
-<div class="arithmatex">\[
-\log p(x) \geq \mathbb{E}_{q(z|x)} \left[ -E_\theta(x, z) - \log q(z|x) \right] - \log Z
-\]</div>
-<ul>
-<li><strong>对抗式隐变量EBMs</strong>：生成器 <span class="arithmatex">\(G(z)\)</span> 生成样本，能量函数 <span class="arithmatex">\(E_\theta(x)\)</span> 判别合理性。</li>
-</ul>
-<h3 id="63-53">6.3 5.3. 能量引导的扩散模型<a class="headerlink" href="#63-53" title="Permanent link">&para;</a></h3>
-<p>在扩散过程中显式引入能量函数 <span class="arithmatex">\(E_\theta(x, c)\)</span>，增强生成可控性：</p>
-<ul>
-<li><strong>采样公式</strong>：</li>
-</ul>
-<div class="arithmatex">\[
-x_{t-1} = \text{Denoise}(x_t) - \eta \nabla_x E_\theta(x_t, c)
-\]</div>
-<ul>
-<li><strong>应用</strong>：分子生成、艺术品风格迁移。</li>
+<li><strong>Cumulative noise</strong>: <span class="arithmatex">\( \alpha_t = \prod_{i=1}^t (1-\beta_i) \)</span>.</li>
+<li><strong>Signal-to-noise ratio (SNR)</strong>: <span class="arithmatex">\( \text{SNR}_t = \frac{\alpha_t}{1-\alpha_t} \)</span>.</li>
+<li><strong>Noise schedule</strong>: <span class="arithmatex">\( \beta_t \)</span> is often linear or cosine-based (e.g., <span class="arithmatex">\( \beta_t \in [10^{-4}, 0.02] \)</span>).</li>
 </ul>
 <hr />
-<h2 id="7-6">7. 6. 能量模型与其他生成模型的关系<a class="headerlink" href="#7-6" title="Permanent link">&para;</a></h2>
-<h3 id="71-61-vae">7.1 6.1. VAE：隐变量能量模型的变分实现<a class="headerlink" href="#71-61-vae" title="Permanent link">&para;</a></h3>
-<p>VAE通过隐变量 <span class="arithmatex">\(z\)</span> 建模联合分布 <span class="arithmatex">\(p(x, z)\)</span>，其ELBO目标等价于能量函数的变分优化：</p>
-<div class="arithmatex">\[
-\text{ELBO} = \mathbb{E}_{q(z|x)}[\log p(x|z)] - \text{KL}(q(z|x) \| p(z))
-\]</div>
-<h3 id="72-62-gan">7.2 6.2. GAN：对抗式能量模型<a class="headerlink" href="#72-62-gan" title="Permanent link">&para;</a></h3>
+<h4 id="196-6-intuition">1.9.6 <strong>6. Intuition</strong><a class="headerlink" href="#196-6-intuition" title="Permanent link">&para;</a></h4>
 <ul>
-<li><strong>EBGAN</strong>：判别器 <span class="arithmatex">\(D(x)\)</span> 作为能量函数，生成器 <span class="arithmatex">\(G(z)\)</span> 最小化 <span class="arithmatex">\(E(G(z))\)</span>。</li>
-<li><strong>能量视角</strong>：GAN的对抗训练隐式优化能量分布。</li>
+<li><span class="arithmatex">\( \alpha_t \)</span>: Decays monotonically, controlling how much signal remains at step <span class="arithmatex">\( t \)</span>.</li>
+<li><span class="arithmatex">\( \beta_t \)</span>: Balances noise addition speed (small <span class="arithmatex">\( \beta_t \)</span> = slow corruption).</li>
+<li><span class="arithmatex">\( \epsilon_\theta \)</span>: Predicts the noise to subtract, steering <span class="arithmatex">\( x_t \)</span> toward high-probability regions.</li>
 </ul>
-<h3 id="73-63">7.3 6.3. 扩散模型：动态能量模型<a class="headerlink" href="#73-63" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong>分数匹配等价性</strong>：扩散模型学习分数函数 <span class="arithmatex">\(\nabla_x \log p(x)\)</span>，即能量梯度 <span class="arithmatex">\(-\nabla_x E(x)\)</span>。</li>
-<li><strong>Langevin动力学</strong>：扩散采样过程与能量模型的MCMC方法一致。</li>
-</ul>
-<h3 id="74-64">7.4 6.4. 标准化流：显式归一化的特例<a class="headerlink" href="#74-64" title="Permanent link">&para;</a></h3>
-<p>标准化流通过可逆变换显式保证 <span class="arithmatex">\(Z=1\)</span>，其能量函数为 <span class="arithmatex">\(E(x) = -\log p(x)\)</span>，但生成机制（确定性映射）与传统EBMs不同。</p>
-<hr />
-<h2 id="8-7">8. 7.挑战与未来方向<a class="headerlink" href="#8-7" title="Permanent link">&para;</a></h2>
-<h3 id="81-71">8.1 7.1. 核心挑战<a class="headerlink" href="#81-71" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong>训练稳定性</strong>：隐变量与条件变量的联合优化易导致模式崩溃。</li>
-<li><strong>采样效率</strong>：高维数据下MCMC收敛缓慢。</li>
-<li><strong>可解释性</strong>：隐变量的物理意义不明确。</li>
-</ul>
-<h3 id="82-72">8.2 7.2. 未来趋势<a class="headerlink" href="#82-72" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong>高效采样算法</strong>：扩散蒸馏、快速MCMC变体。</li>
-<li><strong>多模态统一建模</strong>：跨文本、图像、语音的能量函数设计。</li>
-<li><strong>与大型模型结合</strong>：利用LLMs提供条件信号或隐变量先验。</li>
-<li><strong>科学计算深化</strong>：分子动力学、材料设计中的能量模型应用。</li>
-</ul>
+<p>DDPMs hinge on:</p>
+<ol>
+<li>Forward process equations for efficient training.</li>
+<li>Noise prediction (<span class="arithmatex">\( \epsilon_\theta \)</span>) and simplified loss.</li>
+<li>Sampling via iterative denoising with <span class="arithmatex">\( \alpha_t, \beta_t, \sigma_t \)</span>.</li>
+</ol>
+<p>DDPMs offer a elegant framework for generation by iteratively denoising data. Their simplicity, stability, and quality have made them a cornerstone of modern generative AI. In future posts, we’ll explore accelerated variants like <strong>DDIM</strong> and extensions like <strong>Latent Diffusion Models (LDM)</strong>. Stay tuned!</p>
+<h2 id="2-references">2. References<a class="headerlink" href="#2-references" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Ho et al., <em>Denoising Diffusion Probabilistic Models</em> (2020).</li>
+<li>
+<p>Sohl-Dickstein et al., <em>Deep Unsupervised Learning Using Nonequilibrium Thermodynamics</em> (2015).</p>
+</li>
+<li>
+<p><a href="https://arxiv.org/abs/2006.11239">Denoising Diffusion Probabilistic Models (DDPM)</a></p>
+</li>
+<li>
+<p><a href="https://arxiv.org/abs/2102.09672">Improved Denoising Diffusion Probabilistic Models</a></p>
+</li>
+<li>
+<p><a href="https://arxiv.org/abs/2105.05233">Diffusion Models Beat GANs on Image Synthesis</a></p>
+</li>
+<li>
+<p><a href="https://arxiv.org/abs/2011.13456">Score-Based Generative Modeling through Stochastic Differential Equations</a></p>
+</li>
+<li>
+<p><a href="https://arxiv.org/abs/2112.10752">Latent Diffusion Models</a>  -</p>
+</li>
+<li>
+<p><a href="https://www.cvmart.net/community/detail/6827">Understanding Diffusion Models: A Unified Perspective</a></p>
+</li>
+</ol>
 
 
 
@@ -2323,7 +2183,7 @@ x_{t-1} = \text{Denoise}(x_t) - \eta \nabla_x E_\theta(x_t, c)
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../../chapter2_generation_theory/manifold_hypothesis/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Manifold Hypothesis">
+          <a href="../../chapter5_GAN/vq_gan/" class="md-footer__link md-footer__link--prev" aria-label="Previous: VQ-GAN">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2333,20 +2193,20 @@ x_{t-1} = \text{Denoise}(x_t) - \eta \nabla_x E_\theta(x_t, c)
                 Previous
               </span>
               <div class="md-ellipsis">
-                Manifold Hypothesis
+                VQ-GAN
               </div>
             </div>
           </a>
         
         
           
-          <a href="../score_function/" class="md-footer__link md-footer__link--next" aria-label="Next: Score Functions">
+          <a href="../introduction_sde/" class="md-footer__link md-footer__link--next" aria-label="Next: SDE Fundamentals">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Score Functions
+                SDE Fundamentals
               </div>
             </div>
             <div class="md-footer__button md-icon">

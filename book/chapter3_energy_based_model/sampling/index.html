@@ -368,7 +368,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../chapter7_diffusion/Introduction_diffusion/" class="md-tabs__link">
+        <a href="../../chapter7_diffusion/ddpm/" class="md-tabs__link">
           
   
     
@@ -510,7 +510,9 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
         
           
           <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
@@ -668,7 +670,9 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
         
           
           <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
@@ -890,65 +894,287 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#key-concepts-in-sampling" class="md-nav__link">
+  <a href="#1-key-concepts-in-sampling" class="md-nav__link">
     <span class="md-ellipsis">
-      Key Concepts in Sampling
+      1. Key Concepts in Sampling
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#sample-from-a-simple-gaussian-distribution" class="md-nav__link">
+  <a href="#2-sample-from-a-simple-gaussian-distribution" class="md-nav__link">
     <span class="md-ellipsis">
-      sample from a simple gaussian distribution
+      2. sample from a simple gaussian distribution
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. sample from a simple gaussian distribution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-transformations-from-uniform-distributions" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.1 Transformations from Uniform Distributions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-sampling-from-complex-distributions" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.2 Sampling from Complex Distributions
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-markov-chain-monte-carlo-mcmc" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Markov Chain Monte Carlo (MCMC)
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#markov-chain-monte-carlo-mcmc" class="md-nav__link">
+  <a href="#4-hamiltonian-monte-carlo-hmc" class="md-nav__link">
     <span class="md-ellipsis">
-      Markov Chain Monte Carlo (MCMC)
+      4. Hamiltonian Monte Carlo (HMC)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Hamiltonian Monte Carlo (HMC)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-references-further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.1 References &amp; Further Reading
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-langevin-dynamics" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Langevin Dynamics
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#hamiltonian-monte-carlo-hmc" class="md-nav__link">
+  <a href="#6-alternative-sampling-dynamics" class="md-nav__link">
     <span class="md-ellipsis">
-      Hamiltonian Monte Carlo (HMC)
+      6. Alternative Sampling Dynamics
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Alternative Sampling Dynamics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-1-underdamped-langevin-dynamics" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.1 1. Underdamped Langevin Dynamics
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#langevin-dynamics" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#62-2-regularized-x-sde" class="md-nav__link">
     <span class="md-ellipsis">
-      Langevin Dynamics
+      6.2 2. Regularized X-SDE
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#alternative-sampling-dynamics" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#63-23-generalized-regularized-x-sde-form" class="md-nav__link">
     <span class="md-ellipsis">
-      Alternative Sampling Dynamics
+      6.3 2.3. Generalized Regularized X-SDE Form
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#details-of-annealed-langevin-dynamics-sampling" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#64-24-practical-adjustments" class="md-nav__link">
     <span class="md-ellipsis">
-      Details of Annealed Langevin Dynamics Sampling
+      6.4 2.4. Practical Adjustments
     </span>
   </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#65-3-time-reversal-sde-reverse-diffusion-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.5 3. Time-Reversal SDE (Reverse Diffusion Process)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#66-4-preconditioned-langevin-dynamics" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.6 4. Preconditioned Langevin Dynamics
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#67-summary-of-sde-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.7 Summary of SDE Models
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#68-learning-objectives" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.8 Learning Objectives
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#69-practical-recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.9 Practical Recommendations
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-details-of-annealed-langevin-dynamics-sampling" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Details of Annealed Langevin Dynamics Sampling
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Details of Annealed Langevin Dynamics Sampling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-1-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.1 1. Definition
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-2-core-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.2 2. Core Principles
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-3-mathematical-formulation-and-derivation" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.3 3. Mathematical Formulation and Derivation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#74-4-temperature-scheduling-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.4 4. Temperature Scheduling Design
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#75-5-theoretical-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.5 5. Theoretical Analysis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#76-6-applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.6 6. Applications
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#77-7-practical-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.7 7. Practical Steps
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#78-8-comparison-with-other-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.8 8. Comparison with Other Methods
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#79-9-advanced-extensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.9 9. Advanced Extensions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#710-10-key-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.10 10. Key Considerations
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1021,6 +1247,8 @@
       
         
       
+        
+      
     
     
       
@@ -1033,7 +1261,9 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
         
           
           <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
@@ -1075,6 +1305,27 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter6_VAE/vq_vae/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    VA-VAE
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1097,6 +1348,8 @@
       
         
       
+        
+      
     
     
       
@@ -1109,7 +1362,9 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
         
           
           <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
@@ -1180,7 +1435,9 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_2" >
         
           
           <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
@@ -1314,6 +1571,27 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter5_GAN/vq_gan/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    VQ-GAN
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1346,7 +1624,9 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
         
           
           <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
@@ -1390,7 +1670,9 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_1" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7_1" >
         
           
           <label class="md-nav__link" for="__nav_7_1" id="__nav_7_1_label" tabindex="0">
@@ -1418,11 +1700,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../chapter7_diffusion/Introduction_diffusion/" class="md-nav__link">
+      <a href="../../chapter7_diffusion/ddpm/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Introduction
+    DDPM
   </span>
   
 
@@ -1467,7 +1749,9 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_2" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7_2" >
         
           
           <label class="md-nav__link" for="__nav_7_2" id="__nav_7_2_label" tabindex="0">
@@ -1593,7 +1877,9 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
         
           
           <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
@@ -1713,7 +1999,9 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
         
           
           <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
@@ -1844,7 +2132,7 @@
 
 <h1 id="sampling-from-a-distribution">Sampling from a Distribution<a class="headerlink" href="#sampling-from-a-distribution" title="Permanent link">&para;</a></h1>
 <p>Understanding the process of sampling is crucial in probability and statistics. Sampling is not merely picking random points in space; it involves generating samples that statistically resemble a given probability distribution. This is essential for tasks such as Monte Carlo simulations, statistical modeling, and machine learning.</p>
-<h2 id="key-concepts-in-sampling">Key Concepts in Sampling<a class="headerlink" href="#key-concepts-in-sampling" title="Permanent link">&para;</a></h2>
+<h2 id="1-key-concepts-in-sampling">1. Key Concepts in Sampling<a class="headerlink" href="#1-key-concepts-in-sampling" title="Permanent link">&para;</a></h2>
 <ol>
 <li>
 <p><strong>Representation of the Distribution</strong>: The samples should reflect the underlying probability distribution. For example, if a distribution has a high density in a specific region, more samples should appear in that region.</p>
@@ -1868,7 +2156,7 @@ Unlike the VAE, Gan which directed generated an example. In the energy based mod
 <p>than we obtained the samples that follow the given probability distribution.
 Here CDF is the cumulative distribution function, that is</p>
 <div class="arithmatex">\[ CDF(x) = \int_{-\infty}^x p(z) \, dz \]</div>
-<h2 id="sample-from-a-simple-gaussian-distribution">sample from a simple gaussian distribution<a class="headerlink" href="#sample-from-a-simple-gaussian-distribution" title="Permanent link">&para;</a></h2>
+<h2 id="2-sample-from-a-simple-gaussian-distribution">2. sample from a simple gaussian distribution<a class="headerlink" href="#2-sample-from-a-simple-gaussian-distribution" title="Permanent link">&para;</a></h2>
 <p>In python, sample the gussian distribution maybe simple as the following.</p>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1">1</a></span>
 <span class="normal"><a href="#__codelineno-0-2">2</a></span>
@@ -1882,7 +2170,7 @@ Here CDF is the cumulative distribution function, that is</p>
 <a id="__codelineno-0-5" name="__codelineno-0-5"></a><span class="n">sample</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6"></a><span class="nb">print</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
-<h3 id="transformations-from-uniform-distributions">Transformations from Uniform Distributions<a class="headerlink" href="#transformations-from-uniform-distributions" title="Permanent link">&para;</a></h3>
+<h3 id="21-transformations-from-uniform-distributions">2.1 Transformations from Uniform Distributions<a class="headerlink" href="#21-transformations-from-uniform-distributions" title="Permanent link">&para;</a></h3>
 <p>While Gaussian distributions can be sampled directly, they can also be derived from uniform distributions using transformations like the Box-Muller method:</p>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-1-1">1</a></span>
 <span class="normal"><a href="#__codelineno-1-2">2</a></span>
@@ -1901,14 +2189,14 @@ Here CDF is the cumulative distribution function, that is</p>
 <a id="__codelineno-1-8" name="__codelineno-1-8"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Samples: </span><span class="si">{</span><span class="n">z1</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">z2</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
 <p>This method is efficient because it avoids the need for the inverse CDF, which does not have a closed form for Gaussian distributions.</p>
-<h3 id="sampling-from-complex-distributions">Sampling from Complex Distributions<a class="headerlink" href="#sampling-from-complex-distributions" title="Permanent link">&para;</a></h3>
+<h3 id="22-sampling-from-complex-distributions">2.2 Sampling from Complex Distributions<a class="headerlink" href="#22-sampling-from-complex-distributions" title="Permanent link">&para;</a></h3>
 <p>For complex distributions, especially with unnormalized probability density functions (as in Energy-Based Models), sophisticated methods are needed:</p>
 <ol>
 <li><strong>Markov Chain Monte Carlo (MCMC)</strong>: A broad class of algorithms for sampling from complex distributions.</li>
 <li><strong>Langevin Dynamics</strong>: Combines gradient descent with noise to explore probability spaces.</li>
 <li><strong>Hamiltonian Monte Carlo (HMC)</strong>: Uses physical dynamics to efficiently sample from high-dimensional distributions.</li>
 </ol>
-<h2 id="markov-chain-monte-carlo-mcmc">Markov Chain Monte Carlo (MCMC)<a class="headerlink" href="#markov-chain-monte-carlo-mcmc" title="Permanent link">&para;</a></h2>
+<h2 id="3-markov-chain-monte-carlo-mcmc">3. Markov Chain Monte Carlo (MCMC)<a class="headerlink" href="#3-markov-chain-monte-carlo-mcmc" title="Permanent link">&para;</a></h2>
 <p>MCMC is a broad class of algorithms used to draw samples from complex probability distributions, especially when direct sampling or classical numerical integration is difficult. The main idea behind MCMC is:</p>
 <ol>
 <li><strong>We want samples from a target distribution</strong>
@@ -1938,7 +2226,7 @@ to estimate <span class="arithmatex">\(\mathbb{E}_{\pi}[f]\)</span>. The law of 
 <p><strong>Gibbs sampling</strong> : Update each component in turn from its conditional distribution, often used when conditionals of <span class="arithmatex">\(\pi\)</span> are simpler than the joint.</p>
 </li>
 </ul>
-<h2 id="hamiltonian-monte-carlo-hmc">Hamiltonian Monte Carlo (HMC)<a class="headerlink" href="#hamiltonian-monte-carlo-hmc" title="Permanent link">&para;</a></h2>
+<h2 id="4-hamiltonian-monte-carlo-hmc">4. Hamiltonian Monte Carlo (HMC)<a class="headerlink" href="#4-hamiltonian-monte-carlo-hmc" title="Permanent link">&para;</a></h2>
 <p><strong>Hamiltonian Monte Carlo (HMC)</strong>  is a specialized MCMC method designed to tackle high‐dimensional sampling problems more efficiently than basic Metropolis–Hastings or Gibbs sampling, especially when <span class="arithmatex">\(\pi(x)\propto e^{-E(x)}\)</span> for some smooth potential <span class="arithmatex">\(E(x)\)</span>. Its key ingredients:</p>
 <ol>
 <li><strong>Incorporate “physical” dynamics</strong>
@@ -1992,7 +2280,7 @@ Because Hamiltonian trajectories can travel <em>long distances</em> in the state
 <p><strong>Repeat</strong>  for many iterations.</p>
 </li>
 </ol>
-<h3 id="references-further-reading">References &amp; Further Reading<a class="headerlink" href="#references-further-reading" title="Permanent link">&para;</a></h3>
+<h3 id="41-references-further-reading">4.1 References &amp; Further Reading<a class="headerlink" href="#41-references-further-reading" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>MCMC in general</strong> :</li>
 <li>
@@ -2015,11 +2303,11 @@ Because Hamiltonian trajectories can travel <em>long distances</em> in the state
 </li>
 </ul>
 <p>In short, MCMC is the backbone of <em>sampling from complicated distributions</em> when direct sampling is infeasible. Hamiltonian Monte Carlo refines this idea by incorporating physical dynamics to <em>move quickly</em> through the space, often yielding more efficient sampling in high‐dimensional problems.</p>
-<h2 id="langevin-dynamics">Langevin Dynamics<a class="headerlink" href="#langevin-dynamics" title="Permanent link">&para;</a></h2>
-<h4 id="1-definition">1. Definition<a class="headerlink" href="#1-definition" title="Permanent link">&para;</a></h4>
+<h2 id="5-langevin-dynamics">5. Langevin Dynamics<a class="headerlink" href="#5-langevin-dynamics" title="Permanent link">&para;</a></h2>
+<h4 id="51-1-definition">5.1 1. Definition<a class="headerlink" href="#51-1-definition" title="Permanent link">&para;</a></h4>
 <p>Langevin Dynamics Sampling is a sampling method based on Stochastic Differential Equations (SDE). It is used to sample from high-dimensional probability distributions <span class="arithmatex">\(p(x) \propto e^{-E(x)}\)</span>. The core idea is to add stochastic noise to the deterministic gradient descent process, ensuring a balance between exploration and exploitation, ultimately achieving the desired distribution.</p>
 <hr />
-<h4 id="2-core-principles">2. Core Principles<a class="headerlink" href="#2-core-principles" title="Permanent link">&para;</a></h4>
+<h4 id="52-2-core-principles">5.2 2. Core Principles<a class="headerlink" href="#52-2-core-principles" title="Permanent link">&para;</a></h4>
 <ul>
 <li>
 <p><strong>Physical Perspective</strong> : Derived from particle motion, where <span class="arithmatex">\(E(x)\)</span> represents the particle's potential energy (drift term), and random thermal noise (diffusion term) drives its movement.</p>
@@ -2038,7 +2326,7 @@ Because Hamiltonian trajectories can travel <em>long distances</em> in the state
 </li>
 </ul>
 <p>One also need to note that the converge to the final target distribution is not depended on the initial status, that means we can sample the initial status from any distribution.</p>
-<h4 id="3-discrete-formulation">3. Discrete Formulation<a class="headerlink" href="#3-discrete-formulation" title="Permanent link">&para;</a></h4>
+<h4 id="53-3-discrete-formulation">5.3 3. Discrete Formulation<a class="headerlink" href="#53-3-discrete-formulation" title="Permanent link">&para;</a></h4>
 <p><strong>Continuous Langevin Dynamics</strong></p>
 <div class="arithmatex">\[
  dx_t = -\nabla E(x_t)dt + \sqrt{2}dW_t
@@ -2058,7 +2346,7 @@ Because Hamiltonian trajectories can travel <em>long distances</em> in the state
 \]</div>
 <p>Where <span class="arithmatex">\(\epsilon\)</span> is the step size, controlling the trade-off between convergence speed and accuracy.</p>
 <hr />
-<h4 id="4-proof-target-distribution-as-the-stationary-distribution">4. Proof: Target Distribution as the Stationary Distribution<a class="headerlink" href="#4-proof-target-distribution-as-the-stationary-distribution" title="Permanent link">&para;</a></h4>
+<h4 id="54-4-proof-target-distribution-as-the-stationary-distribution">5.4 4. Proof: Target Distribution as the Stationary Distribution<a class="headerlink" href="#54-4-proof-target-distribution-as-the-stationary-distribution" title="Permanent link">&para;</a></h4>
 <p><strong>Goal</strong> : Prove that the stationary distribution of Langevin Dynamics is <span class="arithmatex">\(p(x) \propto e^{-E(x)}\)</span>.</p>
 <p><strong>Tool</strong> : Fokker-Planck Equation (Describes the evolution of probability density under a stochastic process).</p>
 <ol>
@@ -2088,7 +2376,7 @@ H(t) = \int p(x,t) \log \frac{p(x,t)}{p(x)} d x
 <p>Compute its time derivative, we have</p>
 <div class="arithmatex">\[\frac{d H}{d t} = - \int p \left| \nabla log \frac{p(x,t)}{p(x)}\right|^2 d x \leq 0\]</div>
 <p>This shows <span class="arithmatex">\(p(x,t)\)</span> decreases monotonically and is zero only when <span class="arithmatex">\(p(x,t) = p(x)\)</span>.</p>
-<h4 id="5-application-scenarios">5. Application Scenarios<a class="headerlink" href="#5-application-scenarios" title="Permanent link">&para;</a></h4>
+<h4 id="55-5-application-scenarios">5.5 5. Application Scenarios<a class="headerlink" href="#55-5-application-scenarios" title="Permanent link">&para;</a></h4>
 <ol>
 <li>
 <p><strong>Statistical Sampling</strong> : Simulates sampling from high-dimensional distributions.</p>
@@ -2103,7 +2391,7 @@ H(t) = \int p(x,t) \log \frac{p(x,t)}{p(x)} d x
 <p><strong>Optimization</strong> : Combines stochastic noise with gradient-based optimization (e.g., Stochastic Gradient Langevin Dynamics, SGLD).</p>
 </li>
 </ol>
-<h4 id="6-implementation-steps-and-hyperparameter-tuning">6. Implementation Steps and Hyperparameter Tuning<a class="headerlink" href="#6-implementation-steps-and-hyperparameter-tuning" title="Permanent link">&para;</a></h4>
+<h4 id="56-6-implementation-steps-and-hyperparameter-tuning">5.6 6. Implementation Steps and Hyperparameter Tuning<a class="headerlink" href="#56-6-implementation-steps-and-hyperparameter-tuning" title="Permanent link">&para;</a></h4>
 <p><strong>Implementation Process</strong> :</p>
 <ol>
 <li>
@@ -2140,7 +2428,7 @@ H(t) = \int p(x,t) \log \frac{p(x,t)}{p(x)} d x
 <p>Works under smoothness assumptions of the target distribution <span class="arithmatex">\(E(x)\)</span> (requires Lipschitz continuous gradients).</p>
 </li>
 </ul>
-<h4 id="7-example-code-python-code">7. Example Code (Python Code)<a class="headerlink" href="#7-example-code-python-code" title="Permanent link">&para;</a></h4>
+<h4 id="57-7-example-code-python-code">5.7 7. Example Code (Python Code)<a class="headerlink" href="#57-7-example-code-python-code" title="Permanent link">&para;</a></h4>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-2-1"> 1</a></span>
 <span class="normal"><a href="#__codelineno-2-2"> 2</a></span>
 <span class="normal"><a href="#__codelineno-2-3"> 3</a></span>
@@ -2173,7 +2461,7 @@ H(t) = \int p(x,t) \log \frac{p(x,t)}{p(x)} d x
 <li>Code <code>experiment/langevin_dynamics_simulation.ipynb</code>
 <a class="glightbox" href="../../../images/image-34.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="LD sampling process" src="../../../images/image-34.png" /></a></li>
 </ul>
-<h4 id="8-comparison-with-other-sampling-methods">8. Comparison with Other Sampling Methods<a class="headerlink" href="#8-comparison-with-other-sampling-methods" title="Permanent link">&para;</a></h4>
+<h4 id="58-8-comparison-with-other-sampling-methods">5.8 8. Comparison with Other Sampling Methods<a class="headerlink" href="#58-8-comparison-with-other-sampling-methods" title="Permanent link">&para;</a></h4>
 <table>
 <thead>
 <tr>
@@ -2204,13 +2492,13 @@ H(t) = \int p(x,t) \log \frac{p(x,t)}{p(x)} d x
 </tr>
 </tbody>
 </table>
-<h4 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">&para;</a></h4>
+<h4 id="59-conclusion">5.9 Conclusion<a class="headerlink" href="#59-conclusion" title="Permanent link">&para;</a></h4>
 <p>Langevin Dynamics Sampling introduces stochasticity guided by gradients, enabling efficient sampling from high-dimensional distributions. It is a powerful tool in generative modeling, Bayesian inference, and optimization algorithms. The theoretical guarantee relies on the Fokker-Planck Equation ensuring the target distribution, while practical tuning of step size and noise level balances convergence and efficiency.</p>
 <p>This simulation starts from a uniform distribution and converges to a Gaussian mixture, illustrating the effectiveness of Langevin dynamics in sampling from complex distributions.</p>
-<h2 id="alternative-sampling-dynamics">Alternative Sampling Dynamics<a class="headerlink" href="#alternative-sampling-dynamics" title="Permanent link">&para;</a></h2>
+<h2 id="6-alternative-sampling-dynamics">6. Alternative Sampling Dynamics<a class="headerlink" href="#6-alternative-sampling-dynamics" title="Permanent link">&para;</a></h2>
 <p>A question is that, why should we sample from <span class="arithmatex">\(p(x)\)</span> should follow LD ? Is there any other way?</p>
 <p>He we introduce various stochastic differential equations (SDEs) designed to generate the steady-state distribution <span class="arithmatex">\(p(x) \propto e^{-E(x)}\)</span>. By learning the appropriate potential <span class="arithmatex">\(E(x)\)</span>, these SDE-based methods can model the target distribution, making them suitable for generative tasks, optimization, and more. Below are common dynamics and SDE models:</p>
-<h3 id="1-underdamped-langevin-dynamics">1. Underdamped Langevin Dynamics<a class="headerlink" href="#1-underdamped-langevin-dynamics" title="Permanent link">&para;</a></h3>
+<h3 id="61-1-underdamped-langevin-dynamics">6.1 1. Underdamped Langevin Dynamics<a class="headerlink" href="#61-1-underdamped-langevin-dynamics" title="Permanent link">&para;</a></h3>
 <p><strong>Definition</strong> :</p>
 <p>Introduces momentum <span class="arithmatex">\(v\)</span>, modeling the dynamics of particles in a potential field. The equations are:</p>
 <div class="arithmatex">\[
@@ -2235,7 +2523,7 @@ H(t) = \int p(x,t) \log \frac{p(x,t)}{p(x)} d x
 <p>Simulating particle dynamics in physical systems.</p>
 </li>
 </ul>
-<h3 id="2-regularized-x-sde">2. Regularized X-SDE<a class="headerlink" href="#2-regularized-x-sde" title="Permanent link">&para;</a></h3>
+<h3 id="62-2-regularized-x-sde">6.2 2. Regularized X-SDE<a class="headerlink" href="#62-2-regularized-x-sde" title="Permanent link">&para;</a></h3>
 <p><strong>Definition</strong> :</p>
 <p>For a smooth potential <span class="arithmatex">\(E(x)\)</span>, introduces regularization terms. The SDE is:</p>
 <div class="arithmatex">\[
@@ -2243,7 +2531,7 @@ dx = b(x) dt + g(x) dW_x,
 \]</div>
 <p>where <span class="arithmatex">\(p(x) \propto e^{-E(x)}\)</span>.</p>
 <p>In the <strong>Regularized X-SDE</strong>  framework, the drift term <span class="arithmatex">\(b(x)\)</span> and diffusion term <span class="arithmatex">\(g(x)\)</span> are typically designed based on the energy function <span class="arithmatex">\(E(x)\)</span> to ensure that the process samples from the desired probability distribution <span class="arithmatex">\(p(x) \propto e^{-E(x)}\)</span>. Their relationships are as follows:</p>
-<h4 id="21-drift-term-bx">2.1. Drift Term <span class="arithmatex">\(b(x)\)</span><a class="headerlink" href="#21-drift-term-bx" title="Permanent link">&para;</a></h4>
+<h4 id="621-21-drift-term-bx">6.2.1 2.1. Drift Term <span class="arithmatex">\(b(x)\)</span><a class="headerlink" href="#621-21-drift-term-bx" title="Permanent link">&para;</a></h4>
 <ul>
 <li>
 <p>The drift term <span class="arithmatex">\(b(x)\)</span> represents the deterministic component that drives the system towards lower-energy regions.</p>
@@ -2258,7 +2546,7 @@ dx = b(x) dt + g(x) dW_x,
 <ul>
 <li>However, in <strong>Regularized X-SDE</strong> , <span class="arithmatex">\(b(x)\)</span> can be modified to incorporate additional prior knowledge, regularization, or auxiliary variables to improve sampling efficiency.</li>
 </ul>
-<h4 id="22-diffusion-term-gx">2.2. Diffusion Term <span class="arithmatex">\(g(x)\)</span><a class="headerlink" href="#22-diffusion-term-gx" title="Permanent link">&para;</a></h4>
+<h4 id="622-22-diffusion-term-gx">6.2.2 2.2. Diffusion Term <span class="arithmatex">\(g(x)\)</span><a class="headerlink" href="#622-22-diffusion-term-gx" title="Permanent link">&para;</a></h4>
 <ul>
 <li>
 <p>The diffusion term <span class="arithmatex">\(g(x)\)</span> controls the stochasticity of the process.</p>
@@ -2278,7 +2566,7 @@ dx = b(x) dt + g(x) dW_x,
  g(x) = g(x)
 \]</div>
 <p>where <span class="arithmatex">\(g(x)\)</span> is a function that may depend on the energy landscape <span class="arithmatex">\(E(x)\)</span>, allowing for <strong>adaptive noise scaling</strong> .</p>
-<h3 id="23-generalized-regularized-x-sde-form">2.3. Generalized Regularized X-SDE Form<a class="headerlink" href="#23-generalized-regularized-x-sde-form" title="Permanent link">&para;</a></h3>
+<h3 id="63-23-generalized-regularized-x-sde-form">6.3 2.3. Generalized Regularized X-SDE Form<a class="headerlink" href="#63-23-generalized-regularized-x-sde-form" title="Permanent link">&para;</a></h3>
 <p>A common form of the <strong>Regularized X-SDE</strong>  is</p>
 <div class="arithmatex">\[
  dx = -\nabla E(x) dt + g(x) dW_x
@@ -2292,7 +2580,7 @@ dx = b(x) dt + g(x) dW_x,
 <p><span class="arithmatex">\(g(x)\)</span> can be tuned to balance exploration and exploitation, helping to escape local minima.</p>
 </li>
 </ul>
-<h3 id="24-practical-adjustments">2.4. <strong>Practical Adjustments</strong><a class="headerlink" href="#24-practical-adjustments" title="Permanent link">&para;</a></h3>
+<h3 id="64-24-practical-adjustments">6.4 2.4. <strong>Practical Adjustments</strong><a class="headerlink" href="#64-24-practical-adjustments" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Preconditioned Langevin Dynamics (PLD):</strong>  <span class="arithmatex">\(b(x)\)</span> is modified as:</li>
 </ul>
@@ -2304,16 +2592,16 @@ dx = b(x) dt + g(x) dW_x,
 <li><strong>Adaptive Noise Scaling:</strong>  <span class="arithmatex">\(g(x)\)</span> can be chosen to control the amount of stochasticity, improving mixing properties.</li>
 </ul>
 <p>There are few main popular choise of <span class="arithmatex">\(g(x)\)</span>,</p>
-<h4 id="241-constant-diffusion-standard-langevin-dynamics">2.4.1 Constant Diffusion (Standard Langevin Dynamics)<a class="headerlink" href="#241-constant-diffusion-standard-langevin-dynamics" title="Permanent link">&para;</a></h4>
+<h4 id="641-241-constant-diffusion-standard-langevin-dynamics">6.4.1 2.4.1 Constant Diffusion (Standard Langevin Dynamics)<a class="headerlink" href="#641-241-constant-diffusion-standard-langevin-dynamics" title="Permanent link">&para;</a></h4>
 <div class="arithmatex">\[g(x) = \sqrt(2)I\]</div>
-<h4 id="242-preconditioned-diffusion">2.4.2 Preconditioned Diffusion<a class="headerlink" href="#242-preconditioned-diffusion" title="Permanent link">&para;</a></h4>
+<h4 id="642-242-preconditioned-diffusion">6.4.2 2.4.2 Preconditioned Diffusion<a class="headerlink" href="#642-242-preconditioned-diffusion" title="Permanent link">&para;</a></h4>
 <div class="arithmatex">\[ g(x) = \sqrt{2P(x)}\]</div>
 <p>where <span class="arithmatex">\(P(x)\)</span> is a preconditioning matrix (positive definite). Some choices of <span class="arithmatex">\(P(x)\)</span></p>
 <ul>
 <li>Diagonal Preconditioning <span class="arithmatex">\(P(x) = \text{diag} (\gamma_1, \gamma_2, ...,\gamma_d)\)</span> depends on the local curvature of <span class="arithmatex">\(E(x)\)</span></li>
 <li>Inverse Hession Approximation: <span class="arithmatex">\(P(x) \approx \left( \nabla^2 E(x) + \epsilon I \right)^{-1}\)</span>,(helps navigate high-curvature regions).</li>
 </ul>
-<h4 id="243-energy-based-diffusion-gradient-magnitude-scaling">2.4.3  Energy-Based Diffusion (Gradient Magnitude Scaling)<a class="headerlink" href="#243-energy-based-diffusion-gradient-magnitude-scaling" title="Permanent link">&para;</a></h4>
+<h4 id="643-243-energy-based-diffusion-gradient-magnitude-scaling">6.4.3 2.4.3  Energy-Based Diffusion (Gradient Magnitude Scaling)<a class="headerlink" href="#643-243-energy-based-diffusion-gradient-magnitude-scaling" title="Permanent link">&para;</a></h4>
 <div class="arithmatex">\[
  g(x) = \alpha \cdot (1 + \|\nabla E(x)\|^\beta)
 \]</div>
@@ -2326,7 +2614,7 @@ dx = b(x) dt + g(x) dW_x,
 <p><strong>Use Case:</strong>  Helps escape local minima in multi-modal distributions.</p>
 </li>
 </ul>
-<h4 id="244-annealed-langevin-dynamics-temperature-based-diffusion">2.4.4 Annealed Langevin Dynamics (Temperature-Based Diffusion)<a class="headerlink" href="#244-annealed-langevin-dynamics-temperature-based-diffusion" title="Permanent link">&para;</a></h4>
+<h4 id="644-244-annealed-langevin-dynamics-temperature-based-diffusion">6.4.4 2.4.4 Annealed Langevin Dynamics (Temperature-Based Diffusion)<a class="headerlink" href="#644-244-annealed-langevin-dynamics-temperature-based-diffusion" title="Permanent link">&para;</a></h4>
 <div class="arithmatex">\[
 g(x) = \sqrt{2 T(x)}
 \]</div>
@@ -2342,7 +2630,7 @@ T(x) = \frac{T_0}{1 + \lambda t}
 <p><strong>Use Case:</strong>  Useful in Bayesian inference and generative modeling.</p>
 </li>
 </ul>
-<h4 id="245-score-based-sde-diffusion-models">2.4.5. Score-Based SDE (Diffusion Models)<a class="headerlink" href="#245-score-based-sde-diffusion-models" title="Permanent link">&para;</a></h4>
+<h4 id="645-245-score-based-sde-diffusion-models">6.4.5 2.4.5. Score-Based SDE (Diffusion Models)<a class="headerlink" href="#645-245-score-based-sde-diffusion-models" title="Permanent link">&para;</a></h4>
 <div class="arithmatex">\[
 g(x) = \sigma(t)
 \]</div>
@@ -2375,7 +2663,7 @@ g(x) = \sigma(t)
 </tr>
 </tbody>
 </table>
-<h3 id="3-time-reversal-sde-reverse-diffusion-process">3. Time-Reversal SDE (Reverse Diffusion Process)<a class="headerlink" href="#3-time-reversal-sde-reverse-diffusion-process" title="Permanent link">&para;</a></h3>
+<h3 id="65-3-time-reversal-sde-reverse-diffusion-process">6.5 3. Time-Reversal SDE (Reverse Diffusion Process)<a class="headerlink" href="#65-3-time-reversal-sde-reverse-diffusion-process" title="Permanent link">&para;</a></h3>
 <p><strong>Definition</strong> :</p>
 <p>Given a forward SDE:</p>
 <div class="arithmatex">\[
@@ -2396,7 +2684,7 @@ g(x) = \sigma(t)
 </li>
 </ul>
 <p>In this method, we need to construct a path that maps from the original data distribution to some easy distribution, and then use the revserse process (as defined in the SDE) to sample from target data distribution.</p>
-<h3 id="4-preconditioned-langevin-dynamics">4. Preconditioned Langevin Dynamics<a class="headerlink" href="#4-preconditioned-langevin-dynamics" title="Permanent link">&para;</a></h3>
+<h3 id="66-4-preconditioned-langevin-dynamics">6.6 4. Preconditioned Langevin Dynamics<a class="headerlink" href="#66-4-preconditioned-langevin-dynamics" title="Permanent link">&para;</a></h3>
 <p><strong>Definition</strong> :</p>
 <p>Introduces a preconditioning matrix <span class="arithmatex">\(P(x)\)</span> to accelerate convergence which is a special case of regularized X-SDE. The SDE is:</p>
 <div class="arithmatex">\[
@@ -2480,7 +2768,7 @@ dx = - P(x) A x dt + \sqrt{2P(x)} dW_x
 dx = - x dt + \sqrt{2P(x)} dW_x
 \]</div>
 <p>which <strong>normalizes the scales in all directions</strong> , making the sampling <strong>more efficient</strong></p>
-<h3 id="summary-of-sde-models">Summary of SDE Models<a class="headerlink" href="#summary-of-sde-models" title="Permanent link">&para;</a></h3>
+<h3 id="67-summary-of-sde-models">6.7 Summary of SDE Models<a class="headerlink" href="#67-summary-of-sde-models" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -2523,7 +2811,7 @@ dx = - x dt + \sqrt{2P(x)} dW_x
 </tr>
 </tbody>
 </table>
-<h3 id="learning-objectives">Learning Objectives<a class="headerlink" href="#learning-objectives" title="Permanent link">&para;</a></h3>
+<h3 id="68-learning-objectives">6.8 Learning Objectives<a class="headerlink" href="#68-learning-objectives" title="Permanent link">&para;</a></h3>
 <p>Why do different SDE formulations yield the same equilibrium distribution?</p>
 <p><strong>Mathematical Tool</strong> :</p>
 <p><strong>Fokker-Planck equation</strong></p>
@@ -2536,7 +2824,7 @@ dx = - x dt + \sqrt{2P(x)} dW_x
  \nabla \cdot (p b) = \frac{1}{2} \nabla^2(p \sigma \sigma^\top).
 \]</div>
 <p>By adjusting <span class="arithmatex">\(b(x)\)</span> and <span class="arithmatex">\(\sigma(x)\)</span>, one can achieve the desired stationary distribution.</p>
-<h3 id="practical-recommendations">Practical Recommendations<a class="headerlink" href="#practical-recommendations" title="Permanent link">&para;</a></h3>
+<h3 id="69-practical-recommendations">6.9 Practical Recommendations<a class="headerlink" href="#69-practical-recommendations" title="Permanent link">&para;</a></h3>
 <ol>
 <li>
 <p>Choose the SDE based on your specific problem and computational constraints.</p>
@@ -2548,10 +2836,10 @@ dx = - x dt + \sqrt{2P(x)} dW_x
 <p>When optimizing, balance between exploration (stochastic) and exploitation (deterministic).</p>
 </li>
 </ol>
-<h2 id="details-of-annealed-langevin-dynamics-sampling">Details of Annealed Langevin Dynamics Sampling<a class="headerlink" href="#details-of-annealed-langevin-dynamics-sampling" title="Permanent link">&para;</a></h2>
-<h3 id="1-definition_1">1. Definition<a class="headerlink" href="#1-definition_1" title="Permanent link">&para;</a></h3>
+<h2 id="7-details-of-annealed-langevin-dynamics-sampling">7. Details of Annealed Langevin Dynamics Sampling<a class="headerlink" href="#7-details-of-annealed-langevin-dynamics-sampling" title="Permanent link">&para;</a></h2>
+<h3 id="71-1-definition">7.1 1. Definition<a class="headerlink" href="#71-1-definition" title="Permanent link">&para;</a></h3>
 <p>Annealed Langevin Dynamics Sampling is a stochastic sampling method that incorporates temperature annealing. It enhances the system's ability to explore the target space, balancing between exploration (searching globally) and exploitation (refining locally).</p>
-<h3 id="2-core-principles_1">2. Core Principles<a class="headerlink" href="#2-core-principles_1" title="Permanent link">&para;</a></h3>
+<h3 id="72-2-core-principles">7.2 2. Core Principles<a class="headerlink" href="#72-2-core-principles" title="Permanent link">&para;</a></h3>
 <ul>
 <li>
 <p><strong>Annealing</strong> : Introduces a temperature schedule <span class="arithmatex">\(T(t)\)</span>, which controls the degree of randomness (higher temperatures lead to larger noise, encouraging exploration; lower temperatures reduce noise for refined optimization).</p>
@@ -2560,7 +2848,7 @@ dx = - x dt + \sqrt{2P(x)} dW_x
 <p><strong>Stationary Distribution</strong> : Gradually transitions the sampling distribution towards the target distribution <span class="arithmatex">\(p(x) \propto e^{-E(x)}\)</span> by reducing the temperature.</p>
 </li>
 </ul>
-<h3 id="3-mathematical-formulation-and-derivation">3. Mathematical Formulation and Derivation<a class="headerlink" href="#3-mathematical-formulation-and-derivation" title="Permanent link">&para;</a></h3>
+<h3 id="73-3-mathematical-formulation-and-derivation">7.3 3. Mathematical Formulation and Derivation<a class="headerlink" href="#73-3-mathematical-formulation-and-derivation" title="Permanent link">&para;</a></h3>
 <p>The dynamic form of Annealed Langevin Dynamics is:</p>
 <div class="arithmatex">\[
  dx_t = -\nabla U(x_t) dt + \sqrt{2 T(t)} dW_t,
@@ -2579,7 +2867,7 @@ dx = - x dt + \sqrt{2P(x)} dW_x
  x_{k+1} = x_k - \epsilon \nabla U(x_k) + \sqrt{2 \epsilon T_k} \xi_k, \quad \xi_k \sim \mathcal{N}(0, I),
 \]</div>
 <p>where <span class="arithmatex">\(\epsilon\)</span> is the step size, and <span class="arithmatex">\(\xi_k\)</span> is Gaussian noise.</p>
-<h3 id="4-temperature-scheduling-design">4. Temperature Scheduling Design<a class="headerlink" href="#4-temperature-scheduling-design" title="Permanent link">&para;</a></h3>
+<h3 id="74-4-temperature-scheduling-design">7.4 4. Temperature Scheduling Design<a class="headerlink" href="#74-4-temperature-scheduling-design" title="Permanent link">&para;</a></h3>
 <ul>
 <li>
 <p><strong>Exponential Decay</strong> : <span class="arithmatex">\(T_k = T_0 \cdot \gamma^k\)</span>, where <span class="arithmatex">\(0 &lt; \gamma &lt; 1\)</span>.</p>
@@ -2604,7 +2892,7 @@ dx = - x dt + \sqrt{2P(x)} dW_x
 </li>
 </ul>
 <hr />
-<h3 id="5-theoretical-analysis">5. Theoretical Analysis<a class="headerlink" href="#5-theoretical-analysis" title="Permanent link">&para;</a></h3>
+<h3 id="75-5-theoretical-analysis">7.5 5. Theoretical Analysis<a class="headerlink" href="#75-5-theoretical-analysis" title="Permanent link">&para;</a></h3>
 <p>In the presence of temperature <span class="arithmatex">\(T\)</span>, the stationary distribution of Langevin Dynamics becomes:</p>
 <div class="arithmatex">\[
  p_T(x) \propto e^{-E(x)/T}.
@@ -2619,7 +2907,7 @@ dx = - x dt + \sqrt{2P(x)} dW_x
 <p><strong>Exploitation</strong> : Gradual cooling refines the search towards the target distribution.</p>
 </li>
 </ul>
-<h3 id="6-applications">6. Applications<a class="headerlink" href="#6-applications" title="Permanent link">&para;</a></h3>
+<h3 id="76-6-applications">7.6 6. Applications<a class="headerlink" href="#76-6-applications" title="Permanent link">&para;</a></h3>
 <ul>
 <li>
 <p><strong>Generative Models</strong> : Used in training and optimization tasks for high-dimensional data.</p>
@@ -2628,7 +2916,7 @@ dx = - x dt + \sqrt{2P(x)} dW_x
 <p><strong>Non-Convex Optimization</strong> : Combines annealing and dynamics for escaping local minima.</p>
 </li>
 </ul>
-<h3 id="7-practical-steps">7. Practical Steps<a class="headerlink" href="#7-practical-steps" title="Permanent link">&para;</a></h3>
+<h3 id="77-7-practical-steps">7.7 7. Practical Steps<a class="headerlink" href="#77-7-practical-steps" title="Permanent link">&para;</a></h3>
 <ol>
 <li>
 <p><strong>Initialization</strong> :</p>
@@ -2691,7 +2979,7 @@ dx = - x dt + \sqrt{2P(x)} dW_x
 <a id="__codelineno-3-14" name="__codelineno-3-14"></a>        <span class="n">samples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 <a id="__codelineno-3-15" name="__codelineno-3-15"></a>    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
-<h3 id="8-comparison-with-other-methods">8. Comparison with Other Methods<a class="headerlink" href="#8-comparison-with-other-methods" title="Permanent link">&para;</a></h3>
+<h3 id="78-8-comparison-with-other-methods">7.8 8. Comparison with Other Methods<a class="headerlink" href="#78-8-comparison-with-other-methods" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -2728,7 +3016,7 @@ dx = - x dt + \sqrt{2P(x)} dW_x
 </tr>
 </tbody>
 </table>
-<h3 id="9-advanced-extensions">9. Advanced Extensions<a class="headerlink" href="#9-advanced-extensions" title="Permanent link">&para;</a></h3>
+<h3 id="79-9-advanced-extensions">7.9 9. Advanced Extensions<a class="headerlink" href="#79-9-advanced-extensions" title="Permanent link">&para;</a></h3>
 <ul>
 <li>
 <p><strong>SGLD with Annealing</strong> :
@@ -2740,7 +3028,7 @@ Dynamically adjusts the annealing schedule based on feedback (e.g., acceptance r
 </li>
 </ul>
 <hr />
-<h3 id="10-key-considerations">10. Key Considerations<a class="headerlink" href="#10-key-considerations" title="Permanent link">&para;</a></h3>
+<h3 id="710-10-key-considerations">7.10 10. Key Considerations<a class="headerlink" href="#710-10-key-considerations" title="Permanent link">&para;</a></h3>
 <ul>
 <li>
 <p><strong>Temperature Schedule</strong> : Improper schedules (e.g., too rapid cooling) may lead to poor convergence.</p>
@@ -2917,16 +3205,16 @@ Dynamically adjusts the annealing schedule based on feedback (e.g., acceptance r
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "toc.integrate", "content.code.copy", "content.code.select", "content.code.annotate", "content.tabs.link", "content.footnote.tooltips", "content.tooltips", "navigation.tracking", "search.highlight", "search.share", "search.suggest", "toc.follow", "announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "search.share", "search.suggest"], "search": "../../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "toc.integrate", "content.code.copy", "content.code.select", "content.code.annotate", "content.tabs.link", "content.footnote.tooltips", "content.tooltips", "navigation.tracking", "search.highlight", "search.share", "search.suggest", "toc.follow", "announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.expand", "search.share", "search.suggest"], "search": "../../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
       <script src="../../../assets/javascripts/bundle.60a45f97.min.js"></script>
       
-        <script src="../../../javascripts/mathjax.js"></script>
-      
-        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
-      
         <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+      
+        <script src="../../../javascripts/mathjax.js"></script>
       
     
   <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});

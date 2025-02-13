@@ -9,10 +9,10 @@
       
       
       
-        <link rel="prev" href="../../chapter2_generation_theory/manifold_hypothesis/">
+        <link rel="prev" href="../3.7R3Gan/paper/">
       
       
-        <link rel="next" href="../score_function/">
+        <link rel="next" href="../../chapter7_diffusion/ddpm/">
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
@@ -20,7 +20,7 @@
     
     
       
-        <title>Introduction - Generative AI: From Start to Surrender</title>
+        <title>VQ-GAN - Generative AI: From Start to Surrender</title>
       
     
     
@@ -95,7 +95,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#_1" class="md-skip">
+        <a href="#understanding-vq-gan-a-powerful-approach-to-high-quality-image-synthesis" class="md-skip">
           Skip to content
         </a>
       
@@ -129,7 +129,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Introduction
+              VQ-GAN
             
           </span>
         </div>
@@ -296,13 +296,11 @@
         
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="./" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../chapter3_energy_based_model/introduction/" class="md-tabs__link">
           
   
     
@@ -338,11 +336,13 @@
         
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../chapter5_GAN/3.1from_gan_to_stylegan/paper/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../3.1from_gan_to_stylegan/paper/" class="md-tabs__link">
           
   
     
@@ -746,10 +746,8 @@
       
   
   
-    
   
   
-  
     
     
       
@@ -766,22 +764,21 @@
     
     
       
-        
-        
-      
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -792,7 +789,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             Energy Based Models
@@ -803,30 +800,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    Introduction
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../chapter3_energy_based_model/introduction/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -835,287 +812,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#1" class="md-nav__link">
-    <span class="md-ellipsis">
-      1. 引言
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#2-1" class="md-nav__link">
-    <span class="md-ellipsis">
-      2. 1. 能量模型的基础理论
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="2. 1. 能量模型的基础理论">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#21-11" class="md-nav__link">
-    <span class="md-ellipsis">
-      2.1 1.1. 定义与数学形式
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#22-12" class="md-nav__link">
-    <span class="md-ellipsis">
-      2.2 1.2. 核心假设与条件
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#3-2" class="md-nav__link">
-    <span class="md-ellipsis">
-      3. 2. 能量模型的核心挑战
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="3. 2. 能量模型的核心挑战">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#31-21-p_textdatax" class="md-nav__link">
-    <span class="md-ellipsis">
-      3.1 2.1. 估计真实数据分布 \(p_{\text{data}}(x)\)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#32-22" class="md-nav__link">
-    <span class="md-ellipsis">
-      3.2 2.2. 高效采样
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#4-3-ebm-vs-sbm" class="md-nav__link">
-    <span class="md-ellipsis">
-      4. 3. EBM vs SBM
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#5-4" class="md-nav__link">
-    <span class="md-ellipsis">
-      5. 4. 能量模型的主流流派
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="5. 4. 能量模型的主流流派">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#51-41-contrastive-divergence" class="md-nav__link">
-    <span class="md-ellipsis">
-      5.1 4.1. Contrastive Divergence
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#52-42" class="md-nav__link">
-    <span class="md-ellipsis">
-      5.2 4.2. 分数匹配
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#53-43" class="md-nav__link">
-    <span class="md-ellipsis">
-      5.3 4.3. 对抗训练派
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#54-44" class="md-nav__link">
-    <span class="md-ellipsis">
-      5.4 4.4. 结构化能量模型
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#6-5" class="md-nav__link">
-    <span class="md-ellipsis">
-      6. 5.能量模型的扩展方法
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="6. 5.能量模型的扩展方法">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#61-51" class="md-nav__link">
-    <span class="md-ellipsis">
-      6.1 5.1. 条件能量模型
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#62-52" class="md-nav__link">
-    <span class="md-ellipsis">
-      6.2 5.2. 隐变量能量模型
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#63-53" class="md-nav__link">
-    <span class="md-ellipsis">
-      6.3 5.3. 能量引导的扩散模型
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#7-6" class="md-nav__link">
-    <span class="md-ellipsis">
-      7. 6. 能量模型与其他生成模型的关系
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="7. 6. 能量模型与其他生成模型的关系">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#71-61-vae" class="md-nav__link">
-    <span class="md-ellipsis">
-      7.1 6.1. VAE：隐变量能量模型的变分实现
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#72-62-gan" class="md-nav__link">
-    <span class="md-ellipsis">
-      7.2 6.2. GAN：对抗式能量模型
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#73-63" class="md-nav__link">
-    <span class="md-ellipsis">
-      7.3 6.3. 扩散模型：动态能量模型
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#74-64" class="md-nav__link">
-    <span class="md-ellipsis">
-      7.4 6.4. 标准化流：显式归一化的特例
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#8-7" class="md-nav__link">
-    <span class="md-ellipsis">
-      8. 7.挑战与未来方向
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="8. 7.挑战与未来方向">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#81-71" class="md-nav__link">
-    <span class="md-ellipsis">
-      8.1 7.1. 核心挑战
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#82-72" class="md-nav__link">
-    <span class="md-ellipsis">
-      8.2 7.2. 未来趋势
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1128,7 +824,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../score_function/" class="md-nav__link">
+      <a href="../../chapter3_energy_based_model/score_function/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1149,7 +845,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sampling/" class="md-nav__link">
+      <a href="../../chapter3_energy_based_model/sampling/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1170,7 +866,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cd/" class="md-nav__link">
+      <a href="../../chapter3_energy_based_model/cd/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1191,7 +887,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../score_matching/" class="md-nav__link">
+      <a href="../../chapter3_energy_based_model/score_matching/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1313,8 +1009,10 @@
       
   
   
+    
   
   
+  
     
     
       
@@ -1329,21 +1027,22 @@
     
     
       
+        
+        
+      
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
         
           
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
-        
-          
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
             
   
   <span class="md-ellipsis">
@@ -1354,7 +1053,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             GANs
@@ -1368,7 +1067,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../chapter5_GAN/3.1from_gan_to_stylegan/paper/" class="md-nav__link">
+      <a href="../3.1from_gan_to_stylegan/paper/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1404,10 +1103,13 @@
       
       
         
+          
+          
+        
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
@@ -1416,7 +1118,7 @@
         <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_2" >
         
           
-          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="">
             
   
   <span class="md-ellipsis">
@@ -1441,7 +1143,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../chapter5_GAN/3.3stylegan/paper/" class="md-nav__link">
+      <a href="../3.3stylegan/paper/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1462,7 +1164,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../chapter5_GAN/3.4stylegan2/paper/" class="md-nav__link">
+      <a href="../3.4stylegan2/paper/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1483,7 +1185,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../chapter5_GAN/3.5stylegan3/paper/" class="md-nav__link">
+      <a href="../3.5stylegan3/paper/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1504,7 +1206,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../chapter5_GAN/3.6styleganT/paper/" class="md-nav__link">
+      <a href="../3.6styleganT/paper/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1533,7 +1235,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../chapter5_GAN/3.7R3Gan/paper/" class="md-nav__link">
+      <a href="../3.7R3Gan/paper/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1551,10 +1253,30 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../chapter5_GAN/vq_gan/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    VQ-GAN
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -1563,6 +1285,179 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Introduction
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-why-vq-gan" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Why VQ-GAN?
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Why VQ-GAN?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-limitations-of-vq-vae" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.1 Limitations of VQ-VAE
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-vq-gans-improvements" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.2 VQ-GAN's Improvements
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-how-vq-gan-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. How VQ-GAN Works
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. How VQ-GAN Works">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-quantization-process-similar-to-vq-vae" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.1 Quantization Process (Similar to VQ-VAE)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-adversarial-training" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2 Adversarial Training
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-perceptual-reconstruction-loss" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.3 Perceptual &amp; Reconstruction Loss
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-loss-function-comparison-vq-vae-vs-vq-gan" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.4 Loss Function Comparison: VQ-VAE vs. VQ-GAN
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-transformer-based-prior" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.5 Transformer-based Prior
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-conditioned-synthesis-with-vq-gan" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Conditioned Synthesis with VQ-GAN
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-key-insights" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Key Insights
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-codes" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Codes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Codes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-vectorquantizer" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.1 VectorQuantizer
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Conclusion
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -2106,184 +2001,294 @@
                   
 
 
-<h1 id="_1">能量模型：理论与应用全景解读<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
-<hr />
-<h2 id="1">1. <strong>引言</strong><a class="headerlink" href="#1" title="Permanent link">&para;</a></h2>
-<p>能量模型（Energy-Based Models, EBMs）是机器学习领域的一类重要生成模型，其核心思想是通过能量函数隐式定义数据分布。与显式建模概率密度的模型（如标准化流、VAE）不同，能量模型通过“能量值”衡量样本的合理性，低能量对应高概率区域。这种灵活性使其在图像生成、多模态学习、科学计算等任务中展现出独特优势。
-本文将系统解析能量模型的<strong>数学基础</strong>、<strong>核心流派</strong>、<strong>扩展方法</strong>及其与主流生成模型（如GAN、扩散模型）的联系，并探讨其未来发展方向。</p>
-<hr />
-<h2 id="2-1">2. 1. 能量模型的基础理论<a class="headerlink" href="#2-1" title="Permanent link">&para;</a></h2>
-<h3 id="21-11">2.1 1.1. 定义与数学形式<a class="headerlink" href="#21-11" title="Permanent link">&para;</a></h3>
-<p>能量模型通过能量函数 <span class="arithmatex">\(E_\theta(x)\)</span> 隐式定义概率分布：</p>
+<h1 id="understanding-vq-gan-a-powerful-approach-to-high-quality-image-synthesis">Understanding VQ-GAN: A Powerful Approach to High-Quality Image Synthesis<a class="headerlink" href="#understanding-vq-gan-a-powerful-approach-to-high-quality-image-synthesis" title="Permanent link">&para;</a></h1>
+<h2 id="1-introduction">1. Introduction<a class="headerlink" href="#1-introduction" title="Permanent link">&para;</a></h2>
+<p>Vector Quantized Generative Adversarial Network (<strong>VQ-GAN</strong>) is an advanced generative model that builds upon <strong>VQ-VAE</strong> by incorporating adversarial training and perceptual loss. This allows it to generate high-resolution, photo-realistic images while maintaining compact and meaningful latent representations. In this blog, we will explore how VQ-GAN works, why it surpasses VQ-VAE, and its key insights.</p>
+<h2 id="2-why-vq-gan">2. Why VQ-GAN?<a class="headerlink" href="#2-why-vq-gan" title="Permanent link">&para;</a></h2>
+<h3 id="21-limitations-of-vq-vae">2.1 Limitations of VQ-VAE<a class="headerlink" href="#21-limitations-of-vq-vae" title="Permanent link">&para;</a></h3>
+<p><a class="glightbox" href="../../../images/image-41.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="alt text" src="../../../images/image-41.png" /></a></p>
+<p>VQ-VAE efficiently compresses data into a discrete latent space but has several drawbacks:</p>
+<ul>
+<li>Blurred reconstructions: The decoder in VQ-VAE often produces oversmoothed images due to reliance on mean squared error (MSE) loss.</li>
+<li>Lack of fine details: It does not explicitly optimize for perceptual quality, causing small textures and details to be lost.</li>
+<li>Autoregressive bottleneck: Many implementations rely on autoregressive priors (e.g., PixelCNN), which are computationally expensive.</li>
+</ul>
+<h3 id="22-vq-gans-improvements">2.2 VQ-GAN's Improvements<a class="headerlink" href="#22-vq-gans-improvements" title="Permanent link">&para;</a></h3>
+<p><a class="glightbox" href="../../../images/image-42.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="alt text" src="../../../images/image-42.png" /></a>
+VQ-GAN enhances VQ-VAE with the following key features:</p>
+<ul>
+<li>Adversarial training: By introducing a discriminator (GAN-style training), VQ-GAN produces sharper and more realistic images.</li>
+<li>Perceptual loss: Instead of relying solely on MSE, it uses perceptual loss (from a pre-trained network) to improve visual fidelity.</li>
+<li>Efficient Latent Representations: Unlike PixelCNN priors, VQ-GAN leverages transformers for improved context modeling, leading to faster and more efficient generation.</li>
+</ul>
+<h2 id="3-how-vq-gan-works">3. How VQ-GAN Works<a class="headerlink" href="#3-how-vq-gan-works" title="Permanent link">&para;</a></h2>
+<h3 id="31-quantization-process-similar-to-vq-vae">3.1 Quantization Process (Similar to VQ-VAE)<a class="headerlink" href="#31-quantization-process-similar-to-vq-vae" title="Permanent link">&para;</a></h3>
+<ul>
+<li>The input image is encoded into a <strong>latent space</strong> using a convolutional encoder.</li>
+<li>The encoded features are discretized using a <strong>vector quantization (VQ) layer</strong>, mapping each feature to a learned codebook entry.</li>
+<li>The decoder reconstructs the image from the quantized representation.</li>
+</ul>
+<h3 id="32-adversarial-training">3.2 Adversarial Training<a class="headerlink" href="#32-adversarial-training" title="Permanent link">&para;</a></h3>
+<ul>
+<li>A discriminator is introduced, following the <strong>GAN framework</strong>, to distinguish real images from generated ones.</li>
+<li>The generator (decoder) is trained to fool the discriminator, improving image sharpness and realism.</li>
+</ul>
+<h3 id="33-perceptual-reconstruction-loss">3.3 Perceptual &amp; Reconstruction Loss<a class="headerlink" href="#33-perceptual-reconstruction-loss" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Instead of purely optimizing for pixel-wise loss (MSE), VQ-GAN incorporates a perceptual loss computed using a pre-trained deep network (e.g., VGG) to ensure structural coherence.</li>
+<li>The final objective function combines:</li>
+<li>Reconstruction loss (ensuring faithful reconstructions)</li>
+<li>GAN loss (encouraging realism)</li>
+<li>Perceptual loss (maintaining perceptual consistency)</li>
+</ul>
+<h3 id="34-loss-function-comparison-vq-vae-vs-vq-gan">3.4 Loss Function Comparison: VQ-VAE vs. VQ-GAN<a class="headerlink" href="#34-loss-function-comparison-vq-vae-vs-vq-gan" title="Permanent link">&para;</a></h3>
+<h4 id="341-vq-vae-loss-function">3.4.1 VQ-VAE Loss Function<a class="headerlink" href="#341-vq-vae-loss-function" title="Permanent link">&para;</a></h4>
+<div class="arithmatex">\[ L_{VQ-VAE} = \| x - \hat{x} \|^2 + \| sg(E(x)) - z \|^2 + \beta \| sg(z) - E(x) \|^2 \]</div>
+<p>Where:</p>
+<ul>
+<li><span class="arithmatex">\( x \)</span> is the input image, <span class="arithmatex">\( \hat{x} \)</span> is the reconstructed image.</li>
+<li><span class="arithmatex">\( E(x) \)</span> is the encoder output.</li>
+<li><span class="arithmatex">\( z \)</span> is the quantized latent vector.</li>
+<li>The first term represents the reconstruction loss, while the second and third terms encourage commitment to the learned codebook.</li>
+</ul>
+<h4 id="342-vq-gan-loss-function">3.4.2 VQ-GAN Loss Function<a class="headerlink" href="#342-vq-gan-loss-function" title="Permanent link">&para;</a></h4>
+<div class="arithmatex">\[ L_{VQ-GAN} = L_{VQ-VAE} + \lambda L_{GAN} \]</div>
+<p>The additional GAN loss is defined as</p>
 <div class="arithmatex">\[
-P_\theta(x) = \frac{e^{-E_\theta(x)}}{Z(\theta)}, \quad Z(\theta) = \int e^{-E_\theta(x)} dx
+L_{GAN}(\{E, G, \mathcal{Z}\}, D) = \mathbb{E}[\log D(x) + \log(1 - D(G(z_q(x))))]
 \]</div>
+<p>where:</p>
 <ul>
-<li><strong>能量函数 <span class="arithmatex">\(E_\theta(x)\)</span></strong>：衡量样本 <span class="arithmatex">\(x\)</span> 的“不合理性”，通常由神经网络参数化。</li>
-<li><strong>归一化因子 <span class="arithmatex">\(Z(\theta)\)</span></strong>：确保概率积分为1，但在高维空间中难以直接计算。</li>
+<li><span class="arithmatex">\( z_q(x) \)</span> is the quantized latent representation of the input <span class="arithmatex">\( x \)</span>.</li>
+<li><span class="arithmatex">\( G(z_q(x)) \)</span> represents the reconstructed/generated image from the quantized latent representation.</li>
+<li><span class="arithmatex">\( D(x) \)</span> is the discriminator's probability that the real image <span class="arithmatex">\( x \)</span> is real.</li>
+<li><span class="arithmatex">\( D(G(z_q(x))) \)</span> is the discriminator's probability that the generated image is real.</li>
 </ul>
-<p>类比物理系统</p>
-<ul>
-<li>物理势能：在物理学中，势能越低的状态越稳定（如小球在谷底）。</li>
-<li>能量模型：能量函数E(x) 扮演类似势能的角色，低能量区域对应数据分布的高概率区域（即真实数据集中出现可能性大的样本）。</li>
-</ul>
-<p>能量函数本质是一个评分函数：</p>
-<ul>
-<li>对合理的样本（如训练数据）赋予低能量值;</li>
-<li>对不合理的样本（如噪声、异常值）赋予高能量值。</li>
-</ul>
-<p>示例：</p>
-<ul>
-<li>在图像生成任务中，清晰的图片能量低，模糊或混乱的图片能量高;</li>
-<li>在文本生成中，语法正确的句子能量低，语义矛盾的句子能量高。</li>
-</ul>
-<p>这里大家可能会有困惑，虽然定义了一个能量，但是这个能量到底怎么使用？使用能量模型有两个核心要解决的问题，一个是学习出能量函数和目标数据分布一致，另外一个是从能量函数中采样出数据，这是能量模型的核心挑战。后续我们会讲到怎么学习能量函数，又怎么从能量函数中采样。直观上讲，假设我们有了一个能量函数，那采样意味着我们按照能量函数给出的分布概率进行采样。</p>
-<h3 id="22-12">2.2 1.2. 核心假设与条件<a class="headerlink" href="#22-12" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong>低能量对应高概率</strong>：真实数据样本位于能量函数的低能区域。</li>
-<li><strong>数学条件</strong>：</li>
-<li><strong>可积性</strong>：保证 <span class="arithmatex">\(Z(\theta)\)</span> 存在（积分收敛）。</li>
-<li><strong>可微分性</strong>：能量函数需对输入 <span class="arithmatex">\(x\)</span> 和参数 <span class="arithmatex">\(\theta\)</span> 可导，以支持梯度优化。</li>
-<li><strong>训练假设</strong>：</li>
-<li><strong>对比学习</strong>：通过区分真实样本（低能量）与噪声样本（高能量）优化能量函数。</li>
-<li><strong>采样可行性</strong>：依赖高效采样方法（如MCMC）生成负样本。</li>
-</ul>
-<h2 id="3-2">3. 2. 能量模型的核心挑战<a class="headerlink" href="#3-2" title="Permanent link">&para;</a></h2>
-<h3 id="31-21-p_textdatax">3.1 2.1. 估计真实数据分布 <span class="arithmatex">\(p_{\text{data}}(x)\)</span><a class="headerlink" href="#31-21-p_textdatax" title="Permanent link">&para;</a></h3>
-<p>直接计算归一化因子 <span class="arithmatex">\(Z(\theta)\)</span> 不可行，需绕过显式积分：</p>
-<ul>
-<li><strong>对比散度（CD）</strong>：用少量MCMC步骤生成负样本，对比优化能量函数（如受限玻尔兹曼机）。</li>
-<li><strong>分数匹配（Score Matching）</strong>：直接匹配数据分布的梯度 <span class="arithmatex">\(\nabla_x \log p_{\text{data}}(x)\)</span>（即能量函数的负梯度）。</li>
-<li><strong>对抗训练</strong>：将生成器作为采样器，判别器作为能量函数（如EBGAN）。</li>
-</ul>
-<h3 id="32-22">3.2 2.2. 高效采样<a class="headerlink" href="#32-22" title="Permanent link">&para;</a></h3>
-<p>从 <span class="arithmatex">\(P_\theta(x) \propto e^{-E_\theta(x)}\)</span> 中采样需探索低能量区域：</p>
-<ul>
-<li><strong>马尔可夫链蒙特卡洛（MCMC）</strong>：</li>
-<li><strong>Langevin动力学</strong>：通过梯度下降与噪声扰动迭代采样：</li>
-</ul>
+<p>The adaptive weight <span class="arithmatex">\(\lambda\)</span></p>
 <div class="arithmatex">\[
-x_{t+1} = x_t - \eta \nabla_x E_\theta(x_t) + \sqrt{2\eta} \epsilon_t, \quad \epsilon_t \sim \mathcal{N}(0, I)
+\lambda = \frac{\nabla_{G_L} [\mathcal{L}_{rec}]}{\nabla_{G_L} [\mathcal{L}_{GAN}] + \delta}
 \]</div>
+<p>This formula describes the computation of the adaptive weight <span class="arithmatex">\( \lambda \)</span>, which balances the perceptual reconstruction loss and the adversarial loss.</p>
+<p>Moreover, to enhance perceptual quality, the reconstruction loss is replaced with the perceptual loss.</p>
+<p>The <strong>perceptual reconstruction loss</strong> in VQ-GAN is designed to improve the quality of generated images by ensuring they preserve high-level semantic features from the original input. Instead of relying solely on pixel-wise losses like MSE (which often lead to blurriness), perceptual loss leverages a pre-trained deep network (such as VGG) to compare feature activations between the original and reconstructed images.</p>
+<p><strong>Perceptual Reconstruction Loss Formula</strong></p>
+<div class="arithmatex">\[
+\mathcal{L}_{rec} = \mathbb{E}_{x \sim p(x)} \left[ \| x - G(z_q(x)) \|^2 + \sum_{l} \lambda_l \| \phi_l(x) - \phi_l(G(z_q(x))) \|^2 \right]
+\]</div>
+<p>Where:</p>
 <ul>
-<li><strong>Gibbs采样</strong>：适用于具有局部依赖性的模型（如玻尔兹曼机）。</li>
-<li><strong>隐式生成器</strong>：如GAN的生成器直接学习从简单分布到数据分布的映射。</li>
-<li><strong>扩散模型</strong>：在去噪过程中结合能量梯度引导采样。</li>
+<li><span class="arithmatex">\( x \)</span> is the original image.</li>
+<li><span class="arithmatex">\( G(z_q(x)) \)</span> is the reconstructed/generated image from the quantized latent representation.</li>
+<li><span class="arithmatex">\( \| x - G(z_q(x)) \|^2 \)</span> is the pixel-wise reconstruction loss (MSE).</li>
+<li><span class="arithmatex">\( \phi_l(\cdot) \)</span> represents the feature maps extracted from the <span class="arithmatex">\( l \)</span>-th layer of a pre-trained deep network (e.g., VGG-19).</li>
+<li><span class="arithmatex">\( \lambda_l \)</span> is a weighting factor for each feature layer contribution.</li>
+<li>The second term ensures that the generated image maintains perceptual similarity to the original image in feature space rather than just pixel space.</li>
 </ul>
-<p>采样时一般都需要能量函数的梯度，这个梯度我们也叫做"score function", 是一个向量场，表示能量变化的方向和强度。</p>
-<h2 id="4-3-ebm-vs-sbm">4. 3. EBM vs SBM<a class="headerlink" href="#4-3-ebm-vs-sbm" title="Permanent link">&para;</a></h2>
+<p>This loss helps VQ-GAN produce sharper and more visually appealing images compared to traditional autoencoders.</p>
+<p>By integrating adversarial and perceptual losses, VQ-GAN improves image sharpness and realism compared to VQ-VAE.</p>
+<h3 id="35-transformer-based-prior">3.5 Transformer-based Prior<a class="headerlink" href="#35-transformer-based-prior" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>预测能量函数的模型</strong>, 模型输出一个标量值, 我们叫 "EBM", energy-based model</li>
-<li><strong>直接预测score function 的模型</strong>, 模型输出为一个向量场, 我们叫做 "SBM", score based model</li>
+<li>Unlike VQ-VAE, which often relies on PixelCNN priors, VQ-GAN uses <strong>transformers</strong> to model long-range dependencies in the latent space.</li>
+<li>This allows for more coherent and meaningful latent space representation, enhancing image synthesis quality.</li>
 </ul>
-<h2 id="5-4">5. 4. 能量模型的主流流派<a class="headerlink" href="#5-4" title="Permanent link">&para;</a></h2>
-<h3 id="51-41-contrastive-divergence">5.1 4.1. Contrastive Divergence<a class="headerlink" href="#51-41-contrastive-divergence" title="Permanent link">&para;</a></h3>
+<h4 id="351-sliding-attention-window">3.5.1 Sliding Attention Window<a class="headerlink" href="#351-sliding-attention-window" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Instead of computing self-attention across the entire sequence, a <strong>fixed-size attention window</strong> is used.</li>
+<li>The attention window slides across the sequence, allowing each token to attend only to nearby tokens while gradually incorporating long-range dependencies.</li>
+<li>This reduces computational complexity from <strong>O(N²)</strong> to <strong>O(NW)</strong>, where <span class="arithmatex">\( W \)</span> is the window size.</li>
+<li>Sliding window attention ensures that local consistency is preserved while enabling efficient global information flow.</li>
+</ul>
+<h4 id="352-training-process-for-autoregressive-token-prediction">3.5.2 Training Process for Autoregressive Token Prediction<a class="headerlink" href="#352-training-process-for-autoregressive-token-prediction" title="Permanent link">&para;</a></h4>
+<p>The Transformer models the probability distribution over latent tokens autoregressively:</p>
+<div class="arithmatex">\[
+p(z_q) = \prod_{i} p(z_i | z_{&lt;i}, c)
+\]</div>
+<p>where <span class="arithmatex">\( c \)</span> represents optional conditioning information.</p>
+<p>The loss function for training the Transformer is:</p>
+<div class="arithmatex">\[
+L_{trans} = - \sum_{i=1}^{N} \log p_{\theta} (z_i | z_{&lt;i}, c)
+\]</div>
+<p>This ensures that the Transformer learns to predict the next token in the sequence given previous tokens and any conditional information.</p>
+<h4 id="353-conditional-transformer-training">3.5.3 Conditional Transformer Training<a class="headerlink" href="#353-conditional-transformer-training" title="Permanent link">&para;</a></h4>
+<p>The Transformer can be trained to perform <strong>conditional inference</strong> using different types of conditioning signals:</p>
+<h5 id="3531-class-conditional-generation">3.5.3.1 Class-Conditional Generation<a class="headerlink" href="#3531-class-conditional-generation" title="Permanent link">&para;</a></h5>
+<ul>
+<li>A class label is embedded and concatenated with latent tokens:
+  $$
+  {c, z_1, z_2, ..., z_N}
+  $$</li>
+<li>The Transformer learns to generate latent tokens consistent with the given class label.</li>
+</ul>
+<h5 id="3532-text-to-image-generation">3.5.3.2 Text-to-Image Generation<a class="headerlink" href="#3532-text-to-image-generation" title="Permanent link">&para;</a></h5>
+<ul>
+<li>Text embeddings (from CLIP or other models) are used as conditional inputs:</li>
+</ul>
+<p>$$
+  c = \text{CLIP}(text)
+  $$</p>
+<ul>
+<li>The Transformer generates latent tokens aligned with the text prompt.</li>
+</ul>
+<h5 id="3533-segmentation-or-sketch-based-generation">3.5.3.3 Segmentation or Sketch-Based Generation<a class="headerlink" href="#3533-segmentation-or-sketch-based-generation" title="Permanent link">&para;</a></h5>
+<ul>
+<li>Segmentation maps or sketches are encoded into feature embeddings and used as conditions:
+  $$
+  c = E_{seg}(segmentation) \quad \text{or} \quad c = E_{sketch}(sketch)
+  $$</li>
+<li>The Transformer learns to generate latent tokens that conform to the provided structure.</li>
+</ul>
+<h5 id="3534-image-inpainting-partial-image-completion">3.5.3.4 Image Inpainting (Partial Image Completion)<a class="headerlink" href="#3534-image-inpainting-partial-image-completion" title="Permanent link">&para;</a></h5>
+<ul>
+<li>Missing tokens are inferred while attending to known pixels:
+  $$
+  p(z_q | c) = \prod_{i=1}^{N} p(z_i | z_{&lt;i}, c)
+  $$</li>
+<li>The model fills in missing details using <strong>masked attention</strong>.</li>
+</ul>
+<h4 id="354-inference-process-unconditional-conditional-generation">3.5.4 Inference Process: Unconditional &amp; Conditional Generation<a class="headerlink" href="#354-inference-process-unconditional-conditional-generation" title="Permanent link">&para;</a></h4>
+<h5 id="3541-unconditional-generation">3.5.4.1 Unconditional Generation<a class="headerlink" href="#3541-unconditional-generation" title="Permanent link">&para;</a></h5>
+<ul>
+<li>The Transformer randomly initializes the first token <span class="arithmatex">\( z_0 \)</span> and generates the rest autoregressively:</li>
+</ul>
+<p>$$
+  z_1 \sim p(z_1 | z_0), \quad z_2 \sim p(z_2 | z_0, z_1), ..., z_N \sim p(z_N | z_{&lt;N})
+  $$</p>
+<ul>
+<li>The latent tokens are reshaped into a 2D grid and decoded into an image.</li>
+</ul>
+<h5 id="3542-conditional-generation">3.5.4.2 Conditional Generation<a class="headerlink" href="#3542-conditional-generation" title="Permanent link">&para;</a></h5>
+<ul>
+<li>The Transformer incorporates conditioning signals (class, text, segmentation, sketch, or partial images) to guide latent token prediction:
+  $$
+  p(z_q | c) = \prod_{i=1}^{N} p(z_i | z_{&lt;i}, c)
+  $$</li>
+<li>The final latent tokens are decoded into an image consistent with the condition.</li>
+</ul>
+<h2 id="4-conditioned-synthesis-with-vq-gan">4. Conditioned Synthesis with VQ-GAN<a class="headerlink" href="#4-conditioned-synthesis-with-vq-gan" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Text-to-Image Synthesis</strong>: By combining VQ-GAN with <strong>CLIP</strong> or transformers, it can generate images conditioned on text descriptions, making it suitable for creative AI applications.</li>
+<li><strong>Class-Conditional Image Generation</strong>: By feeding class labels into the latent space alongside encoded images, VQ-GAN can generate class-specific images.</li>
+<li><strong>Image-to-Image Translation</strong>: VQ-GAN can be conditioned on specific inputs (such as edge maps, sketches, or low-resolution images) to generate high-fidelity versions.</li>
+<li><strong>Latent Code Conditioning</strong>: Fine-tuning the learned codebook enables the model to generate samples conditioned on specific feature embeddings, allowing user-defined controls over the generation process.</li>
+</ul>
+<h2 id="5-key-insights">5. Key Insights<a class="headerlink" href="#5-key-insights" title="Permanent link">&para;</a></h2>
 <ul>
 <li>
-<p><strong>核心</strong>：正常迭代模型，需要计算<span class="arithmatex">\(\theta\)</span> 的梯度，那我们是不是可以直接计算出 <span class="arithmatex">\(p_\theta(x)\)</span> 的梯度, 然后按照梯度方向去更新梯度。 根据这个方法我们就得到了对比散度（CD）方法。</p>
+<p>Balance Between Compression &amp; Fidelity
+VQ-GAN achieves <strong>high compression rates</strong> while retaining fine details, unlike traditional autoencoders that tend to over-smooth outputs.</p>
 </li>
 <li>
-<p><strong>代表模型</strong>：受限玻尔兹曼机（RBM）、Deep Belief Networks。</p>
+<p>GANs Improve High-Frequency Details
+The <strong>adversarial loss</strong> significantly enhances the reconstruction of textures, details, and structures, leading to more realistic images compared to VQ-VAE.</p>
 </li>
-<li><strong>特点</strong>：训练稳定，但MCMC采样效率低。</li>
+<li>
+<p>Transformers as a Strong Prior
+Replacing <strong>autoregressive models</strong> like PixelCNN with <strong>transformers</strong> allows VQ-GAN to generate images more efficiently and with greater coherence.</p>
+</li>
+<li>
+<p>Versatile Applications
+VQ-GAN is widely used in:</p>
+</li>
+<li>
+<p><strong>High-resolution image synthesis</strong></p>
+</li>
+<li><strong>Text-to-image generation</strong> (when combined with CLIP or transformers)</li>
+<li><strong>Neural compression</strong> (efficient latent representation for storage and transmission)</li>
+<li><strong>Creative AI applications</strong> (e.g., AI-driven art)</li>
 </ul>
-<h3 id="52-42">5.2 4.2. 分数匹配<a class="headerlink" href="#52-42" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong>核心</strong>： 直接计算两个分布之间的距离会比较难，但是计算两个分布的梯度的差异会容易一些。同时利用分部积分，可以绕过原始分布的梯度计算。这就是所谓的 <strong>score matching</strong> 方法。这里的‘score’ 就是梯度。</li>
-</ul>
-<div class="arithmatex">\[
- J(\theta) = \frac{1}{2} \mathbb{E}_{p(x)} \left[ \| \nabla_x \log q_\theta(x) - \nabla_x \log p(x) \|^2 \right].
-\]</div>
-<p>它等价于优化</p>
-<div class="arithmatex">\[
- \min_\theta\mathbb{E}_{p(x)} \left[ \text{trace} \left( \nabla_x^2 \log q_\theta(x) \right) + \frac{1}{2} \| \nabla_x \log q_\theta(x) \|^2 \right].
-\]</div>
-<p>因为二阶导的计算通常比较复杂，因此在这个方向上会有不同的实践方法，常见的有sliced score matching 和 denosing score matching</p>
-<ul>
-<li><strong>代表模型</strong>：常见的score matching 有 sliced score matching和denosing score matching</li>
-<li><strong>特点</strong>：生成质量高，但计算成本大。</li>
-</ul>
-<h3 id="53-43">5.3 4.3. 对抗训练派<a class="headerlink" href="#53-43" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong>核心</strong>：判别器作为能量函数，生成器作为采样器。</li>
-<li><strong>代表模型</strong>：EBGAN、BEGAN。</li>
-<li><strong>特点</strong>：生成高效，但易模式崩溃。</li>
-</ul>
-<h3 id="54-44">5.4 4.4. 结构化能量模型<a class="headerlink" href="#54-44" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong>核心</strong>：引入领域知识（如图结构、物理约束）设计能量函数。</li>
-<li><strong>代表模型</strong>：GraphEBM（分子生成）、CRF（条件随机场）。</li>
-<li><strong>特点</strong>：可解释性强，泛化性弱。</li>
-</ul>
-<hr />
-<h2 id="6-5">6. 5.能量模型的扩展方法<a class="headerlink" href="#6-5" title="Permanent link">&para;</a></h2>
-<h3 id="61-51">6.1 5.1. 条件能量模型<a class="headerlink" href="#61-51" title="Permanent link">&para;</a></h3>
-<p>通过条件变量 <span class="arithmatex">\(c\)</span>（如文本、标签）建模条件分布 <span class="arithmatex">\(p(x \mid c)\)</span>：</p>
-<ul>
-<li><strong>能量函数</strong>：<span class="arithmatex">\(E_\theta(x, c)\)</span>，概率分布为</li>
-</ul>
-<div class="arithmatex">\[
-p(x \mid c) = \frac{e^{-E_\theta(x, c)}}{Z(c)}, \quad Z(c) = \int e^{-E_\theta(x, c)} dx
-\]</div>
-<ul>
-<li><strong>应用场景</strong>：文本到图像生成、可控生成（如DALL·E 2）。</li>
-</ul>
-<h3 id="62-52">6.2 5.2. 隐变量能量模型<a class="headerlink" href="#62-52" title="Permanent link">&para;</a></h3>
-<p>引入隐变量 <span class="arithmatex">\(z\)</span> 建模联合分布 <span class="arithmatex">\(p(x, z)\)</span>，提升表达能力：</p>
-<ul>
-<li><strong>变分能量模型（VAE-EBM）</strong>：结合VAE的变分推断与能量函数约束。</li>
-</ul>
-<div class="arithmatex">\[
-\log p(x) \geq \mathbb{E}_{q(z|x)} \left[ -E_\theta(x, z) - \log q(z|x) \right] - \log Z
-\]</div>
-<ul>
-<li><strong>对抗式隐变量EBMs</strong>：生成器 <span class="arithmatex">\(G(z)\)</span> 生成样本，能量函数 <span class="arithmatex">\(E_\theta(x)\)</span> 判别合理性。</li>
-</ul>
-<h3 id="63-53">6.3 5.3. 能量引导的扩散模型<a class="headerlink" href="#63-53" title="Permanent link">&para;</a></h3>
-<p>在扩散过程中显式引入能量函数 <span class="arithmatex">\(E_\theta(x, c)\)</span>，增强生成可控性：</p>
-<ul>
-<li><strong>采样公式</strong>：</li>
-</ul>
-<div class="arithmatex">\[
-x_{t-1} = \text{Denoise}(x_t) - \eta \nabla_x E_\theta(x_t, c)
-\]</div>
-<ul>
-<li><strong>应用</strong>：分子生成、艺术品风格迁移。</li>
-</ul>
-<hr />
-<h2 id="7-6">7. 6. 能量模型与其他生成模型的关系<a class="headerlink" href="#7-6" title="Permanent link">&para;</a></h2>
-<h3 id="71-61-vae">7.1 6.1. VAE：隐变量能量模型的变分实现<a class="headerlink" href="#71-61-vae" title="Permanent link">&para;</a></h3>
-<p>VAE通过隐变量 <span class="arithmatex">\(z\)</span> 建模联合分布 <span class="arithmatex">\(p(x, z)\)</span>，其ELBO目标等价于能量函数的变分优化：</p>
-<div class="arithmatex">\[
-\text{ELBO} = \mathbb{E}_{q(z|x)}[\log p(x|z)] - \text{KL}(q(z|x) \| p(z))
-\]</div>
-<h3 id="72-62-gan">7.2 6.2. GAN：对抗式能量模型<a class="headerlink" href="#72-62-gan" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong>EBGAN</strong>：判别器 <span class="arithmatex">\(D(x)\)</span> 作为能量函数，生成器 <span class="arithmatex">\(G(z)\)</span> 最小化 <span class="arithmatex">\(E(G(z))\)</span>。</li>
-<li><strong>能量视角</strong>：GAN的对抗训练隐式优化能量分布。</li>
-</ul>
-<h3 id="73-63">7.3 6.3. 扩散模型：动态能量模型<a class="headerlink" href="#73-63" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong>分数匹配等价性</strong>：扩散模型学习分数函数 <span class="arithmatex">\(\nabla_x \log p(x)\)</span>，即能量梯度 <span class="arithmatex">\(-\nabla_x E(x)\)</span>。</li>
-<li><strong>Langevin动力学</strong>：扩散采样过程与能量模型的MCMC方法一致。</li>
-</ul>
-<h3 id="74-64">7.4 6.4. 标准化流：显式归一化的特例<a class="headerlink" href="#74-64" title="Permanent link">&para;</a></h3>
-<p>标准化流通过可逆变换显式保证 <span class="arithmatex">\(Z=1\)</span>，其能量函数为 <span class="arithmatex">\(E(x) = -\log p(x)\)</span>，但生成机制（确定性映射）与传统EBMs不同。</p>
-<hr />
-<h2 id="8-7">8. 7.挑战与未来方向<a class="headerlink" href="#8-7" title="Permanent link">&para;</a></h2>
-<h3 id="81-71">8.1 7.1. 核心挑战<a class="headerlink" href="#81-71" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong>训练稳定性</strong>：隐变量与条件变量的联合优化易导致模式崩溃。</li>
-<li><strong>采样效率</strong>：高维数据下MCMC收敛缓慢。</li>
-<li><strong>可解释性</strong>：隐变量的物理意义不明确。</li>
-</ul>
-<h3 id="82-72">8.2 7.2. 未来趋势<a class="headerlink" href="#82-72" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong>高效采样算法</strong>：扩散蒸馏、快速MCMC变体。</li>
-<li><strong>多模态统一建模</strong>：跨文本、图像、语音的能量函数设计。</li>
-<li><strong>与大型模型结合</strong>：利用LLMs提供条件信号或隐变量先验。</li>
-<li><strong>科学计算深化</strong>：分子动力学、材料设计中的能量模型应用。</li>
-</ul>
+<h2 id="6-codes">6. Codes<a class="headerlink" href="#6-codes" title="Permanent link">&para;</a></h2>
+<h3 id="61-vectorquantizer">6.1 VectorQuantizer<a class="headerlink" href="#61-vectorquantizer" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-0-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-0-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-0-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-0-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-0-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-0-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-0-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-0-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-0-10">10</a></span>
+<span class="normal"><a href="#__codelineno-0-11">11</a></span>
+<span class="normal"><a href="#__codelineno-0-12">12</a></span>
+<span class="normal"><a href="#__codelineno-0-13">13</a></span>
+<span class="normal"><a href="#__codelineno-0-14">14</a></span>
+<span class="normal"><a href="#__codelineno-0-15">15</a></span>
+<span class="normal"><a href="#__codelineno-0-16">16</a></span>
+<span class="normal"><a href="#__codelineno-0-17">17</a></span>
+<span class="normal"><a href="#__codelineno-0-18">18</a></span>
+<span class="normal"><a href="#__codelineno-0-19">19</a></span>
+<span class="normal"><a href="#__codelineno-0-20">20</a></span>
+<span class="normal"><a href="#__codelineno-0-21">21</a></span>
+<span class="normal"><a href="#__codelineno-0-22">22</a></span>
+<span class="normal"><a href="#__codelineno-0-23">23</a></span>
+<span class="normal"><a href="#__codelineno-0-24">24</a></span>
+<span class="normal"><a href="#__codelineno-0-25">25</a></span>
+<span class="normal"><a href="#__codelineno-0-26">26</a></span>
+<span class="normal"><a href="#__codelineno-0-27">27</a></span>
+<span class="normal"><a href="#__codelineno-0-28">28</a></span>
+<span class="normal"><a href="#__codelineno-0-29">29</a></span>
+<span class="normal"><a href="#__codelineno-0-30">30</a></span>
+<span class="normal"><a href="#__codelineno-0-31">31</a></span>
+<span class="normal"><a href="#__codelineno-0-32">32</a></span>
+<span class="normal"><a href="#__codelineno-0-33">33</a></span>
+<span class="normal"><a href="#__codelineno-0-34">34</a></span>
+<span class="normal"><a href="#__codelineno-0-35">35</a></span>
+<span class="normal"><a href="#__codelineno-0-36">36</a></span>
+<span class="normal"><a href="#__codelineno-0-37">37</a></span>
+<span class="normal"><a href="#__codelineno-0-38">38</a></span>
+<span class="normal"><a href="#__codelineno-0-39">39</a></span>
+<span class="normal"><a href="#__codelineno-0-40">40</a></span>
+<span class="normal"><a href="#__codelineno-0-41">41</a></span>
+<span class="normal"><a href="#__codelineno-0-42">42</a></span>
+<span class="normal"><a href="#__codelineno-0-43">43</a></span>
+<span class="normal"><a href="#__codelineno-0-44">44</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="k">class</span> <span class="nc">VectorQuantizer</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_e</span><span class="p">,</span> <span class="n">e_dim</span><span class="p">,</span> <span class="n">beta</span><span class="p">):</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3"></a>        <span class="nb">super</span><span class="p">(</span><span class="n">VectorQuantizer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">n_e</span> <span class="o">=</span> <span class="n">n_e</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">e_dim</span> <span class="o">=</span> <span class="n">e_dim</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">beta</span> <span class="o">=</span> <span class="n">beta</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">embedding</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_e</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">e_dim</span><span class="p">)</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">embedding</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">uniform_</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_e</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_e</span><span class="p">)</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12"></a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13"></a>        <span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14"></a>        <span class="n">z_flattened</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">e_dim</span><span class="p">)</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15"></a>        <span class="c1"># distances from z to embeddings e_j (z - e)^2 = z^2 + e^2 - 2 e * z</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17"></a>        <span class="n">d</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">z_flattened</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">+</span> \
+<a id="__codelineno-0-18" name="__codelineno-0-18"></a>            <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">embedding</span><span class="o">.</span><span class="n">weight</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> \
+<a id="__codelineno-0-19" name="__codelineno-0-19"></a>            <span class="n">torch</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">z_flattened</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">embedding</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">t</span><span class="p">())</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20"></a>
+<a id="__codelineno-0-21" name="__codelineno-0-21"></a>        <span class="c1"># find closest encodings</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22"></a>        <span class="n">min_encoding_indices</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23"></a>
+<a id="__codelineno-0-24" name="__codelineno-0-24"></a>        <span class="n">min_encodings</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25"></a>            <span class="n">min_encoding_indices</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_e</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26"></a>        <span class="n">min_encodings</span><span class="o">.</span><span class="n">scatter_</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_encoding_indices</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27"></a>
+<a id="__codelineno-0-28" name="__codelineno-0-28"></a>        <span class="n">z_q</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">min_encodings</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">embedding</span><span class="o">.</span><span class="n">weight</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">z</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29"></a>
+<a id="__codelineno-0-30" name="__codelineno-0-30"></a>        <span class="c1"># compute loss for embedding</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31"></a>        <span class="n">loss</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">z_q</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">-</span><span class="n">z</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">beta</span> <span class="o">*</span> \
+<a id="__codelineno-0-32" name="__codelineno-0-32"></a>            <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">z_q</span> <span class="o">-</span> <span class="n">z</span><span class="o">.</span><span class="n">detach</span><span class="p">())</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33"></a>
+<a id="__codelineno-0-34" name="__codelineno-0-34"></a>        <span class="c1"># preserve gradients</span>
+<a id="__codelineno-0-35" name="__codelineno-0-35"></a>        <span class="n">z_q</span> <span class="o">=</span> <span class="n">z</span> <span class="o">+</span> <span class="p">(</span><span class="n">z_q</span> <span class="o">-</span> <span class="n">z</span><span class="p">)</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+<a id="__codelineno-0-36" name="__codelineno-0-36"></a>
+<a id="__codelineno-0-37" name="__codelineno-0-37"></a>        <span class="c1"># perplexity</span>
+<a id="__codelineno-0-38" name="__codelineno-0-38"></a>        <span class="n">e_mean</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">min_encodings</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-0-39" name="__codelineno-0-39"></a>        <span class="n">perplexity</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">e_mean</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">e_mean</span> <span class="o">+</span> <span class="mf">1e-10</span><span class="p">)))</span>
+<a id="__codelineno-0-40" name="__codelineno-0-40"></a>
+<a id="__codelineno-0-41" name="__codelineno-0-41"></a>        <span class="c1"># reshape back to match original input shape</span>
+<a id="__codelineno-0-42" name="__codelineno-0-42"></a>        <span class="n">z_q</span> <span class="o">=</span> <span class="n">z_q</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span>
+<a id="__codelineno-0-43" name="__codelineno-0-43"></a>
+<a id="__codelineno-0-44" name="__codelineno-0-44"></a>        <span class="k">return</span> <span class="n">z_q</span><span class="p">,</span> <span class="n">loss</span><span class="p">,</span> <span class="p">(</span><span class="n">perplexity</span><span class="p">,</span> <span class="n">min_encodings</span><span class="p">,</span> <span class="n">min_encoding_indices</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+<p>Here we can see how we copy the gradient from <span class="arithmatex">\(z_e\)</span> to <span class="arithmatex">\(z_q\)</span>.</p>
+<h2 id="7-conclusion">7. Conclusion<a class="headerlink" href="#7-conclusion" title="Permanent link">&para;</a></h2>
+<p>VQ-GAN represents a significant leap over VQ-VAE by combining <strong>vector quantization, GANs, and transformers</strong> to achieve superior image synthesis. It maintains high compression efficiency while ensuring visually compelling results. With applications in generative art, neural compression, and AI-powered creativity, VQ-GAN is a pivotal model in modern generative AI research.</p>
 
 
 
@@ -2323,7 +2328,7 @@ x_{t-1} = \text{Denoise}(x_t) - \eta \nabla_x E_\theta(x_t, c)
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../../chapter2_generation_theory/manifold_hypothesis/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Manifold Hypothesis">
+          <a href="../3.7R3Gan/paper/" class="md-footer__link md-footer__link--prev" aria-label="Previous: R3GAN">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2333,20 +2338,20 @@ x_{t-1} = \text{Denoise}(x_t) - \eta \nabla_x E_\theta(x_t, c)
                 Previous
               </span>
               <div class="md-ellipsis">
-                Manifold Hypothesis
+                R3GAN
               </div>
             </div>
           </a>
         
         
           
-          <a href="../score_function/" class="md-footer__link md-footer__link--next" aria-label="Next: Score Functions">
+          <a href="../../chapter7_diffusion/ddpm/" class="md-footer__link md-footer__link--next" aria-label="Next: DDPM">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Score Functions
+                DDPM
               </div>
             </div>
             <div class="md-footer__button md-icon">
