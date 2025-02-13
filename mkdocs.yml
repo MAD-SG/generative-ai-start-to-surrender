@@ -18,6 +18,7 @@ nav:
       - Score Matching: "book/chapter3_energy_based_model/score_matching.md"
   - VAE:
       - Introduction: "book/chapter6_VAE/2.1introduction.md"
+      - VA-VAE: "book/chapter6_VAE/vq_vae.md"
   - GANs:
       - From GAN to StyleGAN: "book/chapter5_GAN/3.1from_gan_to_stylegan/paper.md"
       - StyleGAN Variants:
@@ -26,10 +27,11 @@ nav:
           - StyleGAN3: "book/chapter5_GAN/3.5stylegan3/paper.md"
           - StyleGAN-T: "book/chapter5_GAN/3.6styleganT/paper.md"
       - R3GAN: "book/chapter5_GAN/3.7R3Gan/paper.md"
+      - VQ-GAN: "book/chapter5_GAN/vq_gan.md"
 
   - Diffusion Models:
       - Discrete Diffusion:
-          - Introduction: "book/chapter7_diffusion/Introduction_diffusion.md"
+          - DDPM: "book/chapter7_diffusion/ddpm.md"
       - Continuous Diffusion:
           - SDE Fundamentals: "book/chapter7_diffusion/introduction_sde.md"
           - SDE for DDPM: "book/chapter7_diffusion/SDE4_DDPM_DSM.md"
@@ -79,6 +81,7 @@ theme:
     - navigation.tabs
     # - navigation.tabs.sticky
     - navigation.top
+    - navigation.expand
     - search.share
     - search.suggest
   palette:
@@ -128,14 +131,30 @@ plugins:
   - search
   - glightbox
   - blog # 博客功能插件
-
-
+  # - enumerate-headings:
+  #     toc_depth: 0
+  #     strict: true
+  #     increment_across_pages: False
+  #     include:
+  #       - "*"
+  #     exclude:
+  #       - index.md
+  #       - another_page.md
+  #     restart_increment_after:
+  #       - second_section.md
+  - add-number:
+      strict_mode: False
+      order: 2
+      excludes:
+        - index.md
+      includes:
+        - "*"
 markdown_extensions:
   - pymdownx.arithmatex:
       generic: true
   - toc:
       permalink: true   # 在标题旁添加可点击的链接
-      toc_depth: 2      # 设置目录深度，例如只显示 h2 和 h3
+      toc_depth: 3      # 设置目录深度，例如只显示 h2 和 h3
   - abbr
   - meta
   - def_list
@@ -181,14 +200,17 @@ markdown_extensions:
         - docs/includes/definitions.md
         - docs/includes/formulas.md
 
+
 # extra_javascript:
 #   - https://unpkg.com/katex@0/dist/katex.min.js
 #   - https://unpkg.com/katex@0/dist/contrib/auto-render.min.js
 #   - javascripts/katex-init.js  # Custom script to initialize KaTeX
 
 extra_javascript:
-  - javascripts/mathjax.js
-  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
+  # - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
   - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js
+  - javascripts/mathjax.js
+
 watch:
   - docs/includes

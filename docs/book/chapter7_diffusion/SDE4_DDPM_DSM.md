@@ -8,7 +8,7 @@ the denoising score matching.
 In the context of the excerpt, the term “autocorrelation function” refers to the covariance
 
 $$
- \mathbb{E}[\xi(t)\,\xi(t')]\quad
+\mathbb{E}[\xi(t)\,\xi(t')]
 $$
 
 of the noise process $\xi(\cdot)$ evaluated at two different times $t$ and $t'$. For an
@@ -65,21 +65,20 @@ $$
 
 where $\Delta$ is the Laplacian in $x$.
 
-**NOTE**
+!!! note "note"
+    In **one dimension** , the Laplacian simplifies to:
 
-> In **one dimension** , the Laplacian simplifies to:
->
-> $$
-> \Delta p_t(x) = \frac{\partial^2 p_t(x)}{\partial x^2}
-> $$
->
-> In **higher dimensions** , the Laplacian is given by:
->
-> $$
-> \Delta p_t(x) = \sum_{i=1}^{d} \frac{\partial^2 p_t(x)}{\partial x_i^2}
-> $$
->
-> where $d$ is the dimension of the space. Thus, in the context of the **Fokker-Planck equation**, the Laplacian term governs the **diffusive spreading**  of the probability density due to the noise term $g(t) dW_t$ in the associated SDE.
+    $$
+    \Delta p_t(x) = \frac{\partial^2 p_t(x)}{\partial x^2}
+    $$
+
+    In **higher dimensions** , the Laplacian is given by:
+
+    $$
+    \Delta p_t(x) = \sum_{i=1}^{d} \frac{\partial^2 p_t(x)}{\partial x_i^2}
+    $$
+
+    where $d$ is the dimension of the space. Thus, in the context of the **Fokker-Planck equation**, the Laplacian term governs the **diffusive spreading**  of the probability density due to the noise term $g(t) dW_t$ in the associated SDE.
 
 Now we prove that the reverse diffusion formula
 

@@ -17,3 +17,9 @@ document$.subscribe(() => {
   MathJax.texReset()
   MathJax.typesetPromise()
 })
+
+document$.subscribe(() => {
+  if (typeof MathJax !== "undefined") {
+      MathJax.typesetPromise();
+  }
+});

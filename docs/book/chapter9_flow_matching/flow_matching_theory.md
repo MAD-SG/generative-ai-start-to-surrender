@@ -14,7 +14,11 @@ Suppose $v(x,t)$ is the velocity field from push the probability $p$ to $q$. Our
 !!! def "Flow Matching Loss"
       The flow matching loss is defined as
 
-      $$L_{F M}=E_{X_t\sim p_t} ||v(x,t) - v_\theta(x,t)||$$
+      $$
+      \begin{equation}
+      L_{F M}=E_{t,X_t\sim p_t} ||v(x,t) - v_\theta(x,t)||^2
+      \end{equation}
+      $$
 
 Here **$||$** could be any distance metric besides the normal mean square error.
 
@@ -132,44 +136,72 @@ $$u_t(x) = \mathbf{E}[u_t(X_t|X_1)|X_t=x]$$
 !!! def "Contitional Flow Matching"
       Define the conditional flow matching loss as
       $$
-      L_{CF M}(\theta) = E_{t,z,x_t\sim p_{t|Z}(\cdot | Z)} || u_t(x_t|Z)-v_\theta(x_t,t)||
+      L_{CF M}(\theta) = E_{t,z,x_t\sim p_{t|Z}(\cdot | Z)} || u_t(x_t|Z)-v_\theta(x_t,t)||^2
       $$
 
 !!! thm "Equivalent of gradient of FM and CFM loss"
       The gradients of the Flow Matching loss and the Conditional Flow Matching loss coincide. In particular, the minimizer of the Conditional Flow Matching loss is the marginal velocity.
 
-      $$\nabla_\theta L_{F M}(\theta)  = \nabla_\theta L_{CF M}(\theta)$$
+      $$
+      \begin{equation}
+      \nabla_\theta L_{F M}(\theta)  = \nabla_\theta L_{CF M}(\theta)
+      \end{equation}
+      $$
 
 ??? proof "Proof"
       To prove that the **gradients of the Flow Matching (FM) loss and the Conditional Flow Matching (CFM) loss coincide**, i.e.,
 
-      We differentiate the CFM loss:
-
-      $$ \nabla_\theta L_{CF M}(\theta) =E_{t,x,x_t} [ 2 (u_t(x_t | x) - v_\theta(x_t, t)) \cdot \nabla_\theta v_\theta(x_t, t) ].
-      $$
-
-      Using the **law of total expectation**, we can rewrite this expectation over the joint distribution:
+      Take the gradient
 
       $$
-      E_{t, x_t} \left[ 2 \mathbb{E}_{x | x_t} [u_t(x_t | x)] - v_\theta(x_t, t) \cdot \nabla_\theta v_\theta(x_t, t) \right].
+      \begin{equation}
+      \nabla L_{F M}  = \nabla E_{t, X_t}[||v(x,t) - v_\theta(x,t)||^2]
+       = E_{t, X_t} (v_\theta - v)\nabla v_\theta
+      \end{equation}
       $$
 
-      By the **definition of marginal velocity**,
+      Use the expectation formula of conditional velocity field
 
       $$
-      u_t(x_t) = \mathbb{E}_{x | x_t} [u_t(x_t | x)],
+      \begin{equation}
+            \nabla L_{F M} =E_{t,X_t} (v_\theta - E_{Z\sim p_{Z|t}(\cdot|X_t)}[v_t(X_t|Z)])\nabla v_\theta = E_{t,X_t,Z\sim p_{Z|t}(\cdot|X_t) } (v_\theta - v_t(x_t|Z))\nabla v_\theta
+      \end{equation}
       $$
 
-      this simplifies to:
+      By chain rule,
 
       $$
-      \nabla_\theta L_{CF M}(\theta) = \mathbb{E}_{t, x_t} \left[ 2 (u_t(x_t) - v_\theta(x_t, t)) \cdot \nabla_\theta v_\theta(x_t, t) \right].
+      \nabla L_{F M} = = E_{t,X_t,Z\sim p_{Z|t}(\cdot|X_t) }[ \nabla (||v_t(x_t|Z) - v_\theta||^2)]
       $$
 
-      which is **exactly the gradient of the FM loss**:
+      Change the order of expectation and gradient we hvae
 
       $$
-      \nabla_\theta L(\theta) = \nabla_\theta L(\theta).
+      \nabla L_{F M}  =  \nabla  E_{t,X_t,Z\sim p_{Z|t}(\cdot|X_t) }[||v_t(x_t|Z) - v_\theta||^2]
       $$
 
-      $$\nabla_\theta L_{\text{F M}}(\theta)  = \nabla_\theta L_{\text{CF M}}(\theta)$$
+      By the Bayes's rule,
+
+      $$p_{Z|t}(Z|X_t) p(X_t) = p_{t|Z}(X_t|z) $$
+
+      we have
+
+      $$ E_{X_t,Z\sim p_{Z|t}(\cdot|X_t) } \cdots  = \int p(X_t)p_{Z|t}(\cdot|X_t) \cdots dx_t dz $$
+
+      which equals
+
+      $$ E_{X,x_t\sim p_{t|Z}(X_t|z) } \cdots  = \int p(z)p_{t|Z}(x_t|z) \cdots dx_t dz $$
+
+      Hence
+
+      $$
+      \begin{equation}
+      \nabla L_{F M} = \nabla E_{t,z,x_t\sim p_{t|Z}(x_t|z)} [ ||v_t(x_t|Z) - v_\theta||^2]
+      \end{equation}
+      $$
+
+Different conditioning choices Z exist but are essentially all equivalent.
+
+![alt text](../../images/image-40.png)
+
+Main options include fixing target samples $Z = X_1$, source samples $Z = X_0$, or two-sided $Z = (X_0, X_1)$.
