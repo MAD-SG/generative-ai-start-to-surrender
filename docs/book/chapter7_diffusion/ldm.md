@@ -40,15 +40,29 @@ The training and inference processes of LDMs involve multiple stages, primarily 
 
 ### **(1) Training Process**
 
-1. **Train the VAE**:
-   - The VAE consists of an **encoder** that compresses an input image into a latent representation \( z \).
-   - A **decoder** reconstructs the image from \( z \), ensuring the latent space preserves meaningful image information.
+#### Train the VAE
 
-2. **Train the Latent Diffusion Model**:
-   - Noise is gradually added to the latent representation \( z \), following a Gaussian noise schedule.
-   - The U-Net model learns to denoise and recover the original latent representation.
+- The VAE consists of an **encoder** that compresses an input image into a latent representation \( z \).
+- A **decoder** reconstructs the image from \( z \), ensuring the latent space preserves meaningful image information.
 
----
+It has two types of VAEs
+
+##### VQ-VAE
+It is exactly same as that of `VQ-GAN`, refer this article [VQ_GAN](../chapter5_GAN/vq_gan.md) for more details
+##### KL-VAE
+This type is modified based on the VQ-GAN, to replace the quantilizer module with the normal `KL` divergence loss. In that sense, the overall framework is simplifed as `VAE` + `GAN`
+
+The loss can be represented as:
+
+$$
+ \mathcal{L} = \frac{1}{N} \sum_{i=1}^{N} \| x_i - \hat{x}_i \|^2+ \sum_{l} \lambda_l \| \phi_l(x) - \phi_l(G(z)) \|_2^2  + \frac{1}{2} \sum_{j=1}^{d} (1 + \log \sigma_{i,j}^2 - \mu_{i,j}^2 - \sigma_{i,j}^2)+ L_{adv}
+$$
+Refer [Latent Diffusion](./ldm_handson.md) for more details about the coding.
+
+#### Train the Latent Diffusion Model
+
+- Noise is gradually added to the latent representation \( z \), following a Gaussian noise schedule.
+- The U-Net model learns to denoise and recover the original latent representation.
 
 ### **(2) Inference Process**
 
@@ -157,9 +171,7 @@ Latent Diffusion Models (LDMs) have emerged as a groundbreaking approach in AI-g
 
 With continuous advancements, LDM-based models like **Stable Diffusion** are shaping the future of generative AI, making high-quality image synthesis accessible to a broad audience.
 
----
-
-### **Further Reading**
+## Further Reading
 
 - 📄 [High-Resolution Image Synthesis with Latent Diffusion Models](https://arxiv.org/abs/2112.10752) - The original LDM paper by Rombach et al.
 - 🛠️ [Stable Diffusion GitHub](https://github.com/CompVis/stable-diffusion) - Open-source implementation of LDMs.

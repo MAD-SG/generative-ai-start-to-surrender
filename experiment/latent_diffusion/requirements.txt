@@ -1,0 +1,5 @@
+flask
+omegaconf
+pytorch-lightning==1.6.5
+taming-transformers
+kornia

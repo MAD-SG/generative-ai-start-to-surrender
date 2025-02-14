@@ -1,0 +1,422 @@
+{
+    "full": [
+        {
+            "theme": "Natural Landscape",
+            "style": "Realistic",
+            "form": "Photo-realistic",
+            "prompt": "A breathtaking natural landscape scene: early morning light filters through dense leaves onto a tranquil lake, while distant, rolling mountains emerge through a light mist. The scene is rendered with exceptional detail and realism, as vivid as a high-definition photograph."
+        },
+        {
+            "theme": "Natural Landscape",
+            "style": "Impressionist",
+            "form": "Watercolor",
+            "prompt": "A poetic natural landscape painting: gentle hues flow across the canvas, capturing fleeting light and shadows much like a watercolor masterpiece. The outlines of distant mountains and the lake are rendered in a dreamy, soft-focus style characteristic of Impressionism."
+        },
+        {
+            "theme": "Natural Landscape",
+            "style": "Surreal",
+            "form": "Digital Illustration",
+            "prompt": "A surreal natural landscape: bizarre trees, floating rocks, and a warped sky interweave to create a dreamlike scene. Rendered in a digital illustration style, the artwork is rich in detail and bursting with imagination, transporting the viewer to an otherworldly realm."
+        },
+        {
+            "theme": "Urban Architecture",
+            "style": "Futuristic",
+            "form": "Digital Painting",
+            "prompt": "A futuristic urban scene: towering skyscrapers and an intricate three-dimensional transportation network form a grand vision of a future metropolis. Neon lights flicker amid finely rendered digital paint strokes that highlight the interplay of light and technology."
+        },
+        {
+            "theme": "Urban Architecture",
+            "style": "Realistic",
+            "form": "3D Rendering",
+            "prompt": "A realistic depiction of urban architecture: meticulously rendered in 3D, this image showcases the grandeur of modern buildings and authentic street scenes, with every detail captured as if in a high-resolution urban photograph."
+        },
+        {
+            "theme": "Urban Architecture",
+            "style": "Abstract",
+            "form": "Line Drawing",
+            "prompt": "An abstract urban architecture illustration: fluid lines trace the city's silhouette, deconstructing conventional building forms to present the complexity of modern urban life in a minimalist yet dynamic manner."
+        },
+        {
+            "theme": "Portrait",
+            "style": "Surreal",
+            "form": "Hand-drawn Illustration",
+            "prompt": "A portrait imbued with dreamlike mystery: the subject's deep, captivating eyes set against a background of surreal elements evoke a fantastical dreamscape. The hand-drawn illustration style, with expressive lines and vibrant colors, lends a unique artistic flair."
+        },
+        {
+            "theme": "Portrait",
+            "style": "Realistic",
+            "form": "Photo-realistic",
+            "prompt": "A realistic portrait: every facial detail is meticulously rendered, with the interplay of light and shadow capturing genuine, moving emotion, as if freezing a fleeting moment in a photographic masterpiece."
+        },
+        {
+            "theme": "Portrait",
+            "style": "Classical",
+            "form": "Oil Painting Texture",
+            "prompt": "A classical portrait rendered with an oil painting texture: the subject's elegance and depth are highlighted against a background of delicately detailed, historically rich brushstrokes, creating a timeless work of art."
+        },
+        {
+            "theme": "Abstract Art",
+            "style": "Modern Art",
+            "form": "Oil Painting Texture",
+            "prompt": "An abstract artwork with a modern art sensibility: bold blocks of color and textured brushstrokes create rich layers and deep emotion, with an oil painting texture that brings creative energy to every stroke."
+        },
+        {
+            "theme": "Abstract Art",
+            "style": "Abstract Expressionism",
+            "form": "Digital Painting",
+            "prompt": "An abstract expressionist piece: wild brushstrokes and bold colors collide on a digital canvas, creating an image filled with energy and raw emotion."
+        },
+        {
+            "theme": "Science Fiction/Fantasy",
+            "style": "Cyberpunk",
+            "form": "Digital Illustration",
+            "prompt": "A futuristic sci-fi fantasy scene: within a neon-lit cyberpunk city, towering buildings and flying vehicles interweave in a dazzling display. The digital illustration style emphasizes brilliant light effects and a strong futuristic vibe."
+        },
+        {
+            "theme": "Science Fiction/Fantasy",
+            "style": "Surreal",
+            "form": "Digital Painting",
+            "prompt": "A surreal science fiction scene: fantastical creatures, floating structures, and an alien sky come together to create an imaginative future world, rendered in rich detail with a digital painting technique that exudes a magical aura."
+        },
+        {
+            "theme": "Historical Scene",
+            "style": "Classical",
+            "form": "Oil Painting Texture",
+            "prompt": "A historical scene in a classical style: a majestic ancient castle and figures dressed in traditional attire are brought to life with an oil painting texture, vividly re-creating a moment from the past as if transcending time."
+        },
+        {
+            "theme": "Still Life",
+            "style": "Realistic",
+            "form": "Photo-realistic",
+            "prompt": "A refined still life in a realistic style: carefully arranged fruits and flowers bathed in soft light reveal rich textures and vibrant colors, with every detail rendered authentically, akin to a high-quality photograph."
+        },
+        {
+            "theme": "Still Life",
+            "style": "Minimalist",
+            "form": "Digital Illustration",
+            "prompt": "A minimalist still life: a clean composition and gentle color palette outline the contours of everyday objects, rendered in a digital illustration style that exudes modernity and pure aesthetic appeal."
+        },
+        {
+            "theme": "Animals",
+            "style": "Realistic",
+            "form": "Photo-realistic",
+            "prompt": "A realistic animal portrait: a wild creature in its natural habitat is depicted with lifelike detail and vivid expression, with a photo-realistic rendering that captures every strand of fur in crisp detail."
+        },
+        {
+            "theme": "Ocean",
+            "style": "Surreal",
+            "form": "Digital Painting",
+            "prompt": "A surreal ocean scene: deep, mysterious waters reveal fantastical light effects and enigmatic marine life, rendered in a digital painting style that transforms the underwater world into a dreamlike tapestry of colors and textures."
+        },
+        {
+            "theme": "Nightscape",
+            "style": "Futuristic",
+            "form": "3D Rendering",
+            "prompt": "A futuristic nightscape: dazzling city lights weave through the night sky, with 3D rendering techniques capturing the exquisite details of modern architecture and illuminating the scene as if stepping into a future metropolis after dark."
+        },
+        {
+            "theme": "Dreamlike",
+            "style": "Surreal",
+            "form": "Hand-drawn Illustration",
+            "prompt": "A dreamlike, surreal scene: soft hues and flowing lines form a fantastical world filled with wonder, rendered in a hand-drawn illustration style that imbues the image with a fairytale-like magic and mystery."
+        },
+        {
+            "theme": "Magical",
+            "style": "Fantasy Art",
+            "form": "Digital Illustration",
+            "prompt": "A magical fantasy scene: enigmatic symbols, floating islands, and mysterious creatures intertwine to create a world brimming with enchantment and the unknown, all brought to life through a vibrant digital illustration style."
+        },
+        {
+            "theme": "Fairytale",
+            "style": "Classical",
+            "form": "Watercolor",
+            "prompt": "A fairytale scene rendered in a classical style: warm tones and soft watercolor brushstrokes depict a dreamlike, storybook world, inviting the viewer to step into an ancient narrative full of wonder."
+        },
+        {
+            "theme": "Religious",
+            "style": "Classical",
+            "form": "Oil Painting Texture",
+            "prompt": "A religious painting in a classical style: a solemn deity set against a radiant, divine background creates an image imbued with sacredness, rendered with an oil painting texture that conveys deep historical and spiritual gravitas."
+        }
+    ],
+    "Simplified": [
+        {
+            "theme": "Natural Landscape",
+            "style": "Realistic",
+            "form": "Photo-realistic",
+            "prompt": "A realistic natural landscape: a lake and distant mountains under morning light."
+        },
+        {
+            "theme": "Natural Landscape",
+            "style": "Impressionist",
+            "form": "Watercolor",
+            "prompt": "An impressionist natural scene: soft, flowing colors depict a lake with distant mountains in watercolor."
+        },
+        {
+            "theme": "Natural Landscape",
+            "style": "Surreal",
+            "form": "Digital Illustration",
+            "prompt": "A surreal natural scene: fantastical trees, floating rocks, and a distorted sky create an otherworldly landscape."
+        },
+        {
+            "theme": "Urban Architecture",
+            "style": "Futuristic",
+            "form": "Digital Painting",
+            "prompt": "A futuristic urban scene: neon-lit skyscrapers and advanced architecture form a vibrant cyberpunk metropolis."
+        },
+        {
+            "theme": "Urban Architecture",
+            "style": "Realistic",
+            "form": "3D Rendering",
+            "prompt": "A realistic urban scene: modern buildings and busy streets captured in high-detail 3D rendering."
+        },
+        {
+            "theme": "Urban Architecture",
+            "style": "Abstract",
+            "form": "Line Drawing",
+            "prompt": "An abstract urban sketch: minimalist lines form a dynamic city skyline."
+        },
+        {
+            "theme": "Portrait",
+            "style": "Surreal",
+            "form": "Hand-drawn Illustration",
+            "prompt": "A surreal portrait: a mysterious figure with dreamlike elements rendered in hand-drawn style."
+        },
+        {
+            "theme": "Portrait",
+            "style": "Realistic",
+            "form": "Photo-realistic",
+            "prompt": "A realistic portrait: detailed facial features and natural lighting capture the subject’s true essence."
+        },
+        {
+            "theme": "Portrait",
+            "style": "Classical",
+            "form": "Oil Painting Texture",
+            "prompt": "A classical portrait: elegant and detailed with an oil painting texture reminiscent of timeless art."
+        },
+        {
+            "theme": "Abstract Art",
+            "style": "Modern Art",
+            "form": "Oil Painting Texture",
+            "prompt": "A modern abstract artwork: bold colors and expressive brushstrokes create a vibrant, textured composition."
+        },
+        {
+            "theme": "Abstract Art",
+            "style": "Abstract Expressionism",
+            "form": "Digital Painting",
+            "prompt": "An abstract expressionist piece: energetic digital brushstrokes and vivid colors burst with emotion."
+        },
+        {
+            "theme": "Science Fiction/Fantasy",
+            "style": "Cyberpunk",
+            "form": "Digital Illustration",
+            "prompt": "A cyberpunk scene: neon-lit streets, futuristic skyscrapers, and a vibrant urban night come to life in digital illustration."
+        },
+        {
+            "theme": "Science Fiction/Fantasy",
+            "style": "Surreal",
+            "form": "Digital Painting",
+            "prompt": "A surreal sci-fi scene: fantastical creatures and floating structures create an imaginative futuristic world."
+        },
+        {
+            "theme": "Historical Scene",
+            "style": "Classical",
+            "form": "Oil Painting Texture",
+            "prompt": "A classical historical scene: ancient architecture and period figures are rendered in rich, timeless oil paint."
+        },
+        {
+            "theme": "Still Life",
+            "style": "Realistic",
+            "form": "Photo-realistic",
+            "prompt": "A realistic still life: carefully arranged fruits and flowers shine under natural light with crisp detail."
+        },
+        {
+            "theme": "Still Life",
+            "style": "Minimalist",
+            "form": "Digital Illustration",
+            "prompt": "A minimalist still life: simple shapes and soft hues create a clean, modern composition."
+        },
+        {
+            "theme": "Animals",
+            "style": "Realistic",
+            "form": "Photo-realistic",
+            "prompt": "A realistic animal portrait: a wild creature in its natural habitat, captured with vivid detail."
+        },
+        {
+            "theme": "Ocean",
+            "style": "Surreal",
+            "form": "Digital Painting",
+            "prompt": "A surreal ocean scene: vibrant marine life and dreamlike underwater vistas burst with imaginative color."
+        },
+        {
+            "theme": "Nightscape",
+            "style": "Futuristic",
+            "form": "3D Rendering",
+            "prompt": "A futuristic nightscape: illuminated city lights and detailed architecture shine in a 3D-rendered nocturnal scene."
+        },
+        {
+            "theme": "Dreamlike",
+            "style": "Surreal",
+            "form": "Hand-drawn Illustration",
+            "prompt": "A dreamlike scene: soft hues and fluid lines form a whimsical, otherworldly atmosphere."
+        },
+        {
+            "theme": "Magical",
+            "style": "Fantasy Art",
+            "form": "Digital Illustration",
+            "prompt": "A magical fantasy scene: enchanted elements and luminous effects bring a vibrant, mystical world to life."
+        },
+        {
+            "theme": "Fairytale",
+            "style": "Classical",
+            "form": "Watercolor",
+            "prompt": "A fairytale scene: a whimsical castle and enchanted forest rendered in soft, storybook watercolors."
+        },
+        {
+            "theme": "Religious",
+            "style": "Classical",
+            "form": "Oil Painting Texture",
+            "prompt": "A religious artwork: a sacred figure and divine light are captured in a classical oil painting style."
+        }
+    ],
+    "Minimal": [
+        {
+            "theme": "Natural Landscape",
+            "style": "Realistic",
+            "form": "Photo-realistic",
+            "prompt": "A mountain lake at sunrise."
+        },
+        {
+            "theme": "Natural Landscape",
+            "style": "Impressionist",
+            "form": "Watercolor",
+            "prompt": "A dreamy lake and mountains in watercolor."
+        },
+        {
+            "theme": "Natural Landscape",
+            "style": "Surreal",
+            "form": "Digital Illustration",
+            "prompt": "A forest with floating rocks."
+        },
+        {
+            "theme": "Urban Architecture",
+            "style": "Futuristic",
+            "form": "Digital Painting",
+            "prompt": "A cyberpunk city."
+        },
+        {
+            "theme": "Urban Architecture",
+            "style": "Realistic",
+            "form": "3D Rendering",
+            "prompt": "A modern cityscape with skyscrapers."
+        },
+        {
+            "theme": "Urban Architecture",
+            "style": "Abstract",
+            "form": "Line Drawing",
+            "prompt": "A city skyline in minimalist lines."
+        },
+        {
+            "theme": "Portrait",
+            "style": "Surreal",
+            "form": "Hand-drawn Illustration",
+            "prompt": "A mysterious, surreal portrait."
+        },
+        {
+            "theme": "Portrait",
+            "style": "Realistic",
+            "form": "Photo-realistic",
+            "prompt": "A detailed portrait of a person."
+        },
+        {
+            "theme": "Portrait",
+            "style": "Classical",
+            "form": "Oil Painting Texture",
+            "prompt": "A classic oil portrait."
+        },
+        {
+            "theme": "Abstract Art",
+            "style": "Modern Art",
+            "form": "Oil Painting Texture",
+            "prompt": "A modern abstract with bold colors."
+        },
+        {
+            "theme": "Abstract Art",
+            "style": "Abstract Expressionism",
+            "form": "Digital Painting",
+            "prompt": "An energetic abstract painting."
+        },
+        {
+            "theme": "Science Fiction/Fantasy",
+            "style": "Cyberpunk",
+            "form": "Digital Illustration",
+            "prompt": "A neon cyberpunk city."
+        },
+        {
+            "theme": "Science Fiction/Fantasy",
+            "style": "Surreal",
+            "form": "Digital Painting",
+            "prompt": "A futuristic dreamscape."
+        },
+        {
+            "theme": "Historical Scene",
+            "style": "Classical",
+            "form": "Oil Painting Texture",
+            "prompt": "An ancient castle scene."
+        },
+        {
+            "theme": "Still Life",
+            "style": "Realistic",
+            "form": "Photo-realistic",
+            "prompt": "A bowl of fruit and flowers."
+        },
+        {
+            "theme": "Still Life",
+            "style": "Minimalist",
+            "form": "Digital Illustration",
+            "prompt": "A simple still life arrangement."
+        },
+        {
+            "theme": "Animals",
+            "style": "Realistic",
+            "form": "Photo-realistic",
+            "prompt": "A wild animal in nature."
+        },
+        {
+            "theme": "Ocean",
+            "style": "Surreal",
+            "form": "Digital Painting",
+            "prompt": "A vibrant underwater scene."
+        },
+        {
+            "theme": "Nightscape",
+            "style": "Futuristic",
+            "form": "3D Rendering",
+            "prompt": "A futuristic night scene."
+        },
+        {
+            "theme": "Dreamlike",
+            "style": "Surreal",
+            "form": "Hand-drawn Illustration",
+            "prompt": "A whimsical, dreamlike scene."
+        },
+        {
+            "theme": "Magical",
+            "style": "Fantasy Art",
+            "form": "Digital Illustration",
+            "prompt": "A magical fantasy world."
+        },
+        {
+            "theme": "Fairytale",
+            "style": "Classical",
+            "form": "Watercolor",
+            "prompt": "A fairytale castle in an enchanted forest."
+        },
+        {
+            "theme": "Religious",
+            "style": "Classical",
+            "form": "Oil Painting Texture",
+            "prompt": "A sacred religious scene."
+        }
+    ]
+}

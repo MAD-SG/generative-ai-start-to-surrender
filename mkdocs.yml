@@ -33,6 +33,7 @@ nav:
       - Discrete Diffusion:
           - DDPM: "book/chapter7_diffusion/ddpm.md"
           - LDM: "book/chapter7_diffusion/ldm.md"
+          - LDM Handson: "book/chapter7_diffusion/ldm_handson.md"
       - Continuous Diffusion:
           - SDE Fundamentals: "book/chapter7_diffusion/introduction_sde.md"
           - SDE for DDPM: "book/chapter7_diffusion/SDE4_DDPM_DSM.md"
