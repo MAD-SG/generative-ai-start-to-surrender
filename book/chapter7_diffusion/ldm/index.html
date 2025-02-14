@@ -12,7 +12,7 @@
         <link rel="prev" href="../ddpm/">
       
       
-        <link rel="next" href="../introduction_sde/">
+        <link rel="next" href="../ldm_handson/">
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
@@ -1339,6 +1339,8 @@
       
         
       
+        
+      
     
     
       
@@ -1596,20 +1598,14 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="8. Conclusion">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#81-further-reading" class="md-nav__link">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-further-reading" class="md-nav__link">
     <span class="md-ellipsis">
-      8.1 Further Reading
+      9. Further Reading
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1617,6 +1613,27 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ldm_handson/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    LDM Handson
+  </span>
+  
+
+      </a>
     </li>
   
 
@@ -2071,19 +2088,26 @@
 <h2 id="4-2-training-and-inference-in-ldms">4. <strong>2. Training and Inference in LDMs</strong><a class="headerlink" href="#4-2-training-and-inference-in-ldms" title="Permanent link">&para;</a></h2>
 <p>The training and inference processes of LDMs involve multiple stages, primarily leveraging a VAE for encoding-decoding and a diffusion model for denoising.</p>
 <h3 id="41-1-training-process">4.1 <strong>(1) Training Process</strong><a class="headerlink" href="#41-1-training-process" title="Permanent link">&para;</a></h3>
-<ol>
-<li><strong>Train the VAE</strong>:</li>
+<h4 id="411-train-the-vae">4.1.1 Train the VAE<a class="headerlink" href="#411-train-the-vae" title="Permanent link">&para;</a></h4>
+<ul>
 <li>The VAE consists of an <strong>encoder</strong> that compresses an input image into a latent representation <span class="arithmatex">\( z \)</span>.</li>
-<li>
-<p>A <strong>decoder</strong> reconstructs the image from <span class="arithmatex">\( z \)</span>, ensuring the latent space preserves meaningful image information.</p>
-</li>
-<li>
-<p><strong>Train the Latent Diffusion Model</strong>:</p>
-</li>
+<li>A <strong>decoder</strong> reconstructs the image from <span class="arithmatex">\( z \)</span>, ensuring the latent space preserves meaningful image information.</li>
+</ul>
+<p>It has two types of VAEs</p>
+<h5 id="4111-vq-vae">4.1.1.1 VQ-VAE<a class="headerlink" href="#4111-vq-vae" title="Permanent link">&para;</a></h5>
+<p>It is exactly same as that of <code>VQ-GAN</code>, refer this article <a href="../../chapter5_GAN/vq_gan/">VQ_GAN</a> for more details</p>
+<h5 id="4112-kl-vae">4.1.1.2 KL-VAE<a class="headerlink" href="#4112-kl-vae" title="Permanent link">&para;</a></h5>
+<p>This type is modified based on the VQ-GAN, to replace the quantilizer module with the normal <code>KL</code> divergence loss. In that sense, the overall framework is simplifed as <code>VAE</code> + <code>GAN</code></p>
+<p>The loss can be represented as:</p>
+<p>$$
+ \mathcal{L} = \frac{1}{N} \sum_{i=1}^{N} | x_i - \hat{x}<em l="l">i |^2+ \sum</em> \lambda_l | \phi_l(x) - \phi_l(G(z)) |<em j="1">2^2  + \frac{1}{2} \sum</em>
+$$
+Refer }^{d} (1 + \log \sigma_{i,j}^2 - \mu_{i,j}^2 - \sigma_{i,j}^2)+ L_{adv<a href="../ldm_handson/">Latent Diffusion</a> for more details about the coding.</p>
+<h4 id="412-train-the-latent-diffusion-model">4.1.2 Train the Latent Diffusion Model<a class="headerlink" href="#412-train-the-latent-diffusion-model" title="Permanent link">&para;</a></h4>
+<ul>
 <li>Noise is gradually added to the latent representation <span class="arithmatex">\( z \)</span>, following a Gaussian noise schedule.</li>
 <li>The U-Net model learns to denoise and recover the original latent representation.</li>
-</ol>
-<hr />
+</ul>
 <h3 id="42-2-inference-process">4.2 <strong>(2) Inference Process</strong><a class="headerlink" href="#42-2-inference-process" title="Permanent link">&para;</a></h3>
 <ol>
 <li><strong>Start with Random Noise</strong>: Generate a noisy latent variable <span class="arithmatex">\( z_T \)</span>.</li>
@@ -2192,8 +2216,7 @@
 <h2 id="8-conclusion">8. Conclusion<a class="headerlink" href="#8-conclusion" title="Permanent link">&para;</a></h2>
 <p>Latent Diffusion Models (LDMs) have emerged as a groundbreaking approach in AI-generated content. By performing diffusion in latent space, they <strong>enhance efficiency, improve image quality, and enable advanced conditional control mechanisms</strong>. Their applications range from <strong>text-to-image generation to professional-grade image editing and style transfer</strong>.</p>
 <p>With continuous advancements, LDM-based models like <strong>Stable Diffusion</strong> are shaping the future of generative AI, making high-quality image synthesis accessible to a broad audience.</p>
-<hr />
-<h3 id="81-further-reading">8.1 <strong>Further Reading</strong><a class="headerlink" href="#81-further-reading" title="Permanent link">&para;</a></h3>
+<h2 id="9-further-reading">9. Further Reading<a class="headerlink" href="#9-further-reading" title="Permanent link">&para;</a></h2>
 <ul>
 <li>📄 <a href="https://arxiv.org/abs/2112.10752">High-Resolution Image Synthesis with Latent Diffusion Models</a> - The original LDM paper by Rombach et al.</li>
 <li>🛠️ <a href="https://github.com/CompVis/stable-diffusion">Stable Diffusion GitHub</a> - Open-source implementation of LDMs.</li>
@@ -2255,13 +2278,13 @@
         
         
           
-          <a href="../introduction_sde/" class="md-footer__link md-footer__link--next" aria-label="Next: SDE Fundamentals">
+          <a href="../ldm_handson/" class="md-footer__link md-footer__link--next" aria-label="Next: LDM Handson">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                SDE Fundamentals
+                LDM Handson
               </div>
             </div>
             <div class="md-footer__button md-icon">
