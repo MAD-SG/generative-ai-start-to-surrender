@@ -68,6 +68,7 @@ theme:
     - content.action.edit
     - content.action.view
     - content.code.annotate
+
     # - content.code.select
     # - content.footnote.tooltips
     # - content.tabs.link

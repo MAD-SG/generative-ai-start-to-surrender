@@ -19,21 +19,21 @@ LDMs are a class of diffusion models designed to operate in a lower-dimensional 
 
 ## Conditional Generating
 
-Besides the effects from the the latent diffusion, another important contribution is to use conditional generation.
+Beyond the capabilities of latent diffusion, another significant contribution is the implementation of conditional generation.
 
-Take the text-image as an example,
+Let's take text-to-image generation as an example:
 
 Let $\tau_\theta(y)$ be a encoder (like the clip or orther pretrained models), $\tau_\theta$ maps the condition $y$ into the space $R^{M\times d}$, and then use cross attention in the UNet to combine the condition in the model, which looks like
 ![](https://pic3.zhimg.com/v2-1fae51f289b985440ba2af8400c0fbea_r.jpg)
 
-The overall frame work is
+The overall framework consists of two phases:
 
 - Training
 ![](https://pic3.zhimg.com/v2-4e1fc24d800a1a55d94f35b93f5d6d96_1440w.jpg)
 - Inference
 ![](https://pic1.zhimg.com/v2-43baf6d46030347b81a8ddd09aefacb0_1440w.jpg)
 
-The training must be jointed with the condition encodind network. If the condition encoding network is using some pretrained network, it can be fixed and the training only aligned with the latent space with the latent space from the pretrained conditioning model.
+The training process must be jointly performed with the condition encoding network. When using a pretrained network for condition encoding, it can remain fixed while the training focuses on aligning the latent space with that of the pretrained conditioning model.
 
 ## **2. Training and Inference in LDMs**
 The training and inference processes of LDMs involve multiple stages, primarily leveraging a VAE for encoding-decoding and a diffusion model for denoising.
@@ -48,9 +48,9 @@ The training and inference processes of LDMs involve multiple stages, primarily 
 It has two types of VAEs
 
 ##### VQ-VAE
-It is exactly same as that of `VQ-GAN`, refer this article [VQ_GAN](../chapter5_GAN/vq_gan.md) for more details
+It is identical to the `VQ-GAN` architecture. For more details, please refer to the [VQ-GAN](../chapter5_GAN/vq_gan.md) article.
 ##### KL-VAE
-This type is modified based on the VQ-GAN, to replace the quantilizer module with the normal `KL` divergence loss. In that sense, the overall framework is simplifed as `VAE` + `GAN`
+This variant is a modification of VQ-GAN, where the quantizer module is replaced with a standard `KL` divergence loss. This simplifies the overall framework to a combination of `VAE` + `GAN`.
 
 The loss can be represented as:
 
@@ -58,11 +58,64 @@ $$
  \mathcal{L} = \frac{1}{N} \sum_{i=1}^{N} \| x_i - \hat{x}_i \|^2+ \sum_{l} \lambda_l \| \phi_l(x) - \phi_l(G(z)) \|_2^2  + \frac{1}{2} \sum_{j=1}^{d} (1 + \log \sigma_{i,j}^2 - \mu_{i,j}^2 - \sigma_{i,j}^2)+ L_{adv}
 $$
 Refer [Latent Diffusion](./ldm_handson.md) for more details about the coding.
+Here is the overall structure of the KL-VAE
+
+![alt text](../../images/whiteboard_exported_image.png)
 
 #### Train the Latent Diffusion Model
 
 - Noise is gradually added to the latent representation \( z \), following a Gaussian noise schedule.
 - The U-Net model learns to denoise and recover the original latent representation.
+Most steps are similar to those in DDPM. However, in this case, different types of conditions are processed and fed into the model.
+Here's a concise summary of the model's key components:
+
+1. **Input Definitions:**
+   - **Latent and Spatial Condition:**
+     $$
+     h_0 = \operatorname{concat}(z,\, c_{\text{concat}})
+     $$
+   - **Time and Class Embedding:**
+     $$
+     \text{emb} = \phi(t) + \phi(y)
+     $$
+   - **Context for Cross-Attention:**
+     $$
+     \text{context} = c_{\text{crossattn}}
+     $$
+
+2. **Model Operation:**
+   - The module that processes these inputs is defined as:
+     $$
+     h = \operatorname{module}(h_0,\, \text{emb},\, \text{context})
+     $$
+   - Within the module:
+     - The embedding \( \text{emb} \) is added to the concatenated input \( h_0 \).
+     - Cross-attention is applied using the context \( c_{\text{crossattn}} \) (with \( c_{\text{crossattn}} \) serving as both keys and values) to fuse the sequential information with the spatial representation.
+
+This sophisticated framework enables seamless integration of latent features, spatial conditioning, sequential context, and temporal and class information.
+
+Below are visualizations of the Diffusion model framework:
+
+![alt text](../../images/unet.png)
+
+```mermaid
+graph LR
+  subgraph Image Processing
+    direction LR
+    A[down sample layer 1] --> B[SpatialTransformer] --> C[down sample layer 2]
+  end
+
+  subgraph Text Conditioning
+    direction BT
+    F["A white cat sitting on a chair"] --> E[FrozenCLIPEmbedder] --> D[content]
+  end
+
+  D -->|Conditioning| B
+
+```
+
+![alt text](../../images/image-44.png){width=30%}
+![alt text](../../images/image-45.png){width=30%}
 
 ### **(2) Inference Process**
 
@@ -115,7 +168,7 @@ Style transfer refers to transforming an image into a new artistic style while m
   3. Modify the denoising process with a cross-attention mechanism to enforce the style.
   4. Decode the final image.
 
-📌 **Example**: Stable Diffusion allows users to generate images in various artistic styles using text prompts.
+📌 **Application**: Stable Diffusion enables users to generate images in diverse artistic styles through text prompts.
 
 #### **B. Fine-tuning with DreamBooth or ControlNet**
 
@@ -127,9 +180,9 @@ Style transfer refers to transforming an image into a new artistic style while m
    - Guides the diffusion process using structural constraints like **depth maps, edge detection, or pose estimation**.
    - Enables precise **style transfer with structural preservation**.
 
-📌 **Example**: ControlNet is widely used for **anime-style conversions** and **photo-to-painting transformations**.
+📌 **Application**: ControlNet is extensively used for **anime-style conversions** and **photo-to-painting transformations**.
 
----
+Refer [latent diffusion model hands on](./ldm_handson.md) for deep understanding of the codes.
 
 ## **4. Key Advantages of LDMs**
 
@@ -140,32 +193,6 @@ Style transfer refers to transforming an image into a new artistic style while m
 | **Flexible Conditioning** | Allows fine-grained control through text prompts, sketches, depth maps, etc. |
 | **Versatile Applications** | Used in text-to-image generation, inpainting, style transfer, and more. |
 
-## Code Explain
-
-Overall structure of the network
-
-![alt text](../../images/unet.png)
-
-### Combination of condition information
-
-```mermaid
-graph LR
-  subgraph Image Processing
-    direction LR
-    A[down sample layer 1] --> B[SpatialTransformer] --> C[down sample layer 2]
-  end
-
-  subgraph Text Conditioning
-    direction BT
-    F["A white cat sitting on a chair"] --> E[FrozenCLIPEmbedder] --> D[content]
-  end
-
-  D -->|Conditioning| B
-
-```
-
-![alt text](../../images/image-44.png){width=30%}
-![alt text](../../images/image-45.png){width=30%}
 ## Conclusion
 Latent Diffusion Models (LDMs) have emerged as a groundbreaking approach in AI-generated content. By performing diffusion in latent space, they **enhance efficiency, improve image quality, and enable advanced conditional control mechanisms**. Their applications range from **text-to-image generation to professional-grade image editing and style transfer**.
 
