@@ -1,5 +1,5 @@
 import base64
-from fastapi import FastAPI, Form, BackgroundTasks, Request
+from fastapi import FastAPI, Form, BackgroundTasks, Request, HTTPException
 from fastapi.responses import StreamingResponse, HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -70,78 +70,63 @@ templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 
 import yaml
 
-# Load model configurations from YAML file
+# Add new import at the top
+from collections import defaultdict
+
+# Update config loading function
 def load_model_config():
     config_path = BASE_DIR / 'config' / 'model_parameters.yaml'
     try:
         with open(config_path, 'r') as f:
             config = yaml.safe_load(f)
 
-            # Convert torch dtype strings to actual torch dtypes
-            for model_config in config['model_configs'].values():
-                if 'torch_dtype' in model_config:
-                    if model_config['torch_dtype'] == 'float16':
-                        model_config['torch_dtype'] = torch.float16
-                    elif model_config['torch_dtype'] == 'float32':
-                        model_config['torch_dtype'] = torch.float32
-                # Add revision field if not present
-                if 'revision' not in model_config:
-                    model_config['revision'] = None
+            # Keep configuration as-is, conversion will happen in ModelAdapter
 
-            return config['model_parameters'], config['model_configs']
+            return config['models']
     except Exception as e:
-        print(f"Error loading model configurations from {config_path}: {e}")
+        print(f"Error loading model configurations: {e}")
         raise
 
-# Load both model parameters and configurations
-MODEL_PARAMETERS, MODEL_CONFIGS = load_model_config()
+# Update global variable
+MODEL_DEFS = load_model_config()
+
 
 # Global variables for model management
-class ModelManager:
-    def __init__(self):
-        self.models = {k: None for k in MODEL_CONFIGS.keys()}
-        self.last_used: Dict[str, float] = {k: 0 for k in MODEL_CONFIGS.keys()}
-        self.lock = Lock()
-        self.cleanup_interval = 600  # 10 minutes
+class ModelAdapter:
+    def __init__(self, model_id: str, model_config: dict):
+        self.model_id = model_id
+        self.model_config = model_config
+        self.pipeline = None
+        self.device = "cuda" if torch.cuda.is_available() else "cpu"
 
-    def get_model(self, model_id: str):
-        """Get or load a model pipeline
+    def _create_pipeline(self, use_quantized: bool = False):
+        config = self.model_config.copy()
 
-        Special handling for different model types:
-        - Lumina models: Use Karras sigmas and custom VAE
-        - FLUX models: Use custom pipeline
-        - Standard models: Regular pipeline with safety checker
-        """
-        with self.lock:
-            if model_id not in self.models:
-                return None
-            self._update_last_used(model_id)
-            if self.models[model_id] is None:
-                self.models[model_id] = self._load_model_pipeline(model_id)
-            return self.models[model_id]
+        # Convert torch_dtype from string to actual dtype
+        if 'torch_dtype' in config:
+            dtype_str = config['torch_dtype']
+            if dtype_str == 'float16':
+                config['torch_dtype'] = torch.float16
+            elif dtype_str == 'bfloat16':
+                config['torch_dtype'] = torch.bfloat16
+            elif dtype_str == 'float32':
+                config['torch_dtype'] = torch.float32
+            else:
+                raise ValueError(f"Unsupported torch_dtype: {dtype_str}")
 
-    def _update_last_used(self, model_id: str):
-        self.last_used[model_id] = time.time()
-
-    def _load_model_pipeline(self, model_id: str):
-        config = MODEL_CONFIGS[model_id]
-        repo_id = config['repo_id']
+        repo_id = config.get('repo_id', self.model_id)
         other_config = {k: v for k, v in config.items() if k != 'repo_id'}
-        if model_id == 'sd-v3.5':
-            return self._load_sd_v3_5(repo_id, other_config)
-        elif model_id == 'animagine-xl-4':
-            return self._load_animagine_xl_4(repo_id, other_config)
-        elif model_id == 'lumina-2':
-            return self._load_lumina_2(repo_id, other_config)
-        elif model_id.startswith('flux'):
-            return self._load_flux(repo_id, other_config)
-        else:
-            return self._load_default_model(config, repo_id, other_config, model_id)
 
-    def _load_sd_v3_5(self, repo_id, other_config):
-        print(f"Loading SD 3.5 model from {repo_id}")
-        if other_config.get('use_quantized') == True:
-            try:
+        # Configure quantization if requested and supported
+        if use_quantized:
+            other_config['quantization_config'] = BitsAndBytesConfig(
+                load_in_4bit=True,
+                bnb_4bit_compute_dtype=other_config.get('torch_dtype', torch.float16)
+            )
+
+        # Handle different model types
+        if self.model_id == 'sd-v3.5':
+            if use_quantized:
                 nf4_config = BitsAndBytesConfig(
                     load_in_4bit=True,
                     bnb_4bit_quant_type="nf4",
@@ -153,47 +138,107 @@ class ModelManager:
                     quantization_config=nf4_config,
                     torch_dtype=other_config['torch_dtype'],
                 )
-
                 pipeline = StableDiffusion3Pipeline.from_pretrained(
                     repo_id,
                     transformer=model_nf4,
                     torch_dtype=other_config['torch_dtype'],
                 )
-                pipeline = pipeline.to('cuda')
-                pipeline.enable_model_cpu_offload()
-                return pipeline
-            except Exception as e:
-                print(f"Error loading SD 3.5 model in quant mode: {str(e)}")
-                import traceback
-                print(f"Full traceback:\n{traceback.format_exc()}")
-                raise
-        else:
-            print(f"Loading non-quantized SD 3.5 model from {repo_id}")
-            pipeline = StableDiffusion3Pipeline.from_pretrained(
-                repo_id,**other_config,
-            )
-            pipeline = pipeline.to('cuda')
-            pipeline.enable_model_cpu_offload()
-            pipeline.vae.enable_tiling()
-
+            else:
+                pipeline = StableDiffusion3Pipeline.from_pretrained(repo_id, **other_config)
+                pipeline.vae.enable_tiling()
             return pipeline
 
-    def _load_animagine_xl_4(self, config, repo_id, other_config):
-        from diffusers import StableDiffusionXLPipeline
-        pipeline = StableDiffusionXLPipeline.from_pretrained(
-            repo_id, **other_config
-        )
-        pipeline.to('cuda')
-        return pipeline
+        elif self.model_id == 'animagine-xl-4':
+            return StableDiffusionXLPipeline.from_pretrained(repo_id, **other_config)
 
-    def _load_lumina_2(self, config, repo_id, other_config):
-        from diffusers import Lumina2Text2ImgPipeline
-        pipe = Lumina2Text2ImgPipeline.from_pretrained(repo_id, **other_config)
-        pipe = pipe.to('cuda')
-        pipe.enable_model_cpu_offload()
-        return pipe
+        elif self.model_id == 'lumina-2':
+            from diffusers import Lumina2Text2ImgPipeline
+            return Lumina2Text2ImgPipeline.from_pretrained(repo_id, **other_config)
 
-    def _load_flux(self, repo_id, other_config):
+        elif self.model_id.startswith('flux'):
+            # Add specialized flux model handling here
+            return AutoPipelineForText2Image.from_pretrained(repo_id, **other_config)
+
+        else:
+            return AutoPipelineForText2Image.from_pretrained(repo_id, **other_config)
+
+    def load(self, use_quantized: bool = False):
+        if self.pipeline is None:
+            self.pipeline = self._create_pipeline(use_quantized)
+            self.pipeline.to(self.device)
+
+            # Apply optimizations
+            if self.model_config.get('use_dpm_solver', False):
+                self.pipeline.scheduler = DPMSolverMultistepScheduler.from_config(
+                    self.pipeline.scheduler.config
+                )
+        return self.pipeline
+
+    def unload(self):
+        if self.pipeline is not None:
+            self.pipeline = self.pipeline.to("cpu")
+            del self.pipeline
+            self.pipeline = None
+            torch.cuda.empty_cache()
+
+    def generate(
+        self,
+        prompt: str,
+        negative_prompt: str = None,
+        height: int = 512,
+        width: int = 512,
+        num_inference_steps: int = 50,
+        guidance_scale: float = 7.5,
+        **kwargs
+    ):
+        if self.pipeline is None:
+            raise RuntimeError("Model not loaded. Call load() first.")
+        if self.model_id in ['flux1-schnell']:
+            return self.pipeline(
+                prompt=prompt,
+                # negative_prompt=negative_prompt,
+                height=height,
+                width=width,
+                num_inference_steps=num_inference_steps,
+                guidance_scale=guidance_scale,
+                **kwargs
+            ).images[0]
+        else:
+            return self.pipeline(
+                prompt=prompt,
+                negative_prompt=negative_prompt,
+                height=height,
+                width=width,
+                num_inference_steps=num_inference_steps,
+                guidance_scale=guidance_scale,
+                **kwargs
+            ).images[0]
+
+class ModelManager:
+    def __init__(self):
+        self.adapters = {k: ModelAdapter(k, v['config'])
+                        for k, v in MODEL_DEFS.items() if 'config' in v}
+        self.last_used: Dict[str, float] = {k: 0 for k in MODEL_DEFS.keys()}
+        self.lock = Lock()
+        self.cleanup_interval = 600  # 10 minutes
+
+    def get_model(self, model_id: str, use_quantized: bool = False):
+        """Get or load a model pipeline
+
+        Args:
+            model_id (str): ID of the model to load
+            use_quantized (bool): Whether to use quantization for supported models
+
+        Returns:
+            ModelAdapter: The loaded model adapter instance
+        """
+        with self.lock:
+            if model_id not in self.adapters:
+                return None
+            self.last_used[model_id] = time.time()
+            adapter = self.adapters[model_id]
+            adapter.load(use_quantized)
+            return adapter
         from diffusers import FluxPipeline
         pipe = FluxPipeline.from_pretrained(repo_id, **other_config)
         pipe.enable_model_cpu_offload()  # save some VRAM by offloading the model
@@ -244,21 +289,45 @@ async def startup_event():
     background_tasks = BackgroundTasks()
     background_tasks.add_task(cleanup_task)
 
+# Update index route grouping logic
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
+    # Build model groups from definitions
+    model_groups = defaultdict(list)
+    for model_id, model_def in MODEL_DEFS.items():
+        if 'groups' not in model_def:
+            continue
+
+        for group_name in model_def['groups']:
+            model_groups[group_name].append({
+                "id": model_id,
+                "name": model_def.get('display_name', model_id),
+                "description": model_def.get('description', '')
+            })
+
+    # Sort groups and their contents
+    sorted_groups = {}
+    for group_name in sorted(model_groups.keys()):
+        sorted_models = sorted(model_groups[group_name],
+                              key=lambda x: x['name'])
+        sorted_groups[group_name] = sorted_models
+
     return templates.TemplateResponse(
         "index.html",
-        {"request": request}
+        {
+            "request": request,
+            "model_groups": sorted_groups
+        }
     )
 
 @app.get("/model-config/{model_name}")
 async def get_model_config(model_name: str):
     """Get model-specific configuration parameters"""
-    if model_name not in MODEL_PARAMETERS:
+    if model_name not in MODEL_DEFS:
         raise HTTPException(status_code=404, detail=f"Model {model_name} not found")
 
     # Get base parameters
-    config = MODEL_PARAMETERS[model_name].copy()
+    config = MODEL_DEFS[model_name].copy()
 
     # Extract UI controls if present
     ui_controls = config.pop('ui_controls', {
@@ -271,7 +340,7 @@ async def get_model_config(model_name: str):
     })
 
     # Add model-specific settings
-    model_config = MODEL_CONFIGS.get(model_name, {})
+    model_config = MODEL_DEFS.get(model_name, {})
 
     # Add UI controls to config
     config['ui_controls'] = ui_controls
@@ -280,7 +349,7 @@ async def get_model_config(model_name: str):
     if ui_controls.get('show_quantization'):
         config['use_quantized'] = {
             'type': 'boolean',
-            'default': model_config.get('use_quantized', False),
+            'default': model_config['parameters'].get('use_quantized', False),
             'description': 'Use 4-bit quantization for reduced memory usage'
         }
 
@@ -299,7 +368,7 @@ async def generate_image(
 ):
     """Generate image with validation for model-specific parameters"""
     # Get model configuration
-    model_config = MODEL_CONFIGS.get(model_name, {})
+    model_config = MODEL_DEFS.get(model_name, {})
 
     # Use model-specific negative prompt if available and no user-provided negative prompt
     if not negative_prompt and model_config.get('negative_prompt'):
@@ -311,11 +380,13 @@ async def generate_image(
         extra_args['aesthetic_score'] = model_config.get('aesthetic_score', 9.0)
 
     # Validate model exists
-    if model_name not in MODEL_PARAMETERS:
+    if model_name not in MODEL_DEFS:
         raise HTTPException(status_code=400, detail=f"Invalid model: {model_name}")
 
     # Get model parameters
-    params = MODEL_PARAMETERS[model_name]
+    params = MODEL_DEFS[model_name].get('parameters', {})
+    if not params:
+        raise HTTPException(status_code=400, detail=f"No parameters defined for model: {model_name}")
 
     # Validate parameters
     if not (params['height']['min'] <= height <= params['height']['max']):
@@ -344,97 +415,57 @@ async def generate_image(
     # Create a unique task ID
     task_id = f"{int(datetime.now().timestamp())}"
     task = task_manager.create_task(task_id)
-    task.start_time = datetime.now()
     task.total_steps = num_inference_steps
 
-    try:
-        # Update model config if use_quantized is specified
-        if use_quantized is not None and model_name == 'sd-v3.5':
-            MODEL_CONFIGS['sd-v3.5']['use_quantized'] = use_quantized
-
-        # Get model
-        task.status = TaskStatus.LOADING_MODEL
-        pipe = model_manager.get_model(model_name)
-        if pipe is None:
-            task.status = TaskStatus.FAILED
-            task.error = f"Failed to load model {model_name}"
-            return JSONResponse(
-                status_code=500,
-                content={"error": task.error, "task_id": task_id}
-            )
-
-
-        # Generate image with model-specific parameters
-        task.status = TaskStatus.GENERATING
-        if model_name == 'sd-v3.5':
-            # Print debug info
-            print(f"Generating with SD 3.5:\nPrompt: {prompt}\nNegative: {negative_prompt}\nDimensions: {width}x{height}\nSteps: {num_inference_steps}\nGuidance: {guidance_scale}")
-
-            # Print pipeline info
-            print(f"Pipeline components:\n{pipe.components}")
-            print(f"Pipeline device: {pipe.device}")
-
-            # Generate with basic parameters first
-            image = pipe(
-                prompt=prompt,
-                negative_prompt=negative_prompt,
-                height=height,
-                width=width,
-                num_inference_steps=num_inference_steps,
-                guidance_scale=guidance_scale,
-                # callback=callback,
-                # callback_steps=1
-            ).images[0]
-        else:
-            image = pipe(
-                prompt=prompt,
-                negative_prompt=negative_prompt,
-                height=height,
-                width=width,
-                guidance_scale=guidance_scale,
-                num_inference_steps=num_inference_steps,
-                # callback=callback,
-                # callback_steps=1
-            ).images[0]
-
-        # Convert to bytes
-        img_byte_arr = io.BytesIO()
-        image.save(img_byte_arr, format='PNG')
-        img_byte_arr.seek(0)
-
-        # Update task status
-        task.status = TaskStatus.COMPLETED
-        task.end_time = datetime.now()
-        task.progress = 1.0
-
-        return StreamingResponse(
-            img_byte_arr,
-            media_type="image/png",
-            headers={
-                "X-Task-Id": task_id,
-                "X-Generation-Time": str((task.end_time - task.start_time).total_seconds())
-            }
-        )
-
-    except Exception as e:
-        import traceback
-        error_traceback = traceback.format_exc()
-        print(f"Full error traceback:\n{error_traceback}")
-
-        # Update task status on error
+        # Get model adapter
+    task.status = TaskStatus.LOADING_MODEL
+    adapter = model_manager.get_model(model_name, use_quantized)
+    if adapter is None:
         task.status = TaskStatus.FAILED
-        task.error = str(e)
-        task.end_time = datetime.now()
-
+        task.error = f"Failed to load model {model_name}"
         return JSONResponse(
             status_code=500,
-            content={
-                "error": str(e),
-                "traceback": error_traceback,
-                "task_id": task_id,
-                "generation_time": (task.end_time - task.start_time).total_seconds()
-            }
+            content={"error": task.error, "task_id": task_id}
         )
+    print(f"Loaded model {model_name}")
+
+    # Generate image
+    task.status = TaskStatus.GENERATING
+    print(f"Generating with {model_name}:\nPrompt: {prompt}\nNegative: {negative_prompt}\nDimensions: {width}x{height}\nSteps: {num_inference_steps}\nGuidance: {guidance_scale}")
+    task.start_time = datetime.now()
+
+    # Generate with model-specific parameters
+    image = adapter.generate(
+        prompt=prompt,
+        negative_prompt=negative_prompt,
+        height=height,
+        width=width,
+        num_inference_steps=num_inference_steps,
+        guidance_scale=guidance_scale,
+        # callback=callback,
+        # callback_steps=1,
+        **extra_args
+    )
+
+    # Convert to bytes
+    img_byte_arr = io.BytesIO()
+    image.save(img_byte_arr, format='PNG')
+    img_byte_arr.seek(0)
+
+    # Update task status
+    task.status = TaskStatus.COMPLETED
+    task.end_time = datetime.now()
+    print(f"Task {task_id} completed in {task.end_time - task.start_time}")
+    task.progress = 1.0
+
+    return StreamingResponse(
+        img_byte_arr,
+        media_type="image/png",
+        headers={
+            "X-Task-Id": task_id,
+            "X-Generation-Time": str((task.end_time - task.start_time).total_seconds())
+        }
+    )
 
 @app.get("/task/{task_id}")
 async def get_task_progress(task_id: str):

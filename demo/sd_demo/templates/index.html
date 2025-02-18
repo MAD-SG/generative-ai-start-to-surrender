@@ -29,20 +29,19 @@
                                 <label class="form-label" for="model_name">
                                     <i class="fas fa-microchip me-2"></i>Select Model
                                 </label>
-                                <select class="form-select" name="model_name" id="model_name" 
-                                        onchange="window.imageGenerator.updateModelConfig(this.value)">
-                                    <optgroup label="Latest Models">
-                                        <option value="animagine-xl-4">🎨 Animagine XL 4.0 (Anime)</option>
-                                        <option value="lumina-2">✨ Lumina Image 2.0 (Best Quality)</option>
-                                        <option value="flux">🔬 FLUX.1 (Experimental)</option>
+                                <!-- Update the model selection options -->
+                                <select class="form-select" name="model_name" id="model_name"
+                                    onchange="window.imageGenerator.updateModelConfig(this.value)">
+                                    {% for group_name, models in model_groups.items() %}
+                                    <optgroup label="{{ group_name }}">
+                                        {% for model in models %}
+                                        <option value="{{ model.id }}"
+                                            title="{{ model.description }}">
+                                            {{ model.name }}
+                                        </option>
+                                        {% endfor %}
                                     </optgroup>
-                                    <optgroup label="Stable Diffusion Versions">
-                                        <option value="sd-v1.0">Stable Diffusion v1.0</option>
-                                        <option value="sd-v1.5" selected>Stable Diffusion v1.5</option>
-                                        <option value="sd-v2.0">Stable Diffusion v2.0</option>
-                                        <option value="sd-v3.0">Stable Diffusion v3.0</option>
-                                        <option value="sd-v3.5">Stable Diffusion v3.5</option>
-                                    </optgroup>
+                                    {% endfor %}
                                 </select>
                             </div>
 
@@ -50,7 +49,7 @@
                                 <label class="form-label" for="prompt">
                                     <i class="fas fa-magic me-2"></i>Prompt
                                 </label>
-                                <textarea class="form-control" name="prompt" id="prompt" 
+                                <textarea class="form-control" name="prompt" id="prompt"
                                           rows="3" required placeholder="Describe the image you want to create..."></textarea>
                             </div>
 
@@ -58,7 +57,7 @@
                                 <label class="form-label" for="negative_prompt">
                                     <i class="fas fa-ban me-2"></i>Negative Prompt
                                 </label>
-                                <textarea class="form-control" name="negative_prompt" id="negative_prompt" 
+                                <textarea class="form-control" name="negative_prompt" id="negative_prompt"
                                           rows="2" placeholder="Describe what you don't want in the image..."></textarea>
                             </div>
 
@@ -68,7 +67,7 @@
                                         <i class="fas fa-arrows-alt-v me-2"></i>Height
                                     </label>
                                     <div class="dimension-group">
-                                        <input type="number" class="form-control" name="height" id="height" 
+                                        <input type="number" class="form-control" name="height" id="height"
                                                value="1024" min="512" max="1536" step="128" required>
                                         <span class="dimension-unit">px</span>
                                     </div>
@@ -78,7 +77,7 @@
                                         <i class="fas fa-arrows-alt-h me-2"></i>Width
                                     </label>
                                     <div class="dimension-group">
-                                        <input type="number" class="form-control" name="width" id="width" 
+                                        <input type="number" class="form-control" name="width" id="width"
                                                value="1024" min="512" max="1536" step="128" required>
                                         <span class="dimension-unit">px</span>
                                     </div>
@@ -90,7 +89,7 @@
                                     <label class="form-label" for="guidance_scale">
                                         <i class="fas fa-sliders-h me-2"></i>Guidance Scale
                                     </label>
-                                    <input type="range" class="form-range" name="guidance_scale" id="guidance_scale" 
+                                    <input type="range" class="form-range" name="guidance_scale" id="guidance_scale"
                                            value="4.5" min="1" max="25" step="0.5" required>
                                     <div class="text-center" id="guidance_scale_value">4.5</div>
                                 </div>
@@ -98,7 +97,7 @@
                                     <label class="form-label" for="num_inference_steps">
                                         <i class="fas fa-steps me-2"></i>Steps
                                     </label>
-                                    <input type="range" class="form-range" name="num_inference_steps" 
+                                    <input type="range" class="form-range" name="num_inference_steps"
                                            id="num_inference_steps" value="40" min="20" max="200" step="1" required>
                                     <div class="text-center" id="steps_value">40</div>
                                 </div>
