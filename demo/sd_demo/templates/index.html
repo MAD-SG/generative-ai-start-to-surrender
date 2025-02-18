@@ -48,9 +48,27 @@
                             <div class="form-group mb-4">
                                 <label class="form-label" for="prompt">
                                     <i class="fas fa-magic me-2"></i>Prompt
+                                    <button type="button" class="btn btn-sm btn-outline-primary ms-2" id="random-prompt">
+                                        <i class="fas fa-random me-1"></i>Random
+                                    </button>
                                 </label>
                                 <textarea class="form-control" name="prompt" id="prompt"
-                                          rows="3" required placeholder="Describe the image you want to create..."></textarea>
+                                          rows="3" required 
+                                          placeholder="Describe the image you want to create...">A majestic cosmic landscape, ethereal nebulas in vibrant purples and blues, floating islands with crystalline waterfalls, rays of golden light piercing through cosmic clouds, ultra detailed, cinematic lighting, 8k</textarea>
+                                <div class="mt-2">
+                                    <small class="text-muted">Suggested prompts:</small>
+                                    <div class="d-flex flex-wrap gap-2 mt-1" id="prompt-suggestions">
+                                        <button type="button" class="btn btn-sm btn-outline-secondary suggestion-btn">
+                                            Enchanted forest at twilight
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary suggestion-btn">
+                                            Cyberpunk cityscape at night
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary suggestion-btn">
+                                            Underwater palace with bioluminescence
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="form-group mb-4">
@@ -144,7 +162,7 @@
                                 <i class="fas fa-image fa-4x text-muted mb-3"></i>
                                 <p class="text-muted">Your generated image will appear here</p>
                             </div>
-                            <img id="result-image" class="img-fluid rounded shadow-sm" style="display: none;">
+                            <img id="result-image" class="img-fluid rounded shadow-sm cursor-pointer" style="display: none; cursor: pointer;" title="Click to view fullscreen">
                             <div id="generation-info" class="mt-3" style="display: none;">
                                 <h5 class="card-title">
                                     <i class="fas fa-info-circle me-2"></i>Generation Info
@@ -169,10 +187,27 @@
     <!-- Fullscreen Image Modal -->
     <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-fullscreen">
-            <div class="modal-content">
+            <div class="modal-content bg-dark">
                 <div class="modal-header border-0 bg-dark text-white">
+                    <h5 class="modal-title" id="imageModalLabel">Generated Image</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
+                <div class="modal-body d-flex align-items-center justify-content-center p-0">
+                    <img id="modal-image" class="img-fluid" style="max-height: 100vh; width: auto;" alt="Generated image">
+                </div>
+                <div class="modal-footer border-0 bg-dark">
+                    <div class="btn-group">
+                        <a id="modal-download" class="btn btn-primary" href="#" download>
+                            <i class="fas fa-download me-2"></i>Download
+                        </a>
+                        <button id="modal-set-background" class="btn btn-secondary">
+                            <i class="fas fa-image me-2"></i>Set as Background
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>>
                 <div class="modal-body bg-dark d-flex align-items-center justify-content-center p-0">
                     <img id="modal-image" class="img-fluid" alt="Generated image fullscreen view">
                 </div>

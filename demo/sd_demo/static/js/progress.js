@@ -3,10 +3,21 @@ class ImageGenerator {
         this.currentTaskId = null;
         this.progressInterval = null;
         this.currentImageUrl = null;
+        this.prompts = [
+            "A majestic cosmic landscape, ethereal nebulas in vibrant purples and blues, floating islands with crystalline waterfalls, rays of golden light piercing through cosmic clouds, ultra detailed, cinematic lighting, 8k",
+            "A mystical library with floating books, glowing particles of magic, intricate architecture, warm golden light streaming through stained glass windows, photorealistic, detailed textures, volumetric lighting",
+            "An enchanted forest at twilight, bioluminescent flowers, ethereal mist, ancient twisted trees, moonlight filtering through branches, fireflies, magical atmosphere, ultra detailed, cinematic composition",
+            "A futuristic cyberpunk cityscape at night, neon lights reflecting in rain puddles, holographic advertisements, flying vehicles, towering skyscrapers, detailed architecture, moody atmosphere, 8k resolution",
+            "An underwater palace with bioluminescent sea creatures, crystal domes, ancient marble architecture, schools of colorful fish, rays of light piercing through water, detailed coral reefs, magical atmosphere",
+            "A steampunk airship floating through golden clouds at sunset, intricate brass machinery, billowing steam, Victorian architecture, dramatic lighting, highly detailed metalwork, cinematic composition",
+            "A crystalline ice palace in the northern lights, aurora borealis reflecting off transparent walls, snowflakes in the air, magical atmosphere, detailed ice formations, volumetric lighting, 8k resolution",
+            "A magical garden with giant mushrooms, fairy lights, flowing streams, rainbow flowers, butterflies, mystical atmosphere, ultra detailed, soft lighting, photorealistic textures"
+        ];
         this.setupEventListeners();
         this.setupRangeInputs();
         this.setupImageModal();
         this.setupBackgroundButtons();
+        this.setupPromptSuggestions();
     }
 
     setupEventListeners() {
@@ -22,6 +33,12 @@ class ImageGenerator {
             modelSelect.addEventListener('change', () => this.updateModelConfig(modelSelect.value));
             // Initialize with current model
             this.updateModelConfig(modelSelect.value);
+        }
+
+        // Random prompt button
+        const randomPromptBtn = document.getElementById('random-prompt');
+        if (randomPromptBtn) {
+            randomPromptBtn.addEventListener('click', () => this.setRandomPrompt());
         }
 
         // Clear result image when starting a new prompt
@@ -242,13 +259,14 @@ class ImageGenerator {
     showProgress() {
         const resultImage = document.getElementById('result-image');
         const placeholder = document.getElementById('placeholder-message');
+        const progressContainer = document.getElementById('progress-container');
         const progressBar = document.getElementById('progress-bar');
         const generationInfo = document.getElementById('generation-info');
 
         if (resultImage) resultImage.style.display = 'none';
         if (placeholder) placeholder.style.display = 'none';
+        if (progressContainer) progressContainer.style.display = 'block';
         if (progressBar) {
-            progressBar.style.display = 'block';
             progressBar.style.width = '0%';
             progressBar.setAttribute('aria-valuenow', '0');
         }
@@ -268,9 +286,10 @@ class ImageGenerator {
     displayResult(imageUrl, generationTime) {
         const resultImage = document.getElementById('result-image');
         const placeholder = document.getElementById('placeholder-message');
-        const progressBar = document.getElementById('progress-bar');
+        const progressContainer = document.getElementById('progress-container');
         const generationInfo = document.getElementById('generation-info');
         const downloadLink = document.getElementById('download-link');
+        const modalDownload = document.getElementById('modal-download');
         const setBackground = document.getElementById('set-background');
         const generationTimeText = document.getElementById('generation-time');
 
@@ -280,52 +299,138 @@ class ImageGenerator {
         if (resultImage) {
             resultImage.src = imageUrl;
             resultImage.style.display = 'block';
+            resultImage.alt = document.getElementById('prompt')?.value || 'Generated image';
 
-            // Set up download link and background button
+            // Set up download links in both main view and modal
             if (downloadLink) {
                 this.setupDownloadLink(downloadLink, imageUrl);
                 downloadLink.style.display = 'inline-block';
+            }
+            if (modalDownload) {
+                this.setupDownloadLink(modalDownload, imageUrl);
             }
             if (setBackground) {
                 setBackground.style.display = 'inline-block';
             }
         }
         if (placeholder) placeholder.style.display = 'none';
-        if (progressBar) progressBar.style.display = 'none';
+        if (progressContainer) progressContainer.style.display = 'none';
         if (generationInfo) generationInfo.style.display = 'block';
-        if (generationTimeText) generationTimeText.textContent = `Generated in ${generationTime} seconds`;
+        if (generationTimeText) generationTimeText.textContent = `Generation completed in ${generationTime} seconds`;
     }
 
     setupImageModal() {
         // Initialize Bootstrap modal
-        this.imageModal = new bootstrap.Modal(document.getElementById('imageModal'));
+        const modalElement = document.getElementById('imageModal');
+        this.imageModal = new bootstrap.Modal(modalElement);
         
+        // Setup click handler for result image
+        const resultImage = document.getElementById('result-image');
+        if (resultImage) {
+            resultImage.addEventListener('click', () => {
+                if (this.currentImageUrl) {
+                    this.showImageModal(this.currentImageUrl);
+                }
+            });
+        }
+
         // Setup keyboard shortcuts
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && this.imageModal._isShown) {
-                this.imageModal.hide();
+            if (!this.imageModal._isShown) return;
+
+            switch(e.key) {
+                case 'Escape':
+                    this.imageModal.hide();
+                    break;
+                case 'ArrowLeft':
+                    // Could be used for previous image if implementing gallery
+                    break;
+                case 'ArrowRight':
+                    // Could be used for next image if implementing gallery
+                    break;
             }
+        });
+
+        // Setup modal events
+        modalElement.addEventListener('shown.bs.modal', () => {
+            // Focus handling or additional setup when modal is shown
+        });
+
+        modalElement.addEventListener('hidden.bs.modal', () => {
+            // Cleanup or state reset when modal is hidden
         });
     }
 
     setupDownloadLink(link, imageUrl) {
+        // Get model name and prompt for filename
+        const modelSelect = document.getElementById('model_name');
         const prompt = document.getElementById('prompt')?.value || '';
-        const filename = prompt.slice(0, 30).replace(/[^a-z0-9]/gi, '_').toLowerCase() || 'generated';
+        const modelName = modelSelect?.options[modelSelect.selectedIndex]?.text?.replace(/[^a-z0-9]/gi, '_').toLowerCase() || 'unknown_model';
+        
+        // Create a clean filename from the prompt
+        const cleanPrompt = prompt.slice(0, 30).replace(/[^a-z0-9]/gi, '_').toLowerCase() || 'generated';
         const timestamp = new Date().toISOString().replace(/[^0-9]/g, '').slice(0, 14);
+        const filename = `${cleanPrompt}_${modelName}_${timestamp}.png`;
+
+        // Setup the download link
         link.href = imageUrl;
-        link.download = `${filename}_${timestamp}.png`;
+        link.download = filename;
         link.style.display = 'inline-block';
+
+        // Add click handler to handle download errors
+        link.onclick = async (e) => {
+            try {
+                // Fetch the image as blob
+                const response = await fetch(imageUrl);
+                if (!response.ok) throw new Error('Network response was not ok');
+                
+                const blob = await response.blob();
+                const blobUrl = window.URL.createObjectURL(blob);
+                
+                // Create a temporary link and click it
+                const tempLink = document.createElement('a');
+                tempLink.href = blobUrl;
+                tempLink.download = filename;
+                document.body.appendChild(tempLink);
+                tempLink.click();
+                document.body.removeChild(tempLink);
+                
+                // Clean up the blob URL
+                window.URL.revokeObjectURL(blobUrl);
+            } catch (error) {
+                console.error('Download failed:', error);
+                alert('Failed to download image. Please try again.');
+            }
+            return false; // Prevent default link behavior
+        };
     }
 
     showImageModal(imageUrl) {
         const modalImage = document.getElementById('modal-image');
         const modalDownload = document.getElementById('modal-download');
+        const modalTitle = document.getElementById('imageModalLabel');
         
         if (modalImage) {
             modalImage.src = imageUrl;
+            
+            // Handle image loading
+            modalImage.onload = () => {
+                // Add loading indicator if needed
+                modalImage.style.display = 'block';
+            };
+            
+            modalImage.onerror = () => {
+                console.error('Failed to load image in modal');
+            };
         }
+
         if (modalDownload) {
             this.setupDownloadLink(modalDownload, imageUrl);
+        }
+
+        if (modalTitle) {
+            const prompt = document.getElementById('prompt')?.value;
+            modalTitle.textContent = prompt ? `Generated: ${prompt.slice(0, 50)}${prompt.length > 50 ? '...' : ''}` : 'Generated Image';
         }
         
         this.imageModal.show();
@@ -340,6 +445,51 @@ class ImageGenerator {
                 button.addEventListener('click', () => this.setAsBackground());
             }
         });
+    }
+
+    setupPromptSuggestions() {
+        // Setup click handlers for suggestion buttons
+        const suggestionButtons = document.querySelectorAll('.suggestion-btn');
+        suggestionButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const promptArea = document.getElementById('prompt');
+                if (promptArea) {
+                    promptArea.value = button.textContent.trim();
+                    // Trigger height adjustment
+                    promptArea.style.height = 'auto';
+                    promptArea.style.height = promptArea.scrollHeight + 'px';
+                    // Optional: add focus and scroll to view
+                    promptArea.focus();
+                }
+            });
+        });
+
+        // Setup auto-resize for prompt textarea
+        const promptArea = document.getElementById('prompt');
+        if (promptArea) {
+            // Initial height adjustment
+            promptArea.style.height = 'auto';
+            promptArea.style.height = promptArea.scrollHeight + 'px';
+
+            // Adjust height on input
+            promptArea.addEventListener('input', () => {
+                promptArea.style.height = 'auto';
+                promptArea.style.height = promptArea.scrollHeight + 'px';
+            });
+        }
+    }
+
+    setRandomPrompt() {
+        const promptArea = document.getElementById('prompt');
+        if (promptArea && this.prompts.length > 0) {
+            const randomIndex = Math.floor(Math.random() * this.prompts.length);
+            promptArea.value = this.prompts[randomIndex];
+            // Trigger height adjustment
+            promptArea.style.height = 'auto';
+            promptArea.style.height = promptArea.scrollHeight + 'px';
+            // Optional: add focus and scroll to view
+            promptArea.focus();
+        }
     }
 
     setAsBackground() {
