@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Image Generator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-gradient">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-robot me-2"></i>
+                AI Image Generator
+            </a>
+        </div>
+    </nav>
+
+    <div class="container py-4">
+        <div class="row">
+            <!-- Left Column: Generation Form -->
+            <div class="col-lg-6">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <form id="generate-form">
+                            <div class="model-select mb-4">
+                                <label class="form-label" for="model_name">
+                                    <i class="fas fa-microchip me-2"></i>Select Model
+                                </label>
+                                <select class="form-select" name="model_name" id="model_name" 
+                                        onchange="window.imageGenerator.updateModelConfig(this.value)">
+                                    <optgroup label="Latest Models">
+                                        <option value="animagine-xl-4">🎨 Animagine XL 4.0 (Anime)</option>
+                                        <option value="lumina-2">✨ Lumina Image 2.0 (Best Quality)</option>
+                                        <option value="flux">🔬 FLUX.1 (Experimental)</option>
+                                    </optgroup>
+                                    <optgroup label="Stable Diffusion Versions">
+                                        <option value="sd-v1.0">Stable Diffusion v1.0</option>
+                                        <option value="sd-v1.5" selected>Stable Diffusion v1.5</option>
+                                        <option value="sd-v2.0">Stable Diffusion v2.0</option>
+                                        <option value="sd-v3.0">Stable Diffusion v3.0</option>
+                                        <option value="sd-v3.5">Stable Diffusion v3.5</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+
+                            <div class="form-group mb-4">
+                                <label class="form-label" for="prompt">
+                                    <i class="fas fa-magic me-2"></i>Prompt
+                                </label>
+                                <textarea class="form-control" name="prompt" id="prompt" 
+                                          rows="3" required placeholder="Describe the image you want to create..."></textarea>
+                            </div>
+
+                            <div class="form-group mb-4">
+                                <label class="form-label" for="negative_prompt">
+                                    <i class="fas fa-ban me-2"></i>Negative Prompt
+                                </label>
+                                <textarea class="form-control" name="negative_prompt" id="negative_prompt" 
+                                          rows="2" placeholder="Describe what you don't want in the image..."></textarea>
+                            </div>
+
+                            <div class="row mb-4">
+                                <div class="col-6">
+                                    <label class="form-label" for="height">
+                                        <i class="fas fa-arrows-alt-v me-2"></i>Height
+                                    </label>
+                                    <div class="dimension-group">
+                                        <input type="number" class="form-control" name="height" id="height" 
+                                               value="1024" min="512" max="1536" step="128" required>
+                                        <span class="dimension-unit">px</span>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label" for="width">
+                                        <i class="fas fa-arrows-alt-h me-2"></i>Width
+                                    </label>
+                                    <div class="dimension-group">
+                                        <input type="number" class="form-control" name="width" id="width" 
+                                               value="1024" min="512" max="1536" step="128" required>
+                                        <span class="dimension-unit">px</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-4">
+                                <div class="col-6">
+                                    <label class="form-label" for="guidance_scale">
+                                        <i class="fas fa-sliders-h me-2"></i>Guidance Scale
+                                    </label>
+                                    <input type="range" class="form-range" name="guidance_scale" id="guidance_scale" 
+                                           value="4.5" min="1" max="25" step="0.5" required>
+                                    <div class="text-center" id="guidance_scale_value">4.5</div>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label" for="num_inference_steps">
+                                        <i class="fas fa-steps me-2"></i>Steps
+                                    </label>
+                                    <input type="range" class="form-range" name="num_inference_steps" 
+                                           id="num_inference_steps" value="40" min="20" max="200" step="1" required>
+                                    <div class="text-center" id="steps_value">40</div>
+                                </div>
+                            </div>
+
+                            <!-- Extra Settings Container -->
+                            <div id="extra-settings" class="mb-4">
+                                <!-- Dynamic model-specific settings will be inserted here -->
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-wand-magic-sparkles me-2"></i>Generate Image
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Results -->
+            <div class="col-lg-6">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <!-- Progress Tracking -->
+                        <div id="progress-container" class="mb-4" style="display: none;">
+                            <h5 class="card-title mb-3">
+                                <i class="fas fa-spinner fa-spin me-2"></i>Generation Progress
+                            </h5>
+                            <div class="progress">
+                                <div id="progress-bar" class="progress-bar progress-bar-striped progress-bar-animated"
+                                     role="progressbar" style="width: 0%"></div>
+                            </div>
+                            <p id="progress-status" class="mt-2 text-muted">Initializing...</p>
+                        </div>
+
+                        <!-- Error Display -->
+                        <div id="error-message" class="alert alert-danger" style="display: none;">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            <span class="error-text"></span>
+                        </div>
+
+                        <!-- Result Display -->
+                        <div id="result">
+                            <div class="text-center mb-3" id="placeholder-message">
+                                <i class="fas fa-image fa-4x text-muted mb-3"></i>
+                                <p class="text-muted">Your generated image will appear here</p>
+                            </div>
+                            <img id="result-image" class="img-fluid rounded shadow-sm" style="display: none;">
+                            <div id="generation-info" class="mt-3" style="display: none;">
+                                <h5 class="card-title">
+                                    <i class="fas fa-info-circle me-2"></i>Generation Info
+                                </h5>
+                                <p id="generation-time" class="text-muted mb-0"></p>
+                                <div class="mt-3 d-flex gap-2">
+                                    <a id="download-link" class="btn btn-primary" href="#" download style="display: none;">
+                                        <i class="fas fa-download me-2"></i>Download Image
+                                    </a>
+                                    <button id="set-background" class="btn btn-secondary" style="display: none;">
+                                        <i class="fas fa-image me-2"></i>Set as Background
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fullscreen Image Modal -->
+    <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header border-0 bg-dark text-white">
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body bg-dark d-flex align-items-center justify-content-center p-0">
+                    <img id="modal-image" class="img-fluid" alt="Generated image fullscreen view">
+                </div>
+                <div class="modal-footer border-0 bg-dark">
+                    <a id="modal-download" class="btn btn-primary" href="#" download>
+                        <i class="fas fa-download me-2"></i>Download Image
+                    </a>
+                    <button id="modal-set-background" class="btn btn-secondary">
+                        <i class="fas fa-image me-2"></i>Set as Background
+                    </button>
+                    <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/js/progress.js"></script>
+</body>
+</html>
