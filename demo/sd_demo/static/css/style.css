@@ -10,20 +10,13 @@ body {
     min-height: 100vh;
     background: url('/static/images/bg.png') center center fixed;
     background-size: cover;
-    background-color: #f8f9fa;
+    background-color: transparent;
     position: relative;
+    filter: contrast(1.2) brightness(1.2);
 }
 
 body::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(5px);
-    z-index: 0;
+    display: none;
 }
 
 .container {
@@ -33,23 +26,71 @@ body::before {
 
 /* Navbar Styles */
 .navbar.bg-gradient {
+    background: none !important;
+    box-shadow: none;
+}
+
+.navbar .btn,
+.navbar-nav .btn {
+    opacity: 1 !important;
     background: var(--bg-gradient);
-    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    border-radius: 8px;
+    color: white !important;
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+    backdrop-filter: blur(5px);
+}
+
+.navbar .btn:hover,
+.navbar-nav .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px rgba(99, 102, 241, 0.6);
+    background: var(--primary-hover);
 }
 
 .navbar-brand {
+    opacity: 1 !important;
     font-weight: 600;
     font-size: 1.25rem;
+    color: #4f46e5;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
+.navbar-nav .nav-link {
+    opacity: 1 !important;
+    color: #4f46e5 !important;
+    font-weight: 500;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
+.navbar-nav .nav-link:hover {
+    color: var(--primary-hover) !important;
 }
 
 /* Card Styles */
 .card {
+    opacity: 0;
     border: none;
     border-radius: 12px;
     transition: transform 0.2s, box-shadow 0.2s;
-    background-color: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(10px);
+    background: none;
+    backdrop-filter: none;
+    box-shadow: none;
     overflow: hidden;
+}
+
+.card.input-card,
+.card.result-card {
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+}
+
+.card.input-card {
+    opacity: 1;
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(5px);
 }
 
 .card:hover {
@@ -70,11 +111,12 @@ body::before {
 }
 
 .form-control, .form-select {
+    opacity: 1;
     border: 1px solid #e5e7eb;
     border-radius: 8px;
     padding: 0.75rem;
     transition: all 0.2s;
-    background-color: #f9fafb;
+    background-color: rgba(255, 255, 255, 0.8);
     width: 100%;
 }
 
@@ -111,26 +153,35 @@ textarea.form-control {
 }
 
 /* Button Styles */
-.btn-primary {
+.btn {
+    opacity: 1 !important;
+}
+
+.btn-primary,
+.btn-secondary {
     background: var(--bg-gradient);
     border: none;
     padding: 0.75rem 1.5rem;
     font-weight: 500;
     border-radius: 8px;
     transition: all 0.2s;
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+    backdrop-filter: blur(5px);
+    color: white !important;
 }
 
-.btn-primary:hover {
+.btn-primary:hover,
+.btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px rgba(99, 102, 241, 0.6);
     background: var(--primary-hover);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
 }
 
 /* Progress Bar */
 .progress {
     height: 0.75rem;
     border-radius: 1rem;
-    background-color: #e5e7eb;
+    background-color: rgba(229, 231, 235, 0.5);
     overflow: hidden;
 }
 
@@ -197,7 +248,8 @@ textarea.form-control {
     bottom: 2rem;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
     color: white;
     padding: 1rem 2rem;
     border-radius: 50px;
@@ -211,6 +263,30 @@ textarea.form-control {
     0% { transform: translate(-50%, 100%); opacity: 0; }
     15%, 85% { transform: translate(-50%, 0); opacity: 1; }
     100% { transform: translate(-50%, 100%); opacity: 0; }
+}
+
+/* 模型控制面板的背景 */
+.model-controls {
+    background-color: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+}
+
+/* 控制面板中的文本 */
+.model-controls label,
+.model-controls .form-label {
+    color: #4f46e5;
+    font-weight: 600;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
+/* 控制面板中的输入框 */
+.model-controls .form-control,
+.model-controls .form-select {
+    background-color: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(99, 102, 241, 0.3);
 }
 
 /* Responsive Adjustments */
