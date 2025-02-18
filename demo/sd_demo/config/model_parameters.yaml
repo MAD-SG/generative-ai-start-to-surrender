@@ -1,6 +1,38 @@
 # Combined Model Configuration for Stable Diffusion Web Interface
 
 models:
+
+  animagine-xl-4:
+    display_name: "Animagine-XL 4"
+    description: "An improved version of Animagine-XL"
+    parameters:
+      guidance_scale:
+        min: 1
+        max: 20
+        default: 7.5
+        step: 0.5
+      num_inference_steps:
+        min: 20
+        max: 100
+        default: 50
+        step: 1
+      height:
+        min: 512
+        max: 1024
+        default: 512
+        step: 64
+      width:
+        min: 512
+        max: 1024
+        default: 512
+        step: 64
+    config:
+      repo_id: "cagliostrolab/animagine-xl-4.0"
+      custom_pipeline: lpw_stable_diffusion_xl
+      add_watermarker: False
+      use_safetensors: True
+    groups:
+      - "Stable Diffusion Versions"
   sd-v1.0:
     display_name: "Stable Diffusion v1.0"
     description: "Original release version"
@@ -156,7 +188,37 @@ models:
       requires_safety_checker: true
     groups:
       - "Stable Diffusion Versions"
-
+  sd-xl-1.0:
+    display_name: "Stable Diffusion XL v1.0"
+    description: "Original release version"
+    parameters:
+      guidance_scale:
+        min: 1
+        max: 20
+        default: 7.5
+        step: 0.5
+      num_inference_steps:
+        min: 20
+        max: 100
+        default: 50
+        step: 1
+      height:
+        min: 512
+        max: 1024
+        default: 512
+        step: 64
+      width:
+        min: 512
+        max: 1024
+        default: 512
+        step: 64
+    config:
+      repo_id: stabilityai/stable-diffusion-xl-base-1.0
+      torch_dtype: float16
+      use_safetensors: True
+      variant: fp16
+    groups:
+      - "Stable Diffusion Versions"
   sd-v2.0:
     display_name: "Stable Diffusion v2.0"
     description: "Major update with improved quality"
@@ -183,9 +245,7 @@ models:
         step: 64
     config:
       repo_id: "stabilityai/stable-diffusion-2"
-      type: standard
-      safety_checker: true
-      requires_safety_checker: true
+
     groups:
       - "Stable Diffusion Versions"
 
@@ -214,12 +274,45 @@ models:
         default: 1024
         step: 128
     config:
-      repo_id: "stabilityai/stable-diffusion-3-medium"
-      type: standard
-      safety_checker: true
-      requires_safety_checker: true
+      repo_id: "stabilityai/stable-diffusion-3-medium-diffusers"
       torch_dtype: float16
-      variant: fp16
+    groups:
+      - "Stable Diffusion Versions"
+  sd-v3.5-quant:
+    display_name: "Stable Diffusion v3.5 Quantized"
+    description: "Latest version with best performance"
+    parameters:
+      ui_controls:
+        show_prompt: true
+        show_negative_prompt: true
+        show_dimensions: true
+        show_guidance_scale: true
+        show_steps: true
+        show_quantization: true
+      guidance_scale:
+        min: 1
+        max: 25
+        default: 4.5
+        step: 0.5
+      num_inference_steps:
+        min: 20
+        max: 200
+        default: 100
+        step: 1
+      height:
+        min: 512
+        max: 1536
+        default: 1024
+        step: 128
+      width:
+        min: 512
+        max: 1536
+        default: 1024
+        step: 128
+    config:
+      repo_id: "stabilityai/stable-diffusion-3-medium-diffusers"
+      torch_dtype: float16
+      quantization_config: {}
     groups:
       - "Stable Diffusion Versions"
 
@@ -254,10 +347,6 @@ models:
         max: 1536
         default: 1024
         step: 128
-      use_quantized:
-        type: boolean
-        default: false
-        description: "Use 4-bit quantization for reduced memory usage"
       negative_prompt:
         type: string
         default: ""

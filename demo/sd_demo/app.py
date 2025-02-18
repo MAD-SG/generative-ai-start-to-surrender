@@ -3,6 +3,7 @@ from fastapi import FastAPI, Form, BackgroundTasks, Request, HTTPException
 from fastapi.responses import StreamingResponse, HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import torch
 from PIL import Image
@@ -18,6 +19,8 @@ from threading import Lock
 from dataclasses import dataclass
 from enum import Enum
 from datetime import datetime
+from fastapi import FastAPI
+from pydantic import BaseModel
 
 class TaskStatus(Enum):
     QUEUED = "queued"
@@ -32,9 +35,10 @@ class TaskProgress:
     progress: float = 0.0
     total_steps: int = 0
     current_step: int = 0
-    start_time: datetime = None
-    end_time: datetime = None
+    start_time: float = None
+    end_time: float = None
     error: str = None
+    image: io.BytesIO = None  # Store the generated image
 
 class TaskManager:
     def __init__(self):
@@ -57,16 +61,27 @@ class TaskManager:
                     setattr(self.tasks[task_id], key, value)
 
 app = FastAPI()
-task_manager = TaskManager()
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # 在生产环境中应该设置具体的域名
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Get the directory containing app.py
 BASE_DIR = Path(__file__).resolve().parent
 
-# Mount static files directory
+# Mount static files
 app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="static")
 
-# Setup Jinja2 templates
+# Configure templates
 templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
+
+# Initialize task manager
+task_manager = TaskManager()
 
 import yaml
 
@@ -90,6 +105,8 @@ def load_model_config():
 # Update global variable
 MODEL_DEFS = load_model_config()
 
+# Model state management
+model_states = {model_id: True for model_id in MODEL_DEFS.keys()}
 
 # Global variables for model management
 class ModelAdapter:
@@ -117,69 +134,126 @@ class ModelAdapter:
         repo_id = config.get('repo_id', self.model_id)
         other_config = {k: v for k, v in config.items() if k != 'repo_id'}
 
-        # Configure quantization if requested and supported
-        if use_quantized:
-            other_config['quantization_config'] = BitsAndBytesConfig(
-                load_in_4bit=True,
-                bnb_4bit_compute_dtype=other_config.get('torch_dtype', torch.float16)
-            )
+
 
         # Handle different model types
-        if self.model_id == 'sd-v3.5':
-            if use_quantized:
-                nf4_config = BitsAndBytesConfig(
-                    load_in_4bit=True,
-                    bnb_4bit_quant_type="nf4",
-                    bnb_4bit_compute_dtype=other_config['torch_dtype'],
-                )
-                model_nf4 = SD3Transformer2DModel.from_pretrained(
-                    repo_id,
-                    subfolder="transformer",
-                    quantization_config=nf4_config,
-                    torch_dtype=other_config['torch_dtype'],
-                )
-                pipeline = StableDiffusion3Pipeline.from_pretrained(
-                    repo_id,
-                    transformer=model_nf4,
-                    torch_dtype=other_config['torch_dtype'],
-                )
-            else:
-                pipeline = StableDiffusion3Pipeline.from_pretrained(repo_id, **other_config)
-                pipeline.vae.enable_tiling()
+        if self.model_id=='sd-v3.5-quant':
+            from diffusers import BitsAndBytesConfig, SD3Transformer2DModel
+            from diffusers import StableDiffusion3Pipeline
+            nf4_config = BitsAndBytesConfig(
+                load_in_4bit=True,
+                bnb_4bit_quant_type="nf4",
+                bnb_4bit_compute_dtype=other_config['torch_dtype'],
+            )
+
+            model_nf4 = SD3Transformer2DModel.from_pretrained(
+                repo_id,
+                subfolder="transformer",
+                quantization_config=nf4_config,
+                torch_dtype=other_config['torch_dtype'],
+            )
+            pipeline = StableDiffusion3Pipeline.from_pretrained(
+                repo_id,
+                transformer=model_nf4,
+                torch_dtype=other_config['torch_dtype'],
+            )
             return pipeline
+        elif self.model_id == 'sd-v3.5':
+
+            from transformers import T5EncoderModel, CLIPTextModel, CLIPTokenizer
+            from diffusers import StableDiffusion3Pipeline
+            # 预加载文本编码器
+            # text_encoder_1 = CLIPTextModel.from_pretrained("openai/clip-vit-large-patch14")
+            # text_encoder_2 = T5EncoderModel.from_pretrained("google/t5-v1_1-xl")
+
+            # # 预加载分词器
+            # tokenizer_1 = CLIPTokenizer.from_pretrained("openai/clip-vit-large-patch14")
+            # tokenizer_2 = CLIPTokenizer.from_pretrained("google/t5-v1_1-xl")
+
+            pipeline = StableDiffusion3Pipeline.from_pretrained(repo_id,
+                    # text_encoder=text_encoder_1,
+                    # text_encoder_2=text_encoder_2,
+                    # tokenizer=tokenizer_1,
+                    # tokenizer_2=tokenizer_2,
+                    **other_config
+                )
+            pipeline.vae.enable_tiling()
+            return pipeline
+        elif self.model_id == 'sd-v2.0':
+            from diffusers import StableDiffusionPipeline, EulerDiscreteScheduler
+
+            # Use the Euler scheduler here instead
+            scheduler = EulerDiscreteScheduler.from_pretrained(repo_id, subfolder="scheduler")
+            pipe = StableDiffusionPipeline.from_pretrained(repo_id, scheduler=scheduler, **other_config)
+            return pipe
+        elif self.model_id in ['sd-v1.5', 'sd-v1.3', 'sd-v1.2', 'sd-v1.1']:
+            from diffusers import StableDiffusionPipeline, EulerDiscreteScheduler
+            # Get repo_id from config or use default
+            repo_id = self.model_config.get('repo_id', 'runwayml/stable-diffusion-v1-5')
+            # Use the Euler scheduler here instead
+            scheduler = EulerDiscreteScheduler.from_pretrained(repo_id, subfolder="scheduler")
+            pipe = StableDiffusionPipeline.from_pretrained(repo_id, scheduler=scheduler, torch_dtype=torch.float16)
+
+            return pipe
+        elif self.model_id == 'sd-xl-1.0':
+            from diffusers import DiffusionPipeline
+            pipe = DiffusionPipeline.from_pretrained(repo_id, **other_config)
+            return pipe
+
 
         elif self.model_id == 'animagine-xl-4':
             return StableDiffusionXLPipeline.from_pretrained(repo_id, **other_config)
 
-        elif self.model_id == 'lumina-2':
-            from diffusers import Lumina2Text2ImgPipeline
-            return Lumina2Text2ImgPipeline.from_pretrained(repo_id, **other_config)
+        # elif self.model_id == 'lumina-2-image': # error in diffusers package
+        #     from diffusers import Lumina2Text2ImgPipeline
+        #     return Lumina2Text2ImgPipeline.from_pretrained(repo_id, **other_config)
 
         elif self.model_id.startswith('flux'):
             # Add specialized flux model handling here
             return AutoPipelineForText2Image.from_pretrained(repo_id, **other_config)
+        elif self.model_id == 'sd-v3.0':
+            from diffusers import StableDiffusion3Pipeline
+            return StableDiffusion3Pipeline.from_pretrained("stabilityai/stable-diffusion-3-medium-diffusers", **other_config)
 
         else:
             return AutoPipelineForText2Image.from_pretrained(repo_id, **other_config)
 
     def load(self, use_quantized: bool = False):
-        if self.pipeline is None:
-            self.pipeline = self._create_pipeline(use_quantized)
-            self.pipeline.to(self.device)
+        try:
+            if self.pipeline is None:
+                self.pipeline = self._create_pipeline(use_quantized)
+                self.pipeline.to(self.device)
 
-            # Apply optimizations
-            if self.model_config.get('use_dpm_solver', False):
-                self.pipeline.scheduler = DPMSolverMultistepScheduler.from_config(
-                    self.pipeline.scheduler.config
-                )
-        return self.pipeline
+                # Apply optimizations
+                if self.model_config.get('use_dpm_solver', False):
+                    self.pipeline.scheduler = DPMSolverMultistepScheduler.from_config(
+                        self.pipeline.scheduler.config
+                    )
+            return self.pipeline
+        except Exception as e:
+            error_msg = f"Error loading model {self.model_id}: {str(e)}"
+            print(error_msg)  # Log the error
+            self.unload()  # Clean up any partially loaded model
+            raise HTTPException(status_code=500, detail=error_msg)
 
     def unload(self):
-        if self.pipeline is not None:
-            self.pipeline = self.pipeline.to("cpu")
-            del self.pipeline
-            self.pipeline = None
-            torch.cuda.empty_cache()
+        try:
+            if self.pipeline is not None:
+                try:
+                    self.pipeline = self.pipeline.to("cpu")
+                except Exception as e:
+                    print(f"Warning: Error moving pipeline to CPU: {e}")
+                try:
+                    del self.pipeline
+                except Exception as e:
+                    print(f"Warning: Error deleting pipeline: {e}")
+                self.pipeline = None
+                try:
+                    torch.cuda.empty_cache()
+                except Exception as e:
+                    print(f"Warning: Error clearing CUDA cache: {e}")
+        except Exception as e:
+            print(f"Error during model unload: {e}")
 
     def generate(
         self,
@@ -191,33 +265,62 @@ class ModelAdapter:
         guidance_scale: float = 7.5,
         **kwargs
     ):
-        if self.pipeline is None:
-            raise RuntimeError("Model not loaded. Call load() first.")
-        if self.model_id in ['flux1-schnell']:
-            return self.pipeline(
-                prompt=prompt,
-                # negative_prompt=negative_prompt,
-                height=height,
-                width=width,
-                num_inference_steps=num_inference_steps,
-                guidance_scale=guidance_scale,
-                **kwargs
-            ).images[0]
-        else:
-            return self.pipeline(
-                prompt=prompt,
-                negative_prompt=negative_prompt,
-                height=height,
-                width=width,
-                num_inference_steps=num_inference_steps,
-                guidance_scale=guidance_scale,
-                **kwargs
-            ).images[0]
+        try:
+            if self.pipeline is None:
+                raise RuntimeError("Model not loaded. Call load() first.")
+
+            # Validate parameters
+            if not isinstance(height, int) or not isinstance(width, int):
+                raise ValueError("Height and width must be integers")
+            if height < 128 or width < 128:
+                raise ValueError("Height and width must be at least 128 pixels")
+            if not prompt or not isinstance(prompt, str):
+                raise ValueError("Prompt must be a non-empty string")
+
+            # Generate image based on model type
+            extra_args = {}
+            if self.model_id in ['lumina-2-image']:
+                extra_args.update({
+                    'cfg_trunc_ratio': 0.25,
+                    'cfg_normalization': True,
+                    'generator': torch.Generator("cpu").manual_seed(0)
+                })
+
+            if self.model_id in ['flux1-schnell']: # no negative prompt
+                result = self.pipeline(
+                    prompt=prompt,
+                    height=height,
+                    width=width,
+                    num_inference_steps=num_inference_steps,
+                    guidance_scale=guidance_scale,
+                    **extra_args,
+                )
+            else:
+                result = self.pipeline(
+                    prompt=prompt,
+                    negative_prompt=negative_prompt,
+                    height=height,
+                    width=width,
+                    num_inference_steps=num_inference_steps,
+                    guidance_scale=guidance_scale,
+                    **extra_args
+                )
+
+            if not result.images or len(result.images) == 0:
+                raise RuntimeError("No image was generated")
+
+            return result.images[0]
+
+        except Exception as e:
+            error_msg = f"Error generating image with {self.model_id}: {str(e)}"
+            print(error_msg)  # Log the error
+            raise HTTPException(status_code=500, detail=error_msg)
 
 class ModelManager:
     def __init__(self):
         self.adapters = {k: ModelAdapter(k, v['config'])
                         for k, v in MODEL_DEFS.items() if 'config' in v}
+        print("adapters: ", self.adapters.keys())
         self.last_used: Dict[str, float] = {k: 0 for k in MODEL_DEFS.keys()}
         self.lock = Lock()
         self.cleanup_interval = 600  # 10 minutes
@@ -235,36 +338,15 @@ class ModelManager:
         with self.lock:
             if model_id not in self.adapters:
                 return None
+
+            # Check if model is active
+            if not model_states.get(model_id, True):
+                raise ValueError(f"Model {model_id} is currently disabled")
+
             self.last_used[model_id] = time.time()
             adapter = self.adapters[model_id]
             adapter.load(use_quantized)
             return adapter
-        from diffusers import FluxPipeline
-        pipe = FluxPipeline.from_pretrained(repo_id, **other_config)
-        pipe.enable_model_cpu_offload()  # save some VRAM by offloading the model
-        pipe = pipe.to('cuda')
-        return pipe
-
-    def _load_default_model(self, config, repo_id, other_config, model_id):
-        pipeline = StableDiffusionXLPipeline.from_pretrained(
-            repo_id,
-            revision=config['revision'],
-            torch_dtype=torch.float16,
-            use_safetensors=True,
-            safety_checker=None if not config.get('safety_checker') else None
-        )
-        pipeline.scheduler = DPMSolverMultistepScheduler.from_config(
-            pipeline.scheduler.config
-        )
-        pipeline.to("cuda")
-        pipeline.enable_attention_slicing()
-        if config.get('type') == 'flux':
-            pipeline.enable_vae_slicing()
-            pipeline.enable_model_cpu_offload()
-        if model_id in ['sd-v1.1', 'sd-v1.2', 'sd-v1.3']:
-            pipeline.enable_sequential_cpu_offload()
-            pipeline.enable_vae_slicing()
-        return pipeline
 
     def cleanup_models(self):
         current_time = time.time()
@@ -308,17 +390,13 @@ async def index(request: Request):
     # Sort groups and their contents
     sorted_groups = {}
     for group_name in sorted(model_groups.keys()):
-        sorted_models = sorted(model_groups[group_name],
-                              key=lambda x: x['name'])
+        sorted_models = sorted(model_groups[group_name], key=lambda x: x['name'])
         sorted_groups[group_name] = sorted_models
 
-    return templates.TemplateResponse(
-        "index.html",
-        {
-            "request": request,
-            "model_groups": sorted_groups
-        }
-    )
+    return templates.TemplateResponse("index.html", {
+        "request": request,
+        "model_groups": sorted_groups
+    })
 
 @app.get("/model-config/{model_name}")
 async def get_model_config(model_name: str):
@@ -357,6 +435,7 @@ async def get_model_config(model_name: str):
 
 @app.post("/generate")
 async def generate_image(
+    background_tasks: BackgroundTasks,
     prompt: str = Form(...),
     height: int = Form(512),
     width: int = Form(512),
@@ -412,60 +491,218 @@ async def generate_image(
             status_code=400,
             detail=f"Number of inference steps must be between {params['num_inference_steps']['min']} and {params['num_inference_steps']['max']} for {model_name}"
         )
+
     # Create a unique task ID
     task_id = f"{int(datetime.now().timestamp())}"
     task = task_manager.create_task(task_id)
     task.total_steps = num_inference_steps
 
-        # Get model adapter
-    task.status = TaskStatus.LOADING_MODEL
-    adapter = model_manager.get_model(model_name, use_quantized)
-    if adapter is None:
-        task.status = TaskStatus.FAILED
-        task.error = f"Failed to load model {model_name}"
-        return JSONResponse(
-            status_code=500,
-            content={"error": task.error, "task_id": task_id}
-        )
-    print(f"Loaded model {model_name}")
-
-    # Generate image
-    task.status = TaskStatus.GENERATING
-    print(f"Generating with {model_name}:\nPrompt: {prompt}\nNegative: {negative_prompt}\nDimensions: {width}x{height}\nSteps: {num_inference_steps}\nGuidance: {guidance_scale}")
-    task.start_time = datetime.now()
-
-    # Generate with model-specific parameters
-    image = adapter.generate(
+    # Add the generation task to background tasks
+    background_tasks.add_task(
+        generate_image_task,
+        task_id=task_id,
+        model_name=model_name,
+        use_quantized=use_quantized,
         prompt=prompt,
         negative_prompt=negative_prompt,
         height=height,
         width=width,
         num_inference_steps=num_inference_steps,
         guidance_scale=guidance_scale,
-        # callback=callback,
-        # callback_steps=1,
-        **extra_args
+        extra_args=extra_args
     )
 
-    # Convert to bytes
-    img_byte_arr = io.BytesIO()
-    image.save(img_byte_arr, format='PNG')
-    img_byte_arr.seek(0)
+    # Return the task ID immediately
+    return JSONResponse(
+        content={"task_id": task_id},
+        status_code=202  # Accepted
+    )
 
-    # Update task status
-    task.status = TaskStatus.COMPLETED
-    task.end_time = datetime.now()
-    print(f"Task {task_id} completed in {task.end_time - task.start_time}")
-    task.progress = 1.0
+# Add a new endpoint to get the generated image
+@app.get("/image/{task_id}")
+async def get_generated_image(task_id: str):
+    task = task_manager.get_task(task_id)
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+
+    if task.status == TaskStatus.FAILED:
+        raise HTTPException(status_code=500, detail=task.error or "Generation failed")
+
+    if task.status != TaskStatus.COMPLETED:
+        raise HTTPException(status_code=425, detail="Image not ready yet")
+
+    # Get the image from the task
+    img_byte_arr = task.image  # We'll add this to TaskProgress
+    if not img_byte_arr:
+        raise HTTPException(status_code=500, detail="Image data not found")
+
+    generation_time = round((task.end_time - task.start_time), 2) if task.end_time and task.start_time else 0
 
     return StreamingResponse(
         img_byte_arr,
         media_type="image/png",
         headers={
-            "X-Task-Id": task_id,
-            "X-Generation-Time": str((task.end_time - task.start_time).total_seconds())
+            "X-Generation-Time": str(generation_time)
         }
     )
+
+# Model control endpoints
+@app.get("/api/models")
+async def get_models():
+    return JSONResponse([
+        {
+            'id': model_id,
+            'display_name': model_def.get('display_name', model_id),
+            'description': model_def.get('description', ''),
+            'active': model_states.get(model_id, True)
+        } for model_id, model_def in MODEL_DEFS.items()
+    ])
+
+class ModelStateUpdate(BaseModel):
+    states: Dict[str, bool]
+
+@app.post("/api/models/state")
+async def update_model_states(state_update: ModelStateUpdate):
+    try:
+        print("Received model states update:", state_update.states)
+        # Update states
+        for model_id, active in state_update.states.items():
+            print(f"Processing model {model_id}: active={active}")
+            if model_id in MODEL_DEFS:
+                model_states[model_id] = active
+
+                # If model is being disabled, unload it
+                if not active and model_id in model_manager.adapters:
+                    print(f"Unloading model {model_id}")
+                    model_manager.adapters[model_id].unload()
+            else:
+                print(f"Warning: Model {model_id} not found in MODEL_DEFS")
+
+        return JSONResponse({'success': True})
+    except Exception as e:
+        print("Error in update_model_states:", str(e))
+        return JSONResponse({
+            'success': False,
+            'message': str(e)
+        }, status_code=400)
+
+# Add the background task function
+async def generate_image_task(
+    task_id: str,
+    model_name: str,
+    use_quantized: bool,
+    prompt: str,
+    negative_prompt: str,
+    height: int,
+    width: int,
+    num_inference_steps: int,
+    guidance_scale: float,
+    extra_args: dict
+):
+    task = task_manager.get_task(task_id)
+    if not task:
+        print(f"Error: Task {task_id} not found")
+        return
+
+    adapter = None
+    try:
+        # Input validation
+        if not prompt or not isinstance(prompt, str):
+            raise ValueError("Prompt must be a non-empty string")
+        if height < 128 or width < 128:
+            raise ValueError("Height and width must be at least 128 pixels")
+        if num_inference_steps < 1:
+            raise ValueError("Number of inference steps must be positive")
+        if guidance_scale < 0:
+            raise ValueError("Guidance scale must be non-negative")
+
+        # Record start time and update status
+        task.start_time = time.time()
+        task_manager.update_task(
+            task_id,
+            status=TaskStatus.LOADING_MODEL,
+            start_time=task.start_time
+        )
+
+        # Load model
+        try:
+            adapter = model_manager.get_model(model_name, use_quantized)
+            if adapter is None:
+                raise RuntimeError(f"Failed to get model adapter for {model_name}")
+            pipeline = adapter.load(use_quantized)
+            if pipeline is None:
+                raise RuntimeError(f"Failed to load pipeline for {model_name}")
+        except Exception as e:
+            raise RuntimeError(f"Model loading failed: {str(e)}")
+
+        # Update generation status
+        task_manager.update_task(
+            task_id,
+            status=TaskStatus.GENERATING,
+            total_steps=num_inference_steps
+        )
+
+        # Log generation parameters
+        print(f"Generating with {model_name}:\n"
+              f"Prompt: {prompt}\n"
+              f"Negative: {negative_prompt}\n"
+              f"Dimensions: {width}x{height}\n"
+              f"Steps: {num_inference_steps}\n"
+              f"Guidance: {guidance_scale}")
+
+        # Generate image
+        try:
+            image = adapter.generate(
+                prompt=prompt,
+                negative_prompt=negative_prompt,
+                height=height,
+                width=width,
+                num_inference_steps=num_inference_steps,
+                guidance_scale=guidance_scale,
+                **extra_args
+            )
+            if image is None:
+                raise RuntimeError("No image was generated")
+        except Exception as e:
+            raise RuntimeError(f"Image generation failed: {str(e)}")
+
+        # Save image
+        try:
+            img_byte_arr = io.BytesIO()
+            image.save(img_byte_arr, format='PNG')
+            img_byte_arr.seek(0)
+        except Exception as e:
+            raise RuntimeError(f"Failed to save generated image: {str(e)}")
+
+        # Update task completion
+        end_time = time.time()
+        task_manager.update_task(
+            task_id,
+            status=TaskStatus.COMPLETED,
+            end_time=end_time,
+            image=img_byte_arr,
+            progress=1.0
+        )
+
+        print(f"Task {task_id} completed in {round(end_time - task.start_time, 2)}s")
+
+    except Exception as e:
+        error_msg = str(e)
+        print(f"Error in generate_image_task: {error_msg}")
+        # Update task failure status
+        task_manager.update_task(
+            task_id,
+            status=TaskStatus.FAILED,
+            error=error_msg,
+            end_time=time.time()
+        )
+
+        # Clean up model on error
+        if adapter and adapter.pipeline:
+            try:
+                adapter.unload()
+            except Exception as cleanup_error:
+                print(f"Warning: Error during model cleanup: {cleanup_error}")
 
 @app.get("/task/{task_id}")
 async def get_task_progress(task_id: str):
@@ -474,33 +711,107 @@ async def get_task_progress(task_id: str):
     if task is None:
         raise HTTPException(status_code=404, detail=f"Task {task_id} not found")
 
+    # Calculate progress percentage
+    progress = 0.0
+    if task.status == TaskStatus.COMPLETED:
+        progress = 1.0
+    elif task.status == TaskStatus.GENERATING and task.total_steps > 0:
+        progress = min(0.9, task.current_step / task.total_steps)  # Cap at 90% until complete
+    elif task.status == TaskStatus.LOADING_MODEL:
+        progress = 0.1  # Show some progress while loading
+
+    # Calculate time information
+    current_time = time.time()
+    time_elapsed = None
+    time_remaining = None
+    generation_time = None
+
+    if task.start_time:
+        if task.end_time:
+            time_elapsed = round(task.end_time - task.start_time, 2)
+            generation_time = time_elapsed
+        else:
+            time_elapsed = round(current_time - task.start_time, 2)
+            if task.status == TaskStatus.GENERATING and progress > 0:
+                # Estimate remaining time based on progress
+                time_remaining = round((time_elapsed / progress) * (1 - progress), 2)
+
     response = {
         "status": task.status.value,
-        "progress": task.progress,
+        "progress": progress,
         "total_steps": task.total_steps,
         "current_step": task.current_step,
+        "time_elapsed": time_elapsed,
+        "time_remaining": time_remaining,
+        "generation_time": generation_time
     }
 
     if task.error:
         response["error"] = task.error
 
-    if task.start_time:
-        response["start_time"] = task.start_time.isoformat()
+    # Add detailed status message
+    status_message = "Initializing..."
+    if task.status == TaskStatus.LOADING_MODEL:
+        status_message = "Loading model..."
+    elif task.status == TaskStatus.GENERATING:
+        status_message = f"Generating image (Step {task.current_step}/{task.total_steps})"
+        if time_remaining:
+            status_message += f" - {time_remaining}s remaining"
+    elif task.status == TaskStatus.COMPLETED:
+        status_message = f"Generation completed in {generation_time}s"
+    elif task.status == TaskStatus.FAILED:
+        status_message = f"Generation failed: {task.error}"
 
-    if task.end_time:
-        response["end_time"] = task.end_time.isoformat()
-        response["generation_time"] = (task.end_time - task.start_time).total_seconds()
+    response["status_message"] = status_message
 
     return response
+
+
+
+class InferenceRequest(BaseModel):
+    model_id: str
+    prompt: str
+    output_path: str
+
+@app.post("/inference")
+async def generate_image(request: InferenceRequest):
+    try:
+        adapter = model_manager.get_model(request.model_id)
+        image = adapter.generate(prompt=request.prompt)
+        image.save(request.output_path, format='PNG')
+        return {"message": f"Image saved to {request.output_path}"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":
     import argparse
 
-    parser = argparse.ArgumentParser(description='Stable Diffusion Web Demo')
-    parser.add_argument('--port', type=int, default=30982,
-                        help='Port to run the server on (default: 30982)')
+    # Set up argument parser
+    parser = argparse.ArgumentParser(description="Local inference or run FastAPI server")
+    parser.add_argument('--model-id', type=str, help='Model ID to use for inference')
+    parser.add_argument('--prompt', type=str, help='Prompt for image generation')
+    parser.add_argument('--output-path', type=str, help='Path to save the generated image')
+    parser.add_argument('--port', type=int, default=8000, help='Port to run the FastAPI server on (default: 8000)')
 
+    # Parse arguments
     args = parser.parse_args()
 
-    print(f"Starting server on port {args.port}...")
-    uvicorn.run(app, host="0.0.0.0", port=args.port)
+    if args.model_id and args.prompt and args.output_path:
+        # Perform local inference
+        print(f"Performing inference with model {args.model_id} and prompt '{args.prompt}'")
+        adapter = model_manager.get_model(args.model_id)
+        image = adapter.generate(prompt=args.prompt)
+        image.save(args.output_path, format='PNG')
+        print(f"Image saved to {args.output_path}")
+    else:
+        # Start FastAPI server
+        import uvicorn
+        print(f"Starting FastAPI server on port {args.port}...")
+        uvicorn.run(
+            "app:app",
+            host="0.0.0.0",
+            port=args.port,
+            reload=True,
+            reload_dirs=[str(BASE_DIR)],
+            workers=1
+        )

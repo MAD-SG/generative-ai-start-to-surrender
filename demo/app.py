@@ -1,471 +1,746 @@
 import base64
-from fastapi import FastAPI, Form
-from fastapi.responses import StreamingResponse, HTMLResponse, RedirectResponse, JSONResponse
+from fastapi import FastAPI, Form, BackgroundTasks, Request, HTTPException
+from fastapi.responses import StreamingResponse, HTMLResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 import uvicorn
 import torch
-from omegaconf import OmegaConf
 from PIL import Image
-from einops import rearrange
-from tqdm import tqdm
 import io
-import numpy as np
 import os
-import sys
-import requests
-from diffusers import StableDiffusionPipeline
+import time
+from pathlib import Path
+from typing import Dict, Optional
+from diffusers import StableDiffusionXLPipeline, DPMSolverMultistepScheduler, AutoPipelineForText2Image
+from diffusers import BitsAndBytesConfig, SD3Transformer2DModel, StableDiffusion3Pipeline
+import torch
+from threading import Lock
+from dataclasses import dataclass
+from enum import Enum
+from datetime import datetime
 
-# Add 'experiment/repos/latent-diffusion' to sys.path
-current_dir = os.path.dirname(os.path.abspath(__file__))  # NOQA
-latent_diffusion_path = os.path.join(current_dir, '../repos/latent-diffusion')  # NOQA
-sys.path.append(latent_diffusion_path)  # NOQA
+class TaskStatus(Enum):
+    QUEUED = "queued"
+    LOADING_MODEL = "loading_model"
+    GENERATING = "generating"
+    COMPLETED = "completed"
+    FAILED = "failed"
 
-from ldm.util import instantiate_from_config
-from ldm.models.diffusion.ddim import DDIMSampler
+@dataclass
+class TaskProgress:
+    status: TaskStatus
+    progress: float = 0.0
+    total_steps: int = 0
+    current_step: int = 0
+    start_time: float = None
+    end_time: float = None
+    error: str = None
+    image: io.BytesIO = None  # Store the generated image
+
+class TaskManager:
+    def __init__(self):
+        self.tasks = {}
+        self.lock = Lock()
+
+    def create_task(self, task_id: str) -> TaskProgress:
+        with self.lock:
+            self.tasks[task_id] = TaskProgress(status=TaskStatus.QUEUED)
+            return self.tasks[task_id]
+
+    def get_task(self, task_id: str) -> TaskProgress:
+        with self.lock:
+            return self.tasks.get(task_id)
+
+    def update_task(self, task_id: str, **kwargs):
+        with self.lock:
+            if task_id in self.tasks:
+                for key, value in kwargs.items():
+                    setattr(self.tasks[task_id], key, value)
 
 app = FastAPI()
+task_manager = TaskManager()
 
-# Initialize model and sampler at startup
-model = None
-sampler = None
-diffusion_model = None
-model_choice = None
+# Get the directory containing app.py
+BASE_DIR = Path(__file__).resolve().parent
 
-@app.get("/")
-async def index():
-    return HTMLResponse(content="""
-    <!DOCTYPE html>
-    <html>
-        <head>
-            <title>Text to Image Generation</title>
-            <style>
-                body {
-                    font-family: Arial, sans-serif;
-                    max-width: 800px;
-                    margin: 0 auto;
-                    padding: 20px;
-                }
-                .container {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 20px;
-                }
-                .form-group {
-                    margin-bottom: 15px;
-                }
-                label {
-                    display: block;
-                    margin-bottom: 5px;
-                }
-                select, input[type="text"], input[type="number"] {
-                    width: 100%;
-                    padding: 8px;
-                    margin-bottom: 10px;
-                }
-                button {
-                    padding: 10px 20px;
-                    background-color: #007bff;
-                    color: white;
-                    border: none;
-                    cursor: pointer;
-                }
-                button:hover {
-                    background-color: #0056b3;
-                }
-                #imageContainer {
-                    margin-top: 20px;
-                }
-                #imageContainer img {
-                    max-width: 100%;
-                    height: auto;
-                }
-            </style>
-        </head>
-        <body>
-            <div class="container">
-                <h1>Text to Image Generation</h1>
-                <div class="form-group">
-                    <label for="model">Choose a model:</label>
-                    <select name="model" id="model">
-                        <option value="stable-diffusion-v1-5">Stable Diffusion v1.5</option>
-                        <option value="stable-diffusion-v1-0">Stable Diffusion v1.0</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="prompt">Enter your prompt:</label>
-                    <input type="text" id="prompt" name="prompt" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="height">Image Height:</label>
-                    <input type="number" id="height" name="height" value="512" min="256" max="1024" step="64">
-                </div>
-                
-                <div class="form-group">
-                    <label for="width">Image Width:</label>
-                    <input type="number" id="width" name="width" value="512" min="256" max="1024" step="64">
-                </div>
-                
-                <div class="form-group">
-                    <label for="scale">Guidance Scale:</label>
-                    <input type="number" id="scale" name="scale" value="7.5" min="1" max="20" step="0.5">
-                </div>
-                
-                <button onclick="generateImage()">Generate Image</button>
-                <button onclick="regenerateImage()" id="regenerateBtn" style="display: none;">Regenerate</button>
-                
-                <div id="imageContainer"></div>
-            </div>
-            
-            <script>
-            async function generateImage() {
-                const prompt = document.getElementById('prompt').value;
-                const height = document.getElementById('height').value;
-                const width = document.getElementById('width').value;
-                const scale = document.getElementById('scale').value;
-                const model = document.getElementById('model').value;
-                
-                const formData = new FormData();
-                formData.append('prompt', prompt);
-                formData.append('height', height);
-                formData.append('width', width);
-                formData.append('scale', scale);
-                formData.append('model_name', model);
-                
-                try {
-                    const response = await fetch('/generate', {
-                        method: 'POST',
-                        body: formData
-                    });
-                    
-                    const data = await response.json();
-                    const imageContainer = document.getElementById('imageContainer');
-                    imageContainer.innerHTML = '';
-                    
-                    // Display the final image
-                    const finalImage = data.images.find(img => img.type === 'final');
-                    if (finalImage) {
-                        const img = document.createElement('img');
-                        img.src = `data:image/png;base64,${finalImage.data}`;
-                        imageContainer.appendChild(img);
-                    }
-                    
-                    document.getElementById('regenerateBtn').style.display = 'block';
-                } catch (error) {
-                    console.error('Error:', error);
-                }
-            }
-            
-            function regenerateImage() {
-                generateImage();
-            }
-            </script>
-        </body>
-    </html>
-    """)
+# Mount static files directory
+app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="static")
 
-@app.post("/set_model")
-async def set_model(model: str = Form(...)):
-    global model_choice
-    model_choice = model
-    return RedirectResponse(url="/", status_code=303)
+# Setup Jinja2 templates
+templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
+
+import yaml
+
+# Add new import at the top
+from collections import defaultdict
+
+# Update config loading function
+def load_model_config():
+    config_path = BASE_DIR / 'config' / 'model_parameters.yaml'
+    try:
+        with open(config_path, 'r') as f:
+            config = yaml.safe_load(f)
+
+            # Keep configuration as-is, conversion will happen in ModelAdapter
+
+            return config['models']
+    except Exception as e:
+        print(f"Error loading model configurations: {e}")
+        raise
+
+# Update global variable
+MODEL_DEFS = load_model_config()
+
+
+# Global variables for model management
+class ModelAdapter:
+    def __init__(self, model_id: str, model_config: dict):
+        self.model_id = model_id
+        self.model_config = model_config
+        self.pipeline = None
+        self.device = "cuda" if torch.cuda.is_available() else "cpu"
+
+    def _create_pipeline(self, use_quantized: bool = False):
+        config = self.model_config.copy()
+
+        # Convert torch_dtype from string to actual dtype
+        if 'torch_dtype' in config:
+            dtype_str = config['torch_dtype']
+            if dtype_str == 'float16':
+                config['torch_dtype'] = torch.float16
+            elif dtype_str == 'bfloat16':
+                config['torch_dtype'] = torch.bfloat16
+            elif dtype_str == 'float32':
+                config['torch_dtype'] = torch.float32
+            else:
+                raise ValueError(f"Unsupported torch_dtype: {dtype_str}")
+
+        repo_id = config.get('repo_id', self.model_id)
+        other_config = {k: v for k, v in config.items() if k != 'repo_id'}
+
+
+
+        # Handle different model types
+        if self.model_id=='sd-v3.5-quant':
+            nf4_config = BitsAndBytesConfig(
+                load_in_4bit=True,
+                bnb_4bit_quant_type="nf4",
+                bnb_4bit_compute_dtype=other_config['torch_dtype'],
+            )
+            model_nf4 = SD3Transformer2DModel.from_pretrained(
+                repo_id,
+                subfolder="transformer",
+                quantization_config=nf4_config,
+                torch_dtype=other_config['torch_dtype'],
+            )
+            pipeline = StableDiffusion3Pipeline.from_pretrained(
+                repo_id,
+                transformer=model_nf4,
+                torch_dtype=other_config['torch_dtype'],
+            )
+            return pipeline
+        elif self.model_id == 'sd-v3.5':
+
+            # from transformers import T5EncoderModel, CLIPTextModel, CLIPTokenizer
+            # from diffusers import StableDiffusion3Pipeline
+            # # 预加载文本编码器
+            # text_encoder_1 = CLIPTextModel.from_pretrained("openai/clip-vit-large-patch14")
+            # text_encoder_2 = T5EncoderModel.from_pretrained("google/t5-v1_1-xl")
+
+            # # 预加载分词器
+            # tokenizer_1 = CLIPTokenizer.from_pretrained("openai/clip-vit-large-patch14")
+            # tokenizer_2 = CLIPTokenizer.from_pretrained("google/t5-v1_1-xl")
+
+            pipeline = StableDiffusion3Pipeline.from_pretrained(repo_id,
+                    # text_encoder=text_encoder_1,
+                    # text_encoder_2=text_encoder_2,
+                    # tokenizer=tokenizer_1,
+                    # tokenizer_2=tokenizer_2,
+                    **other_config
+                )
+            pipeline.vae.enable_tiling()
+            return pipeline
+
+        elif self.model_id == 'animagine-xl-4':
+            return StableDiffusionXLPipeline.from_pretrained(repo_id, **other_config)
+
+        elif self.model_id == 'lumina-2':
+            from diffusers import Lumina2Text2ImgPipeline
+            return Lumina2Text2ImgPipeline.from_pretrained(repo_id, **other_config)
+
+        elif self.model_id.startswith('flux'):
+            # Add specialized flux model handling here
+            return AutoPipelineForText2Image.from_pretrained(repo_id, **other_config)
+        elif self.model_id == 'sd-v3.0':
+            return StableDiffusion3Pipeline.from_pretrained("stabilityai/stable-diffusion-3-medium-diffusers", **other_config)
+
+        else:
+            return AutoPipelineForText2Image.from_pretrained(repo_id, **other_config)
+
+    def load(self, use_quantized: bool = False):
+        try:
+            if self.pipeline is None:
+                self.pipeline = self._create_pipeline(use_quantized)
+                self.pipeline.to(self.device)
+
+                # Apply optimizations
+                if self.model_config.get('use_dpm_solver', False):
+                    self.pipeline.scheduler = DPMSolverMultistepScheduler.from_config(
+                        self.pipeline.scheduler.config
+                    )
+            return self.pipeline
+        except Exception as e:
+            error_msg = f"Error loading model {self.model_id}: {str(e)}"
+            print(error_msg)  # Log the error
+            self.unload()  # Clean up any partially loaded model
+            raise HTTPException(status_code=500, detail=error_msg)
+
+    def unload(self):
+        try:
+            if self.pipeline is not None:
+                try:
+                    self.pipeline = self.pipeline.to("cpu")
+                except Exception as e:
+                    print(f"Warning: Error moving pipeline to CPU: {e}")
+                try:
+                    del self.pipeline
+                except Exception as e:
+                    print(f"Warning: Error deleting pipeline: {e}")
+                self.pipeline = None
+                try:
+                    torch.cuda.empty_cache()
+                except Exception as e:
+                    print(f"Warning: Error clearing CUDA cache: {e}")
+        except Exception as e:
+            print(f"Error during model unload: {e}")
+
+    def generate(
+        self,
+        prompt: str,
+        negative_prompt: str = None,
+        height: int = 512,
+        width: int = 512,
+        num_inference_steps: int = 50,
+        guidance_scale: float = 7.5,
+        **kwargs
+    ):
+        try:
+            if self.pipeline is None:
+                raise RuntimeError("Model not loaded. Call load() first.")
+
+            # Validate parameters
+            if not isinstance(height, int) or not isinstance(width, int):
+                raise ValueError("Height and width must be integers")
+            if height < 128 or width < 128:
+                raise ValueError("Height and width must be at least 128 pixels")
+            if not prompt or not isinstance(prompt, str):
+                raise ValueError("Prompt must be a non-empty string")
+
+            # Generate image based on model type
+            if self.model_id in ['flux1-schnell']:
+                result = self.pipeline(
+                    prompt=prompt,
+                    height=height,
+                    width=width,
+                    num_inference_steps=num_inference_steps,
+                    guidance_scale=guidance_scale,
+                    **kwargs
+                )
+            else:
+                result = self.pipeline(
+                    prompt=prompt,
+                    negative_prompt=negative_prompt,
+                    height=height,
+                    width=width,
+                    num_inference_steps=num_inference_steps,
+                    guidance_scale=guidance_scale,
+                    **kwargs
+                )
+
+            if not result.images or len(result.images) == 0:
+                raise RuntimeError("No image was generated")
+
+            return result.images[0]
+
+        except Exception as e:
+            error_msg = f"Error generating image with {self.model_id}: {str(e)}"
+            print(error_msg)  # Log the error
+            raise HTTPException(status_code=500, detail=error_msg)
+
+class ModelManager:
+    def __init__(self):
+        self.adapters = {k: ModelAdapter(k, v['config'])
+                        for k, v in MODEL_DEFS.items() if 'config' in v}
+        self.last_used: Dict[str, float] = {k: 0 for k in MODEL_DEFS.keys()}
+        self.lock = Lock()
+        self.cleanup_interval = 600  # 10 minutes
+
+    def get_model(self, model_id: str, use_quantized: bool = False):
+        """Get or load a model pipeline
+
+        Args:
+            model_id (str): ID of the model to load
+            use_quantized (bool): Whether to use quantization for supported models
+
+        Returns:
+            ModelAdapter: The loaded model adapter instance
+        """
+        with self.lock:
+            if model_id not in self.adapters:
+                return None
+            self.last_used[model_id] = time.time()
+            adapter = self.adapters[model_id]
+            adapter.load(use_quantized)
+            return adapter
+        from diffusers import FluxPipeline
+        pipe = FluxPipeline.from_pretrained(repo_id, **other_config)
+        pipe.enable_model_cpu_offload()  # save some VRAM by offloading the model
+        pipe = pipe.to('cuda')
+        return pipe
+
+    def _load_default_model(self, config, repo_id, other_config, model_id):
+        pipeline = StableDiffusionXLPipeline.from_pretrained(
+            repo_id,
+            revision=config['revision'],
+            torch_dtype=torch.float16,
+            use_safetensors=True,
+            safety_checker=None if not config.get('safety_checker') else None
+        )
+        pipeline.scheduler = DPMSolverMultistepScheduler.from_config(
+            pipeline.scheduler.config
+        )
+        pipeline.to("cuda")
+        pipeline.enable_attention_slicing()
+        if config.get('type') == 'flux':
+            pipeline.enable_vae_slicing()
+            pipeline.enable_model_cpu_offload()
+        if model_id in ['sd-v1.1', 'sd-v1.2', 'sd-v1.3']:
+            pipeline.enable_sequential_cpu_offload()
+            pipeline.enable_vae_slicing()
+        return pipeline
+
+    def cleanup_models(self):
+        current_time = time.time()
+        with self.lock:
+            for model_id, last_used in self.last_used.items():
+                if (current_time - last_used > self.cleanup_interval and
+                    self.models[model_id] is not None):
+                    print(f"Unloading model {model_id} due to inactivity")
+                    self.models[model_id] = None
+                    torch.cuda.empty_cache()
+
+model_manager = ModelManager()
+
+# Background task for model cleanup
+def cleanup_task():
+    while True:
+        time.sleep(60)  # Check every minute
+        model_manager.cleanup_models()
 
 @app.on_event("startup")
 async def startup_event():
-    global model, sampler, diffusion_model
-    
-    # Initialize both models
-    # 1. Stable Diffusion v1.5
-    model_id = "sd-legacy/stable-diffusion-v1-5"
-    diffusion_model = StableDiffusionPipeline.from_pretrained(model_id, torch_dtype=torch.float16)
-    diffusion_model = diffusion_model.to("cuda")
-    
-    # 2. Original model
-    model_url = "https://ommer-lab.com/files/latent-diffusion/nitro/txt2img-f8-large/model.ckpt"
-    cache_dir = os.path.expanduser("~/.cache/latent-diffusion")
-    os.makedirs(cache_dir, exist_ok=True)
-    checkpoint_path = os.path.join(cache_dir, "txt2img-f8-large_model.ckpt")
-    config_path = os.path.join(latent_diffusion_path, "configs/latent-diffusion/txt2img-1p4B-eval.yaml")
-    download_model_checkpoint(model_url, checkpoint_path)
-    model = load_model(config_path, checkpoint_path)
-    sampler = DDIMSampler(model)
+    background_tasks = BackgroundTasks()
+    background_tasks.add_task(cleanup_task)
 
-# Function to download model checkpoint
-def download_model_checkpoint(url, path):
-    if not os.path.exists(path):
-        print("Downloading model checkpoint...")
-        response = requests.get(url, stream=True)
-        total_size = int(response.headers.get('content-length', 0))
-        block_size = 1024  # 1 Kibibyte
-        t = tqdm(total=total_size, unit='iB', unit_scale=True)
-        with open(path, 'wb') as f:
-            for data in response.iter_content(block_size):
-                t.update(len(data))
-                f.write(data)
-        t.close()
-        if total_size != 0 and t.n != total_size:
-            print("ERROR, something went wrong")
-        else:
-            print("Model checkpoint downloaded.")
+# Update index route grouping logic
+@app.get("/", response_class=HTMLResponse)
+async def index(request: Request):
+    # Build model groups from definitions
+    model_groups = defaultdict(list)
+    for model_id, model_def in MODEL_DEFS.items():
+        if 'groups' not in model_def:
+            continue
 
-# Load model configuration and instantiate model
-def load_model(config_path, checkpoint_path):
-    config = OmegaConf.load(config_path)
-    model = instantiate_from_config(config.model)
-    checkpoint = torch.load(checkpoint_path, map_location="cpu")
-    model.load_state_dict(checkpoint["state_dict"], strict=False)
-    model.cuda().eval()
-    return model
+        for group_name in model_def['groups']:
+            model_groups[group_name].append({
+                "id": model_id,
+                "name": model_def.get('display_name', model_id),
+                "description": model_def.get('description', '')
+            })
 
-# Main route for generating images
+    # Sort groups and their contents
+    sorted_groups = {}
+    for group_name in sorted(model_groups.keys()):
+        sorted_models = sorted(model_groups[group_name],
+                              key=lambda x: x['name'])
+        sorted_groups[group_name] = sorted_models
+
+    return templates.TemplateResponse(
+        "index.html",
+        {
+            "request": request,
+            "model_groups": sorted_groups
+        }
+    )
+
+@app.get("/model-config/{model_name}")
+async def get_model_config(model_name: str):
+    """Get model-specific configuration parameters"""
+    if model_name not in MODEL_DEFS:
+        raise HTTPException(status_code=404, detail=f"Model {model_name} not found")
+
+    # Get base parameters
+    config = MODEL_DEFS[model_name].copy()
+
+    # Extract UI controls if present
+    ui_controls = config.pop('ui_controls', {
+        'show_prompt': True,
+        'show_negative_prompt': True,
+        'show_dimensions': True,
+        'show_guidance_scale': True,
+        'show_steps': True,
+        'show_quantization': False
+    })
+
+    # Add model-specific settings
+    model_config = MODEL_DEFS.get(model_name, {})
+
+    # Add UI controls to config
+    config['ui_controls'] = ui_controls
+
+    # Add quantization option if enabled in UI controls
+    if ui_controls.get('show_quantization'):
+        config['use_quantized'] = {
+            'type': 'boolean',
+            'default': model_config['parameters'].get('use_quantized', False),
+            'description': 'Use 4-bit quantization for reduced memory usage'
+        }
+
+    return config
+
 @app.post("/generate")
 async def generate_image(
+    background_tasks: BackgroundTasks,
     prompt: str = Form(...),
     height: int = Form(512),
     width: int = Form(512),
-    scale: float = Form(7.5),
-    model_name: str = Form("stable-diffusion-v1-5"),
-    ddim_eta: float = Form(1.0),
-    n_iter: int = Form(1)
+    guidance_scale: float = Form(7.5),
+    num_inference_steps: int = Form(50),
+    model_name: str = Form("sd-v1.5"),
+    negative_prompt: str = Form("", description="Optional negative prompt for better control"),
+    use_quantized: bool = Form(None, description="Use quantization for supported models")
 ):
-    global diffusion_model, model, sampler
-    n_samples = 1  # Ensure only one sample is generated
-    images = []
+    """Generate image with validation for model-specific parameters"""
+    # Get model configuration
+    model_config = MODEL_DEFS.get(model_name, {})
 
-    if model_name == "stable-diffusion-v1-5":
-        # Use Stable Diffusion v1.5
-        image = diffusion_model(
-            prompt=prompt,
-            height=height,
-            width=width,
-            guidance_scale=scale,
-            num_inference_steps=50
-        ).images[0]
-        img_byte_arr = io.BytesIO()
-        image.save(img_byte_arr, format='PNG')
-        img_byte_arr.seek(0)
-        img_base64 = base64.b64encode(img_byte_arr.getvalue()).decode()
-        images.append({"type": "final", "data": img_base64})
-    else:
-        with torch.no_grad():
-            with model.ema_scope():
-                # Set up unconditional conditioning if using guidance
-                uc = None
-                if scale != 1.0:
-                    uc = model.get_learned_conditioning(n_samples * [""])
+    # Use model-specific negative prompt if available and no user-provided negative prompt
+    if not negative_prompt and model_config.get('negative_prompt'):
+        negative_prompt = model_config['negative_prompt']
 
-                for _ in range(n_iter):
-                    # Get conditioning
-                    c = model.get_learned_conditioning(n_samples * [prompt])
-                    shape = [4, height // 8, width // 8]
+    # Add aesthetic score for models that support it
+    extra_args = {}
+    if model_config.get('requires_aesthetic_score'):
+        extra_args['aesthetic_score'] = model_config.get('aesthetic_score', 9.0)
 
-                    # Sample
-                    samples, intermediates = sampler.sample(
-                        S=200,
-                        conditioning=c,
-                        batch_size=n_samples,
-                        shape=shape,
-                        verbose=False,
-                        unconditional_guidance_scale=scale,
-                        unconditional_conditioning=uc,
-                        eta=ddim_eta,
-                        log_every_t = 20,
-                    )
+    # Validate model exists
+    if model_name not in MODEL_DEFS:
+        raise HTTPException(status_code=400, detail=f"Invalid model: {model_name}")
 
-                    # Decode
-                    x_samples = model.decode_first_stage(samples)
-                    x_samples = torch.clamp((x_samples + 1.0) / 2.0, min=0.0, max=1.0)
+    # Get model parameters
+    params = MODEL_DEFS[model_name].get('parameters', {})
+    if not params:
+        raise HTTPException(status_code=400, detail=f"No parameters defined for model: {model_name}")
 
-                    # Create output directory if it doesn't exist
-                    output_dir = os.path.join(os.path.dirname(__file__), 'outputs')
-                    os.makedirs(output_dir, exist_ok=True)
+    # Validate parameters
+    if not (params['height']['min'] <= height <= params['height']['max']):
+        raise HTTPException(
+            status_code=400,
+            detail=f"Height must be between {params['height']['min']} and {params['height']['max']} for {model_name}"
+        )
 
-                    # Process final samples (full size)
-                    for idx, x_sample in enumerate(x_samples):
-                        x_sample = 255. * rearrange(x_sample.cpu().numpy(), 'c h w -> h w c')
-                        pil_image = Image.fromarray(x_sample.astype(np.uint8))
+    if not (params['width']['min'] <= width <= params['width']['max']):
+        raise HTTPException(
+            status_code=400,
+            detail=f"Width must be between {params['width']['min']} and {params['width']['max']} for {model_name}"
+        )
 
-                        # Save final image
-                        filename = f"final_{idx}.png"
-                        pil_image.save(os.path.join(output_dir, filename))
+    if not (params['guidance_scale']['min'] <= guidance_scale <= params['guidance_scale']['max']):
+        raise HTTPException(
+            status_code=400,
+            detail=f"Guidance scale must be between {params['guidance_scale']['min']} and {params['guidance_scale']['max']} for {model_name}"
+        )
 
-                        # Convert to base64 for JSON response
-                        img_byte_arr = io.BytesIO()
-                        pil_image.save(img_byte_arr, format='PNG')
-                        img_byte_arr.seek(0)
-                        img_base64 = base64.b64encode(img_byte_arr.getvalue()).decode()
-                        images.append({"type": "final", "data": img_base64})
+    if not (params['num_inference_steps']['min'] <= num_inference_steps <= params['num_inference_steps']['max']):
+        raise HTTPException(
+            status_code=400,
+            detail=f"Number of inference steps must be between {params['num_inference_steps']['min']} and {params['num_inference_steps']['max']} for {model_name}"
+        )
 
-                    # Process intermediate samples (smaller size)
-                    total_steps = len(intermediates['x_inter'])
+    # Create a unique task ID
+    task_id = f"{int(datetime.now().timestamp())}"
+    task = task_manager.create_task(task_id)
+    task.total_steps = num_inference_steps
 
-                    for step_idx, x_inter  in enumerate(intermediates['x_inter']):
-                        decoded = model.decode_first_stage(x_inter)
-                        decoded = torch.clamp((decoded + 1.0) / 2.0, min=0.0, max=1.0)
+    # Add the generation task to background tasks
+    background_tasks.add_task(
+        generate_image_task,
+        task_id=task_id,
+        model_name=model_name,
+        use_quantized=use_quantized,
+        prompt=prompt,
+        negative_prompt=negative_prompt,
+        height=height,
+        width=width,
+        num_inference_steps=num_inference_steps,
+        guidance_scale=guidance_scale,
+        extra_args=extra_args
+    )
 
-                        for idx, sample in enumerate(decoded):
-                            sample = 255. * rearrange(sample.cpu().numpy(), 'c h w -> h w c')
-                            pil_image = Image.fromarray(sample.astype(np.uint8))
+    # Return the task ID immediately
+    return JSONResponse(
+        content={"task_id": task_id},
+        status_code=202  # Accepted
+    )
 
-                            # Save intermediate image
-                            filename = f"step_{step_idx}_{idx}.png"
-                            pil_image.save(os.path.join(output_dir, filename))
+# Add a new endpoint to get the generated image
+@app.get("/image/{task_id}")
+async def get_generated_image(task_id: str):
+    task = task_manager.get_task(task_id)
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
 
-                            # Create smaller version for web display
-                            small_size = (height//4, width//4)  # 1/4 of original size
-                            pil_image_small = pil_image.resize(small_size, Image.Resampling.LANCZOS)
+    if task.status == TaskStatus.FAILED:
+        raise HTTPException(status_code=500, detail=task.error or "Generation failed")
 
-                            # Convert to base64 for JSON response
-                            img_byte_arr = io.BytesIO()
-                            pil_image_small.save(img_byte_arr, format='PNG')
-                            img_byte_arr.seek(0)
-                            img_base64 = base64.b64encode(img_byte_arr.getvalue()).decode()
-                            images.append({"type": "intermediate", "step": step_idx, "data": img_base64})
+    if task.status != TaskStatus.COMPLETED:
+        raise HTTPException(status_code=425, detail="Image not ready yet")
 
-    return JSONResponse(content={"images": images, "prompt": prompt})
+    # Get the image from the task
+    img_byte_arr = task.image  # We'll add this to TaskProgress
+    if not img_byte_arr:
+        raise HTTPException(status_code=500, detail="Image data not found")
 
-@app.get("/main")
-async def main():
-    content = """
-    <html>
-        <head>
-            <title>Latent Diffusion Image Generator</title>
-            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        </head>
-        <body class="container">
-            <h1 class="mt-5">Generate Image from Text</h1>
-            <form id="generateForm" class="mb-4">
-                <div class="form-group">
-                    <label for="prompt">Enter Text Prompt:</label>
-                    <input type="text" class="form-control" id="prompt" name="prompt" required>
-                </div>
-                <div class="form-group">
-                    <label for="ddim_eta">DDIM Eta:</label>
-                    <input type="number" step="0.1" class="form-control" id="ddim_eta" name="ddim_eta" value="1.0">
-                </div>
-                <div class="form-group">
-                    <label for="n_iter">Number of Iterations:</label>
-                    <input type="number" class="form-control" id="n_iter" name="n_iter" value="1">
-                </div>
-                <div class="form-group">
-                    <label for="height">Height:</label>
-                    <input type="number" class="form-control" id="height" name="height" value="512">
-                </div>
-                <div class="form-group">
-                    <label for="width">Width:</label>
-                    <input type="number" class="form-control" id="width" name="width" value="512">
-                </div>
-                <div class="form-group">
-                    <label for="scale">Scale:</label>
-                    <input type="number" step="0.1" class="form-control" id="scale" name="scale" value="5.0">
-                </div>
-                <button type="submit" class="btn btn-primary">Generate</button>
-            </form>
+    generation_time = round((task.end_time - task.start_time), 2) if task.end_time and task.start_time else 0
 
-            <div id="results" class="mt-4">
-                <div id="promptDisplay" class="mb-3"></div>
-                <div id="imageContainer" class="text-center">
-                    <div class="loading d-none">Generating images...</div>
-                    <div id="imagesGrid" class="d-flex flex-wrap justify-content-center"></div>
-                </div>
-            </div>
+    return StreamingResponse(
+        img_byte_arr,
+        media_type="image/png",
+        headers={
+            "X-Generation-Time": str(generation_time)
+        }
+    )
 
-            <script>
-            $(document).ready(function() {
-                $('#generateForm').on('submit', function(e) {
-                    e.preventDefault();
+# Add the background task function
+async def generate_image_task(
+    task_id: str,
+    model_name: str,
+    use_quantized: bool,
+    prompt: str,
+    negative_prompt: str,
+    height: int,
+    width: int,
+    num_inference_steps: int,
+    guidance_scale: float,
+    extra_args: dict
+):
+    task = task_manager.get_task(task_id)
+    if not task:
+        print(f"Error: Task {task_id} not found")
+        return
 
-                    // Show loading state
-                    $('.loading').removeClass('d-none');
-                    $('#generatedImage').addClass('d-none');
+    adapter = None
+    try:
+        # Input validation
+        if not prompt or not isinstance(prompt, str):
+            raise ValueError("Prompt must be a non-empty string")
+        if height < 128 or width < 128:
+            raise ValueError("Height and width must be at least 128 pixels")
+        if num_inference_steps < 1:
+            raise ValueError("Number of inference steps must be positive")
+        if guidance_scale < 0:
+            raise ValueError("Guidance scale must be non-negative")
 
-                    const formData = new FormData(this);
-                    const prompt = formData.get('prompt');
+        # Record start time and update status
+        task.start_time = time.time()
+        task_manager.update_task(
+            task_id,
+            status=TaskStatus.LOADING_MODEL,
+            start_time=task.start_time
+        )
 
-                    // Display prompt
-                    $('#promptDisplay').html('<h4>Prompt: ' + prompt + '</h4>');
+        # Load model
+        try:
+            adapter = model_manager.get_model(model_name, use_quantized)
+            if adapter is None:
+                raise RuntimeError(f"Failed to get model adapter for {model_name}")
+            pipeline = adapter.load(use_quantized)
+            if pipeline is None:
+                raise RuntimeError(f"Failed to load pipeline for {model_name}")
+        except Exception as e:
+            raise RuntimeError(f"Model loading failed: {str(e)}")
 
-                    $.ajax({
-                        url: '/generate',
-                        type: 'POST',
-                        data: formData,
-                        processData: false,
-                        contentType: false,
-                        success: function(response) {
-                            // Hide loading state
-                            $('.loading').addClass('d-none');
+        # Update generation status
+        task_manager.update_task(
+            task_id,
+            status=TaskStatus.GENERATING,
+            total_steps=num_inference_steps
+        )
 
-                            // Clear previous images
-                            $('#imagesGrid').empty();
+        # Log generation parameters
+        print(f"Generating with {model_name}:\n"
+              f"Prompt: {prompt}\n"
+              f"Negative: {negative_prompt}\n"
+              f"Dimensions: {width}x{height}\n"
+              f"Steps: {num_inference_steps}\n"
+              f"Guidance: {guidance_scale}")
 
-                            // Display final image first
-                            const finalImages = response.images.filter(img => img.type === 'final');
-                            const intermediateImages = response.images.filter(img => img.type === 'intermediate');
+        # Generate image
+        try:
+            image = adapter.generate(
+                prompt=prompt,
+                negative_prompt=negative_prompt,
+                height=height,
+                width=width,
+                num_inference_steps=num_inference_steps,
+                guidance_scale=guidance_scale,
+                **extra_args
+            )
+            if image is None:
+                raise RuntimeError("No image was generated")
+        except Exception as e:
+            raise RuntimeError(f"Image generation failed: {str(e)}")
 
-                            // Create container for final images
-                            const finalContainer = $('<div class="mb-4">');
-                            finalContainer.append('<h3>Final Result</h3>');
-                            finalImages.forEach(img => {
-                                const imgContainer = $('<div class="text-center">');
-                                const imgElement = $('<img>')
-                                    .attr('src', 'data:image/png;base64,' + img.data)
-                                    .addClass('img-fluid mb-2');
-                                imgContainer.append(imgElement);
-                                finalContainer.append(imgContainer);
-                            });
-                            $('#imagesGrid').append(finalContainer);
+        # Save image
+        try:
+            img_byte_arr = io.BytesIO()
+            image.save(img_byte_arr, format='PNG')
+            img_byte_arr.seek(0)
+        except Exception as e:
+            raise RuntimeError(f"Failed to save generated image: {str(e)}")
 
-                            // Create container for intermediate steps
-                            const intermediateContainer = $('<div>');
-                            intermediateContainer.append('<h3>Generation Process</h3>');
-                            const stepsGrid = $('<div class="d-flex flex-wrap justify-content-center">');
+        # Update task completion
+        end_time = time.time()
+        task_manager.update_task(
+            task_id,
+            status=TaskStatus.COMPLETED,
+            end_time=end_time,
+            image=img_byte_arr,
+            progress=1.0
+        )
 
-                            intermediateImages.forEach(img => {
-                                const imgContainer = $('<div class="m-1 text-center">');
-                                const imgElement = $('<img>')
-                                    .attr('src', 'data:image/png;base64,' + img.data)
-                                    .addClass('img-fluid mb-1')
-                                    .css('max-width', '150px');
-                                const caption = $('<p class="mb-0 small">').text(`Step ${img.step}`);
+        print(f"Task {task_id} completed in {round(end_time - task.start_time, 2)}s")
 
-                                imgContainer.append(imgElement, caption);
-                                stepsGrid.append(imgContainer);
-                            });
+    except Exception as e:
+        error_msg = str(e)
+        print(f"Error in generate_image_task: {error_msg}")
+        # Update task failure status
+        task_manager.update_task(
+            task_id,
+            status=TaskStatus.FAILED,
+            error=error_msg,
+            end_time=time.time()
+        )
 
-                            intermediateContainer.append(stepsGrid);
-                            $('#imagesGrid').append(intermediateContainer);
-                        },
-                        error: function() {
-                            $('.loading').addClass('d-none');
-                            $('#imageContainer').append(
-                                '<div class="alert alert-danger">Error generating image</div>'
-                            );
-                        }
-                    });
-                });
-            });
-            </script>
-        </body>
-    </html>
-    """
-    return HTMLResponse(content=content)
+        # Clean up model on error
+        if adapter and adapter.pipeline:
+            try:
+                adapter.unload()
+            except Exception as cleanup_error:
+                print(f"Warning: Error during model cleanup: {cleanup_error}")
+
+@app.get("/task/{task_id}")
+async def get_task_progress(task_id: str):
+    """Get the progress of a specific task"""
+    task = task_manager.get_task(task_id)
+    if task is None:
+        raise HTTPException(status_code=404, detail=f"Task {task_id} not found")
+
+    # Calculate progress percentage
+    progress = 0.0
+    if task.status == TaskStatus.COMPLETED:
+        progress = 1.0
+    elif task.status == TaskStatus.GENERATING and task.total_steps > 0:
+        progress = min(0.9, task.current_step / task.total_steps)  # Cap at 90% until complete
+    elif task.status == TaskStatus.LOADING_MODEL:
+        progress = 0.1  # Show some progress while loading
+
+    # Calculate time information
+    current_time = time.time()
+    time_elapsed = None
+    time_remaining = None
+    generation_time = None
+
+    if task.start_time:
+        if task.end_time:
+            time_elapsed = round(task.end_time - task.start_time, 2)
+            generation_time = time_elapsed
+        else:
+            time_elapsed = round(current_time - task.start_time, 2)
+            if task.status == TaskStatus.GENERATING and progress > 0:
+                # Estimate remaining time based on progress
+                time_remaining = round((time_elapsed / progress) * (1 - progress), 2)
+
+    response = {
+        "status": task.status.value,
+        "progress": progress,
+        "total_steps": task.total_steps,
+        "current_step": task.current_step,
+        "time_elapsed": time_elapsed,
+        "time_remaining": time_remaining,
+        "generation_time": generation_time
+    }
+
+    if task.error:
+        response["error"] = task.error
+
+    # Add detailed status message
+    status_message = "Initializing..."
+    if task.status == TaskStatus.LOADING_MODEL:
+        status_message = "Loading model..."
+    elif task.status == TaskStatus.GENERATING:
+        status_message = f"Generating image (Step {task.current_step}/{task.total_steps})"
+        if time_remaining:
+            status_message += f" - {time_remaining}s remaining"
+    elif task.status == TaskStatus.COMPLETED:
+        status_message = f"Generation completed in {generation_time}s"
+    elif task.status == TaskStatus.FAILED:
+        status_message = f"Generation failed: {task.error}"
+
+    response["status_message"] = status_message
+
+    return response
+
+from fastapi import FastAPI
+from pydantic import BaseModel
+
+class InferenceRequest(BaseModel):
+    model_id: str
+    prompt: str
+    output_path: str
+
+@app.post("/inference")
+async def generate_image(request: InferenceRequest):
+    try:
+        adapter = model_manager.get_model(request.model_id)
+        image = adapter.generate(prompt=request.prompt)
+        image.save(request.output_path, format='PNG')
+        return {"message": f"Image saved to {request.output_path}"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=30982)
+    import argparse
 
-    # Define cache directory in ~/.cache
-    cache_dir = os.path.join(os.path.expanduser('~'), '.cache', 'latent-diffusion')
-    os.makedirs(cache_dir, exist_ok=True)
-    model_path = os.path.join(cache_dir, 'txt2img-f8-large_model.ckpt')
+    # Set up argument parser
+    parser = argparse.ArgumentParser(description="Local inference or run FastAPI server")
+    parser.add_argument('--model-id', type=str, help='Model ID to use for inference')
+    parser.add_argument('--prompt', type=str, help='Prompt for image generation')
+    parser.add_argument('--output-path', type=str, help='Path to save the generated image')
+    parser.add_argument('--port', type=int, default=8000, help='Port to run the FastAPI server on (default: 8000)')
 
-    # Download the model checkpoint if it doesn't exist
-    if not os.path.exists(model_path):
-        download_model_checkpoint(model_url, model_path)
+    # Parse arguments
+    args = parser.parse_args()
 
-    # Load model
-    config_path = os.path.join(current_dir, '../repos/latent-diffusion/configs/latent-diffusion/txt2img-1p4B-eval.yaml')
-    model = load_model(config_path, model_path)
-    sampler = DDIMSampler(model)
-
-    uvicorn.run(app, host="0.0.0.0", port=30982)
+    if args.model_id and args.prompt and args.output_path:
+        # Perform local inference
+        print(f"Performing inference with model {args.model_id} and prompt '{args.prompt}'")
+        adapter = model_manager.get_model(args.model_id)
+        image = adapter.generate(prompt=args.prompt)
+        image.save(args.output_path, format='PNG')
+        print(f"Image saved to {args.output_path}")
+    else:
+        # Start FastAPI server
+        import uvicorn
+        print(f"Starting FastAPI server on port {args.port}...")
+        uvicorn.run(app, host="0.0.0.0", port=args.port)
