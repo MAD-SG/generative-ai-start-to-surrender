@@ -15,10 +15,15 @@ class App {
 
     setupEventListeners() {
         // Generate button click
-        document.getElementById('generate-btn').addEventListener('click', async (e) => {
+        const generateBtn = document.getElementById('generate-btn');
+        console.log('Generate button element:', generateBtn);
+        generateBtn.addEventListener('click', async (e) => {
+            console.log('Generate button clicked');
             e.preventDefault();
             try {
+                console.log('Getting parameters from UIManager...');
                 const parameters = this.uiManager.getParameters();
+                console.log('Parameters from UIManager:', parameters);
                 await this.imageGenerator.generateImage(parameters);
             } catch (error) {
                 console.error('Generation failed:', error);

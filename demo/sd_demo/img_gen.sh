@@ -26,8 +26,14 @@ prompt="A magical garden with giant mushrooms, fairy lights, flowing streams, ra
 # CUDA_VISIBLE_DEVICES=3 python3 app.py --model-id sd-xl-1.0 \
 #     --prompt "${prompt}" --output-path output.png
 
-CUDA_VISIBLE_DEVICES=3 python3 app.py --model-id sd-v1.5 \
-    --prompt "${prompt}" --output-path output.png
+# CUDA_VISIBLE_DEVICES=3 python3 app.py --model-id sd-v1.5 \
+#     --prompt "${prompt}" --output-path output.png
 
 # CUDA_VISIBLE_DEVICES=3 python3 app.py --model-id sd-v1.4 \
+#     --prompt "${prompt}" --output-path output.png
+
+CUDA_VISIBLE_DEVICES=3 python3 app.py --model-id sd-v1.2 \
+    --prompt "${prompt}" --output-path output.png
+
+# CUDA_VISIBLE_DEVICES=3 python3 app.py --model-id sd-v1.1 \
 #     --prompt "${prompt}" --output-path output.png

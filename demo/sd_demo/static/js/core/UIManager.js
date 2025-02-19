@@ -5,8 +5,10 @@ class UIManager {
     constructor() {
         this.models = [];
         this.activeModels = new Set();
+        // Initialize all UI elements
         this.elements = {
             promptInput: document.getElementById('prompt-input'),
+            negativePromptInput: document.getElementById('negative-prompt-input'),
             generateBtn: document.getElementById('generate-btn'),
             progressBar: document.getElementById('progress-bar'),
             progressContainer: document.getElementById('progress-container'),
@@ -55,17 +57,34 @@ class UIManager {
      * @returns {Object} Parameters object
      */
     getParameters() {
-        // Get selected model from active models
-        const selectedModel = Array.from(this.activeModels)[0] || 'sd-v1.5';
+        // Debug: Check if we can find the negative prompt element
+        const negativePromptEl = document.getElementById('negative-prompt-input');
+        console.log('Found negative prompt element:', negativePromptEl);
+        console.log('Negative prompt element value:', negativePromptEl?.value);
 
-        return {
-            prompt: this.elements.promptInput.value,
-            width: parseInt(document.getElementById('width').value),
-            height: parseInt(document.getElementById('height').value),
-            guidance_scale: parseFloat(document.getElementById('guidance_scale').value),
-            num_inference_steps: parseInt(document.getElementById('num_inference_steps').value),
-            model_name: selectedModel
-        };
+        // Get all form values with detailed logging
+        const formValues = {};
+
+        // Add prompt
+        const promptEl = document.getElementById('prompt-input');
+        formValues.prompt = promptEl?.value || '';
+        console.log('Prompt value:', formValues.prompt);
+
+        // Add negative prompt
+        formValues.negative_prompt = negativePromptEl?.value || '';
+        console.log('Negative prompt value:', formValues.negative_prompt);
+
+        // Add other parameters
+        formValues.width = parseInt(document.getElementById('width')?.value || '512');
+        formValues.height = parseInt(document.getElementById('height')?.value || '512');
+        formValues.guidance_scale = parseFloat(document.getElementById('guidance_scale')?.value || '7.5');
+        formValues.num_inference_steps = parseInt(document.getElementById('num_inference_steps')?.value || '50');
+        formValues.model_name = Array.from(this.activeModels)[0] || 'sd-v1.5';
+
+        // Log the final object
+        console.log('Complete form values object:', formValues);
+
+        return formValues;
     }
 
     /**

@@ -286,7 +286,7 @@ class ModelAdapter:
                     'generator': torch.Generator("cpu").manual_seed(0)
                 })
 
-            if self.model_id in ['flux1-schnell']: # no negative prompt
+            if self.model_id in ['flux1-schnell'] or negative_prompt is None or negative_prompt == '': # no negative prompt
                 result = self.pipeline(
                     prompt=prompt,
                     height=height,
@@ -296,6 +296,7 @@ class ModelAdapter:
                     **extra_args,
                 )
             else:
+                print(f"Negative prompt: model adapter: {negative_prompt!r}")
                 result = self.pipeline(
                     prompt=prompt,
                     negative_prompt=negative_prompt,
@@ -446,6 +447,17 @@ async def generate_image(
     use_quantized: bool = Form(None, description="Use quantization for supported models")
 ):
     """Generate image with validation for model-specific parameters"""
+    # Log all parameters received
+    print("\nReceived parameters in /generate:")
+    print(f"  prompt: {prompt!r} (type: {type(prompt)})")
+    print(f"  negative_prompt: {negative_prompt!r} (type: {type(negative_prompt)})")
+    print(f"  height: {height} (type: {type(height)})")
+    print(f"  width: {width} (type: {type(width)})")
+    print(f"  guidance_scale: {guidance_scale} (type: {type(guidance_scale)})")
+    print(f"  num_inference_steps: {num_inference_steps} (type: {type(num_inference_steps)})")
+    print(f"  model_name: {model_name!r} (type: {type(model_name)})")
+    print(f"  use_quantized: {use_quantized} (type: {type(use_quantized)})")
+
     # Get model configuration
     model_config = MODEL_DEFS.get(model_name, {})
 

@@ -326,3 +326,16 @@ textarea.form-control {
         padding: 1.5rem;
     }
 }
+
+
+#imageModal .modal-dialog {
+    max-width: 90%;
+    max-height: 90%;
+    margin: auto;
+    z-index: 1050; /* Bootstrap默认模态框z-index */
+}
+
+#modal-image {
+    max-width: 100%;
+    max-height: 100%;
+}

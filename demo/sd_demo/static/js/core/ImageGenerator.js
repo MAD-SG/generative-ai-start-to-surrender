@@ -32,11 +32,41 @@ class ImageGenerator {
             this.uiManager.reset();
             this.uiManager.toggleGenerateButton(true);
 
+            // Log what we received
+            console.log('Raw parameters received:', parameters);
+            console.log('Negative prompt from parameters:', parameters.negative_prompt);
+
+            // Create FormData
             const formData = new FormData();
-            Object.entries(parameters).forEach(([key, value]) => {
-                formData.append(key, value);
-                console.log(`Adding parameter: ${key} = ${value}`);
-            });
+
+            // Add parameters one by one with explicit logging
+            const negativePrompt = parameters.negative_prompt || '';
+            formData.append('negative_prompt', negativePrompt);
+            console.log('Added negative_prompt to FormData:', negativePrompt);
+
+            formData.append('prompt', parameters.prompt || '');
+            console.log('Added prompt to FormData:', parameters.prompt || '');
+
+            formData.append('width', parameters.width || 512);
+            console.log('Added width to FormData:', parameters.width || 512);
+
+            formData.append('height', parameters.height || 512);
+            console.log('Added height to FormData:', parameters.height || 512);
+
+            formData.append('guidance_scale', parameters.guidance_scale || 7.5);
+            console.log('Added guidance_scale to FormData:', parameters.guidance_scale || 7.5);
+
+            formData.append('num_inference_steps', parameters.num_inference_steps || 50);
+            console.log('Added num_inference_steps to FormData:', parameters.num_inference_steps || 50);
+
+            formData.append('model_name', parameters.model_name || 'sd-v1.5');
+            console.log('Added model_name to FormData:', parameters.model_name || 'sd-v1.5');
+
+            // Log final FormData contents
+            console.log('\nFinal FormData contents:');
+            for (const pair of formData.entries()) {
+                console.log(`${pair[0]}: ${pair[1]}`);
+            }
 
             console.log('Sending request to /generate');
             const response = await fetch('/generate', {

@@ -3,9 +3,8 @@
 
 Web Demo
 
-![alt text](../../images/image-46.png)
-
-Refer the guide in `experiment/latent_diffusion/readme.md`
+![alt text](../../images/image-50.png)
+Refer the demo in `demo/sd_demo/app.py` in the repo.
 
 ## Generating Results
 

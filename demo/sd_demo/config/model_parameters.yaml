@@ -33,34 +33,6 @@ models:
       use_safetensors: True
     groups:
       - "Stable Diffusion Versions"
-  sd-v1.0:
-    display_name: "Stable Diffusion v1.0"
-    description: "Original release version"
-    parameters:
-      guidance_scale:
-        min: 1
-        max: 20
-        default: 7.5
-        step: 0.5
-      num_inference_steps:
-        min: 20
-        max: 100
-        default: 50
-        step: 1
-      height:
-        min: 512
-        max: 1024
-        default: 512
-        step: 64
-      width:
-        min: 512
-        max: 1024
-        default: 512
-        step: 64
-    config: {}   # No pipeline config available
-    groups:
-      - "Stable Diffusion Versions"
-
   sd-v1.1:
     display_name: "Stable Diffusion v1.1"
     description: "Early version of Stable Diffusion"
@@ -87,9 +59,6 @@ models:
         step: 64
     config:
       repo_id: "CompVis/stable-diffusion-v1-1"
-      type: standard
-      safety_checker: true
-      requires_safety_checker: true
     groups:
       - "Stable Diffusion Versions"
 

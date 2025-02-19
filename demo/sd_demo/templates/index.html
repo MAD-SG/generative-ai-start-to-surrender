@@ -61,8 +61,16 @@
                             id="prompt-input"
                             class="form-control"
                             rows="3"
-                            placeholder="Describe the image you want to generate..."
-                        ></textarea>
+                            placeholder="Describe the image you want to generate...">A beautiful landscape painting of a mountain lake at sunset, with vibrant colors, detailed reflections in the water, artistic style</textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="negative-prompt-input" class="form-label">Negative Prompt</label>
+                        <textarea
+                            id="negative-prompt-input"
+                            class="form-control"
+                            rows="2"
+                            placeholder="Describe what you don't want in the generated image...">ugly, blurry, low quality, distorted, deformed, bad anatomy, extra limbs, duplicate, watermark, signature, text, bad proportions, oversaturated, low resolution</textarea>
                     </div>
 
                     <!-- Parameter Controls -->
@@ -191,17 +199,13 @@
 
     <!-- Fullscreen Image Modal -->
     <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-fullscreen">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content bg-dark">
-                <div class="modal-body bg-dark d-flex align-items-center justify-content-center">
-                    <div id="modal-image-container" class="position-relative">
-                        <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
-                            <div class="spinner-border text-light" role="status" id="modal-loading" style="display: none;">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
-                        </div>
-                        <img id="modal-image" class="img-fluid" alt="Generated image">
-                    </div>
+                <div class="modal-header border-0">
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-flex align-items-center justify-content-center">
+                    <img id="modal-image" class="img-fluid" alt="Generated image">
                 </div>
             </div>
         </div>
