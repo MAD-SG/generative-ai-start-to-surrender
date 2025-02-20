@@ -34,6 +34,7 @@ nav:
           - DDPM: "book/chapter7_diffusion/ddpm.md"
           - LDM: "book/chapter7_diffusion/ldm.md"
           - LDM Handson: "book/chapter7_diffusion/ldm_handson.md"
+      - Diffusion Model Varients: "book/chapter7_diffusion/diffusion_model_varients.md"
       - Continuous Diffusion:
           - SDE Fundamentals: "book/chapter7_diffusion/introduction_sde.md"
           - SDE for DDPM: "book/chapter7_diffusion/SDE4_DDPM_DSM.md"
@@ -45,7 +46,10 @@ nav:
   - Hybrid SOTA Models:
       - Hybrid Methods: "book/chapter11_hybrid_sota_models/hybrid_methods.md"
       - Closed Models: "book/chapter11_hybrid_sota_models/sota_closed_models.md"
-      - Open Models: "book/chapter11_hybrid_sota_models/sota_open_models.md"
+      - Open Models:
+        - Stable Diffusion Series: "book/chapter11_hybrid_sota_models/sota_open_models/stable_diffusion_series.md"
+        - Stable Diffusion 3 paper reading: "book/chapter11_hybrid_sota_models/sota_open_models/stable_diffusion_3_paper_reading.md"
+        - Flux.1: "book/chapter11_hybrid_sota_models/sota_open_models/flux1.md"
       - Future Trends: "book/chapter11_hybrid_sota_models/trends_future.md"
 
 theme:
