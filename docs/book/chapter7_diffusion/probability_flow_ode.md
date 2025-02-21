@@ -615,7 +615,7 @@ $$
 - **Reverse Process (SDE)**
 
 $$
-dx = \left(\frac{d[\sigma^2(t)]}{dt} \right) \nabla_x \log p_t(x) dt + \sqrt{\frac{d[\sigma^2(t)]}{dt}} dw
+dx = - \left(\frac{d[\sigma^2(t)]}{dt} \right) \nabla_x \log p_t(x) dt + \sqrt{\frac{d[\sigma^2(t)]}{dt}} dw
 $$
 
 - **derivateve of $\sigma(t)$**
@@ -627,13 +627,13 @@ $$
 - **Flow ODE (Deterministic Approximation)**
 
 $$
-dx = \left(\frac{d[\sigma^2(t)]}{dt} \right) \nabla_x \log p_t(x) dt
+dx = -\frac{1}{2}\left(\frac{d[\sigma^2(t)]}{dt} \right) \nabla_x \log p_t(x) dt
 $$
 
 - **Reverse Sampling**
 
 $$
-x_{t-1} = x_t - \left(\frac{d[\sigma^2(t)]}{dt} \right) s_{\theta}(x, t) dt
+x_{t-1} = x_t + \left(\frac{d[\sigma^2(t)]}{dt} \right) s_{\theta}(x, t) dt
 $$
 
 - **Score Function**
@@ -649,10 +649,11 @@ $$
 $$
 
 ##### Sampling Results
+docs/images/ve_ode.gif
 
-|![alt text](../../images/ve_sde.gif)|![alt text](../../images/vp_sde_sampling.gif)| ![alt text](../../images/vp_ode_sampling.gif)| ![](../../images/ddpm_sde.gif)|
+|![alt text](../../images/ve_sde.gif)|![alt text](../../images/ve_ode.gif)| ![alt text](../../images/vp_ode_sampling.gif)| ![](../../images/ddpm_sde.gif)|
 | :-----------------------: | :-----------------------: | :-----------------------: |:---:|
-|ve-sde||||
+|ve-sde|ve-sde flow ODE|DP-SDE flow ODE|DDPM|
 
 ## Conclusion
 
