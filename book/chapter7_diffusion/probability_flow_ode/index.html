@@ -3135,6 +3135,81 @@ dx = \left[-\frac{1}{2}\beta(t)x - \frac{1}{2}\beta(t)\nabla_x\log p_t(x)\right]
 </div>
 </div>
 <h4 id="832-ve-sde">8.3.2 VE-SDE<a class="headerlink" href="#832-ve-sde" title="Permanent link">&para;</a></h4>
+<p>Let's experiment with VE-SDE. First, just recall the formulas to understand the dynamics:</p>
+<ul>
+<li><strong>Forward Process (SDE)</strong></li>
+</ul>
+<div class="arithmatex">\[
+dx = \sqrt{\frac{d[\sigma^2(t)]}{dt}} dw
+\]</div>
+<ul>
+<li><strong>Noise Schedule</strong></li>
+</ul>
+<div class="arithmatex">\[
+\sigma_t = \sigma_{\text{min}} \left(\frac{\sigma_{\text{max}}}{\sigma_{\text{min}}} \right)^t
+\]</div>
+<ul>
+<li><strong>Sampling from Noisy Distribution</strong></li>
+</ul>
+<div class="arithmatex">\[
+x_t = x_0 + \sigma_t \epsilon, \quad \epsilon \sim \mathcal{N}(0, I)
+\]</div>
+<ul>
+<li><strong>Reverse Process (SDE)</strong></li>
+</ul>
+<div class="arithmatex">\[
+dx = - \left(\frac{d[\sigma^2(t)]}{dt} \right) \nabla_x \log p_t(x) dt + \sqrt{\frac{d[\sigma^2(t)]}{dt}} dw
+\]</div>
+<ul>
+<li><strong>derivateve of <span class="arithmatex">\(\sigma(t)\)</span></strong></li>
+</ul>
+<div class="arithmatex">\[
+\frac{d \sigma^2(t)}{dt} = \sigma_{\text{min}}^2 \left(\frac{\sigma_{\text{max}}^2}{\sigma_{\text{min}}^2} \right)^t \log \left(\frac{\sigma_{\text{max}}^2}{\sigma_{\text{min}}^2} \right)
+\]</div>
+<ul>
+<li><strong>Flow ODE (Deterministic Approximation)</strong></li>
+</ul>
+<div class="arithmatex">\[
+dx = -\frac{1}{2}\left(\frac{d[\sigma^2(t)]}{dt} \right) \nabla_x \log p_t(x) dt
+\]</div>
+<ul>
+<li><strong>Reverse Sampling</strong></li>
+</ul>
+<div class="arithmatex">\[
+x_{t-1} = x_t + \left(\frac{d[\sigma^2(t)]}{dt} \right) s_{\theta}(x, t) dt
+\]</div>
+<ul>
+<li><strong>Score Function</strong></li>
+</ul>
+<div class="arithmatex">\[
+s_{\theta}(x, t) = -\frac{\epsilon}{\sigma_t}
+\]</div>
+<ul>
+<li><strong>Loss Function (Score Matching)</strong></li>
+</ul>
+<div class="arithmatex">\[
+\mathbb{E}_{t, x_0, \epsilon} \left[ \lambda_t \left\| s_{\theta}(x_t, t) + \frac{\epsilon}{\sigma_t} \right\|^2 \right]
+\]</div>
+<h5 id="8321-sampling-results">8.3.2.1 Sampling Results<a class="headerlink" href="#8321-sampling-results" title="Permanent link">&para;</a></h5>
+<p>docs/images/ve_ode.gif</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;"><a class="glightbox" href="../../../images/ve_sde.gif" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="alt text" src="../../../images/ve_sde.gif" /></a></th>
+<th style="text-align: center;"><a class="glightbox" href="../../../images/ve_ode.gif" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="alt text" src="../../../images/ve_ode.gif" /></a></th>
+<th style="text-align: center;"><a class="glightbox" href="../../../images/vp_ode_sampling.gif" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="alt text" src="../../../images/vp_ode_sampling.gif" /></a></th>
+<th style="text-align: center;"><a class="glightbox" href="../../../images/ddpm_sde.gif" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="../../../images/ddpm_sde.gif" /></a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">ve-sde</td>
+<td style="text-align: center;">ve-sde flow ODE</td>
+<td style="text-align: center;">DP-SDE flow ODE</td>
+<td style="text-align: center;">DDPM</td>
+</tr>
+</tbody>
+</table>
 <h2 id="9-conclusion">9. Conclusion<a class="headerlink" href="#9-conclusion" title="Permanent link">&para;</a></h2>
 <ul>
 <li>
