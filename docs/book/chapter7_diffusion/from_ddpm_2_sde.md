@@ -331,17 +331,15 @@ $$
 we can represent $\epsilon_i$ as the sum of $M$ smaller Gaussians of variance $\beta_i/M$. In other words, we can rewrite that same update with $M$ micro-steps, each of which has variance $\beta_i/M$. Because Gaussians are closed under convolution, $M$ small steps or $1$ big step produce the *same* marginal distribution for $x_i$.
 When $M \to \infty$, each micro-step becomes infinitesimally small. Hence, we can imagine the entire forward diffusion as a limit of infinitely many tiny Gaussian increments. This viewpoint paves the way to interpret the forward process as a stochastic differential equation.
 
+In other point of view, since we want to get the continuous format by taking the $N$ tends to infinity, corresponds the increment of $x_t$ be infenitesimal, which also requires that $\beta_i \to 0$. In this sense, we have enough confidence to assume that
+
+$$\tag{1}\boxed{\beta_i = \beta(t_i)\Delta t},\quad \beta(x): X \to \mathbb{R^+}$$
+
 ### From Discrete Updates to a Continuous SDE
 
 #### Mapping Steps to Time
 
-Let the total diffusion run over time $t \in [0,1]$, with discrete steps $t_i = i/N$. Denote $\Delta t = 1/N$. Suppose we set
-
-$$
- \beta_i \;\approx\; \beta(t_i)\,\Delta t,
-$$
-
-where $\beta(\cdot)$ is some bounded nonnegative function on $[0,1]$.
+Let the total diffusion run over time $t \in [0,1]$, with discrete steps $t_i = i/N$. Denote $\Delta t = 1/N$
 
 #### Taylor Expansion Argument
 
@@ -519,6 +517,20 @@ We got
 $$
 dx = \left[-\frac{1}{2}\beta(t)x + \frac{\beta(t)}{\sqrt{1-\bar{\alpha}(t)}}\,\epsilon_\theta(x,t)\right]dt + \sqrt{\beta(t)}\,d\bar{w}.
 $$
+
+## Summary of Correspondence
+
+In the continuous format, we name it as ==VP-SDE==, refer [score based SDE](./score_based_sde.md) for more details.
+
+| | VP-SDE (Continuous) | DDPM (Discrete) |
+|---| --- | --- |
+|$x_t$ | $x_t = \sqrt{\alpha_t} x_0 + \sqrt{1 - \alpha_t} \epsilon$ | $x_t = \sqrt{\bar{\alpha}_t} x_0 + \sqrt{1 - \bar{\alpha}_t} \epsilon$ |
+|$\alpha_t$| $\alpha_t = e^{-\int_0^t \beta(s) ds}$ | $\bar{\alpha}_t = \prod_{s=1}^{t} (1 - \beta_s)$ |
+|$\beta_t$| $\beta_t^{\text{VP-SDE}} = d(-\log \alpha_t) / dt$ | $\beta_t^{\text{DDPM}} \approx \beta_t^{\text{VP-SDE}} \Delta t$ |
+|$\sigma_t$| $\sigma_t =\sqrt{ 1 - \alpha_t}$ |$\sigma_t =\sqrt{1 - \bar{\alpha}_t}$  |
+|forward|$dx = -\frac{1}{2} \beta(t) x dt + \sqrt{\beta(t)} dw$ |$x_t = \sqrt{1 - \beta_t} x_{t-1} + \sqrt{\beta_t} \epsilon$|
+|backward|\(dx = -\frac{1}{2} \beta(t) \left(  x + 2 s_\theta(x, t) \right) dt + \sqrt{\beta(t)} dw\) |$x_{t-1} = \frac{1}{\sqrt{\alpha_t}} \left( x_t - \frac{1 - \alpha_t}{\sqrt{1 - \bar{\alpha}_t}} \epsilon_\theta(x_t, t) \right) + \sigma_t z$ |
+|Flow ODE|\(dx = - \frac{1}{2} \beta(t)\left( x + s_\theta(x, t) \right) dt + \sqrt{\beta(t)} dw\)|Na|
 
 ## Network Output: Noise Prediction vs. Score
 In practice, DDPM commonly trains a network to predict the added noise $\epsilon$ rather than directly predicting $\nabla_x \log p(x_t)$. However, there is a **simple linear relation**  between $\epsilon$ and the score. Therefore:
