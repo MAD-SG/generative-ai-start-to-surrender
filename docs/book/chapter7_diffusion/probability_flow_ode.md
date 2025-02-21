@@ -13,8 +13,6 @@ This post will:
 
 - **Give a Python implementation for deterministic sampling**
 
----
-
 ## What is an SDE-Based Generative Model?
 
 A **stochastic differential equation (SDE)**  is used to describe how data evolves over time:
@@ -177,6 +175,24 @@ $$
 
 ![alt text](../../images/image-79.png)
 
+```py3
+import torch
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.datasets import make_swiss_roll
+def sample_funnel_data(num_samples=10000):
+    """
+    从简化 2D funnel 分布中采样:
+    z ~ N(0, 1)
+    x ~ N(0, exp(z))
+    返回 shape: (num_samples, 2)
+    """
+    z = torch.randn(num_samples)*0.8
+    x = torch.randn(num_samples) * torch.exp(z )/5  # exp(z/2) 的方差 = exp(z)
+    data = torch.stack([x,z], dim=1)  # shape [num_samples, 2]
+    return data
+```
+
 ### sampling formula
 Below are the expressions for the original distribution, the Langevin (diffusion) process, the DDPM reverse diffusion SDE, and the corresponding probability flow ODE for DDPM sampling.
 
@@ -218,17 +234,364 @@ Solving this ODE from \( t=1 \) (Gaussian noise) to \( t=0 \) yields samples tha
 
 These expressions form the basis for diffusion-based generative modeling—from the formulation of the target distribution to sampling via both stochastic reverse diffusion and its deterministic ODE counterpart.
 
-Sampling by the Langevin Dynamics
+### Results on different sampling methods
 
-![alt text](../../images/funnel_langevin.gif)
+#### VP-SDE
 
-Now we build a diffusion process that convert the tunnel distribution into the Gaussian distribution in the same way as DDPM
+##### Sampling Annimation
 
-sampling with DDPM inverse SDE
-![alt text](../../images/ddpm_reverse_sde_sampling.gif)
+|![alt text](../../images/langervin_annitation.gif)|![alt text](../../images/vp_sde_sampling.gif)| ![alt text](../../images/vp_ode_sampling.gif)| ![](../../images/ddpm_sde.gif)|
+| :-----------------------: | :-----------------------: | :-----------------------: |:---:|
+|Langervin Dynamic|VP-SDE| VP-SDE FLow ODE|DDPM|
 
-Sampling with Probability Flow ODE
-![alt text](../../images/ode_sampling_funnel.gif)
+##### Codes
+
+=== "ddpm"
+    ```py3 title="ddpm training and sampling"
+    import torch
+    import torch.nn as nn
+    class DiffusionBlock(nn.Module):
+        def **init**(self, nunits):
+            super(DiffusionBlock, self).**init**()
+            self.linear = nn.Linear(nunits, nunits)
+        def forward(self, x: torch.Tensor):
+            x = self.linear(x)
+            x = nn.functional.relu(x)
+            return x
+    class DiffusionModel(nn.Module):
+        def **init**(self, nfeatures: int, nblocks: int = 2, nunits: int = 64):
+            super(DiffusionModel, self).**init**()
+            self.inblock = nn.Linear(nfeatures+1, nunits)
+            self.midblocks = nn.ModuleList([DiffusionBlock(nunits) for _ in range(nblocks)])
+            self.outblock = nn.Linear(nunits, nfeatures)
+        def forward(self, x: torch.Tensor, t: torch.Tensor) -> torch.Tensor:
+            val = torch.hstack([x, t])  # Add t to inputs
+            val = self.inblock(val)
+            for midblock in self.midblocks:
+                val = midblock(val)
+            val = self.outblock(val)
+            return val
+    model = DiffusionModel(nfeatures=2, nblocks=4)
+    device = "cuda"
+    model = model.to(device)
+    import torch.optim as optim
+    nepochs = 100
+    batch_size = 2048
+    loss_fn = nn.MSELoss()
+    optimizer = optim.Adam(model.parameters(), lr=0.001)
+    scheduler = optim.lr_scheduler.LinearLR(optimizer, start_factor=1.0, end_factor=0.01, total_iters=nepochs)
+    for epoch in range(nepochs):
+        epoch_loss = steps = 0
+        for i in range(0, len(X), batch_size):
+            Xbatch = X[i:i+batch_size]
+            timesteps = torch.randint(0, diffusion_steps, size=[len(Xbatch), 1])
+            noised, eps = noise(Xbatch, timesteps)
+            predicted_noise = model(noised.to(device), timesteps.to(device))
+            loss = loss_fn(predicted_noise, eps.to(device))
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+            epoch_loss += loss
+            steps += 1
+        print(f"Epoch {epoch} loss = {epoch_loss / steps}")
+    def sample_ddpm(model, nsamples, nfeatures):
+        """Sampler following the Denoising Diffusion Probabilistic Models method by Ho et al (Algorithm 2)"""
+        with torch.no_grad():
+            x = torch.randn(size=(nsamples, nfeatures)).to(device)
+            xt = [x]
+            for t in range(diffusion_steps-1, 0, -1):
+                predicted_noise = model(x, torch.full([nsamples, 1], t).to(device))
+                # See DDPM paper between equations 11 and 12
+                x = 1 / (alphas[t] ** 0.5) * (x - (1 - alphas[t]) / ((1-baralphas[t]) ** 0.5) * predicted_noise)
+                if t > 1:
+                    # See DDPM paper section 3.2.
+                    # Choosing the variance through beta_t is optimal for x_0 a normal distribution
+                    variance = betas[t]
+                    std = variance ** (0.5)
+                    x += std * torch.randn(size=(nsamples, nfeatures)).to(device)
+                xt += [x]
+            return x, xt
+    ```
+
+=== "VP-SDE training"
+
+    ```py3 title="VP-SDE training"
+    import torch
+    import torch.nn as nn
+    import torch.optim as optim
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+    import torch
+    import torch.nn as nn
+    import torch.optim as optim
+    from torch.utils.data import DataLoader, TensorDataset
+    # Function to generate funnel data
+    def sample_funnel_data(num_samples=10000):
+        z = torch.randn(num_samples) * 0.8
+        x = torch.randn(num_samples) * torch.exp(z) / 5
+        return torch.stack([x, z], dim=1)
+    class ScoreModel(nn.Module):
+        def __init__(self, hidden_dims=[128, 256, 128], embed_dim=64):
+            super().__init__()
+            # 时间嵌入层
+            self.embed = nn.Sequential(
+                nn.Linear(1, embed_dim),
+                nn.SiLU(),
+                nn.Linear(embed_dim, embed_dim)
+            )
+            # 主干网络
+            self.net = nn.ModuleList()
+            input_dim = 2  # 输入维度
+            for h_dim in hidden_dims:
+                self.net.append(nn.Sequential(
+                    nn.Linear(input_dim + embed_dim, h_dim),
+                    nn.SiLU()))
+                input_dim = h_dim
+            self.out = nn.Linear(input_dim, 2)  # 输出噪声预测
+
+        def forward(self, x, t):
+            t_embed = self.embed(t)
+            for layer in self.net:
+                x = layer(torch.cat([x, t_embed], dim=1))
+            return self.out(x)
+    # 训练参数
+    beta_min, beta_max = 0.1, 20.0
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    # device ='cpu'
+    model = ScoreModel().to(device)
+    optimizer = optim.Adam(model.parameters(), lr=3e-4)
+    # 准备数据
+    data = sample_funnel_data(100000)
+    dataset = TensorDataset(data)
+    dataloader = DataLoader(dataset, batch_size=512, shuffle=True)
+    from tqdm import tqdm
+    # 训练循环
+    for epoch in tqdm(range(200)):
+        total_loss = 0.0
+        for batch, in dataloader:
+            x0 = batch.to(device)
+            batch_size = x0.size(0)
+            # 采样时间和噪声
+            t = torch.rand(batch_size, 1, device=device)
+            epsilon = torch.randn_like(x0, device=device)
+            # 计算 α(t) 和 σ(t)
+            integral = beta_min * t + 0.5 * (beta_max - beta_min) * t**2
+            alpha = torch.exp(-integral)
+            sigma = torch.sqrt(1.0 - alpha)
+            # 扰动数据
+            x_t = torch.sqrt(alpha) * x0 + torch.sqrt(1.0 - alpha) * epsilon
+            # 预测噪声
+            score_pred = model(x_t, t)
+            # 计算加权损失
+            # beta_t = beta_min + (beta_max - beta_min) * t
+            # print((1-alpha))
+            loss = torch.mean( (score_pred - epsilon)**2) # predict is the score
+            # 反向传播
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+            total_loss += loss.item() * batch_size
+        if (epoch+1) % 20 == 0:
+            print(f"Epoch {epoch+1}, Loss: {total_loss/len(data):.5f}")
+    ```
+
+=== "VP-SDE sampling"
+    ``` title="VP SDE sampling"
+    import torch
+    import numpy as np
+    import math
+    import matplotlib.pyplot as plt
+    def vp_sde_sample(model,x_T, timesteps, beta_min=0.1, beta_max=20.0, save_trajectory=True):
+        """
+        Implements the reverse sampling process for VP-SDE using Euler-Maruyama method.
+        Args:
+            x_T: Final noisy sample (torch.Tensor) of shape (N, D)
+            timesteps: Number of diffusion steps (int)
+            beta_min: Minimum beta value (float)
+            beta_max: Maximum beta value (float)
+            save_trajectory: Whether to save and return the sampling trajectory (bool)
+        Returns:
+            x_0: Recovered data sample (torch.Tensor)
+            trajectory: List of intermediate states (if save_trajectory=True)
+        """
+        dt = 1.0 / timesteps  # Time step for numerical integration
+        x_t = x_T.clone()
+        trajectory = [x_t.clone().cpu().numpy()] if save_trajectory else None
+        model  = model.eval()
+        for t_index in reversed(range(1,timesteps)):
+            t = t_index * dt
+            print("t",t, end="\r")
+            # 计算 α(t) 和 σ(t)
+            integral = beta_min * t + 0.5 * (beta_max - beta_min) * t**2
+            integral = torch.Tensor([integral])
+            alpha = torch.exp(-integral)
+            beta_t = beta_min +  (beta_max - beta_min) * t
+            beta_t = torch.Tensor([beta_t])
+            with torch.no_grad():
+                t_input = torch.Tensor([t]*len(x_t)).to(device).unsqueeze(-1)
+                # print('x_t',x_t.shape, t_input.shape)
+                noise_pred = model(x_t.to(device),t_input)
+                if  not torch.isfinite(noise_pred).all():
+                    print('score_function got nan',score_function,t_index)
+                    raise
+                score_function = - noise_pred.cpu() / torch.sqrt(1-alpha)
+            s_theta  = score_function.cpu()
+            # Reverse SDE Euler-Maruyama step
+            x_t = x_t +1/2 * beta_t *( x_t +2* s_theta)* dt # dritf term
+            x_t += torch.sqrt(beta_t) * torch.randn_like(x_t) * math.sqrt(dt) # diffusion term
+            if  not torch.isfinite(x_t).all():
+                print("xt got infinite", t_index, x_t[:2],torch.sqrt(1-alpha))
+            if save_trajectory:
+                trajectory.append(x_t.clone().cpu().numpy())
+        return x_t, trajectory if save_trajectory else None
+    # Set parameters
+    timesteps = 1500
+    num_samples = 20000
+    dim = 2  # 2D distribution for visualization
+    x_T = torch.randn(num_samples, dim)  # Sample from Gaussian prior (standard normal)
+    # Perform VP-SDE sampling
+    x_0, trajectory = vp_sde_sample(model, x_T, timesteps)
+    # Convert trajectory to numpy for plotting
+    trajectory_np = np.array(trajectory)  # Shape: (timesteps, num_samples, dim)
+    # Plot final distribution shape
+    plt.figure(figsize=(6, 6))
+    plt.scatter(x_0[:, 0].numpy(), x_0[:, 1].numpy(), alpha=0.5, s=10)
+    plt.title("Final Sampled Distribution from VP-SDE")
+    plt.xlabel("X-axis")
+    plt.ylabel("Y-axis")
+    plt.axis("equal")
+    plt.show()
+    ```
+=== "VP-SDE FLOW ODE sampling"
+    ``` title="VP-SDE FLOW ODE sampling"
+    import torch
+    import numpy as np
+    import math
+    import matplotlib.pyplot as plt
+    def vp_ode_sample(model,x_T, timesteps, beta_min=0.1, beta_max=20.0, save_trajectory=True):
+        """
+        Implements the reverse sampling process for VP-SDE using Euler-Maruyama method.
+        Args:
+            x_T: Final noisy sample (torch.Tensor) of shape (N, D)
+            timesteps: Number of diffusion steps (int)
+            beta_min: Minimum beta value (float)
+            beta_max: Maximum beta value (float)
+            save_trajectory: Whether to save and return the sampling trajectory (bool)
+        Returns:
+            x_0: Recovered data sample (torch.Tensor)
+            trajectory: List of intermediate states (if save_trajectory=True)
+        """
+        dt = 1.0 / timesteps  # Time step for numerical integration
+        x_t = x_T.clone()
+        trajectory = [x_t.clone().cpu().numpy()] if save_trajectory else None
+        model  = model.eval()
+        for t_index in reversed(range(1,timesteps)):
+            t = t_index *dt
+            print("t",t, end="\r")
+            # 计算 α(t) 和 σ(t)
+            integral = beta_min* t + 0.5 *(beta_max - beta_min)* t**2
+            integral = torch.Tensor([integral])
+            alpha = torch.exp(-integral)
+            beta_t = beta_min +  (beta_max - beta_min) *t
+            beta_t = torch.Tensor([beta_t])
+            with torch.no_grad():
+                t_input = torch.Tensor([t]*len(x_t)).to(device).unsqueeze(-1)
+                # print('x_t',x_t.shape, t_input.shape)
+                noise_pred = model(x_t.to(device),t_input)
+                if  not torch.isfinite(noise_pred).all():
+                    print('score_function got nan',score_function,t_index)
+                    raise
+                score_function = - noise_pred.cpu() / torch.sqrt(1-alpha)
+            s_theta  = score_function.cpu()
+            # Reverse SDE Euler-Maruyama step
+            # x_t = x_t +1/2 * beta_t *( x_t +2* s_theta)* dt # dritf term
+            # x_t += torch.sqrt(beta_t)* torch.randn_like(x_t) *math.sqrt(dt) # diffusion term
+            x_t = x_t +1/2* beta_t *( x_t + s_theta)* dt
+            if  not torch.isfinite(x_t).all():
+                print("xt got infinite", t_index, x_t[:2],torch.sqrt(1-alpha))
+            if save_trajectory:
+                trajectory.append(x_t.clone().cpu().numpy())
+        return x_t, trajectory if save_trajectory else None
+    # Set parameters
+    timesteps = 1500
+    num_samples = 20000
+    dim = 2  # 2D distribution for visualization
+    x_T = torch.randn(num_samples, dim)  # Sample from Gaussian prior (standard normal)
+    # Perform VP-SDE sampling
+    x_0, trajectory = vp_ode_sample(model, x_T, timesteps)
+    # Convert trajectory to numpy for plotting
+    trajectory_np = np.array(trajectory)  # Shape: (timesteps, num_samples, dim)
+    # Plot final distribution shape
+    plt.figure(figsize=(6, 6))
+    plt.scatter(x_0[:, 0].numpy(), x_0[:, 1].numpy(), alpha=0.5, s=10)
+    plt.title("Final Sampled Distribution from VP-SDE")
+    plt.xlabel("X-axis")
+    plt.ylabel("Y-axis")
+    plt.axis("equal")
+    plt.show()
+    ```
+=== "Langervin Dynamic sampling"
+
+    ```python3 title="Langervin Dynamic sampling"
+        import torch
+        import matplotlib.pyplot as plt
+        def funnel_score(x, z):
+            """Compute the score function (gradient of log-density) of the funnel distribution."""
+            score_x = -x / torch.exp(z)
+            score_z = -z + 0.5 * x**2 * torch.exp(-z)
+            return torch.stack([score_x, score_z], dim=1)
+        def langevin_sampling_funnel(num_samples=10000, lr=0.001, num_steps=1500, noise_scale=0.001):
+            """Sample from the funnel distribution using Langevin dynamics."""
+            # Initialize samples from a normal distribution
+            samples = torch.randn(num_samples, 2)
+            trajectory = [samples.clone()]  # Store trajectory
+            for _ in range(num_steps):
+                x, z = samples[:, 0], samples[:, 1]
+                score = funnel_score(x, z)
+                samples = samples + lr * score + math.sqrt(2*noise_scale) * torch.randn_like(samples)
+                trajectory.append(samples.clone())  # Store trajectory step
+            return samples, trajectory
+        # Sample using Langevin dynamics
+        samples, trajectory = langevin_sampling_funnel()
+        # Convert trajectory to numpy for visualization
+        trajectory_np = [step.numpy() for step in trajectory]
+        # Plot final distribution
+        plt.figure(figsize=(6, 6))
+        plt.scatter(samples[:, 0], samples[:, 1], alpha=0.5, s=0.1)
+        plt.title("Final Sampled Distribution from VP-SDE")
+        plt.xlabel("X-axis")
+        plt.ylabel("Y-axis")
+        plt.axis("equal")
+        plt.show()
+    ```
+=== "make annimation"
+    ```
+    from matplotlib.animation import FuncAnimation, PillowWriter
+    def make_animation(trajectory, filename="sampling.gif"):
+        """
+        Given a list of [N x 2] arrays (trajectory), create and save an animation.
+        """
+        trajectory = [x.cpu() for x in trajectory]
+        fig, ax = plt.subplots(figsize=(5, 5))
+        scat = ax.scatter(trajectory[0][:, 0], trajectory[0][:, 1], alpha=0.5, color='red',s=0.2)
+        ax.set_xlim(-6, 6)
+        ax.set_ylim(-6, 6)
+        ax.axis("off")
+        ax.set_aspect('equal')
+        time_text = ax.text(0.02, 0.02, '', transform=ax.transAxes, fontsize=12)
+        def update(frame):
+            data = trajectory[frame]
+            scat.set_offsets(data)
+            time_text.set_text(f"Step {frame}/{len(trajectory)-1}")
+            return scat, time_text
+        ani = FuncAnimation(fig, update, frames=len(trajectory), interval=1)
+        writer = PillowWriter(fps=40)
+        ani.save(filename, writer=writer)
+        plt.close()
+    ...
+    make_animation(trajectory_np, filename=img_file)
+    ```
+#### VE-SDE
 ## Conclusion
 
 - **Every SDE can be converted into a Probability Flow ODE.**

@@ -533,9 +533,10 @@ In the continuous format, we name it as ==VP-SDE==, refer [score based SDE](./sc
 |Flow ODE|\(dx = - \frac{1}{2} \beta(t)\left( x + s_\theta(x, t) \right) dt\)|Na|
 | loss|\(\mathbb{E}_{t, x_0, \epsilon} \left[ \lambda_t \|s_\theta(x_t, t) + \frac{\epsilon_\theta(x,t)}{\sqrt{1-\alpha_t}} \|^2 \right] \) |  \(\mathbb{E}_{t,x_0,\epsilon} \left[\| \epsilon_\theta(x,t) - \epsilon\|^2\right] \)|
 |score function| \(-\frac{\epsilon}{\sqrt{1-\alpha_t}}\)| |
+|Reverse Sampling|\(x_{t-1} =x_{t} +\frac{1}{2} \beta(t) \left(  x + 2 s_\theta(x, t) \right) dt - \sqrt{\beta(t)} dw\) or \(x_{t-1} =x_{t} +\frac{1}{2} \beta(t) \left(  x +  s_\theta(x, t) \right) dt\)  |$x_{t-1} = \frac{1}{\sqrt{\alpha_t}} \left( x_t - \frac{1 - \alpha_t}{\sqrt{1 - \bar{\alpha}_t}} \epsilon_\theta(x_t, t) \right) + \sigma_t z$|
 
 ## Network Output: Noise Prediction vs. Score
-In practice, DDPM commonly trains a network to predict the added noise $\epsilon$ rather than directly predicting $\nabla_x \log p(x_t)$. However, there is a **simple linear relation**  between $\epsilon$ and the score. Therefore:
+In practice, DDPM commonly trains a network to predict the added noise $\epsilon$ rather than directly predicting $\nabla_x \log p(x_t)$ for better stability or convergence rage. However, there is a **simple linear relation**  between $\epsilon$ and the score. Therefore:
 
 1. **Predicting noise**  and **predicting the score**  are *equivalent* in mathematical terms.
 
