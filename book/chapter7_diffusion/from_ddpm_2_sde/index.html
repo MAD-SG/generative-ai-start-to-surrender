@@ -2679,6 +2679,16 @@ dx = \left[-\frac{1}{2}\beta(t)x + \frac{\beta(t)}{\sqrt{1-\bar{\alpha}(t)}}\,\e
 <td><span class="arithmatex">\(dx = - \frac{1}{2} \beta(t)\left( x + s_\theta(x, t) \right) dt\)</span></td>
 <td>Na</td>
 </tr>
+<tr>
+<td>loss</td>
+<td><span class="arithmatex">\(\mathbb{E}_{t, x_0, \epsilon} \left[ \lambda_t \|s_\theta(x_t, t) + \frac{\epsilon_\theta(x,t)}{\sqrt{1-\alpha_t}} \|^2 \right] \)</span></td>
+<td><span class="arithmatex">\(\mathbb{E}_{t,x_0,\epsilon} \left[\| \epsilon_\theta(x,t) - \epsilon\|^2\right] \)</span></td>
+</tr>
+<tr>
+<td>score function</td>
+<td><span class="arithmatex">\(-\frac{\epsilon}{\sqrt{1-\alpha_t}}\)</span></td>
+<td></td>
+</tr>
 </tbody>
 </table>
 <h2 id="5-network-output-noise-prediction-vs-score">5. Network Output: Noise Prediction vs. Score<a class="headerlink" href="#5-network-output-noise-prediction-vs-score" title="Permanent link">&para;</a></h2>
