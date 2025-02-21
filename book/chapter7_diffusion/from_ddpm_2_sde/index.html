@@ -1535,7 +1535,7 @@
             
   
   <span class="md-ellipsis">
-    Continuous Diffusion
+    SDE Diffusion
   </span>
   
 
@@ -1545,7 +1545,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_7_2">
             <span class="md-nav__icon md-icon"></span>
-            Continuous Diffusion
+            SDE Diffusion
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1707,46 +1707,55 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#4-network-output-noise-prediction-vs-score" class="md-nav__link">
+  <a href="#4-summary-of-correspondence" class="md-nav__link">
     <span class="md-ellipsis">
-      4. Network Output: Noise Prediction vs. Score
+      4. Summary of Correspondence
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#5-appendix" class="md-nav__link">
+  <a href="#5-network-output-noise-prediction-vs-score" class="md-nav__link">
     <span class="md-ellipsis">
-      5. Appendix
+      5. Network Output: Noise Prediction vs. Score
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="5. Appendix">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-appendix" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Appendix
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Appendix">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#51-what-is-the-fokkerplanck-equation" class="md-nav__link">
+  <a href="#61-what-is-the-fokkerplanck-equation" class="md-nav__link">
     <span class="md-ellipsis">
-      5.1 What is the Fokker–Planck Equation?
+      6.1 What is the Fokker–Planck Equation?
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#52-when-does-the-probability-follow-the-fokkerplanck-equation" class="md-nav__link">
+  <a href="#62-when-does-the-probability-follow-the-fokkerplanck-equation" class="md-nav__link">
     <span class="md-ellipsis">
-      5.2 When Does the Probability Follow the Fokker–Planck Equation?
+      6.2 When Does the Probability Follow the Fokker–Planck Equation?
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#53-intuitive-interpretation-of-drift-and-diffusion-in-the-fokkerplanck-equation" class="md-nav__link">
+  <a href="#63-intuitive-interpretation-of-drift-and-diffusion-in-the-fokkerplanck-equation" class="md-nav__link">
     <span class="md-ellipsis">
-      5.3 Intuitive Interpretation of Drift and Diffusion in the Fokker–Planck Equation
+      6.3 Intuitive Interpretation of Drift and Diffusion in the Fokker–Planck Equation
     </span>
   </a>
   
@@ -2492,13 +2501,11 @@ Often, <span class="arithmatex">\(\beta_i\)</span> is chosen according to a sche
 $$
 we can represent <span class="arithmatex">\(\epsilon_i\)</span> as the sum of <span class="arithmatex">\(M\)</span> smaller Gaussians of variance <span class="arithmatex">\(\beta_i/M\)</span>. In other words, we can rewrite that same update with <span class="arithmatex">\(M\)</span> micro-steps, each of which has variance <span class="arithmatex">\(\beta_i/M\)</span>. Because Gaussians are closed under convolution, <span class="arithmatex">\(M\)</span> small steps or <span class="arithmatex">\(1\)</span> big step produce the <em>same</em> marginal distribution for <span class="arithmatex">\(x_i\)</span>.
 When <span class="arithmatex">\(M \to \infty\)</span>, each micro-step becomes infinitesimally small. Hence, we can imagine the entire forward diffusion as a limit of infinitely many tiny Gaussian increments. This viewpoint paves the way to interpret the forward process as a stochastic differential equation.</p>
+<p>In other point of view, since we want to get the continuous format by taking the <span class="arithmatex">\(N\)</span> tends to infinity, corresponds the increment of <span class="arithmatex">\(x_t\)</span> be infenitesimal, which also requires that <span class="arithmatex">\(\beta_i \to 0\)</span>. In this sense, we have enough confidence to assume that</p>
+<div class="arithmatex">\[\tag{1}\boxed{\beta_i = \beta(t_i)\Delta t},\quad \beta(x): X \to \mathbb{R^+}\]</div>
 <h3 id="33-from-discrete-updates-to-a-continuous-sde">3.3 From Discrete Updates to a Continuous SDE<a class="headerlink" href="#33-from-discrete-updates-to-a-continuous-sde" title="Permanent link">&para;</a></h3>
 <h4 id="331-mapping-steps-to-time">3.3.1 Mapping Steps to Time<a class="headerlink" href="#331-mapping-steps-to-time" title="Permanent link">&para;</a></h4>
-<p>Let the total diffusion run over time <span class="arithmatex">\(t \in [0,1]\)</span>, with discrete steps <span class="arithmatex">\(t_i = i/N\)</span>. Denote <span class="arithmatex">\(\Delta t = 1/N\)</span>. Suppose we set</p>
-<div class="arithmatex">\[
- \beta_i \;\approx\; \beta(t_i)\,\Delta t,
-\]</div>
-<p>where <span class="arithmatex">\(\beta(\cdot)\)</span> is some bounded nonnegative function on <span class="arithmatex">\([0,1]\)</span>.</p>
+<p>Let the total diffusion run over time <span class="arithmatex">\(t \in [0,1]\)</span>, with discrete steps <span class="arithmatex">\(t_i = i/N\)</span>. Denote <span class="arithmatex">\(\Delta t = 1/N\)</span></p>
 <h4 id="332-taylor-expansion-argument">3.3.2 Taylor Expansion Argument<a class="headerlink" href="#332-taylor-expansion-argument" title="Permanent link">&para;</a></h4>
 <p>Consider one discrete step:</p>
 <div class="arithmatex">\[
@@ -2626,7 +2633,55 @@ x(t-\Delta t) &amp;\approx \Bigl(1+\tfrac{1}{2}\beta(t)\Delta t\Bigr)\left(x(t) 
 <div class="arithmatex">\[
 dx = \left[-\frac{1}{2}\beta(t)x + \frac{\beta(t)}{\sqrt{1-\bar{\alpha}(t)}}\,\epsilon_\theta(x,t)\right]dt + \sqrt{\beta(t)}\,d\bar{w}.
 \]</div>
-<h2 id="4-network-output-noise-prediction-vs-score">4. Network Output: Noise Prediction vs. Score<a class="headerlink" href="#4-network-output-noise-prediction-vs-score" title="Permanent link">&para;</a></h2>
+<h2 id="4-summary-of-correspondence">4. Summary of Correspondence<a class="headerlink" href="#4-summary-of-correspondence" title="Permanent link">&para;</a></h2>
+<p>In the continuous format, we name it as <mark>VP-SDE</mark>, refer <a href="../score_based_sde/">score based SDE</a> for more details.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>VP-SDE (Continuous)</th>
+<th>DDPM (Discrete)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(x_t\)</span></td>
+<td><span class="arithmatex">\(x_t = \sqrt{\alpha_t} x_0 + \sqrt{1 - \alpha_t} \epsilon\)</span></td>
+<td><span class="arithmatex">\(x_t = \sqrt{\bar{\alpha}_t} x_0 + \sqrt{1 - \bar{\alpha}_t} \epsilon\)</span></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\alpha_t\)</span></td>
+<td><span class="arithmatex">\(\alpha_t = e^{-\int_0^t \beta(s) ds}\)</span></td>
+<td><span class="arithmatex">\(\bar{\alpha}_t = \prod_{s=1}^{t} (1 - \beta_s)\)</span></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\beta_t\)</span></td>
+<td><span class="arithmatex">\(\beta_t^{\text{VP-SDE}} = d(-\log \alpha_t) / dt\)</span></td>
+<td><span class="arithmatex">\(\beta_t^{\text{DDPM}} \approx \beta_t^{\text{VP-SDE}} \Delta t\)</span></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\sigma_t\)</span></td>
+<td><span class="arithmatex">\(\sigma_t =\sqrt{ 1 - \alpha_t}\)</span></td>
+<td><span class="arithmatex">\(\sigma_t =\sqrt{1 - \bar{\alpha}_t}\)</span></td>
+</tr>
+<tr>
+<td>forward</td>
+<td><span class="arithmatex">\(dx = -\frac{1}{2} \beta(t) x dt + \sqrt{\beta(t)} dw\)</span></td>
+<td><span class="arithmatex">\(x_t = \sqrt{1 - \beta_t} x_{t-1} + \sqrt{\beta_t} \epsilon\)</span></td>
+</tr>
+<tr>
+<td>backward</td>
+<td><span class="arithmatex">\(dx = -\frac{1}{2} \beta(t) \left(  x + 2 s_\theta(x, t) \right) dt + \sqrt{\beta(t)} dw\)</span></td>
+<td><span class="arithmatex">\(x_{t-1} = \frac{1}{\sqrt{\alpha_t}} \left( x_t - \frac{1 - \alpha_t}{\sqrt{1 - \bar{\alpha}_t}} \epsilon_\theta(x_t, t) \right) + \sigma_t z\)</span></td>
+</tr>
+<tr>
+<td>Flow ODE</td>
+<td><span class="arithmatex">\(dx = - \frac{1}{2} \beta(t)\left( x + s_\theta(x, t) \right) dt + \sqrt{\beta(t)} dw\)</span></td>
+<td>Na</td>
+</tr>
+</tbody>
+</table>
+<h2 id="5-network-output-noise-prediction-vs-score">5. Network Output: Noise Prediction vs. Score<a class="headerlink" href="#5-network-output-noise-prediction-vs-score" title="Permanent link">&para;</a></h2>
 <p>In practice, DDPM commonly trains a network to predict the added noise <span class="arithmatex">\(\epsilon\)</span> rather than directly predicting <span class="arithmatex">\(\nabla_x \log p(x_t)\)</span>. However, there is a <strong>simple linear relation</strong>  between <span class="arithmatex">\(\epsilon\)</span> and the score. Therefore:</p>
 <ol>
 <li>
@@ -2711,8 +2766,8 @@ dx = \left[-\frac{1}{2}\beta(t)x + \frac{\beta(t)}{\sqrt{1-\bar{\alpha}(t)}}\,\e
 <li><strong>Score-based prediction</strong> is used in <strong>continuous-time models</strong>.</li>
 <li><strong>EBMs</strong> provide an alternative <strong>energy-based formulation</strong>.</li>
 </ul>
-<h2 id="5-appendix">5. Appendix<a class="headerlink" href="#5-appendix" title="Permanent link">&para;</a></h2>
-<h3 id="51-what-is-the-fokkerplanck-equation">5.1 What is the Fokker–Planck Equation?<a class="headerlink" href="#51-what-is-the-fokkerplanck-equation" title="Permanent link">&para;</a></h3>
+<h2 id="6-appendix">6. Appendix<a class="headerlink" href="#6-appendix" title="Permanent link">&para;</a></h2>
+<h3 id="61-what-is-the-fokkerplanck-equation">6.1 What is the Fokker–Planck Equation?<a class="headerlink" href="#61-what-is-the-fokkerplanck-equation" title="Permanent link">&para;</a></h3>
 <p>Put simply, the Fokker–Planck equation describes how the <em>probability density function</em> (PDF) of a stochastic (random) process evolves over time. More formally, if we let <span class="arithmatex">\(p(x,t)\)</span> be the probability density of finding the system in state <span class="arithmatex">\(x\)</span> at time <span class="arithmatex">\(t\)</span>, the Fokker–Planck equation reads:</p>
 <div class="arithmatex">\[
 \frac{\partial p(x,t)}{\partial t} =  \left\lbrace -\frac{\partial}{\partial x} \left[ \mu(x)p(x,t)\right] + \frac{1}{2}\,\frac{\partial^2}{\partial x^2}(\,D(x)\,p(x,t))\right\rbrace
@@ -2732,7 +2787,7 @@ $$
 $$</p>
 <p>This partial differential equation tells us how the probability density changes because of both deterministic drift (<span class="arithmatex">\(v\)</span>) and random diffusion (<span class="arithmatex">\(D\)</span>).</p>
 <hr />
-<h3 id="52-when-does-the-probability-follow-the-fokkerplanck-equation">5.2 When Does the Probability Follow the Fokker–Planck Equation?<a class="headerlink" href="#52-when-does-the-probability-follow-the-fokkerplanck-equation" title="Permanent link">&para;</a></h3>
+<h3 id="62-when-does-the-probability-follow-the-fokkerplanck-equation">6.2 When Does the Probability Follow the Fokker–Planck Equation?<a class="headerlink" href="#62-when-does-the-probability-follow-the-fokkerplanck-equation" title="Permanent link">&para;</a></h3>
 <p>The Fokker–Planck equation is typically valid under these conditions:</p>
 <ol>
 <li>
@@ -2764,9 +2819,9 @@ dX_t = \mu(X_t)\,dt + \sqrt{D(X_t)}\,dW_t,
    In essence, if your system follows an Itô-type (or Stratonovich-type) SDE with drift <span class="arithmatex">\(\mu\)</span> and diffusion coefficient <span class="arithmatex">\(D\)</span>, then the <em>probability density</em> of where that system might be at time <span class="arithmatex">\(t\)</span> will satisfy the Fokker–Planck equation.</p>
 </li>
 </ol>
-<h3 id="53-intuitive-interpretation-of-drift-and-diffusion-in-the-fokkerplanck-equation">5.3 Intuitive Interpretation of Drift and Diffusion in the Fokker–Planck Equation<a class="headerlink" href="#53-intuitive-interpretation-of-drift-and-diffusion-in-the-fokkerplanck-equation" title="Permanent link">&para;</a></h3>
+<h3 id="63-intuitive-interpretation-of-drift-and-diffusion-in-the-fokkerplanck-equation">6.3 Intuitive Interpretation of Drift and Diffusion in the Fokker–Planck Equation<a class="headerlink" href="#63-intuitive-interpretation-of-drift-and-diffusion-in-the-fokkerplanck-equation" title="Permanent link">&para;</a></h3>
 <p>The Fokker–Planck equation is a powerful tool for describing how probability densities evolve over time. In many fields—such as physics, biology, and finance—it is used to capture the interplay between deterministic forces and random fluctuations. This blog post provides an intuitive explanation of the two key components: <strong>drift</strong>  and <strong>diffusion</strong> .</p>
-<h4 id="531-drift-the-deterministic-push">5.3.1 Drift: The Deterministic Push<a class="headerlink" href="#531-drift-the-deterministic-push" title="Permanent link">&para;</a></h4>
+<h4 id="631-drift-the-deterministic-push">6.3.1 Drift: The Deterministic Push<a class="headerlink" href="#631-drift-the-deterministic-push" title="Permanent link">&para;</a></h4>
 <p>In the one-dimensional Fokker–Planck equation, the drift term is commonly written as:</p>
 <div class="arithmatex">\[
  -\frac{\partial}{\partial x}\Big[A(x)P(x,t)\Big]
@@ -2801,7 +2856,7 @@ The spatial derivative <span class="arithmatex">\(\frac{\partial}{\partial x}[A(
 </li>
 </ul>
 <p>This formulation captures how deterministic forces cause a net flow of probability, thereby modifying the local density.</p>
-<h4 id="532-diffusion-the-smoothing-effect-of-random-perturbations">5.3.2 Diffusion: The Smoothing Effect of Random Perturbations<a class="headerlink" href="#532-diffusion-the-smoothing-effect-of-random-perturbations" title="Permanent link">&para;</a></h4>
+<h4 id="632-diffusion-the-smoothing-effect-of-random-perturbations">6.3.2 Diffusion: The Smoothing Effect of Random Perturbations<a class="headerlink" href="#632-diffusion-the-smoothing-effect-of-random-perturbations" title="Permanent link">&para;</a></h4>
 <p>The diffusion term in the Fokker–Planck equation is typically expressed as:
 $$
  \frac{1}{2}\frac{\partial^2}{\partial x^2}\Big[B(x)P(x,t)\Big]
@@ -2828,7 +2883,7 @@ In contrast, in regions where the density is low and the distribution is convex 
 </ul>
 <p>This effect is analogous to a drop of ink spreading on paper: the concentrated ink in the center disperses outward, leading to a more uniform concentration over time. Diffusion thus does not simply lower the density everywhere; rather, it redistributes it, diminishing local extremes to create a smoother overall profile.</p>
 <hr />
-<h5 id="5321-drift-and-diffusion-combined-evolution-of-the-probability-density">5.3.2.1 Drift and Diffusion: Combined Evolution of the Probability Density<a class="headerlink" href="#5321-drift-and-diffusion-combined-evolution-of-the-probability-density" title="Permanent link">&para;</a></h5>
+<h5 id="6321-drift-and-diffusion-combined-evolution-of-the-probability-density">6.3.2.1 Drift and Diffusion: Combined Evolution of the Probability Density<a class="headerlink" href="#6321-drift-and-diffusion-combined-evolution-of-the-probability-density" title="Permanent link">&para;</a></h5>
 <p>In the Fokker–Planck equation, drift and diffusion work together to dictate how the probability density evolves:</p>
 <ul>
 <li>
