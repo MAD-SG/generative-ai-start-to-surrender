@@ -9,7 +9,7 @@
       
       
       
-        <link rel="prev" href="../SDE4_DDPM_DSM/">
+        <link rel="prev" href="../score_based_sde/">
       
       
         <link rel="next" href="../../chapter9_flow_matching/introduction/">
@@ -280,7 +280,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../chapter2_generation_theory/5.1MLE/" class="md-tabs__link">
+        <a href="../../chapter2_generation_theory/mle/" class="md-tabs__link">
           
   
     
@@ -702,7 +702,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../chapter2_generation_theory/5.1MLE/" class="md-nav__link">
+      <a href="../../chapter2_generation_theory/mle/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1288,8 +1288,6 @@
       
         
       
-        
-      
     
     
       
@@ -1334,6 +1332,10 @@
   
     
     
+      
+        
+      
+        
       
         
       
@@ -1442,14 +1444,6 @@
 
               
             
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
               
                 
   
@@ -1475,12 +1469,43 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../general_diffusion_model/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    General Diffusion Model
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
   
     
     
+      
+        
       
         
       
@@ -1503,10 +1528,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_2" checked>
         
           
-          <label class="md-nav__link" for="__nav_7_3" id="__nav_7_3_label" tabindex="">
+          <label class="md-nav__link" for="__nav_7_2" id="__nav_7_2_label" tabindex="">
             
   
   <span class="md-ellipsis">
@@ -1517,8 +1542,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_3_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_7_3">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_7_2">
             <span class="md-nav__icon md-icon"></span>
             Continuous Diffusion
           </label>
@@ -1552,11 +1577,32 @@
   
   
     <li class="md-nav__item">
-      <a href="../SDE4_DDPM_DSM/" class="md-nav__link">
+      <a href="../from_ddpm_2_sde/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
     SDE for DDPM
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../score_based_sde/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Score Based SDE
   </span>
   
 
@@ -1687,6 +1733,30 @@
       8. Experiment
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="8. Experiment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-target-distribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.1 Target Distribution
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-sampling-formula" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.2 sampling formula
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2305,8 +2375,43 @@ dx = \left[ f(x, t) - \frac{1}{2} g^2(t) s_t(x) \right] dt
 </tbody>
 </table>
 <h2 id="8-experiment">8. Experiment<a class="headerlink" href="#8-experiment" title="Permanent link">&para;</a></h2>
-<p><strong>Target Distribution</strong>
-<a class="glightbox" href="../../../images/image-79.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="alt text" src="../../../images/image-79.png" /></a></p>
+<h3 id="81-target-distribution">8.1 Target Distribution<a class="headerlink" href="#81-target-distribution" title="Permanent link">&para;</a></h3>
+<p>The Funnel distribution is defined as follows:</p>
+<ul>
+<li><span class="arithmatex">\( v \sim \mathcal{N}(0, 3^2) \)</span></li>
+<li><span class="arithmatex">\( x \mid v \sim \mathcal{N}\bigl(0, \exp(v)\bigr) \)</span></li>
+</ul>
+<p>Thus, the joint density is given by:</p>
+<div class="arithmatex">\[
+p(x,v) = \frac{1}{3\sqrt{2\pi}} \exp\left(-\frac{v^2}{18}\right)
+\cdot \frac{1}{\sqrt{2\pi\,\exp(v)}} \exp\left(-\frac{x^2}{2\exp(v)}\right)
+\]</div>
+<p><a class="glightbox" href="../../../images/image-79.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="alt text" src="../../../images/image-79.png" /></a></p>
+<h3 id="82-sampling-formula">8.2 sampling formula<a class="headerlink" href="#82-sampling-formula" title="Permanent link">&para;</a></h3>
+<p>Below are the expressions for the original distribution, the Langevin (diffusion) process, the DDPM reverse diffusion SDE, and the corresponding probability flow ODE for DDPM sampling.</p>
+<h4 id="821-langevin-diffusion-expression">8.2.1 Langevin Diffusion Expression<a class="headerlink" href="#821-langevin-diffusion-expression" title="Permanent link">&para;</a></h4>
+<p>In overdamped Langevin dynamics, the update rule for a state <span class="arithmatex">\( z = (x,v) \)</span> is:</p>
+<div class="arithmatex">\[
+z_{t+1} = z_t + \epsilon\,\nabla_z \log p(z_t) + \sqrt{2\epsilon}\,\xi_t,\quad \xi_t \sim \mathcal{N}(0, I)
+\]</div>
+<p>This iterative update gradually moves samples toward the target distribution <span class="arithmatex">\( p(x,v) \)</span>.</p>
+<h4 id="822-ddpm-reverse-diffusion-sde">8.2.2 DDPM Reverse Diffusion SDE<a class="headerlink" href="#822-ddpm-reverse-diffusion-sde" title="Permanent link">&para;</a></h4>
+<p>For a variance-preserving (VP) forward SDE defined as</p>
+<div class="arithmatex">\[
+dx = -\frac{1}{2}\beta(t)x\,dt + \sqrt{\beta(t)}\,dW_t,
+\]</div>
+<p>the reverse-time SDE used for sampling (starting from pure Gaussian noise at <span class="arithmatex">\( t=1 \)</span>) is:</p>
+<div class="arithmatex">\[
+dx = \left[-\frac{1}{2}\beta(t)x - \beta(t)\nabla_x\log p_t(x)\right]\,dt + \sqrt{\beta(t)}\,d\bar{W}_t.
+\]</div>
+<p>Here, <span class="arithmatex">\( \nabla_x\log p_t(x) \)</span> is the score function at time <span class="arithmatex">\( t \)</span>.</p>
+<h4 id="823-ddpm-probability-flow-ode">8.2.3 DDPM Probability Flow ODE<a class="headerlink" href="#823-ddpm-probability-flow-ode" title="Permanent link">&para;</a></h4>
+<p>The deterministic probability flow ODE corresponding to the DDPM SDE is given by:</p>
+<div class="arithmatex">\[
+dx = \left[-\frac{1}{2}\beta(t)x - \frac{1}{2}\beta(t)\nabla_x\log p_t(x)\right]\,dt.
+\]</div>
+<p>Solving this ODE from <span class="arithmatex">\( t=1 \)</span> (Gaussian noise) to <span class="arithmatex">\( t=0 \)</span> yields samples that follow the target distribution.</p>
+<p>These expressions form the basis for diffusion-based generative modeling—from the formulation of the target distribution to sampling via both stochastic reverse diffusion and its deterministic ODE counterpart.</p>
 <p>Sampling by the Langevin Dynamics</p>
 <p><a class="glightbox" href="../../../images/funnel_langevin.gif" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="alt text" src="../../../images/funnel_langevin.gif" /></a></p>
 <p>Now we build a diffusion process that convert the tunnel distribution into the Gaussian distribution in the same way as DDPM</p>
@@ -2419,7 +2524,7 @@ By leveraging Probability Flow ODE, <strong>we gain a powerful tool for determin
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../SDE4_DDPM_DSM/" class="md-footer__link md-footer__link--prev" aria-label="Previous: SDE for DDPM">
+          <a href="../score_based_sde/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Score Based SDE">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2429,7 +2534,7 @@ By leveraging Probability Flow ODE, <strong>we gain a powerful tool for determin
                 Previous
               </span>
               <div class="md-ellipsis">
-                SDE for DDPM
+                Score Based SDE
               </div>
             </div>
           </a>
