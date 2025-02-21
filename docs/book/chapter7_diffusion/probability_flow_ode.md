@@ -648,6 +648,12 @@ $$
 \mathbb{E}_{t, x_0, \epsilon} \left[ \lambda_t \left\| s_{\theta}(x_t, t) + \frac{\epsilon}{\sigma_t} \right\|^2 \right]
 $$
 
+##### Sampling Results
+
+|![alt text](../../images/ve_sde.gif)|![alt text](../../images/vp_sde_sampling.gif)| ![alt text](../../images/vp_ode_sampling.gif)| ![](../../images/ddpm_sde.gif)|
+| :-----------------------: | :-----------------------: | :-----------------------: |:---:|
+|ve-sde||||
+
 ## Conclusion
 
 - **Every SDE can be converted into a Probability Flow ODE.**
