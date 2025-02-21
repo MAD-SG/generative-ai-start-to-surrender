@@ -2689,10 +2689,15 @@ dx = \left[-\frac{1}{2}\beta(t)x + \frac{\beta(t)}{\sqrt{1-\bar{\alpha}(t)}}\,\e
 <td><span class="arithmatex">\(-\frac{\epsilon}{\sqrt{1-\alpha_t}}\)</span></td>
 <td></td>
 </tr>
+<tr>
+<td>Reverse Sampling</td>
+<td><span class="arithmatex">\(x_{t-1} =x_{t} +\frac{1}{2} \beta(t) \left(  x + 2 s_\theta(x, t) \right) dt - \sqrt{\beta(t)} dw\)</span> or <span class="arithmatex">\(x_{t-1} =x_{t} +\frac{1}{2} \beta(t) \left(  x +  s_\theta(x, t) \right) dt\)</span></td>
+<td><span class="arithmatex">\(x_{t-1} = \frac{1}{\sqrt{\alpha_t}} \left( x_t - \frac{1 - \alpha_t}{\sqrt{1 - \bar{\alpha}_t}} \epsilon_\theta(x_t, t) \right) + \sigma_t z\)</span></td>
+</tr>
 </tbody>
 </table>
 <h2 id="5-network-output-noise-prediction-vs-score">5. Network Output: Noise Prediction vs. Score<a class="headerlink" href="#5-network-output-noise-prediction-vs-score" title="Permanent link">&para;</a></h2>
-<p>In practice, DDPM commonly trains a network to predict the added noise <span class="arithmatex">\(\epsilon\)</span> rather than directly predicting <span class="arithmatex">\(\nabla_x \log p(x_t)\)</span>. However, there is a <strong>simple linear relation</strong>  between <span class="arithmatex">\(\epsilon\)</span> and the score. Therefore:</p>
+<p>In practice, DDPM commonly trains a network to predict the added noise <span class="arithmatex">\(\epsilon\)</span> rather than directly predicting <span class="arithmatex">\(\nabla_x \log p(x_t)\)</span> for better stability or convergence rage. However, there is a <strong>simple linear relation</strong>  between <span class="arithmatex">\(\epsilon\)</span> and the score. Therefore:</p>
 <ol>
 <li>
 <p><strong>Predicting noise</strong>  and <strong>predicting the score</strong>  are <em>equivalent</em> in mathematical terms.</p>

@@ -1755,6 +1755,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#83-results-on-different-sampling-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.3 Results on different sampling methods
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2201,7 +2210,6 @@ This post will:</p>
 <p><strong>Give a Python implementation for deterministic sampling</strong></p>
 </li>
 </ul>
-<hr />
 <h2 id="2-what-is-an-sde-based-generative-model">2. What is an SDE-Based Generative Model?<a class="headerlink" href="#2-what-is-an-sde-based-generative-model" title="Permanent link">&para;</a></h2>
 <p>A <strong>stochastic differential equation (SDE)</strong>  is used to describe how data evolves over time:</p>
 <div class="arithmatex">\[
@@ -2387,6 +2395,36 @@ p(x,v) = \frac{1}{3\sqrt{2\pi}} \exp\left(-\frac{v^2}{18}\right)
 \cdot \frac{1}{\sqrt{2\pi\,\exp(v)}} \exp\left(-\frac{x^2}{2\exp(v)}\right)
 \]</div>
 <p><a class="glightbox" href="../../../images/image-79.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="alt text" src="../../../images/image-79.png" /></a></p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-1-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-1-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-1-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-1-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-1-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-1-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-1-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-1-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-1-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-1-10">10</a></span>
+<span class="normal"><a href="#__codelineno-1-11">11</a></span>
+<span class="normal"><a href="#__codelineno-1-12">12</a></span>
+<span class="normal"><a href="#__codelineno-1-13">13</a></span>
+<span class="normal"><a href="#__codelineno-1-14">14</a></span>
+<span class="normal"><a href="#__codelineno-1-15">15</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="kn">import</span> <span class="nn">torch</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2"></a><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3"></a><span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4"></a><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">make_swiss_roll</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5"></a><span class="k">def</span> <span class="nf">sample_funnel_data</span><span class="p">(</span><span class="n">num_samples</span><span class="o">=</span><span class="mi">10000</span><span class="p">):</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7"></a><span class="sd">    从简化 2D funnel 分布中采样:</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8"></a><span class="sd">    z ~ N(0, 1)</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9"></a><span class="sd">    x ~ N(0, exp(z))</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10"></a><span class="sd">    返回 shape: (num_samples, 2)</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12"></a>    <span class="n">z</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">num_samples</span><span class="p">)</span><span class="o">*</span><span class="mf">0.8</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13"></a>    <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">num_samples</span><span class="p">)</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">z</span> <span class="p">)</span><span class="o">/</span><span class="mi">5</span>  <span class="c1"># exp(z/2) 的方差 = exp(z)</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14"></a>    <span class="n">data</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">x</span><span class="p">,</span><span class="n">z</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># shape [num_samples, 2]</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15"></a>    <span class="k">return</span> <span class="n">data</span>
+</code></pre></div></td></tr></table></div>
 <h3 id="82-sampling-formula">8.2 sampling formula<a class="headerlink" href="#82-sampling-formula" title="Permanent link">&para;</a></h3>
 <p>Below are the expressions for the original distribution, the Langevin (diffusion) process, the DDPM reverse diffusion SDE, and the corresponding probability flow ODE for DDPM sampling.</p>
 <h4 id="821-langevin-diffusion-expression">8.2.1 Langevin Diffusion Expression<a class="headerlink" href="#821-langevin-diffusion-expression" title="Permanent link">&para;</a></h4>
@@ -2412,13 +2450,691 @@ dx = \left[-\frac{1}{2}\beta(t)x - \frac{1}{2}\beta(t)\nabla_x\log p_t(x)\right]
 \]</div>
 <p>Solving this ODE from <span class="arithmatex">\( t=1 \)</span> (Gaussian noise) to <span class="arithmatex">\( t=0 \)</span> yields samples that follow the target distribution.</p>
 <p>These expressions form the basis for diffusion-based generative modeling—from the formulation of the target distribution to sampling via both stochastic reverse diffusion and its deterministic ODE counterpart.</p>
-<p>Sampling by the Langevin Dynamics</p>
-<p><a class="glightbox" href="../../../images/funnel_langevin.gif" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="alt text" src="../../../images/funnel_langevin.gif" /></a></p>
-<p>Now we build a diffusion process that convert the tunnel distribution into the Gaussian distribution in the same way as DDPM</p>
-<p>sampling with DDPM inverse SDE
-<a class="glightbox" href="../../../images/ddpm_reverse_sde_sampling.gif" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="alt text" src="../../../images/ddpm_reverse_sde_sampling.gif" /></a></p>
-<p>Sampling with Probability Flow ODE
-<a class="glightbox" href="../../../images/ode_sampling_funnel.gif" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="alt text" src="../../../images/ode_sampling_funnel.gif" /></a></p>
+<h3 id="83-results-on-different-sampling-methods">8.3 Results on different sampling methods<a class="headerlink" href="#83-results-on-different-sampling-methods" title="Permanent link">&para;</a></h3>
+<h4 id="831-vp-sde">8.3.1 VP-SDE<a class="headerlink" href="#831-vp-sde" title="Permanent link">&para;</a></h4>
+<h5 id="8311-sampling-annimation">8.3.1.1 Sampling Annimation<a class="headerlink" href="#8311-sampling-annimation" title="Permanent link">&para;</a></h5>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;"><a class="glightbox" href="../../../images/langervin_annitation.gif" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="alt text" src="../../../images/langervin_annitation.gif" /></a></th>
+<th style="text-align: center;"><a class="glightbox" href="../../../images/vp_sde_sampling.gif" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="alt text" src="../../../images/vp_sde_sampling.gif" /></a></th>
+<th style="text-align: center;"><a class="glightbox" href="../../../images/vp_ode_sampling.gif" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="alt text" src="../../../images/vp_ode_sampling.gif" /></a></th>
+<th style="text-align: center;"><a class="glightbox" href="../../../images/ddpm_sde.gif" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="../../../images/ddpm_sde.gif" /></a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">Langervin Dynamic</td>
+<td style="text-align: center;">VP-SDE</td>
+<td style="text-align: center;">VP-SDE FLow ODE</td>
+<td style="text-align: center;">DDPM</td>
+</tr>
+</tbody>
+</table>
+<h5 id="8312-codes">8.3.1.2 Codes<a class="headerlink" href="#8312-codes" title="Permanent link">&para;</a></h5>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:6"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><input id="__tabbed_1_4" name="__tabbed_1" type="radio" /><input id="__tabbed_1_5" name="__tabbed_1" type="radio" /><input id="__tabbed_1_6" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">ddpm</label><label for="__tabbed_1_2">VP-SDE training</label><label for="__tabbed_1_3">VP-SDE sampling</label><label for="__tabbed_1_4">VP-SDE FLOW ODE sampling</label><label for="__tabbed_1_5">Langervin Dynamic sampling</label><label for="__tabbed_1_6">make annimation</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">ddpm training and sampling</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-2-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-2-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-2-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-2-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-2-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-2-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-2-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-2-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-2-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-2-10">10</a></span>
+<span class="normal"><a href="#__codelineno-2-11">11</a></span>
+<span class="normal"><a href="#__codelineno-2-12">12</a></span>
+<span class="normal"><a href="#__codelineno-2-13">13</a></span>
+<span class="normal"><a href="#__codelineno-2-14">14</a></span>
+<span class="normal"><a href="#__codelineno-2-15">15</a></span>
+<span class="normal"><a href="#__codelineno-2-16">16</a></span>
+<span class="normal"><a href="#__codelineno-2-17">17</a></span>
+<span class="normal"><a href="#__codelineno-2-18">18</a></span>
+<span class="normal"><a href="#__codelineno-2-19">19</a></span>
+<span class="normal"><a href="#__codelineno-2-20">20</a></span>
+<span class="normal"><a href="#__codelineno-2-21">21</a></span>
+<span class="normal"><a href="#__codelineno-2-22">22</a></span>
+<span class="normal"><a href="#__codelineno-2-23">23</a></span>
+<span class="normal"><a href="#__codelineno-2-24">24</a></span>
+<span class="normal"><a href="#__codelineno-2-25">25</a></span>
+<span class="normal"><a href="#__codelineno-2-26">26</a></span>
+<span class="normal"><a href="#__codelineno-2-27">27</a></span>
+<span class="normal"><a href="#__codelineno-2-28">28</a></span>
+<span class="normal"><a href="#__codelineno-2-29">29</a></span>
+<span class="normal"><a href="#__codelineno-2-30">30</a></span>
+<span class="normal"><a href="#__codelineno-2-31">31</a></span>
+<span class="normal"><a href="#__codelineno-2-32">32</a></span>
+<span class="normal"><a href="#__codelineno-2-33">33</a></span>
+<span class="normal"><a href="#__codelineno-2-34">34</a></span>
+<span class="normal"><a href="#__codelineno-2-35">35</a></span>
+<span class="normal"><a href="#__codelineno-2-36">36</a></span>
+<span class="normal"><a href="#__codelineno-2-37">37</a></span>
+<span class="normal"><a href="#__codelineno-2-38">38</a></span>
+<span class="normal"><a href="#__codelineno-2-39">39</a></span>
+<span class="normal"><a href="#__codelineno-2-40">40</a></span>
+<span class="normal"><a href="#__codelineno-2-41">41</a></span>
+<span class="normal"><a href="#__codelineno-2-42">42</a></span>
+<span class="normal"><a href="#__codelineno-2-43">43</a></span>
+<span class="normal"><a href="#__codelineno-2-44">44</a></span>
+<span class="normal"><a href="#__codelineno-2-45">45</a></span>
+<span class="normal"><a href="#__codelineno-2-46">46</a></span>
+<span class="normal"><a href="#__codelineno-2-47">47</a></span>
+<span class="normal"><a href="#__codelineno-2-48">48</a></span>
+<span class="normal"><a href="#__codelineno-2-49">49</a></span>
+<span class="normal"><a href="#__codelineno-2-50">50</a></span>
+<span class="normal"><a href="#__codelineno-2-51">51</a></span>
+<span class="normal"><a href="#__codelineno-2-52">52</a></span>
+<span class="normal"><a href="#__codelineno-2-53">53</a></span>
+<span class="normal"><a href="#__codelineno-2-54">54</a></span>
+<span class="normal"><a href="#__codelineno-2-55">55</a></span>
+<span class="normal"><a href="#__codelineno-2-56">56</a></span>
+<span class="normal"><a href="#__codelineno-2-57">57</a></span>
+<span class="normal"><a href="#__codelineno-2-58">58</a></span>
+<span class="normal"><a href="#__codelineno-2-59">59</a></span>
+<span class="normal"><a href="#__codelineno-2-60">60</a></span>
+<span class="normal"><a href="#__codelineno-2-61">61</a></span>
+<span class="normal"><a href="#__codelineno-2-62">62</a></span>
+<span class="normal"><a href="#__codelineno-2-63">63</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="kn">import</span> <span class="nn">torch</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3"></a><span class="k">class</span> <span class="nc">DiffusionBlock</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4"></a>    <span class="k">def</span> <span class="o">**</span><span class="n">init</span><span class="o">**</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nunits</span><span class="p">):</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5"></a>        <span class="nb">super</span><span class="p">(</span><span class="n">DiffusionBlock</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.**</span><span class="n">init</span><span class="o">**</span><span class="p">()</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">linear</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">nunits</span><span class="p">,</span> <span class="n">nunits</span><span class="p">)</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7"></a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8"></a>        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9"></a>        <span class="n">x</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10"></a>        <span class="k">return</span> <span class="n">x</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11"></a><span class="k">class</span> <span class="nc">DiffusionModel</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12"></a>    <span class="k">def</span> <span class="o">**</span><span class="n">init</span><span class="o">**</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nfeatures</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">nblocks</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">nunits</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">64</span><span class="p">):</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13"></a>        <span class="nb">super</span><span class="p">(</span><span class="n">DiffusionModel</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.**</span><span class="n">init</span><span class="o">**</span><span class="p">()</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">inblock</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">nfeatures</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">nunits</span><span class="p">)</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">midblocks</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">([</span><span class="n">DiffusionBlock</span><span class="p">(</span><span class="n">nunits</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nblocks</span><span class="p">)])</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">outblock</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">nunits</span><span class="p">,</span> <span class="n">nfeatures</span><span class="p">)</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17"></a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18"></a>        <span class="n">val</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">])</span>  <span class="c1"># Add t to inputs</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19"></a>        <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inblock</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20"></a>        <span class="k">for</span> <span class="n">midblock</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">midblocks</span><span class="p">:</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21"></a>            <span class="n">val</span> <span class="o">=</span> <span class="n">midblock</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22"></a>        <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outblock</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23"></a>        <span class="k">return</span> <span class="n">val</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24"></a><span class="n">model</span> <span class="o">=</span> <span class="n">DiffusionModel</span><span class="p">(</span><span class="n">nfeatures</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">nblocks</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25"></a><span class="n">device</span> <span class="o">=</span> <span class="s2">&quot;cuda&quot;</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26"></a><span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+<a id="__codelineno-2-27" name="__codelineno-2-27"></a><span class="kn">import</span> <span class="nn">torch.optim</span> <span class="k">as</span> <span class="nn">optim</span>
+<a id="__codelineno-2-28" name="__codelineno-2-28"></a><span class="n">nepochs</span> <span class="o">=</span> <span class="mi">100</span>
+<a id="__codelineno-2-29" name="__codelineno-2-29"></a><span class="n">batch_size</span> <span class="o">=</span> <span class="mi">2048</span>
+<a id="__codelineno-2-30" name="__codelineno-2-30"></a><span class="n">loss_fn</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">()</span>
+<a id="__codelineno-2-31" name="__codelineno-2-31"></a><span class="n">optimizer</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.001</span><span class="p">)</span>
+<a id="__codelineno-2-32" name="__codelineno-2-32"></a><span class="n">scheduler</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">lr_scheduler</span><span class="o">.</span><span class="n">LinearLR</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">start_factor</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">end_factor</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">total_iters</span><span class="o">=</span><span class="n">nepochs</span><span class="p">)</span>
+<a id="__codelineno-2-33" name="__codelineno-2-33"></a><span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nepochs</span><span class="p">):</span>
+<a id="__codelineno-2-34" name="__codelineno-2-34"></a>    <span class="n">epoch_loss</span> <span class="o">=</span> <span class="n">steps</span> <span class="o">=</span> <span class="mi">0</span>
+<a id="__codelineno-2-35" name="__codelineno-2-35"></a>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">batch_size</span><span class="p">):</span>
+<a id="__codelineno-2-36" name="__codelineno-2-36"></a>        <span class="n">Xbatch</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">batch_size</span><span class="p">]</span>
+<a id="__codelineno-2-37" name="__codelineno-2-37"></a>        <span class="n">timesteps</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">diffusion_steps</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">Xbatch</span><span class="p">),</span> <span class="mi">1</span><span class="p">])</span>
+<a id="__codelineno-2-38" name="__codelineno-2-38"></a>        <span class="n">noised</span><span class="p">,</span> <span class="n">eps</span> <span class="o">=</span> <span class="n">noise</span><span class="p">(</span><span class="n">Xbatch</span><span class="p">,</span> <span class="n">timesteps</span><span class="p">)</span>
+<a id="__codelineno-2-39" name="__codelineno-2-39"></a>        <span class="n">predicted_noise</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">noised</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">),</span> <span class="n">timesteps</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">))</span>
+<a id="__codelineno-2-40" name="__codelineno-2-40"></a>        <span class="n">loss</span> <span class="o">=</span> <span class="n">loss_fn</span><span class="p">(</span><span class="n">predicted_noise</span><span class="p">,</span> <span class="n">eps</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">))</span>
+<a id="__codelineno-2-41" name="__codelineno-2-41"></a>        <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+<a id="__codelineno-2-42" name="__codelineno-2-42"></a>        <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+<a id="__codelineno-2-43" name="__codelineno-2-43"></a>        <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+<a id="__codelineno-2-44" name="__codelineno-2-44"></a>        <span class="n">epoch_loss</span> <span class="o">+=</span> <span class="n">loss</span>
+<a id="__codelineno-2-45" name="__codelineno-2-45"></a>        <span class="n">steps</span> <span class="o">+=</span> <span class="mi">1</span>
+<a id="__codelineno-2-46" name="__codelineno-2-46"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Epoch </span><span class="si">{</span><span class="n">epoch</span><span class="si">}</span><span class="s2"> loss = </span><span class="si">{</span><span class="n">epoch_loss</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">steps</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-2-47" name="__codelineno-2-47"></a><span class="k">def</span> <span class="nf">sample_ddpm</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">nsamples</span><span class="p">,</span> <span class="n">nfeatures</span><span class="p">):</span>
+<a id="__codelineno-2-48" name="__codelineno-2-48"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Sampler following the Denoising Diffusion Probabilistic Models method by Ho et al (Algorithm 2)&quot;&quot;&quot;</span>
+<a id="__codelineno-2-49" name="__codelineno-2-49"></a>    <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+<a id="__codelineno-2-50" name="__codelineno-2-50"></a>        <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">nsamples</span><span class="p">,</span> <span class="n">nfeatures</span><span class="p">))</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+<a id="__codelineno-2-51" name="__codelineno-2-51"></a>        <span class="n">xt</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span>
+<a id="__codelineno-2-52" name="__codelineno-2-52"></a>        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">diffusion_steps</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+<a id="__codelineno-2-53" name="__codelineno-2-53"></a>            <span class="n">predicted_noise</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">full</span><span class="p">([</span><span class="n">nsamples</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">t</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">))</span>
+<a id="__codelineno-2-54" name="__codelineno-2-54"></a>            <span class="c1"># See DDPM paper between equations 11 and 12</span>
+<a id="__codelineno-2-55" name="__codelineno-2-55"></a>            <span class="n">x</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">alphas</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">**</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alphas</span><span class="p">[</span><span class="n">t</span><span class="p">])</span> <span class="o">/</span> <span class="p">((</span><span class="mi">1</span><span class="o">-</span><span class="n">baralphas</span><span class="p">[</span><span class="n">t</span><span class="p">])</span> <span class="o">**</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="n">predicted_noise</span><span class="p">)</span>
+<a id="__codelineno-2-56" name="__codelineno-2-56"></a>            <span class="k">if</span> <span class="n">t</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+<a id="__codelineno-2-57" name="__codelineno-2-57"></a>                <span class="c1"># See DDPM paper section 3.2.</span>
+<a id="__codelineno-2-58" name="__codelineno-2-58"></a>                <span class="c1"># Choosing the variance through beta_t is optimal for x_0 a normal distribution</span>
+<a id="__codelineno-2-59" name="__codelineno-2-59"></a>                <span class="n">variance</span> <span class="o">=</span> <span class="n">betas</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>
+<a id="__codelineno-2-60" name="__codelineno-2-60"></a>                <span class="n">std</span> <span class="o">=</span> <span class="n">variance</span> <span class="o">**</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+<a id="__codelineno-2-61" name="__codelineno-2-61"></a>                <span class="n">x</span> <span class="o">+=</span> <span class="n">std</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">nsamples</span><span class="p">,</span> <span class="n">nfeatures</span><span class="p">))</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+<a id="__codelineno-2-62" name="__codelineno-2-62"></a>            <span class="n">xt</span> <span class="o">+=</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span>
+<a id="__codelineno-2-63" name="__codelineno-2-63"></a>        <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">xt</span>
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">VP-SDE training</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-3-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-3-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-3-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-3-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-3-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-3-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-3-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-3-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-3-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-3-10">10</a></span>
+<span class="normal"><a href="#__codelineno-3-11">11</a></span>
+<span class="normal"><a href="#__codelineno-3-12">12</a></span>
+<span class="normal"><a href="#__codelineno-3-13">13</a></span>
+<span class="normal"><a href="#__codelineno-3-14">14</a></span>
+<span class="normal"><a href="#__codelineno-3-15">15</a></span>
+<span class="normal"><a href="#__codelineno-3-16">16</a></span>
+<span class="normal"><a href="#__codelineno-3-17">17</a></span>
+<span class="normal"><a href="#__codelineno-3-18">18</a></span>
+<span class="normal"><a href="#__codelineno-3-19">19</a></span>
+<span class="normal"><a href="#__codelineno-3-20">20</a></span>
+<span class="normal"><a href="#__codelineno-3-21">21</a></span>
+<span class="normal"><a href="#__codelineno-3-22">22</a></span>
+<span class="normal"><a href="#__codelineno-3-23">23</a></span>
+<span class="normal"><a href="#__codelineno-3-24">24</a></span>
+<span class="normal"><a href="#__codelineno-3-25">25</a></span>
+<span class="normal"><a href="#__codelineno-3-26">26</a></span>
+<span class="normal"><a href="#__codelineno-3-27">27</a></span>
+<span class="normal"><a href="#__codelineno-3-28">28</a></span>
+<span class="normal"><a href="#__codelineno-3-29">29</a></span>
+<span class="normal"><a href="#__codelineno-3-30">30</a></span>
+<span class="normal"><a href="#__codelineno-3-31">31</a></span>
+<span class="normal"><a href="#__codelineno-3-32">32</a></span>
+<span class="normal"><a href="#__codelineno-3-33">33</a></span>
+<span class="normal"><a href="#__codelineno-3-34">34</a></span>
+<span class="normal"><a href="#__codelineno-3-35">35</a></span>
+<span class="normal"><a href="#__codelineno-3-36">36</a></span>
+<span class="normal"><a href="#__codelineno-3-37">37</a></span>
+<span class="normal"><a href="#__codelineno-3-38">38</a></span>
+<span class="normal"><a href="#__codelineno-3-39">39</a></span>
+<span class="normal"><a href="#__codelineno-3-40">40</a></span>
+<span class="normal"><a href="#__codelineno-3-41">41</a></span>
+<span class="normal"><a href="#__codelineno-3-42">42</a></span>
+<span class="normal"><a href="#__codelineno-3-43">43</a></span>
+<span class="normal"><a href="#__codelineno-3-44">44</a></span>
+<span class="normal"><a href="#__codelineno-3-45">45</a></span>
+<span class="normal"><a href="#__codelineno-3-46">46</a></span>
+<span class="normal"><a href="#__codelineno-3-47">47</a></span>
+<span class="normal"><a href="#__codelineno-3-48">48</a></span>
+<span class="normal"><a href="#__codelineno-3-49">49</a></span>
+<span class="normal"><a href="#__codelineno-3-50">50</a></span>
+<span class="normal"><a href="#__codelineno-3-51">51</a></span>
+<span class="normal"><a href="#__codelineno-3-52">52</a></span>
+<span class="normal"><a href="#__codelineno-3-53">53</a></span>
+<span class="normal"><a href="#__codelineno-3-54">54</a></span>
+<span class="normal"><a href="#__codelineno-3-55">55</a></span>
+<span class="normal"><a href="#__codelineno-3-56">56</a></span>
+<span class="normal"><a href="#__codelineno-3-57">57</a></span>
+<span class="normal"><a href="#__codelineno-3-58">58</a></span>
+<span class="normal"><a href="#__codelineno-3-59">59</a></span>
+<span class="normal"><a href="#__codelineno-3-60">60</a></span>
+<span class="normal"><a href="#__codelineno-3-61">61</a></span>
+<span class="normal"><a href="#__codelineno-3-62">62</a></span>
+<span class="normal"><a href="#__codelineno-3-63">63</a></span>
+<span class="normal"><a href="#__codelineno-3-64">64</a></span>
+<span class="normal"><a href="#__codelineno-3-65">65</a></span>
+<span class="normal"><a href="#__codelineno-3-66">66</a></span>
+<span class="normal"><a href="#__codelineno-3-67">67</a></span>
+<span class="normal"><a href="#__codelineno-3-68">68</a></span>
+<span class="normal"><a href="#__codelineno-3-69">69</a></span>
+<span class="normal"><a href="#__codelineno-3-70">70</a></span>
+<span class="normal"><a href="#__codelineno-3-71">71</a></span>
+<span class="normal"><a href="#__codelineno-3-72">72</a></span>
+<span class="normal"><a href="#__codelineno-3-73">73</a></span>
+<span class="normal"><a href="#__codelineno-3-74">74</a></span>
+<span class="normal"><a href="#__codelineno-3-75">75</a></span>
+<span class="normal"><a href="#__codelineno-3-76">76</a></span>
+<span class="normal"><a href="#__codelineno-3-77">77</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="kn">import</span> <span class="nn">torch</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2"></a><span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3"></a><span class="kn">import</span> <span class="nn">torch.optim</span> <span class="k">as</span> <span class="nn">optim</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4"></a><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5"></a><span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6"></a><span class="kn">import</span> <span class="nn">torch</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7"></a><span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8"></a><span class="kn">import</span> <span class="nn">torch.optim</span> <span class="k">as</span> <span class="nn">optim</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9"></a><span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">DataLoader</span><span class="p">,</span> <span class="n">TensorDataset</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10"></a><span class="c1"># Function to generate funnel data</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11"></a><span class="k">def</span> <span class="nf">sample_funnel_data</span><span class="p">(</span><span class="n">num_samples</span><span class="o">=</span><span class="mi">10000</span><span class="p">):</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12"></a>    <span class="n">z</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">num_samples</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.8</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13"></a>    <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">num_samples</span><span class="p">)</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="o">/</span> <span class="mi">5</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14"></a>    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">z</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15"></a><span class="k">class</span> <span class="nc">ScoreModel</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hidden_dims</span><span class="o">=</span><span class="p">[</span><span class="mi">128</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">128</span><span class="p">],</span> <span class="n">embed_dim</span><span class="o">=</span><span class="mi">64</span><span class="p">):</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18"></a>        <span class="c1"># 时间嵌入层</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">embed</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20"></a>            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">embed_dim</span><span class="p">),</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21"></a>            <span class="n">nn</span><span class="o">.</span><span class="n">SiLU</span><span class="p">(),</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22"></a>            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">embed_dim</span><span class="p">,</span> <span class="n">embed_dim</span><span class="p">)</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23"></a>        <span class="p">)</span>
+<a id="__codelineno-3-24" name="__codelineno-3-24"></a>        <span class="c1"># 主干网络</span>
+<a id="__codelineno-3-25" name="__codelineno-3-25"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">net</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">()</span>
+<a id="__codelineno-3-26" name="__codelineno-3-26"></a>        <span class="n">input_dim</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># 输入维度</span>
+<a id="__codelineno-3-27" name="__codelineno-3-27"></a>        <span class="k">for</span> <span class="n">h_dim</span> <span class="ow">in</span> <span class="n">hidden_dims</span><span class="p">:</span>
+<a id="__codelineno-3-28" name="__codelineno-3-28"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">net</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+<a id="__codelineno-3-29" name="__codelineno-3-29"></a>                <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">input_dim</span> <span class="o">+</span> <span class="n">embed_dim</span><span class="p">,</span> <span class="n">h_dim</span><span class="p">),</span>
+<a id="__codelineno-3-30" name="__codelineno-3-30"></a>                <span class="n">nn</span><span class="o">.</span><span class="n">SiLU</span><span class="p">()))</span>
+<a id="__codelineno-3-31" name="__codelineno-3-31"></a>            <span class="n">input_dim</span> <span class="o">=</span> <span class="n">h_dim</span>
+<a id="__codelineno-3-32" name="__codelineno-3-32"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">out</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">input_dim</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># 输出噪声预测</span>
+<a id="__codelineno-3-33" name="__codelineno-3-33"></a>
+<a id="__codelineno-3-34" name="__codelineno-3-34"></a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+<a id="__codelineno-3-35" name="__codelineno-3-35"></a>        <span class="n">t_embed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">embed</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+<a id="__codelineno-3-36" name="__codelineno-3-36"></a>        <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">net</span><span class="p">:</span>
+<a id="__codelineno-3-37" name="__codelineno-3-37"></a>            <span class="n">x</span> <span class="o">=</span> <span class="n">layer</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">t_embed</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+<a id="__codelineno-3-38" name="__codelineno-3-38"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<a id="__codelineno-3-39" name="__codelineno-3-39"></a><span class="c1"># 训练参数</span>
+<a id="__codelineno-3-40" name="__codelineno-3-40"></a><span class="n">beta_min</span><span class="p">,</span> <span class="n">beta_max</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">20.0</span>
+<a id="__codelineno-3-41" name="__codelineno-3-41"></a><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">&#39;cuda&#39;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s1">&#39;cpu&#39;</span><span class="p">)</span>
+<a id="__codelineno-3-42" name="__codelineno-3-42"></a><span class="c1"># device =&#39;cpu&#39;</span>
+<a id="__codelineno-3-43" name="__codelineno-3-43"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ScoreModel</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+<a id="__codelineno-3-44" name="__codelineno-3-44"></a><span class="n">optimizer</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">3e-4</span><span class="p">)</span>
+<a id="__codelineno-3-45" name="__codelineno-3-45"></a><span class="c1"># 准备数据</span>
+<a id="__codelineno-3-46" name="__codelineno-3-46"></a><span class="n">data</span> <span class="o">=</span> <span class="n">sample_funnel_data</span><span class="p">(</span><span class="mi">100000</span><span class="p">)</span>
+<a id="__codelineno-3-47" name="__codelineno-3-47"></a><span class="n">dataset</span> <span class="o">=</span> <span class="n">TensorDataset</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<a id="__codelineno-3-48" name="__codelineno-3-48"></a><span class="n">dataloader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-3-49" name="__codelineno-3-49"></a><span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<a id="__codelineno-3-50" name="__codelineno-3-50"></a><span class="c1"># 训练循环</span>
+<a id="__codelineno-3-51" name="__codelineno-3-51"></a><span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">200</span><span class="p">)):</span>
+<a id="__codelineno-3-52" name="__codelineno-3-52"></a>    <span class="n">total_loss</span> <span class="o">=</span> <span class="mf">0.0</span>
+<a id="__codelineno-3-53" name="__codelineno-3-53"></a>    <span class="k">for</span> <span class="n">batch</span><span class="p">,</span> <span class="ow">in</span> <span class="n">dataloader</span><span class="p">:</span>
+<a id="__codelineno-3-54" name="__codelineno-3-54"></a>        <span class="n">x0</span> <span class="o">=</span> <span class="n">batch</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+<a id="__codelineno-3-55" name="__codelineno-3-55"></a>        <span class="n">batch_size</span> <span class="o">=</span> <span class="n">x0</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-3-56" name="__codelineno-3-56"></a>        <span class="c1"># 采样时间和噪声</span>
+<a id="__codelineno-3-57" name="__codelineno-3-57"></a>        <span class="n">t</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+<a id="__codelineno-3-58" name="__codelineno-3-58"></a>        <span class="n">epsilon</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn_like</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+<a id="__codelineno-3-59" name="__codelineno-3-59"></a>        <span class="c1"># 计算 α(t) 和 σ(t)</span>
+<a id="__codelineno-3-60" name="__codelineno-3-60"></a>        <span class="n">integral</span> <span class="o">=</span> <span class="n">beta_min</span> <span class="o">*</span> <span class="n">t</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">beta_max</span> <span class="o">-</span> <span class="n">beta_min</span><span class="p">)</span> <span class="o">*</span> <span class="n">t</span><span class="o">**</span><span class="mi">2</span>
+<a id="__codelineno-3-61" name="__codelineno-3-61"></a>        <span class="n">alpha</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">integral</span><span class="p">)</span>
+<a id="__codelineno-3-62" name="__codelineno-3-62"></a>        <span class="n">sigma</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">)</span>
+<a id="__codelineno-3-63" name="__codelineno-3-63"></a>        <span class="c1"># 扰动数据</span>
+<a id="__codelineno-3-64" name="__codelineno-3-64"></a>        <span class="n">x_t</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="n">x0</span> <span class="o">+</span> <span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="n">epsilon</span>
+<a id="__codelineno-3-65" name="__codelineno-3-65"></a>        <span class="c1"># 预测噪声</span>
+<a id="__codelineno-3-66" name="__codelineno-3-66"></a>        <span class="n">score_pred</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">x_t</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+<a id="__codelineno-3-67" name="__codelineno-3-67"></a>        <span class="c1"># 计算加权损失</span>
+<a id="__codelineno-3-68" name="__codelineno-3-68"></a>        <span class="c1"># beta_t = beta_min + (beta_max - beta_min) * t</span>
+<a id="__codelineno-3-69" name="__codelineno-3-69"></a>        <span class="c1"># print((1-alpha))</span>
+<a id="__codelineno-3-70" name="__codelineno-3-70"></a>        <span class="n">loss</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span> <span class="p">(</span><span class="n">score_pred</span> <span class="o">-</span> <span class="n">epsilon</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># predict is the score</span>
+<a id="__codelineno-3-71" name="__codelineno-3-71"></a>        <span class="c1"># 反向传播</span>
+<a id="__codelineno-3-72" name="__codelineno-3-72"></a>        <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+<a id="__codelineno-3-73" name="__codelineno-3-73"></a>        <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+<a id="__codelineno-3-74" name="__codelineno-3-74"></a>        <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+<a id="__codelineno-3-75" name="__codelineno-3-75"></a>        <span class="n">total_loss</span> <span class="o">+=</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="o">*</span> <span class="n">batch_size</span>
+<a id="__codelineno-3-76" name="__codelineno-3-76"></a>    <span class="k">if</span> <span class="p">(</span><span class="n">epoch</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">20</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+<a id="__codelineno-3-77" name="__codelineno-3-77"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Epoch </span><span class="si">{</span><span class="n">epoch</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">, Loss: </span><span class="si">{</span><span class="n">total_loss</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">VP SDE sampling</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-4-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-4-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-4-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-4-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-4-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-4-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-4-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-4-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-4-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-4-10">10</a></span>
+<span class="normal"><a href="#__codelineno-4-11">11</a></span>
+<span class="normal"><a href="#__codelineno-4-12">12</a></span>
+<span class="normal"><a href="#__codelineno-4-13">13</a></span>
+<span class="normal"><a href="#__codelineno-4-14">14</a></span>
+<span class="normal"><a href="#__codelineno-4-15">15</a></span>
+<span class="normal"><a href="#__codelineno-4-16">16</a></span>
+<span class="normal"><a href="#__codelineno-4-17">17</a></span>
+<span class="normal"><a href="#__codelineno-4-18">18</a></span>
+<span class="normal"><a href="#__codelineno-4-19">19</a></span>
+<span class="normal"><a href="#__codelineno-4-20">20</a></span>
+<span class="normal"><a href="#__codelineno-4-21">21</a></span>
+<span class="normal"><a href="#__codelineno-4-22">22</a></span>
+<span class="normal"><a href="#__codelineno-4-23">23</a></span>
+<span class="normal"><a href="#__codelineno-4-24">24</a></span>
+<span class="normal"><a href="#__codelineno-4-25">25</a></span>
+<span class="normal"><a href="#__codelineno-4-26">26</a></span>
+<span class="normal"><a href="#__codelineno-4-27">27</a></span>
+<span class="normal"><a href="#__codelineno-4-28">28</a></span>
+<span class="normal"><a href="#__codelineno-4-29">29</a></span>
+<span class="normal"><a href="#__codelineno-4-30">30</a></span>
+<span class="normal"><a href="#__codelineno-4-31">31</a></span>
+<span class="normal"><a href="#__codelineno-4-32">32</a></span>
+<span class="normal"><a href="#__codelineno-4-33">33</a></span>
+<span class="normal"><a href="#__codelineno-4-34">34</a></span>
+<span class="normal"><a href="#__codelineno-4-35">35</a></span>
+<span class="normal"><a href="#__codelineno-4-36">36</a></span>
+<span class="normal"><a href="#__codelineno-4-37">37</a></span>
+<span class="normal"><a href="#__codelineno-4-38">38</a></span>
+<span class="normal"><a href="#__codelineno-4-39">39</a></span>
+<span class="normal"><a href="#__codelineno-4-40">40</a></span>
+<span class="normal"><a href="#__codelineno-4-41">41</a></span>
+<span class="normal"><a href="#__codelineno-4-42">42</a></span>
+<span class="normal"><a href="#__codelineno-4-43">43</a></span>
+<span class="normal"><a href="#__codelineno-4-44">44</a></span>
+<span class="normal"><a href="#__codelineno-4-45">45</a></span>
+<span class="normal"><a href="#__codelineno-4-46">46</a></span>
+<span class="normal"><a href="#__codelineno-4-47">47</a></span>
+<span class="normal"><a href="#__codelineno-4-48">48</a></span>
+<span class="normal"><a href="#__codelineno-4-49">49</a></span>
+<span class="normal"><a href="#__codelineno-4-50">50</a></span>
+<span class="normal"><a href="#__codelineno-4-51">51</a></span>
+<span class="normal"><a href="#__codelineno-4-52">52</a></span>
+<span class="normal"><a href="#__codelineno-4-53">53</a></span>
+<span class="normal"><a href="#__codelineno-4-54">54</a></span>
+<span class="normal"><a href="#__codelineno-4-55">55</a></span>
+<span class="normal"><a href="#__codelineno-4-56">56</a></span>
+<span class="normal"><a href="#__codelineno-4-57">57</a></span>
+<span class="normal"><a href="#__codelineno-4-58">58</a></span>
+<span class="normal"><a href="#__codelineno-4-59">59</a></span>
+<span class="normal"><a href="#__codelineno-4-60">60</a></span>
+<span class="normal"><a href="#__codelineno-4-61">61</a></span>
+<span class="normal"><a href="#__codelineno-4-62">62</a></span>
+<span class="normal"><a href="#__codelineno-4-63">63</a></span>
+<span class="normal"><a href="#__codelineno-4-64">64</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1"></a>import torch
+<a id="__codelineno-4-2" name="__codelineno-4-2"></a>import numpy as np
+<a id="__codelineno-4-3" name="__codelineno-4-3"></a>import math
+<a id="__codelineno-4-4" name="__codelineno-4-4"></a>import matplotlib.pyplot as plt
+<a id="__codelineno-4-5" name="__codelineno-4-5"></a>def vp_sde_sample(model,x_T, timesteps, beta_min=0.1, beta_max=20.0, save_trajectory=True):
+<a id="__codelineno-4-6" name="__codelineno-4-6"></a>    &quot;&quot;&quot;
+<a id="__codelineno-4-7" name="__codelineno-4-7"></a>    Implements the reverse sampling process for VP-SDE using Euler-Maruyama method.
+<a id="__codelineno-4-8" name="__codelineno-4-8"></a>    Args:
+<a id="__codelineno-4-9" name="__codelineno-4-9"></a>        x_T: Final noisy sample (torch.Tensor) of shape (N, D)
+<a id="__codelineno-4-10" name="__codelineno-4-10"></a>        timesteps: Number of diffusion steps (int)
+<a id="__codelineno-4-11" name="__codelineno-4-11"></a>        beta_min: Minimum beta value (float)
+<a id="__codelineno-4-12" name="__codelineno-4-12"></a>        beta_max: Maximum beta value (float)
+<a id="__codelineno-4-13" name="__codelineno-4-13"></a>        save_trajectory: Whether to save and return the sampling trajectory (bool)
+<a id="__codelineno-4-14" name="__codelineno-4-14"></a>    Returns:
+<a id="__codelineno-4-15" name="__codelineno-4-15"></a>        x_0: Recovered data sample (torch.Tensor)
+<a id="__codelineno-4-16" name="__codelineno-4-16"></a>        trajectory: List of intermediate states (if save_trajectory=True)
+<a id="__codelineno-4-17" name="__codelineno-4-17"></a>    &quot;&quot;&quot;
+<a id="__codelineno-4-18" name="__codelineno-4-18"></a>    dt = 1.0 / timesteps  # Time step for numerical integration
+<a id="__codelineno-4-19" name="__codelineno-4-19"></a>    x_t = x_T.clone()
+<a id="__codelineno-4-20" name="__codelineno-4-20"></a>    trajectory = [x_t.clone().cpu().numpy()] if save_trajectory else None
+<a id="__codelineno-4-21" name="__codelineno-4-21"></a>    model  = model.eval()
+<a id="__codelineno-4-22" name="__codelineno-4-22"></a>    for t_index in reversed(range(1,timesteps)):
+<a id="__codelineno-4-23" name="__codelineno-4-23"></a>        t = t_index * dt
+<a id="__codelineno-4-24" name="__codelineno-4-24"></a>        print(&quot;t&quot;,t, end=&quot;\r&quot;)
+<a id="__codelineno-4-25" name="__codelineno-4-25"></a>        # 计算 α(t) 和 σ(t)
+<a id="__codelineno-4-26" name="__codelineno-4-26"></a>        integral = beta_min * t + 0.5 * (beta_max - beta_min) * t**2
+<a id="__codelineno-4-27" name="__codelineno-4-27"></a>        integral = torch.Tensor([integral])
+<a id="__codelineno-4-28" name="__codelineno-4-28"></a>        alpha = torch.exp(-integral)
+<a id="__codelineno-4-29" name="__codelineno-4-29"></a>        beta_t = beta_min +  (beta_max - beta_min) * t
+<a id="__codelineno-4-30" name="__codelineno-4-30"></a>        beta_t = torch.Tensor([beta_t])
+<a id="__codelineno-4-31" name="__codelineno-4-31"></a>        with torch.no_grad():
+<a id="__codelineno-4-32" name="__codelineno-4-32"></a>            t_input = torch.Tensor([t]*len(x_t)).to(device).unsqueeze(-1)
+<a id="__codelineno-4-33" name="__codelineno-4-33"></a>            # print(&#39;x_t&#39;,x_t.shape, t_input.shape)
+<a id="__codelineno-4-34" name="__codelineno-4-34"></a>            noise_pred = model(x_t.to(device),t_input)
+<a id="__codelineno-4-35" name="__codelineno-4-35"></a>            if  not torch.isfinite(noise_pred).all():
+<a id="__codelineno-4-36" name="__codelineno-4-36"></a>                print(&#39;score_function got nan&#39;,score_function,t_index)
+<a id="__codelineno-4-37" name="__codelineno-4-37"></a>                raise
+<a id="__codelineno-4-38" name="__codelineno-4-38"></a>            score_function = - noise_pred.cpu() / torch.sqrt(1-alpha)
+<a id="__codelineno-4-39" name="__codelineno-4-39"></a>        s_theta  = score_function.cpu()
+<a id="__codelineno-4-40" name="__codelineno-4-40"></a>        # Reverse SDE Euler-Maruyama step
+<a id="__codelineno-4-41" name="__codelineno-4-41"></a>        x_t = x_t +1/2 * beta_t *( x_t +2* s_theta)* dt # dritf term
+<a id="__codelineno-4-42" name="__codelineno-4-42"></a>        x_t += torch.sqrt(beta_t) * torch.randn_like(x_t) * math.sqrt(dt) # diffusion term
+<a id="__codelineno-4-43" name="__codelineno-4-43"></a>        if  not torch.isfinite(x_t).all():
+<a id="__codelineno-4-44" name="__codelineno-4-44"></a>            print(&quot;xt got infinite&quot;, t_index, x_t[:2],torch.sqrt(1-alpha))
+<a id="__codelineno-4-45" name="__codelineno-4-45"></a>        if save_trajectory:
+<a id="__codelineno-4-46" name="__codelineno-4-46"></a>            trajectory.append(x_t.clone().cpu().numpy())
+<a id="__codelineno-4-47" name="__codelineno-4-47"></a>    return x_t, trajectory if save_trajectory else None
+<a id="__codelineno-4-48" name="__codelineno-4-48"></a># Set parameters
+<a id="__codelineno-4-49" name="__codelineno-4-49"></a>timesteps = 1500
+<a id="__codelineno-4-50" name="__codelineno-4-50"></a>num_samples = 20000
+<a id="__codelineno-4-51" name="__codelineno-4-51"></a>dim = 2  # 2D distribution for visualization
+<a id="__codelineno-4-52" name="__codelineno-4-52"></a>x_T = torch.randn(num_samples, dim)  # Sample from Gaussian prior (standard normal)
+<a id="__codelineno-4-53" name="__codelineno-4-53"></a># Perform VP-SDE sampling
+<a id="__codelineno-4-54" name="__codelineno-4-54"></a>x_0, trajectory = vp_sde_sample(model, x_T, timesteps)
+<a id="__codelineno-4-55" name="__codelineno-4-55"></a># Convert trajectory to numpy for plotting
+<a id="__codelineno-4-56" name="__codelineno-4-56"></a>trajectory_np = np.array(trajectory)  # Shape: (timesteps, num_samples, dim)
+<a id="__codelineno-4-57" name="__codelineno-4-57"></a># Plot final distribution shape
+<a id="__codelineno-4-58" name="__codelineno-4-58"></a>plt.figure(figsize=(6, 6))
+<a id="__codelineno-4-59" name="__codelineno-4-59"></a>plt.scatter(x_0[:, 0].numpy(), x_0[:, 1].numpy(), alpha=0.5, s=10)
+<a id="__codelineno-4-60" name="__codelineno-4-60"></a>plt.title(&quot;Final Sampled Distribution from VP-SDE&quot;)
+<a id="__codelineno-4-61" name="__codelineno-4-61"></a>plt.xlabel(&quot;X-axis&quot;)
+<a id="__codelineno-4-62" name="__codelineno-4-62"></a>plt.ylabel(&quot;Y-axis&quot;)
+<a id="__codelineno-4-63" name="__codelineno-4-63"></a>plt.axis(&quot;equal&quot;)
+<a id="__codelineno-4-64" name="__codelineno-4-64"></a>plt.show()
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">VP-SDE FLOW ODE sampling</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-5-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-5-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-5-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-5-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-5-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-5-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-5-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-5-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-5-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-5-10">10</a></span>
+<span class="normal"><a href="#__codelineno-5-11">11</a></span>
+<span class="normal"><a href="#__codelineno-5-12">12</a></span>
+<span class="normal"><a href="#__codelineno-5-13">13</a></span>
+<span class="normal"><a href="#__codelineno-5-14">14</a></span>
+<span class="normal"><a href="#__codelineno-5-15">15</a></span>
+<span class="normal"><a href="#__codelineno-5-16">16</a></span>
+<span class="normal"><a href="#__codelineno-5-17">17</a></span>
+<span class="normal"><a href="#__codelineno-5-18">18</a></span>
+<span class="normal"><a href="#__codelineno-5-19">19</a></span>
+<span class="normal"><a href="#__codelineno-5-20">20</a></span>
+<span class="normal"><a href="#__codelineno-5-21">21</a></span>
+<span class="normal"><a href="#__codelineno-5-22">22</a></span>
+<span class="normal"><a href="#__codelineno-5-23">23</a></span>
+<span class="normal"><a href="#__codelineno-5-24">24</a></span>
+<span class="normal"><a href="#__codelineno-5-25">25</a></span>
+<span class="normal"><a href="#__codelineno-5-26">26</a></span>
+<span class="normal"><a href="#__codelineno-5-27">27</a></span>
+<span class="normal"><a href="#__codelineno-5-28">28</a></span>
+<span class="normal"><a href="#__codelineno-5-29">29</a></span>
+<span class="normal"><a href="#__codelineno-5-30">30</a></span>
+<span class="normal"><a href="#__codelineno-5-31">31</a></span>
+<span class="normal"><a href="#__codelineno-5-32">32</a></span>
+<span class="normal"><a href="#__codelineno-5-33">33</a></span>
+<span class="normal"><a href="#__codelineno-5-34">34</a></span>
+<span class="normal"><a href="#__codelineno-5-35">35</a></span>
+<span class="normal"><a href="#__codelineno-5-36">36</a></span>
+<span class="normal"><a href="#__codelineno-5-37">37</a></span>
+<span class="normal"><a href="#__codelineno-5-38">38</a></span>
+<span class="normal"><a href="#__codelineno-5-39">39</a></span>
+<span class="normal"><a href="#__codelineno-5-40">40</a></span>
+<span class="normal"><a href="#__codelineno-5-41">41</a></span>
+<span class="normal"><a href="#__codelineno-5-42">42</a></span>
+<span class="normal"><a href="#__codelineno-5-43">43</a></span>
+<span class="normal"><a href="#__codelineno-5-44">44</a></span>
+<span class="normal"><a href="#__codelineno-5-45">45</a></span>
+<span class="normal"><a href="#__codelineno-5-46">46</a></span>
+<span class="normal"><a href="#__codelineno-5-47">47</a></span>
+<span class="normal"><a href="#__codelineno-5-48">48</a></span>
+<span class="normal"><a href="#__codelineno-5-49">49</a></span>
+<span class="normal"><a href="#__codelineno-5-50">50</a></span>
+<span class="normal"><a href="#__codelineno-5-51">51</a></span>
+<span class="normal"><a href="#__codelineno-5-52">52</a></span>
+<span class="normal"><a href="#__codelineno-5-53">53</a></span>
+<span class="normal"><a href="#__codelineno-5-54">54</a></span>
+<span class="normal"><a href="#__codelineno-5-55">55</a></span>
+<span class="normal"><a href="#__codelineno-5-56">56</a></span>
+<span class="normal"><a href="#__codelineno-5-57">57</a></span>
+<span class="normal"><a href="#__codelineno-5-58">58</a></span>
+<span class="normal"><a href="#__codelineno-5-59">59</a></span>
+<span class="normal"><a href="#__codelineno-5-60">60</a></span>
+<span class="normal"><a href="#__codelineno-5-61">61</a></span>
+<span class="normal"><a href="#__codelineno-5-62">62</a></span>
+<span class="normal"><a href="#__codelineno-5-63">63</a></span>
+<span class="normal"><a href="#__codelineno-5-64">64</a></span>
+<span class="normal"><a href="#__codelineno-5-65">65</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1"></a>import torch
+<a id="__codelineno-5-2" name="__codelineno-5-2"></a>import numpy as np
+<a id="__codelineno-5-3" name="__codelineno-5-3"></a>import math
+<a id="__codelineno-5-4" name="__codelineno-5-4"></a>import matplotlib.pyplot as plt
+<a id="__codelineno-5-5" name="__codelineno-5-5"></a>def vp_ode_sample(model,x_T, timesteps, beta_min=0.1, beta_max=20.0, save_trajectory=True):
+<a id="__codelineno-5-6" name="__codelineno-5-6"></a>    &quot;&quot;&quot;
+<a id="__codelineno-5-7" name="__codelineno-5-7"></a>    Implements the reverse sampling process for VP-SDE using Euler-Maruyama method.
+<a id="__codelineno-5-8" name="__codelineno-5-8"></a>    Args:
+<a id="__codelineno-5-9" name="__codelineno-5-9"></a>        x_T: Final noisy sample (torch.Tensor) of shape (N, D)
+<a id="__codelineno-5-10" name="__codelineno-5-10"></a>        timesteps: Number of diffusion steps (int)
+<a id="__codelineno-5-11" name="__codelineno-5-11"></a>        beta_min: Minimum beta value (float)
+<a id="__codelineno-5-12" name="__codelineno-5-12"></a>        beta_max: Maximum beta value (float)
+<a id="__codelineno-5-13" name="__codelineno-5-13"></a>        save_trajectory: Whether to save and return the sampling trajectory (bool)
+<a id="__codelineno-5-14" name="__codelineno-5-14"></a>    Returns:
+<a id="__codelineno-5-15" name="__codelineno-5-15"></a>        x_0: Recovered data sample (torch.Tensor)
+<a id="__codelineno-5-16" name="__codelineno-5-16"></a>        trajectory: List of intermediate states (if save_trajectory=True)
+<a id="__codelineno-5-17" name="__codelineno-5-17"></a>    &quot;&quot;&quot;
+<a id="__codelineno-5-18" name="__codelineno-5-18"></a>    dt = 1.0 / timesteps  # Time step for numerical integration
+<a id="__codelineno-5-19" name="__codelineno-5-19"></a>    x_t = x_T.clone()
+<a id="__codelineno-5-20" name="__codelineno-5-20"></a>    trajectory = [x_t.clone().cpu().numpy()] if save_trajectory else None
+<a id="__codelineno-5-21" name="__codelineno-5-21"></a>    model  = model.eval()
+<a id="__codelineno-5-22" name="__codelineno-5-22"></a>    for t_index in reversed(range(1,timesteps)):
+<a id="__codelineno-5-23" name="__codelineno-5-23"></a>        t = t_index *dt
+<a id="__codelineno-5-24" name="__codelineno-5-24"></a>        print(&quot;t&quot;,t, end=&quot;\r&quot;)
+<a id="__codelineno-5-25" name="__codelineno-5-25"></a>        # 计算 α(t) 和 σ(t)
+<a id="__codelineno-5-26" name="__codelineno-5-26"></a>        integral = beta_min* t + 0.5 *(beta_max - beta_min)* t**2
+<a id="__codelineno-5-27" name="__codelineno-5-27"></a>        integral = torch.Tensor([integral])
+<a id="__codelineno-5-28" name="__codelineno-5-28"></a>        alpha = torch.exp(-integral)
+<a id="__codelineno-5-29" name="__codelineno-5-29"></a>        beta_t = beta_min +  (beta_max - beta_min) *t
+<a id="__codelineno-5-30" name="__codelineno-5-30"></a>        beta_t = torch.Tensor([beta_t])
+<a id="__codelineno-5-31" name="__codelineno-5-31"></a>        with torch.no_grad():
+<a id="__codelineno-5-32" name="__codelineno-5-32"></a>            t_input = torch.Tensor([t]*len(x_t)).to(device).unsqueeze(-1)
+<a id="__codelineno-5-33" name="__codelineno-5-33"></a>            # print(&#39;x_t&#39;,x_t.shape, t_input.shape)
+<a id="__codelineno-5-34" name="__codelineno-5-34"></a>            noise_pred = model(x_t.to(device),t_input)
+<a id="__codelineno-5-35" name="__codelineno-5-35"></a>            if  not torch.isfinite(noise_pred).all():
+<a id="__codelineno-5-36" name="__codelineno-5-36"></a>                print(&#39;score_function got nan&#39;,score_function,t_index)
+<a id="__codelineno-5-37" name="__codelineno-5-37"></a>                raise
+<a id="__codelineno-5-38" name="__codelineno-5-38"></a>            score_function = - noise_pred.cpu() / torch.sqrt(1-alpha)
+<a id="__codelineno-5-39" name="__codelineno-5-39"></a>        s_theta  = score_function.cpu()
+<a id="__codelineno-5-40" name="__codelineno-5-40"></a>        # Reverse SDE Euler-Maruyama step
+<a id="__codelineno-5-41" name="__codelineno-5-41"></a>        # x_t = x_t +1/2 * beta_t *( x_t +2* s_theta)* dt # dritf term
+<a id="__codelineno-5-42" name="__codelineno-5-42"></a>        # x_t += torch.sqrt(beta_t)* torch.randn_like(x_t) *math.sqrt(dt) # diffusion term
+<a id="__codelineno-5-43" name="__codelineno-5-43"></a>        x_t = x_t +1/2* beta_t *( x_t + s_theta)* dt
+<a id="__codelineno-5-44" name="__codelineno-5-44"></a>        if  not torch.isfinite(x_t).all():
+<a id="__codelineno-5-45" name="__codelineno-5-45"></a>            print(&quot;xt got infinite&quot;, t_index, x_t[:2],torch.sqrt(1-alpha))
+<a id="__codelineno-5-46" name="__codelineno-5-46"></a>        if save_trajectory:
+<a id="__codelineno-5-47" name="__codelineno-5-47"></a>            trajectory.append(x_t.clone().cpu().numpy())
+<a id="__codelineno-5-48" name="__codelineno-5-48"></a>    return x_t, trajectory if save_trajectory else None
+<a id="__codelineno-5-49" name="__codelineno-5-49"></a># Set parameters
+<a id="__codelineno-5-50" name="__codelineno-5-50"></a>timesteps = 1500
+<a id="__codelineno-5-51" name="__codelineno-5-51"></a>num_samples = 20000
+<a id="__codelineno-5-52" name="__codelineno-5-52"></a>dim = 2  # 2D distribution for visualization
+<a id="__codelineno-5-53" name="__codelineno-5-53"></a>x_T = torch.randn(num_samples, dim)  # Sample from Gaussian prior (standard normal)
+<a id="__codelineno-5-54" name="__codelineno-5-54"></a># Perform VP-SDE sampling
+<a id="__codelineno-5-55" name="__codelineno-5-55"></a>x_0, trajectory = vp_ode_sample(model, x_T, timesteps)
+<a id="__codelineno-5-56" name="__codelineno-5-56"></a># Convert trajectory to numpy for plotting
+<a id="__codelineno-5-57" name="__codelineno-5-57"></a>trajectory_np = np.array(trajectory)  # Shape: (timesteps, num_samples, dim)
+<a id="__codelineno-5-58" name="__codelineno-5-58"></a># Plot final distribution shape
+<a id="__codelineno-5-59" name="__codelineno-5-59"></a>plt.figure(figsize=(6, 6))
+<a id="__codelineno-5-60" name="__codelineno-5-60"></a>plt.scatter(x_0[:, 0].numpy(), x_0[:, 1].numpy(), alpha=0.5, s=10)
+<a id="__codelineno-5-61" name="__codelineno-5-61"></a>plt.title(&quot;Final Sampled Distribution from VP-SDE&quot;)
+<a id="__codelineno-5-62" name="__codelineno-5-62"></a>plt.xlabel(&quot;X-axis&quot;)
+<a id="__codelineno-5-63" name="__codelineno-5-63"></a>plt.ylabel(&quot;Y-axis&quot;)
+<a id="__codelineno-5-64" name="__codelineno-5-64"></a>plt.axis(&quot;equal&quot;)
+<a id="__codelineno-5-65" name="__codelineno-5-65"></a>plt.show()
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">Langervin Dynamic sampling</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-6-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-6-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-6-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-6-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-6-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-6-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-6-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-6-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-6-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-6-10">10</a></span>
+<span class="normal"><a href="#__codelineno-6-11">11</a></span>
+<span class="normal"><a href="#__codelineno-6-12">12</a></span>
+<span class="normal"><a href="#__codelineno-6-13">13</a></span>
+<span class="normal"><a href="#__codelineno-6-14">14</a></span>
+<span class="normal"><a href="#__codelineno-6-15">15</a></span>
+<span class="normal"><a href="#__codelineno-6-16">16</a></span>
+<span class="normal"><a href="#__codelineno-6-17">17</a></span>
+<span class="normal"><a href="#__codelineno-6-18">18</a></span>
+<span class="normal"><a href="#__codelineno-6-19">19</a></span>
+<span class="normal"><a href="#__codelineno-6-20">20</a></span>
+<span class="normal"><a href="#__codelineno-6-21">21</a></span>
+<span class="normal"><a href="#__codelineno-6-22">22</a></span>
+<span class="normal"><a href="#__codelineno-6-23">23</a></span>
+<span class="normal"><a href="#__codelineno-6-24">24</a></span>
+<span class="normal"><a href="#__codelineno-6-25">25</a></span>
+<span class="normal"><a href="#__codelineno-6-26">26</a></span>
+<span class="normal"><a href="#__codelineno-6-27">27</a></span>
+<span class="normal"><a href="#__codelineno-6-28">28</a></span>
+<span class="normal"><a href="#__codelineno-6-29">29</a></span>
+<span class="normal"><a href="#__codelineno-6-30">30</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1"></a>    <span class="kn">import</span> <span class="nn">torch</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2"></a>    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3"></a>    <span class="k">def</span> <span class="nf">funnel_score</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute the score function (gradient of log-density) of the funnel distribution.&quot;&quot;&quot;</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5"></a>        <span class="n">score_x</span> <span class="o">=</span> <span class="o">-</span><span class="n">x</span> <span class="o">/</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6"></a>        <span class="n">score_z</span> <span class="o">=</span> <span class="o">-</span><span class="n">z</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">z</span><span class="p">)</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7"></a>        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">score_x</span><span class="p">,</span> <span class="n">score_z</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8"></a>    <span class="k">def</span> <span class="nf">langevin_sampling_funnel</span><span class="p">(</span><span class="n">num_samples</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">num_steps</span><span class="o">=</span><span class="mi">1500</span><span class="p">,</span> <span class="n">noise_scale</span><span class="o">=</span><span class="mf">0.001</span><span class="p">):</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Sample from the funnel distribution using Langevin dynamics.&quot;&quot;&quot;</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10"></a>        <span class="c1"># Initialize samples from a normal distribution</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11"></a>        <span class="n">samples</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">num_samples</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12"></a>        <span class="n">trajectory</span> <span class="o">=</span> <span class="p">[</span><span class="n">samples</span><span class="o">.</span><span class="n">clone</span><span class="p">()]</span>  <span class="c1"># Store trajectory</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13"></a>        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_steps</span><span class="p">):</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14"></a>            <span class="n">x</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">samples</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">samples</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15"></a>            <span class="n">score</span> <span class="o">=</span> <span class="n">funnel_score</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16"></a>            <span class="n">samples</span> <span class="o">=</span> <span class="n">samples</span> <span class="o">+</span> <span class="n">lr</span> <span class="o">*</span> <span class="n">score</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">noise_scale</span><span class="p">)</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn_like</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17"></a>            <span class="n">trajectory</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">samples</span><span class="o">.</span><span class="n">clone</span><span class="p">())</span>  <span class="c1"># Store trajectory step</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18"></a>        <span class="k">return</span> <span class="n">samples</span><span class="p">,</span> <span class="n">trajectory</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19"></a>    <span class="c1"># Sample using Langevin dynamics</span>
+<a id="__codelineno-6-20" name="__codelineno-6-20"></a>    <span class="n">samples</span><span class="p">,</span> <span class="n">trajectory</span> <span class="o">=</span> <span class="n">langevin_sampling_funnel</span><span class="p">()</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21"></a>    <span class="c1"># Convert trajectory to numpy for visualization</span>
+<a id="__codelineno-6-22" name="__codelineno-6-22"></a>    <span class="n">trajectory_np</span> <span class="o">=</span> <span class="p">[</span><span class="n">step</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span> <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">trajectory</span><span class="p">]</span>
+<a id="__codelineno-6-23" name="__codelineno-6-23"></a>    <span class="c1"># Plot final distribution</span>
+<a id="__codelineno-6-24" name="__codelineno-6-24"></a>    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<a id="__codelineno-6-25" name="__codelineno-6-25"></a>    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">samples</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">samples</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<a id="__codelineno-6-26" name="__codelineno-6-26"></a>    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Final Sampled Distribution from VP-SDE&quot;</span><span class="p">)</span>
+<a id="__codelineno-6-27" name="__codelineno-6-27"></a>    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;X-axis&quot;</span><span class="p">)</span>
+<a id="__codelineno-6-28" name="__codelineno-6-28"></a>    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Y-axis&quot;</span><span class="p">)</span>
+<a id="__codelineno-6-29" name="__codelineno-6-29"></a>    <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;equal&quot;</span><span class="p">)</span>
+<a id="__codelineno-6-30" name="__codelineno-6-30"></a>    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-7-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-7-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-7-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-7-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-7-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-7-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-7-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-7-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-7-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-7-10">10</a></span>
+<span class="normal"><a href="#__codelineno-7-11">11</a></span>
+<span class="normal"><a href="#__codelineno-7-12">12</a></span>
+<span class="normal"><a href="#__codelineno-7-13">13</a></span>
+<span class="normal"><a href="#__codelineno-7-14">14</a></span>
+<span class="normal"><a href="#__codelineno-7-15">15</a></span>
+<span class="normal"><a href="#__codelineno-7-16">16</a></span>
+<span class="normal"><a href="#__codelineno-7-17">17</a></span>
+<span class="normal"><a href="#__codelineno-7-18">18</a></span>
+<span class="normal"><a href="#__codelineno-7-19">19</a></span>
+<span class="normal"><a href="#__codelineno-7-20">20</a></span>
+<span class="normal"><a href="#__codelineno-7-21">21</a></span>
+<span class="normal"><a href="#__codelineno-7-22">22</a></span>
+<span class="normal"><a href="#__codelineno-7-23">23</a></span>
+<span class="normal"><a href="#__codelineno-7-24">24</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1"></a>from matplotlib.animation import FuncAnimation, PillowWriter
+<a id="__codelineno-7-2" name="__codelineno-7-2"></a>def make_animation(trajectory, filename=&quot;sampling.gif&quot;):
+<a id="__codelineno-7-3" name="__codelineno-7-3"></a>    &quot;&quot;&quot;
+<a id="__codelineno-7-4" name="__codelineno-7-4"></a>    Given a list of [N x 2] arrays (trajectory), create and save an animation.
+<a id="__codelineno-7-5" name="__codelineno-7-5"></a>    &quot;&quot;&quot;
+<a id="__codelineno-7-6" name="__codelineno-7-6"></a>    trajectory = [x.cpu() for x in trajectory]
+<a id="__codelineno-7-7" name="__codelineno-7-7"></a>    fig, ax = plt.subplots(figsize=(5, 5))
+<a id="__codelineno-7-8" name="__codelineno-7-8"></a>    scat = ax.scatter(trajectory[0][:, 0], trajectory[0][:, 1], alpha=0.5, color=&#39;red&#39;,s=0.2)
+<a id="__codelineno-7-9" name="__codelineno-7-9"></a>    ax.set_xlim(-6, 6)
+<a id="__codelineno-7-10" name="__codelineno-7-10"></a>    ax.set_ylim(-6, 6)
+<a id="__codelineno-7-11" name="__codelineno-7-11"></a>    ax.axis(&quot;off&quot;)
+<a id="__codelineno-7-12" name="__codelineno-7-12"></a>    ax.set_aspect(&#39;equal&#39;)
+<a id="__codelineno-7-13" name="__codelineno-7-13"></a>    time_text = ax.text(0.02, 0.02, &#39;&#39;, transform=ax.transAxes, fontsize=12)
+<a id="__codelineno-7-14" name="__codelineno-7-14"></a>    def update(frame):
+<a id="__codelineno-7-15" name="__codelineno-7-15"></a>        data = trajectory[frame]
+<a id="__codelineno-7-16" name="__codelineno-7-16"></a>        scat.set_offsets(data)
+<a id="__codelineno-7-17" name="__codelineno-7-17"></a>        time_text.set_text(f&quot;Step {frame}/{len(trajectory)-1}&quot;)
+<a id="__codelineno-7-18" name="__codelineno-7-18"></a>        return scat, time_text
+<a id="__codelineno-7-19" name="__codelineno-7-19"></a>    ani = FuncAnimation(fig, update, frames=len(trajectory), interval=1)
+<a id="__codelineno-7-20" name="__codelineno-7-20"></a>    writer = PillowWriter(fps=40)
+<a id="__codelineno-7-21" name="__codelineno-7-21"></a>    ani.save(filename, writer=writer)
+<a id="__codelineno-7-22" name="__codelineno-7-22"></a>    plt.close()
+<a id="__codelineno-7-23" name="__codelineno-7-23"></a>...
+<a id="__codelineno-7-24" name="__codelineno-7-24"></a>make_animation(trajectory_np, filename=img_file)
+</code></pre></div></td></tr></table></div>
+</div>
+</div>
+</div>
+<h4 id="832-ve-sde">8.3.2 VE-SDE<a class="headerlink" href="#832-ve-sde" title="Permanent link">&para;</a></h4>
 <h2 id="9-conclusion">9. Conclusion<a class="headerlink" href="#9-conclusion" title="Permanent link">&para;</a></h2>
 <ul>
 <li>
