@@ -530,7 +530,7 @@ In the continuous format, we name it as ==VP-SDE==, refer [score based SDE](./sc
 |$\sigma_t$| $\sigma_t =\sqrt{ 1 - \alpha_t}$ |$\sigma_t =\sqrt{1 - \bar{\alpha}_t}$  |
 |forward|$dx = -\frac{1}{2} \beta(t) x dt + \sqrt{\beta(t)} dw$ |$x_t = \sqrt{1 - \beta_t} x_{t-1} + \sqrt{\beta_t} \epsilon$|
 |backward|\(dx = -\frac{1}{2} \beta(t) \left(  x + 2 s_\theta(x, t) \right) dt + \sqrt{\beta(t)} dw\) |$x_{t-1} = \frac{1}{\sqrt{\alpha_t}} \left( x_t - \frac{1 - \alpha_t}{\sqrt{1 - \bar{\alpha}_t}} \epsilon_\theta(x_t, t) \right) + \sigma_t z$ |
-|Flow ODE|\(dx = - \frac{1}{2} \beta(t)\left( x + s_\theta(x, t) \right) dt + \sqrt{\beta(t)} dw\)|Na|
+|Flow ODE|\(dx = - \frac{1}{2} \beta(t)\left( x + s_\theta(x, t) \right) dt\)|Na|
 
 ## Network Output: Noise Prediction vs. Score
 In practice, DDPM commonly trains a network to predict the added noise $\epsilon$ rather than directly predicting $\nabla_x \log p(x_t)$. However, there is a **simple linear relation**  between $\epsilon$ and the score. Therefore:
