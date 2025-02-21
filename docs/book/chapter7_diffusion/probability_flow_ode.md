@@ -592,6 +592,62 @@ These expressions form the basis for diffusion-based generative modeling—from 
     make_animation(trajectory_np, filename=img_file)
     ```
 #### VE-SDE
+Let's experiment with VE-SDE. First, just recall the formulas to understand the dynamics:
+
+- **Forward Process (SDE)**
+
+$$
+dx = \sqrt{\frac{d[\sigma^2(t)]}{dt}} dw
+$$
+
+- **Noise Schedule**
+
+$$
+\sigma_t = \sigma_{\text{min}} \left(\frac{\sigma_{\text{max}}}{\sigma_{\text{min}}} \right)^t
+$$
+
+- **Sampling from Noisy Distribution**
+
+$$
+x_t = x_0 + \sigma_t \epsilon, \quad \epsilon \sim \mathcal{N}(0, I)
+$$
+
+- **Reverse Process (SDE)**
+
+$$
+dx = \left(\frac{d[\sigma^2(t)]}{dt} \right) \nabla_x \log p_t(x) dt + \sqrt{\frac{d[\sigma^2(t)]}{dt}} dw
+$$
+
+- **derivateve of $\sigma(t)$**
+
+$$
+\frac{d \sigma^2(t)}{dt} = \sigma_{\text{min}}^2 \left(\frac{\sigma_{\text{max}}^2}{\sigma_{\text{min}}^2} \right)^t \log \left(\frac{\sigma_{\text{max}}^2}{\sigma_{\text{min}}^2} \right)
+$$
+
+- **Flow ODE (Deterministic Approximation)**
+
+$$
+dx = \left(\frac{d[\sigma^2(t)]}{dt} \right) \nabla_x \log p_t(x) dt
+$$
+
+- **Reverse Sampling**
+
+$$
+x_{t-1} = x_t - \left(\frac{d[\sigma^2(t)]}{dt} \right) s_{\theta}(x, t) dt
+$$
+
+- **Score Function**
+
+$$
+s_{\theta}(x, t) = -\frac{\epsilon}{\sigma_t}
+$$
+
+- **Loss Function (Score Matching)**
+
+$$
+\mathbb{E}_{t, x_0, \epsilon} \left[ \lambda_t \left\| s_{\theta}(x_t, t) + \frac{\epsilon}{\sigma_t} \right\|^2 \right]
+$$
+
 ## Conclusion
 
 - **Every SDE can be converted into a Probability Flow ODE.**
