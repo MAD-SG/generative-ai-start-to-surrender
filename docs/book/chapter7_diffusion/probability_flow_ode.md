@@ -1,9 +1,5 @@
 # Understanding Probability Flow ODE: Converting SDEs into Deterministic Sampling
-
-**📅 Date:**  [2025/02/05]
-
-**✍️ Author:**  [Qian Lilong]
-
+![](https://pbs.twimg.com/media/EoKYkB6VoAgcyff.jpg:large)
 ## Introduction
 
 Score-based generative models (SBMs) and diffusion models rely on **stochastic differential equations (SDEs)**  to model data distributions. However, while SDEs introduce randomness in sample trajectories, they can be **converted into an equivalent ordinary differential equation (ODE)**  that retains the same probability density evolution. This ODE, known as the **Probability Flow ODE** , enables **deterministic sampling**  while preserving the learned data distribution.
@@ -163,6 +159,76 @@ For $v(x, t)$ to **exist** , the following conditions must hold:
 | $p_t(x)$ is strictly positive and smooth | Avoids singularities and undefined score function regions. |
 | Drift term $f(x, t)$ is uniquely defined | Ensures a single solution to the continuity equation. |
 
+## Experiment
+
+### Target Distribution
+
+The Funnel distribution is defined as follows:
+
+- \( v \sim \mathcal{N}(0, 3^2) \)
+- \( x \mid v \sim \mathcal{N}\bigl(0, \exp(v)\bigr) \)
+
+Thus, the joint density is given by:
+
+$$
+p(x,v) = \frac{1}{3\sqrt{2\pi}} \exp\left(-\frac{v^2}{18}\right)
+\cdot \frac{1}{\sqrt{2\pi\,\exp(v)}} \exp\left(-\frac{x^2}{2\exp(v)}\right)
+$$
+
+![alt text](../../images/image-79.png)
+
+### sampling formula
+Below are the expressions for the original distribution, the Langevin (diffusion) process, the DDPM reverse diffusion SDE, and the corresponding probability flow ODE for DDPM sampling.
+
+#### Langevin Diffusion Expression
+
+In overdamped Langevin dynamics, the update rule for a state \( z = (x,v) \) is:
+
+$$
+z_{t+1} = z_t + \epsilon\,\nabla_z \log p(z_t) + \sqrt{2\epsilon}\,\xi_t,\quad \xi_t \sim \mathcal{N}(0, I)
+$$
+
+This iterative update gradually moves samples toward the target distribution \( p(x,v) \).
+
+#### DDPM Reverse Diffusion SDE
+
+For a variance-preserving (VP) forward SDE defined as
+
+$$
+dx = -\frac{1}{2}\beta(t)x\,dt + \sqrt{\beta(t)}\,dW_t,
+$$
+
+the reverse-time SDE used for sampling (starting from pure Gaussian noise at \( t=1 \)) is:
+
+$$
+dx = \left[-\frac{1}{2}\beta(t)x - \beta(t)\nabla_x\log p_t(x)\right]\,dt + \sqrt{\beta(t)}\,d\bar{W}_t.
+$$
+
+Here, \( \nabla_x\log p_t(x) \) is the score function at time \( t \).
+
+#### DDPM Probability Flow ODE
+
+The deterministic probability flow ODE corresponding to the DDPM SDE is given by:
+
+$$
+dx = \left[-\frac{1}{2}\beta(t)x - \frac{1}{2}\beta(t)\nabla_x\log p_t(x)\right]\,dt.
+$$
+
+Solving this ODE from \( t=1 \) (Gaussian noise) to \( t=0 \) yields samples that follow the target distribution.
+
+These expressions form the basis for diffusion-based generative modeling—from the formulation of the target distribution to sampling via both stochastic reverse diffusion and its deterministic ODE counterpart.
+
+Sampling by the Langevin Dynamics
+
+![alt text](../../images/funnel_langevin.gif)
+
+Now we build a diffusion process that convert the tunnel distribution into the Gaussian distribution in the same way as DDPM
+
+sampling with DDPM inverse SDE
+![alt text](../../images/ddpm_reverse_sde_sampling.gif)
+
+Sampling with Probability Flow ODE
+![alt text](../../images/ode_sampling_funnel.gif)
 ## Conclusion
 
 - **Every SDE can be converted into a Probability Flow ODE.**

@@ -8,7 +8,7 @@ nav:
       - Statistics: "book/chapter1_Introduction/1.4statistics.md"
       - Tutorials: "book/chapter1_Introduction/tutorials.md"
   - Generation Theory:
-      - Maximal Likelihood: "book/chapter2_generation_theory/5.1MLE.md"
+      - Maximal Likelihood: "book/chapter2_generation_theory/mle.md"
       - Manifold Hypothesis: "book/chapter2_generation_theory/manifold_hypothesis.md"
   - Energy Based Models:
       - Introduction: "book/chapter3_energy_based_model/introduction.md"
@@ -34,11 +34,14 @@ nav:
           - DDPM: "book/chapter7_diffusion/ddpm.md"
           - LDM: "book/chapter7_diffusion/ldm.md"
           - LDM Handson: "book/chapter7_diffusion/ldm_handson.md"
-      - Diffusion Model Varients: "book/chapter7_diffusion/diffusion_model_varients.md"
-      - Continuous Diffusion:
+          - Diffusion Model Varients: "book/chapter7_diffusion/diffusion_model_varients.md"
+          - General Diffusion Model: "book/chapter7_diffusion/general_diffusion_model.md"
+      - SDE Diffusion:
           - SDE Fundamentals: "book/chapter7_diffusion/introduction_sde.md"
-          - SDE for DDPM: "book/chapter7_diffusion/SDE4_DDPM_DSM.md"
+          - SDE for DDPM: "book/chapter7_diffusion/from_ddpm_2_sde.md"
+          - Score Based SDE: "book/chapter7_diffusion/score_based_sde.md"
           - Probability Flow ODE: "book/chapter7_diffusion/probability_flow_ode.md"
+
   - Flow Matching:
       - Introduction: "book/chapter9_flow_matching/introduction.md"
       - Probability Path and Velocity Fields: "book/chapter9_flow_matching/probability_with_velocity_field.md"
