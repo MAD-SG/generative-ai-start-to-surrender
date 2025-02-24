@@ -54,11 +54,13 @@ x_t = x_0 e^{-\frac{1}{2} \int_0^t \beta(s) ds} + \sqrt{1 - e^{-\int_0^t \beta(s
 $$
 
 ### **VESDE (Variance Exploding SDE)**
+
 $$
 dx = \sigma(t) dw
 $$
 
 Solution:
+
 $$
 x_t = x_0 + \sqrt{\int_0^t \sigma^2(s) ds} \epsilon, \quad \epsilon \sim \mathcal{N}(0, I)
 $$
@@ -88,16 +90,19 @@ $$
 $$
 
 ### **For VPSDE:**
+
 $$
 \nabla_x \log p_t(x_t | x_0) = -\frac{x_t - x_0 e^{-\frac{1}{2} \int_0^t \beta(s) ds}}{(1 - e^{-\int_0^t \beta(s) ds})}
 $$
 
 ### **For VESDE:**
+
 $$
 \nabla_x \log p_t(x_t | x_0) = -\frac{x_t - x_0}{\int_0^t \sigma^2(s) ds}
 $$
 
 ### **For Sub-VPSDE:**
+
 $$
 \nabla_x \log p_t(x_t | x_0) = -\frac{x_t - x_0 e^{-\frac{1}{2} \int_0^t \beta(s) ds}}{(1 - e^{-\int_0^t \beta(s) ds})}
 $$
@@ -625,16 +630,18 @@ $$
 - **VE SDE:**
   - **Mean:** \(m(x_0,t)= x_0\) (preserved)
   - **Conditional Score:**
-    $$
-    s(x,t\mid x_0) = -\frac{x-x_0}{\sigma^2(t)}.
-    $$
+
+$$
+s(x,t\mid x_0) = -\frac{x-x_0}{\sigma^2(t)}.
+$$
 
 - **sub-VP SDE:**
   - **Mean:** \(m(x_0,t)= x_0\) (by design)
   - **Conditional Score:**
-    $$
-    s(x,t\mid x_0) = -\frac{x-x_0}{\tilde{\sigma}^2(t)}.
-    $$
+
+$$
+s(x,t\mid x_0) = -\frac{x-x_0}{\tilde{\sigma}^2(t)}.
+$$
 
 ### Conclusion
 
@@ -642,30 +649,39 @@ To summarize:
 
 - **Score Functions:**
   - The **marginal score function** is defined as \(\nabla_x \log p_t(x)\). Under Gaussian assumptions, we derived
-    $$
-    s(x,t) = -\frac{x - \mathbb{E}[m(x_0,t) \mid x]}{\sigma_t^2} \quad \text{or} \quad s(x,t) = -\Sigma(t)^{-1}\bigl(x - m(t)\bigr).
-    $$
-  - The **conditional score function** for the transition density \(p_{t|0}(x \mid x_0)\) is
-    $$
-    s(x,t\mid x_0) = -\frac{x - m(x_0,t)}{\sigma_t^2},
-    $$
+
+$$
+s(x,t) = -\frac{x - \mathbb{E}[m(x_0,t) \mid x]}{\sigma_t^2} \quad \text{or} \quad s(x,t) = -\Sigma(t)^{-1}\bigl(x - m(t)\bigr).
+$$
+
+- The **conditional score function** for the transition density \(p_{t|0}(x \mid x_0)\) is
+
+$$
+s(x,t\mid x_0) = -\frac{x - m(x_0,t)}{\sigma_t^2},
+$$
+
     and under linear drift and state-independent diffusion, this becomes
-    $$
-    s(x,t\mid x_0) = -\frac{x - (\Psi(t)x_0 + \mu(t))}{\sigma_t^2}.
-    $$
+
+$$
+s(x,t\mid x_0) = -\frac{x - (\Psi(t)x_0 + \mu(t))}{\sigma_t^2}.
+$$
 
 - **Gaussian Transition Probabilities:**
   The transition probability remains Gaussian if the drift is linear (or affine), \(f(x,t)=A(t)x+b(t)\), and the diffusion is state-independent, \(g(x,t)=g(t)\).
 
 - **State Transition Matrix \(\Psi(t)\) and \(A(t)\):**
   \(\Psi(t)\) satisfies
+
   $$
   \frac{d}{dt}\Psi(t) = A(t)\,\Psi(t) \quad \text{with} \quad \Psi(0)=I.
   $$
+
   When \(A(t)\) is time-invariant, \(\Psi(t) = e^{At}\). More generally, if \(A(t)\) commutes with itself at different times, then
+
   $$
   \Psi(t) = \exp\left(\int_0^t A(s)\,ds\right),
   $$
+
   providing a closed-form expression for the state transition matrix.
 
 - **Non-Gaussian Example:**
@@ -681,12 +697,14 @@ Here are some additional **Score-based SDEs**:
 This method introduces **momentum variables** to improve sampling efficiency. Unlike VPSDE/VESDE, which use only position updates, CLD-SDE includes velocity to achieve faster convergence.
 
 #### SDE Formulation
+
 $$
 \begin{cases}
-dx = v dt \\
-dv = -\gamma v dt - \lambda^2 x dt + \sigma dw
+dx &= v dt \\
+dv &= -\gamma v dt - \lambda^2 x dt + \sigma dw
 \end{cases}
 $$
+
 where:
 
 - \( x \) is the **position**.
@@ -720,9 +738,11 @@ $$|| \nabla_{v_t} \log p(v_t | x_t) - s_\theta(x,v)||^2$$
 Instead of traditional diffusion, **Rectified Flow SDE** designs a flow field where trajectories follow a **straight-line path** from data to noise.
 
 #### SDE Formulation
+
 $$
 dx = (x_T - x) dt + g(t) dw
 $$
+
 where:
 
 - \( x_T \) is the terminal (noise) state.
@@ -794,17 +814,22 @@ $$
 $$
 
 - **Noise scaling function:**
-  $$
-  g(t) = \sigma_0 \sqrt{1 - t}
-  $$
+
+$$
+g(t) = \sigma_0 \sqrt{1 - t}
+$$
+
 - **Variance accumulation:**
-  $$
-  \sigma_t^2 = \sigma_0^2 (t - \frac{t^2}{2})
-  $$
+
+$$
+\sigma_t^2 = \sigma_0^2 (t - \frac{t^2}{2})
+$$
+
 - **Score function:**
-  $$
-  \nabla_x \log p_t(x_t | x_0) = -\frac{x_t - x_0}{\sigma_0^2 t (1 - \frac{t}{2})}
-  $$
+
+$$
+\nabla_x \log p_t(x_t | x_0) = -\frac{x_t - x_0}{\sigma_0^2 t (1 - \frac{t}{2})}
+$$
 
 ### Continuous-Time Normalizing Flows (CTNF-SDE)
 
@@ -878,9 +903,11 @@ $$
 Since \( x_t \) does **not** have an analytical solution, we must **numerically estimate it**:
 
 - **Use SDE discretization**:
+
   $$
   x_{t+\Delta t} = x_t + f(x_t, t) \Delta t + g(x_t, t) \sqrt{\Delta t} \eta_t, \quad \eta_t \sim \mathcal{N}(0, I)
   $$
+
 - Compute the **score function** numerically.
 
 ---
@@ -937,8 +964,8 @@ Some models **combine SDE and ODE approaches** to get the best of both:
 
 $$
 \begin{cases}
-dx = f(x, t) dt + g(t) dw \quad &\text{for } t < T_1\\
-dx = f(x, t) dt \quad \text{for } &\text{for } t \geq T_1
+dx = f(x, t) dt + g(t) dw  &\text{for } t < T_1\\
+dx = f(x, t) dt  &\text{for } t \geq T_1
 \end{cases}
 $$
 

@@ -36,26 +36,36 @@ A stochastic process is a collection of random variables that evolve over time. 
     - \((S, \mathcal{S})\) be a measurable space (typically, \(S = \mathbb{R}\) or \(\mathbb{R}^d\) with its Borel \(\sigma\)-algebra).
 
     A **stochastic process** is a collection (or family) of random variables
+
     $$
     \{X_t : t \in T\},
     $$
+
     where for each \(t \in T\), the mapping
+
     $$
     X_t : \Omega \to S
     $$
+
     is a random variable; that is, for every \(B \in \mathcal{S}\),
+
     $$
     X_t^{-1}(B) = \{\omega \in \Omega : X_t(\omega) \in B\} \in \mathcal{F}.
     $$
 
+
     Alternatively, one may define a stochastic process as a function
+
     $$
     X: T \times \Omega \to S,
     $$
+
     which is jointly measurable with respect to the product \(\sigma\)-algebra \(\mathcal{B}(T) \otimes \mathcal{F}\) and \(\mathcal{S}\). In this formulation, for each fixed \(t \in T\), the mapping
+
     $$
     X(t, \cdot): \Omega \to S
     $$
+
     is a random variable.
 
     ---
@@ -79,9 +89,11 @@ A stochastic process is a collection of random variables that evolve over time. 
 
     2. **Independent Increments:**
         For any sequence of times \(0 \leq t_0 < t_1 < \dots < t_n\), the increments
+
         $$
         W_{t_1} - W_{t_0},\ W_{t_2} - W_{t_1},\ \dots,\ W_{t_n} - W_{t_{n-1}}
         $$
+
         are independent random variables.
 
     3. **Stationary Increments:**
@@ -89,9 +101,11 @@ A stochastic process is a collection of random variables that evolve over time. 
 
     4. **Gaussian Increments:**
        For any \(s, t \geq 0\) with \(s > 0\), the increment \(W_{t+s} - W_t\) is normally distributed with mean 0 and variance \(s\):
+
        $$
        W_{t+s} - W_t \sim N(0, s).
        $$
+
 
     5. **Continuous Paths:**
       With probability 1, the function \(t \mapsto W_t\) is continuous.
@@ -116,7 +130,9 @@ Examples of Wiener Process:
   - You have a **fixed set of choices (four directions)**, and each step has the same size.
   - Time is also discrete—you take one step at a time in fixed intervals.
   - That is given $x_t$, $x_{t+1}$ has two possibles
+
     $$\Delta x = x_{t+1}-x_{t}, p(\Delta x = \Delta t \cdot d_i) = \frac{1}{4}, i\in \{上,下,左,右\} $$
+
     where $d_i$ is the direction, $\Delta t$ is the time step.
 
 - **Brownian Motion: Walking in Infinite Directions**
@@ -128,6 +144,7 @@ Examples of Wiener Process:
   - But now, you can move in **any possible direction**, not just four fixed ones.
   - Your steps become **smaller and more frequent**, eventually forming a continuous, smooth path instead of discrete jumps.
   - that is then $\Delta t \rightarrow 0$  and $d_i$ is the whole Euclidean  space. But for Wiener process, usually we assume $d_i$ is follow a Standard Gaussian Distribution. Formally, we denote
+
     $$ \tag{1} X_{t+1}-X_{t}= \Delta x = \mathcal{N}(0,\Delta t) = \sqrt{\Delta t} \mathcal{N}(0,1) = \Delta W$$
 
 **Summary: Brownian Motion as the Limit of a Discrete Markov Chain**
@@ -157,9 +174,11 @@ where $x(t)$ is the unknown function, and $f(x,t)$ is a known deterministic func
     \frac{dx}{dt} = \lambda x
     $$
 
+
     Solution:
 
     $$x(t) = x_0 e^{\lambda t}$$
+
 
     where $x_0$ is the initial condition.
 
@@ -180,9 +199,11 @@ However, this definition is illegal, since no mather what function here $xi(t)$ 
     In most of the SDE contents, we are talking about the Wiener Process which has good properties like independent and continuity. But there actually has different kinds of SDE. We will introduce this at the end of this article. From now, just consider the random process as the Wiener Process
 
 !!! def "SDE Definition"
+
     $$
     dX_t = f(X_t, t) dt + g(X_t, t) dW_t
     $$
+
 
     where:
 
@@ -210,6 +231,7 @@ used to model stock prices in the **Black-Scholes model** .
     $$\frac{dx(t)}{dt} = f(t, \mathbf{x}) + g(t, \mathbf{x})\xi(t), \quad \text{where} \quad \xi(t) \sim \mathcal{N}(0, \mathbf{I})
     $$
 
+
     is mathematically problematic for defining a stochastic differential equation (SDE). Below are the key reasons:
 
      1. **White Noise as a Generalized Function**
@@ -224,6 +246,7 @@ used to model stock prices in the **Black-Scholes model** .
         - The standard SDE formulation is:
 
             $$dx(t) = f(t, \mathbf{x})dt + g(t, \mathbf{x})dW(t),$$
+
 
             where $dW(t)$ is the increment of a Wiener process.
         - This avoids differentiating $W(t)$ and instead uses integration to handle its irregular paths.
@@ -253,19 +276,23 @@ A very important property we need to care is that $dW(t)\sim \sqrt{dt}$ (asympto
     \end{equation}
     $$
 
+
     and not
 
     $$
     W(t+\delta) - W(t) \sim N(0, \delta^2)
     $$
 
+
     stems from the definition and fundamental properties of Brownian motion (or the Wiener process), which also reflect physical realities. Here are the key points:
 
     1. **Linear Variance Growth:**
       A fundamental property of Brownian motion is that the variance of its increments grows linearly with the time interval. Specifically,
+
       $$
       \operatorname{Var}[W(t+\delta) - W(t)] = \delta.
       $$
+
       This relationship reflects the diffusion phenomenon observed in nature—for instance, in molecular diffusion, the mean squared displacement is proportional to time.
 
     2. **Scale Invariance (Self-Similarity):**
@@ -276,6 +303,7 @@ A very important property we need to care is that $dW(t)\sim \sqrt{dt}$ (asympto
         \{W(ct)\}_{t \ge 0} \stackrel{d}{=} \{\sqrt{c}\,W(t)\}_{t \ge 0}.
         \end{equation}
         $$
+
 
       This scaling property implies that when time is dilated by a factor of \( c \), the magnitude of the process scales by \(\sqrt{c}\), so the variance scales by \( c \). If we were to use \( N(0, \delta^2) \) for the increments, the variance would scale with the square of the time interval, which would contradict this self-similarity property.
 
@@ -291,6 +319,7 @@ A very important property we need to care is that $dW(t)\sim \sqrt{dt}$ (asympto
         W(t+\delta) - W(t) \sim N(0, \delta)
         $$
 
+
         is not an arbitrary choice; it is dictated by the mathematical properties of Brownian motion and the physical behavior of diffusive systems. Choosing \( N(0, \delta^2) \) would lead to a model where the variance grows with the square of the time interval, which does not match the observed and theoretical properties of diffusion.
 
 ## Solving SDE
@@ -304,33 +333,44 @@ Let's consider how to solve ODE first
     \frac{dy}{dx} = -2y
     $$
 
+
     **Solution Steps:**
     1. **Separate variables**:
+
     $$
     \frac{dy}{y} = -2 dx
     $$
+
     2. **Integrate**:
+
     $$
     \ln |y| = -2x + C
     $$
+
     3. **Solve for \( y \)**:
+
     $$
     y = C e^{-2x}
     $$
 
+
     **With Initial Condition \( y(0) = 5 \)**:
+
     $$
     5 = C e^0 \Rightarrow C = 5
     $$
+
     $$
     y = 5 e^{-2x}
     $$
+
 
     ✔ **Final Answer**:
 
     $$
     y = C e^{-2x} \quad \text{(or \( y = 5 e^{-2x} \) if \( y(0) = 5 \))}
     $$
+
     From the examle, we know, it the initial condition is not given, there could be infinite solutions of the ODE since the derivative of constant is always zero. Hence in the following, we are always assume the initial condition is given.
 
 !!! note "General method for ODE solution analytically"
@@ -402,6 +442,7 @@ where the integrand $H_t$ is evaluated at the **left endpoint** of each subinter
 
     This irregularity forces a new calculus.
 4. **integra**
+
    $$\int_{s}^{s+\sigma} dW_t = W_{s+\sigma} - W_{s} \sim \mathcal{N}(0,\sigma)=\sqrt{\sigma}Z, Z\sim\mathcal{N}(0,1)$$
 
 ### Itô’s Lemma
@@ -410,9 +451,11 @@ Itô’s Lemma is a fundamental result in stochastic calculus, often described a
 
 !!! thm "Itô’s Lemma"
     Suppose you have an Itô process \( X_t \) defined by the stochastic differential equation (SDE)
+
     $$
     dX_t = a(t, X_t)\,dt + b(t, X_t)\,dW_t,
     $$
+
     where:
     - \( a(t, X_t) \) is the drift coefficient,
     - \( b(t, X_t) \) is the diffusion coefficient, and
@@ -425,6 +468,7 @@ Itô’s Lemma is a fundamental result in stochastic calculus, often described a
     $$
     df(t, X_t) = \frac{\partial f}{\partial t}(t, X_t)\,dt + \frac{\partial f}{\partial x}(t, X_t)\,dX_t + \frac{1}{2}\frac{\partial^2 f}{\partial x^2}(t, X_t) \,(dX_t)^2.
     $$
+
 
     Since \( dX_t = a(t, X_t)\,dt + b(t, X_t)\,dW_t \), and using the properties of Itô calculus (in particular, \((dW_t)^2 = dt\) and cross-terms like \(dt\,dW_t = 0\)), the formula becomes:
 
@@ -458,6 +502,7 @@ Yes, some **stochastic differential equations (SDEs)** have **closed-form analyt
     dX_t = -\lambda X_t dt + \sigma dW_t
     $$
 
+
     where:
 
     - \( \lambda > 0 \) is a drift coefficient (controls mean reversion),
@@ -473,17 +518,20 @@ Yes, some **stochastic differential equations (SDEs)** have **closed-form analyt
     e^{\lambda t} dX_t + \lambda e^{\lambda t} X_t dt = \sigma e^{\lambda t} dW_t
     $$
 
+
     3. Recognizing the left-hand side as an exact differential:
 
     $$
     d(e^{\lambda t} X_t) = \sigma e^{\lambda t} dW_t
     $$
 
+
     4. Integrating both sides from \( 0 \) to \( t \):
 
     $$
     X_t = X_0 e^{-\lambda t} + \sigma \int_0^t e^{-\lambda (t-s)} dW_s
     $$
+
 
     This is the **closed-form solution** for the Ornstein-Uhlenbeck process.
 
@@ -499,43 +547,54 @@ Some SDEs admit exact solutions formula, often when they fall into these categor
     $$
 
    - Example: **Geometric Brownian Motion (GBM)**
+
      $$
      dX_t = \mu X_t dt + \sigma X_t dW_t
      $$
+
      Solution:
+
      $$
      X_t = X_0 \exp \left( (\mu - \frac{1}{2} \sigma^2)t + \sigma W_t \right)
      $$
 
 2. **Separable SDEs**: If it can be rewritten as:
+
    $$
    f(X_t) dX_t = g(t) dt + h(t) dW_t
    $$
+
    then explicit integration is possible.
 
     **Solution** (Using direct integration when separable):
+
     $$
     \int \frac{1}{f(X_t)} dX_t = \int g(t) dt + \int h(t) dW_t
     $$
 
     For example, if the equation is:
+
     $$
     dX_t = (\alpha X_t + \beta) dt + \sigma dW_t
     $$
+
     - The **solution** can be derived as:
+
     $$
     X_t = e^{\alpha t} \left( X_0 + \int_0^t e^{-\alpha s} (\beta ds + \sigma dW_s) \right)
     $$
 
 3. **Exact Differential Form**: When an integrating factor transforms the SDE into an explicit integral.
+
     $$
     dX_t + P(t) X_t dt = Q(t) dW_t
     $$
+
     - Multiply by the integrating factor \( I_t = e^{\int P(t) dt} \), then integrate:
 
-    $$
-    X_t = e^{-\int_0^t P(s) ds} \left( X_0 + \int_0^t e^{\int_0^s P(r) dr} Q(s) dW_s \right)
-    $$
+$$
+X_t = e^{-\int_0^t P(s) ds} \left( X_0 + \int_0^t e^{\int_0^s P(r) dr} Q(s) dW_s \right)
+$$
 
 ### Famus SDEs
 
@@ -581,9 +640,11 @@ The Itô integral is defined with respect to the **Wiener process** (or Brownian
 ### 3. **Gaussian Increments**
 
 - **Property**: Increments $W_t - W_s$ follow a normal distribution:
+
      $$
      W_t - W_s \sim \mathcal{N}(0, t-s).
      $$
+
 - **Implication**: The Itô integral inherits Gaussian structure, making it analytically tractable.
 
 ---
@@ -591,9 +652,11 @@ The Itô integral is defined with respect to the **Wiener process** (or Brownian
 ### 4. **Quadratic Variation**
 
 - **Property**: The quadratic variation of $W_t$ over $[0, T]$ is $T$:
+
      $$
      \langle W \rangle_T = \lim_{\Delta t \to 0} \sum_{i=0}^{n-1} |W_{t_{i+1}} - W_{t_i}|^2 = T.
      $$
+
 - **Heuristic Rule**: $(dW_t)^2 = dt$ in stochastic calculus.
 - **Implication**: This drives the "extra term" in Itô’s Lemma (e.g., $\frac{1}{2} \sigma^2 \frac{\partial^2 f}{\partial x^2} dt$).
 
@@ -650,32 +713,40 @@ Let recall the numerical methods for ODE
 | **Adaptive RK45 (Dormand-Prince)** | \( O(h^4) \) or \( O(h^5) \) | Explicit | Automatic step size | Uses adaptive step control with embedded RK4 and RK5 methods |
 
 !!! note "KR4 formula"
+
     $$
     k_1 = f(y_n, t_n)
     $$
+
 
     $$
     k_2 = f(y_n + \frac{h}{2} k_1, t_n + \frac{h}{2})
     $$
 
+
     $$
     k_3 = f(y_n + \frac{h}{2} k_2, t_n + \frac{h}{2})
     $$
+
 
     $$
     k_4 = f(y_n + h k_3, t_n + h)
     $$
 
+
     $$
     y_{n+1} = y_n + \frac{h}{6} (k_1 + 2k_2 + 2k_3 + k_4).
     $$
+
 
     Good accuracy $O(h^4)$.
 
 Similar to the ODE solver, we can solve th SDE by the similar numerical methods
 
 !!! note "One thing need to note is that"
+
     $$dW_t \sim \sqrt{dt}$$
+
     when using Talay expansion
 
 ### Euler-Maruyama Discretization
@@ -761,6 +832,7 @@ def milstein(f, g, X0, T, dt):
     \;+\;\int_{t_n}^{t_{n+1}} g\bigl(X_{s},s\bigr)\,dW_{s}.
     $$
 
+
     The Milstein scheme refines the simpler **Euler–Maruyama**  scheme by adding a correction term that captures more information about how $g(x)$ varies with $x$. This provides higher-order accuracy in a single Brownian dimension.
 
 
@@ -775,9 +847,11 @@ def milstein(f, g, X0, T, dt):
 
     $$ \int_{t_n}^{t_{n+1}} f\bigl(X_{s},s\bigr)\,ds$$
 
+
     2. **Diffusion integral** :
 
     $$\int_{t_n}^{t_{n+1}} g\bigl(X_{s},s\bigr)\,dW_{s}$$
+
 
     Over a small step $\Delta t$, a first approximation uses $f(X_{s}, s) \approx f(X_n, t_n)$ and $g(X_{s}, s) \approx g(X_n, t_n)$.
 
@@ -788,11 +862,13 @@ def milstein(f, g, X0, T, dt):
     \;\approx\; f(X_{n}, t_n)\,\Delta t,
     $$
 
+
     $$
     \int_{t_n}^{t_{n+1}} g\bigl(X_{n}, t_n\bigr)\,dW_{s}
     \;\approx\; g(X_{n}, t_n)\,\bigl(W_{t_{n+1}} - W_{t_n}\bigr)
     \;=\; g(X_{n}, t_n)\,\Delta W_{n}.
     $$
+
 
     This is precisely the **Euler–Maruyama**  step. However, Euler–Maruyama does **not**  capture the effect of how $g$ changes when $X_s$ itself changes over the interval. Milstein’s idea is to expand $g(X_{s}, s)$ around $X_{n}$ and keep enough terms in the expansion so that the variance structure (Itô’s isometry) is better approximated.
 
@@ -807,6 +883,7 @@ def milstein(f, g, X0, T, dt):
     \;+\; \frac{\partial g}{\partial x}\bigl(X_{n}\bigr)\,\bigl(X_{s} - X_{n}\bigr),
     $$
 
+
     suppressing explicit time arguments for brevity and focusing on the dependence on $x$. Then:
 
     $$
@@ -815,6 +892,7 @@ def milstein(f, g, X0, T, dt):
     \int_{t_n}^{t_{n+1}} \Bigl[g(X_n)
     \;+\; g'(X_n)\,\bigl(X_{s} - X_{n}\bigr)\Bigr]\,dW_{s}.
     $$
+
 
     The term $X_{s} - X_{n}$ can be approximated by the **leading-order**  contributions from the SDE:
 
@@ -830,6 +908,7 @@ def milstein(f, g, X0, T, dt):
     g(X_{n})\,(W_{s} - W_{t_n}).
     $$
 
+
     Hence,
 
     $$
@@ -839,6 +918,7 @@ def milstein(f, g, X0, T, dt):
     \;+\;
     g(X_{n})\,\bigl(W_{s} - W_{t_n}\bigr) \Bigr].
     $$
+
 
     Substitute back inside the stochastic integral:
 
@@ -853,6 +933,7 @@ def milstein(f, g, X0, T, dt):
     \text{(terms involving \(\,f\))}.
     $$
 
+
     However, for the one-dimensional Milstein method **in the Itô sense** , the primary correction stems from
 
     $$
@@ -860,14 +941,17 @@ def milstein(f, g, X0, T, dt):
     g'(X_n)\,g(X_{n})\,\bigl(W_{s} - W_{t_n}\bigr)\,dW_{s},
     $$
 
+
     because the $\,f$-related terms contribute at a higher order in $\Delta t$.
 
     ##### Evaluating the second stochastic integral
 
     The integral
+
     $$
     \int_{t_n}^{t_{n+1}} (W_{s} - W_{t_n})\,dW_{s}
     $$
+
 
     in the Itô sense is well-known to satisfy:
 
@@ -876,6 +960,7 @@ def milstein(f, g, X0, T, dt):
     \;=\;
     \tfrac12 \Bigl[(W_{t_{n+1}} - W_{t_n})^2 - (t_{n+1} - t_n)\Bigr].
     $$
+
 
     This identity follows from an Itô integration by parts or can be seen from Itô’s formula applied to $\frac12 (W_s - W_{t_n})^2$.
     Hence,
@@ -889,12 +974,14 @@ def milstein(f, g, X0, T, dt):
     \tfrac12 \Bigl[(\Delta W_{n})^2 - \Delta t\Bigr].
     $$
 
+
     Thus the **additional correction**  to the usual Euler–Maruyama term is:
 
     $$
     \tfrac12\,g\bigl(X_{n}\bigr)\,\frac{\partial\,g\bigl(X_{n}\bigr)}{\partial x}
     \bigl((\Delta W_{n})^2 - \Delta t \bigr).
     $$
+
 
 
     #### Collecting All Terms
@@ -906,11 +993,13 @@ def milstein(f, g, X0, T, dt):
     f\bigl(X_{n}, t_n\bigr)\,\Delta t,
     $$
 
+
     4. **Euler–Maruyama “diffusion”** :
 
     $$
     g\bigl(X_{n}, t_n\bigr)\,\Delta W_{n},
     $$
+
 
     5. **Milstein correction** :
 
@@ -918,6 +1007,7 @@ def milstein(f, g, X0, T, dt):
     \tfrac{1}{2}\,g\bigl(X_{n}, t_n\bigr)\,\frac{\partial\,g\bigl(X_{n}, t_n\bigr)}{\partial x}
     \Bigl((\Delta W_{n})^2 - \Delta t\Bigr).
     $$
+
 
     Hence, the Milstein update is
 
@@ -931,6 +1021,7 @@ def milstein(f, g, X0, T, dt):
     \Bigl((\Delta W_{n})^2 - \Delta t\Bigr).
     }
     $$
+
 
     ##### Key Points in the Derivation
 
@@ -1208,9 +1299,11 @@ Below are several common forms of stochastic differential equations (SDEs) when 
 ### 1. SDE Driven by Brownian Motion
 
 **Differential Form:**
+
 $$
 dX_t = b(X_t, t)\,dt + \sigma(X_t, t)\,dW_t,
 $$
+
 where:
 
 - \(b(X_t, t)\) is the drift coefficient,
@@ -1218,9 +1311,11 @@ where:
 - \(W_t\) is a standard Brownian motion.
 
 **Integral Form:**
+
 $$
 X_t = X_0 + \int_0^t b(X_s, s)\,ds + \int_0^t \sigma(X_s, s)\,dW_s.
 $$
+
 Here, the stochastic integral \(\int_0^t \sigma(X_s, s)\,dW_s\) is interpreted in the Itô sense.
 
 ---
@@ -1230,9 +1325,11 @@ Here, the stochastic integral \(\int_0^t \sigma(X_s, s)\,dW_s\) is interpreted i
 Lévy processes generalize Brownian motion by allowing jumps. In many models, a Lévy process is represented as a combination of a continuous part (often still a Brownian motion) and a jump part, typically modeled using a compensated Poisson random measure.
 
 **Differential Form:**
+
 $$
 dX_t = b(X_{t-}, t)\,dt + \sigma(X_{t-}, t)\,dW_t + \int_{\mathbb{R}} \gamma(X_{t-}, t, z)\,\tilde{N}(dt,dz),
 $$
+
 where:
 
 - \(X_{t-}\) denotes the left-limit of \(X\) at time \(t\) (to handle jump discontinuities),
@@ -1240,6 +1337,7 @@ where:
 - \(\gamma(X_{t-}, t, z)\) describes the impact on \(X_t\) when a jump of size \(z\) occurs.
 
 **Integral Form:**
+
 $$
 X_t = X_0 + \int_0^t b(X_{s-}, s)\,ds + \int_0^t \sigma(X_{s-}, s)\,dW_s + \int_0^t\int_{\mathbb{R}} \gamma(X_{s-}, s, z)\,\tilde{N}(ds,dz).
 $$
@@ -1251,16 +1349,21 @@ $$
 In some models, the jump component is emphasized. Here, the SDE might include both a continuous part (from Brownian motion) and a pure jump part, often represented by a Poisson random measure.
 
 **Differential Form:**
+
 $$
 dX_t = b(X_{t-}, t)\,dt + \sigma(X_{t-}, t)\,dW_t + dJ_t,
 $$
+
 where the jump process \(J_t\) is given by
+
 $$
 J_t = \int_0^t\int_{\mathbb{R}} z\,N(ds,dz),
 $$
+
 with \(N(ds,dz)\) being the (non-compensated) Poisson random measure.
 
 **Integral Form:**
+
 $$
 X_t = X_0 + \int_0^t b(X_{s-}, s)\,ds + \int_0^t \sigma(X_{s-}, s)\,dW_s + \int_0^t\int_{\mathbb{R}} z\,N(ds,dz).
 $$
@@ -1272,15 +1375,19 @@ $$
 Fractional Brownian motion \(B^H_t\) is a generalization of standard Brownian motion that exhibits self-similarity and long-range dependence. Its increments are not independent, which means that the standard Itô calculus does not apply; one must use other definitions of stochastic integration (e.g., Young integration or the rough paths approach).
 
 **Differential Form:**
+
 $$
 dX_t = b(X_t, t)\,dt + \sigma(X_t, t)\,dB^H_t,
 $$
+
 where \(B^H_t\) is a fractional Brownian motion with Hurst parameter \(H \in (0,1)\).
 
 **Integral Form:**
+
 $$
 X_t = X_0 + \int_0^t b(X_s, s)\,ds + \int_0^t \sigma(X_s, s)\,dB^H_s.
 $$
+
 The integral \(\int_0^t \sigma(X_s, s)\,dB^H_s\) is defined according to a theory appropriate for fractional Brownian motion, such as Young integration or the rough paths framework.
 
 ---
