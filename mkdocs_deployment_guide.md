@@ -9,15 +9,19 @@
 
 1. **Install MkDocs**:
 
-   ```bash
-   pip install mkdocs
-   pip install mkdocs-material
-   pip install pymdown-extensions
-   pip install mkdocs mkdocs-gitbook
-   pip install mkdocs-glightbox
+    ```bash
+    pip install mkdocs
+    pip install mkdocs-material
+    pip install pymdown-extensions
+    pip install mkdocs mkdocs-gitbook
+    pip install mkdocs-glightbox
+    ```
 
+    If got error "pymdown-extensions", upgrade to the latest version:
 
-   ```
+    ```bash
+       pip install --upgrade pymdown-extensions
+    ```
 
 2. **Initialize MkDocs Project**:
 
@@ -31,6 +35,13 @@
 
 4. **Configure Navigation**:
    - Edit `mkdocs.yml` to define the site's navigation.
+
+6. **Add number plugin**
+
+    ```bash
+    # Follow the guide here: https://github.com/ignorantshr/mkdocs-add-number-plugin
+    pip install mkdocs-add-number-plugin
+    ```
 
 5. **Build and Serve Locally**:
 
@@ -295,9 +306,11 @@ extra_javascript:
 ```
 
 ```markdown
+
 $$
 \int_a^b f(x) dx
 $$
+
 ```
 
 ✅ **Result**:
@@ -372,9 +385,11 @@ includes/
 ```markdown
 :einstein: $E=mc^2$
 :bayes: $P(A|B) = \frac{P(B|A) P(A)}{P(B)}$
+
 :integral: $$
 \int_a^b f(x) dx
 $$
+
 ```
 
 ---
@@ -446,7 +461,9 @@ You can create interactive buttons inside your documentation.
 | ✅ Task Lists | `- [x] Task` |
 | ✅ Code Line Numbers | `linenums: true` |
 | ✅ Highlight Text | `==highlight==` |
+
 | ✅ Math Equations | `$$ E=mc^2 $$` |
+
 | ✅ Mermaid Diagrams | ` ```mermaid` |
 | ✅ Variable References | `:einstein:` |
 
