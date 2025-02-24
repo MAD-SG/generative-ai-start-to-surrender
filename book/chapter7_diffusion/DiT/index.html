@@ -1812,7 +1812,7 @@
           <li class="md-nav__item">
   <a href="#12-positional-encoding" class="md-nav__link">
     <span class="md-ellipsis">
-      1.2 positional encoding
+      1.2 Positional Encoding
     </span>
   </a>
   
@@ -1826,26 +1826,26 @@
         <li class="md-nav__item">
   <a href="#2-dit-block-design" class="md-nav__link">
     <span class="md-ellipsis">
-      2. Dit Block Design
+      2. DiT Block Design
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="2. Dit Block Design">
+    <nav class="md-nav" aria-label="2. DiT Block Design">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
   <a href="#21-in-context-conditioning" class="md-nav__link">
     <span class="md-ellipsis">
-      2.1 In-context conditioning
+      2.1 In-context Conditioning
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#22-cross-attenstion-block" class="md-nav__link">
+  <a href="#22-cross-attention-block" class="md-nav__link">
     <span class="md-ellipsis">
-      2.2 Cross Attenstion Block
+      2.2 Cross Attention Block
     </span>
   </a>
   
@@ -1861,9 +1861,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#24-adaln-zero-initial" class="md-nav__link">
+  <a href="#24-adaln-zero-initialization" class="md-nav__link">
     <span class="md-ellipsis">
-      2.4 adaLN Zero Initial
+      2.4 adaLN Zero Initialization
     </span>
   </a>
   
@@ -1872,7 +1872,7 @@
           <li class="md-nav__item">
   <a href="#25-overall-structure-of-dit" class="md-nav__link">
     <span class="md-ellipsis">
-      2.5 Overall structure of DiT
+      2.5 Overall Structure of DiT
     </span>
   </a>
   
@@ -2388,36 +2388,35 @@
 
 <h1 id="scalable-diffusion-models-with-transformers-dit">Scalable Diffusion Models with Transformers (DiT)<a class="headerlink" href="#scalable-diffusion-models-with-transformers-dit" title="Permanent link">&para;</a></h1>
 <ul>
-<li>Year 2023 Mar</li>
-<li>Author:</li>
-<li>威廉·皮布尔斯（William Peebles）<ul>
-<li>DiT model (UC Berkely)</li>
-<li>SORA project (open ai)</li>
+<li>Year: March 2023</li>
+<li>Authors:</li>
+<li>William Peebles<ul>
+<li>DiT model (UC Berkeley)</li>
+<li>SORA project (OpenAI)</li>
 </ul>
 </li>
-<li>谢赛宁（Saining Xie）<ul>
+<li>Saining Xie<ul>
 <li>DiT model (New York University)</li>
 <li>ResNeXt</li>
-<li>Cambrian-1 with Yan Lecun</li>
+<li>Cambrian-1 with Yann LeCun</li>
 </ul>
 </li>
-<li>Main contribution</li>
-<li>replace the U-Net backbone with transformers</li>
-<li>Analyze the scalability properties</li>
-<li>repo: <a href="https://github.com/facebookresearch/DiT/tree/main">https://github.com/facebookresearch/DiT/tree/main</a></li>
+<li>Main Contributions:</li>
+<li>Replaced the U-Net backbone with transformers</li>
+<li>Analyzed scalability properties</li>
+<li>Repository: <a href="https://github.com/facebookresearch/DiT/tree/main">https://github.com/facebookresearch/DiT/tree/main</a></li>
 </ul>
-<p><a class="glightbox" href="../../../images/image-80.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="alt text" src="../../../images/image-80.png" /></a></p>
 <h2 id="1-diffusion-transformer-design">1. Diffusion Transformer Design<a class="headerlink" href="#1-diffusion-transformer-design" title="Permanent link">&para;</a></h2>
 <div class="admonition note">
-<p>The transformer diffusion is also trained with the latent diffusion model. Thus the transformer diffusion is desinged on the latent space.</p>
+<p>The transformer diffusion is also trained with the latent diffusion model. Thus, the transformer diffusion is designed on the latent space.</p>
 </div>
 <h3 id="11-patchify">1.1 Patchify<a class="headerlink" href="#11-patchify" title="Permanent link">&para;</a></h3>
 <ul>
-<li>convert spatial input into a sequence of <span class="arithmatex">\(T\)</span> tokens</li>
-<li>suppose the input size if [64, 64, 4], <span class="arithmatex">\(p=16\)</span>, then for each <span class="arithmatex">\(16\times16\)</span> sqaure, we flatten into the single token with a linear embedding layer. totally, we obtained <span class="arithmatex">\(64\times 64 / (p^2) = 16\)</span> tokens. The output shape should be [16,d]</li>
-<li>In the design, the patchsize  <span class="arithmatex">\(p\)</span> is regarded as a parameter</li>
+<li>Converts spatial input into a sequence of <span class="arithmatex">\(T\)</span> tokens.</li>
+<li>Suppose the input size is [64, 64, 4], <span class="arithmatex">\(p=16\)</span>. For each <span class="arithmatex">\(16\times16\)</span> square, we flatten it into a single token with a linear embedding layer. In total, we obtain <span class="arithmatex">\(64\times 64 / (p^2) = 16\)</span> tokens. The output shape should be [16, d].</li>
+<li>In the design, the patch size <span class="arithmatex">\(p\)</span> is regarded as a parameter.</li>
 </ul>
-<p>We can use the conv2d to do the patchify, then we can use the flatten and transpose to reshape the output.</p>
+<p>We can use <code>conv2d</code> to perform patchification, followed by flattening and transposing to reshape the output.</p>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1"> 1</a></span>
 <span class="normal"><a href="#__codelineno-0-2"> 2</a></span>
 <span class="normal"><a href="#__codelineno-0-3"> 3</a></span>
@@ -2464,8 +2463,8 @@
 <a id="__codelineno-0-22" name="__codelineno-0-22"></a><span class="n">patches</span> <span class="o">=</span> <span class="n">patches</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># Shape: (batch_size, num_patches, embedding_dim)</span>
 <a id="__codelineno-0-23" name="__codelineno-0-23"></a><span class="nb">print</span><span class="p">(</span><span class="n">patches</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># Output: torch.Size([batch_size, 16, 768])</span>
 </code></pre></div></td></tr></table></div>
-<h3 id="12-positional-encoding">1.2 positional encoding<a class="headerlink" href="#12-positional-encoding" title="Permanent link">&para;</a></h3>
-<p>Similar to the normal sine-cosine positional encoding, we can also use the conv2d to do the positional encoding.</p>
+<h3 id="12-positional-encoding">1.2 Positional Encoding<a class="headerlink" href="#12-positional-encoding" title="Permanent link">&para;</a></h3>
+<p>Similar to the standard sine-cosine positional encoding, we can also use <code>conv2d</code> for positional encoding.</p>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-1-1"> 1</a></span>
 <span class="normal"><a href="#__codelineno-1-2"> 2</a></span>
 <span class="normal"><a href="#__codelineno-1-3"> 3</a></span>
@@ -2518,7 +2517,7 @@
 <a id="__codelineno-1-25" name="__codelineno-1-25"></a>        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">pe</span><span class="p">[:,</span> <span class="p">:</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="p">:]</span>
 <a id="__codelineno-1-26" name="__codelineno-1-26"></a>        <span class="k">return</span> <span class="n">x</span>
 </code></pre></div></td></tr></table></div>
-<p>In transformer models, positional encoding is used to inject information about the position of tokens in a sequence, since the model itself doesn't inherently capture positional information. A common method is to use sinusoidal functions to generate these encodings. The formulas for sine and cosine positional encodings are as follows:</p>
+<p>In transformer models, positional encoding is used to inject information about the position of tokens in a sequence, as the model itself doesn't inherently capture positional information. A common method is to use sinusoidal functions to generate these encodings. The formulas for sine and cosine positional encodings are as follows:</p>
 <p>For a given position <span class="arithmatex">\( \text{pos} \)</span> and embedding dimension <span class="arithmatex">\( i \)</span>:</p>
 <ul>
 <li>When <span class="arithmatex">\( i \)</span> is even:</li>
@@ -2527,34 +2526,33 @@
 <ul>
 <li>When <span class="arithmatex">\( i \)</span> is odd:</li>
 </ul>
-<div class="arithmatex">\[\text{PE}(\text{pos}, i) = \cos\left(\frac{\text{pos}}{10000^{\frac{i}{d_{\text{model}}}}}\right) \]</div>
+<div class="arithmatex">\[ \text{PE}(\text{pos}, i) = \cos\left(\frac{\text{pos}}{10000^{\frac{i}{d_{\text{model}}}}}\right) \]</div>
 <p>Here, <span class="arithmatex">\( d_{\text{model}} \)</span> represents the dimensionality of the model's embeddings. These functions use different frequencies to encode each dimension, allowing the model to distinguish between different positions in the sequence. This approach was introduced in the "Attention Is All You Need" paper.</p>
 <iframe width="560" height="315" src="https://www.youtube.com/embed/8DDDAT9JCu0" frameborder="0" allowfullscreen></iframe>
 
-<h2 id="2-dit-block-design">2. Dit Block Design<a class="headerlink" href="#2-dit-block-design" title="Permanent link">&para;</a></h2>
-<p>The core is to design how to accept condition information like</p>
+<h2 id="2-dit-block-design">2. DiT Block Design<a class="headerlink" href="#2-dit-block-design" title="Permanent link">&para;</a></h2>
+<p>The core challenge is to design how to incorporate conditional information such as:</p>
 <ul>
-<li>timestep <span class="arithmatex">\(t\)</span></li>
-<li>class label <span class="arithmatex">\(c\)</span></li>
-<li>guided text</li>
-<li>guided spatial information such as depth, etc.</li>
+<li>Timestep <span class="arithmatex">\(t\)</span></li>
+<li>Class label <span class="arithmatex">\(c\)</span></li>
+<li>Guided text</li>
+<li>Guided spatial information such as depth, etc.</li>
 </ul>
-<p>To implement this, the paper design four different blocks to accept the condition</p>
-<h3 id="21-in-context-conditioning">2.1 In-context conditioning<a class="headerlink" href="#21-in-context-conditioning" title="Permanent link">&para;</a></h3>
-<p>Similar to the <code>cls</code> token in ViT, treat the embeddings of <span class="arithmatex">\(t\)</span> and <span class="arithmatex">\(c\)</span> as two additional tokens in the input sequence, which is</p>
+<p>To implement this, the paper designs four different blocks to accept the conditions.</p>
+<h3 id="21-in-context-conditioning">2.1 In-context Conditioning<a class="headerlink" href="#21-in-context-conditioning" title="Permanent link">&para;</a></h3>
+<p>Similar to the <code>cls</code> token in ViT, treat the embeddings of <span class="arithmatex">\(t\)</span> and <span class="arithmatex">\(c\)</span> as two additional tokens in the input sequence:</p>
 <div class="arithmatex">\[
-[e_t, e_c, patch_1, patch_2, ...,patch_N]
+[e_t, e_c, \text{patch}_1, \text{patch}_2, ..., \text{patch}_N]
 \]</div>
 <p>Then the input sequence is passed through a transformer encoder to extract context information.</p>
-<h3 id="22-cross-attenstion-block">2.2 Cross Attenstion Block<a class="headerlink" href="#22-cross-attenstion-block" title="Permanent link">&para;</a></h3>
-<p>Similar in the Latent Diffusion <a href="../ldm_handson/">latent diffusion handson</a></p>
+<h3 id="22-cross-attention-block">2.2 Cross Attention Block<a class="headerlink" href="#22-cross-attention-block" title="Permanent link">&para;</a></h3>
+<p>Similar to the Latent Diffusion <a href="../ldm_handson/">latent diffusion hands-on</a></p>
 <p><a class="glightbox" href="../../images/image-81.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="../../images/image-81.png" width="200" /></a></p>
 <p><a class="glightbox" href="https://media.licdn.com/dms/image/v2/D5612AQG0az4xyd5ODQ/article-cover_image-shrink_600_2000/article-cover_image-shrink_600_2000/0/1687101703871?e=2147483647&amp;v=beta&amp;t=5dL9K_PU8JZedBPh67hVx71LDc_K-GND1Y5vB8i0sOA" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://media.licdn.com/dms/image/v2/D5612AQG0az4xyd5ODQ/article-cover_image-shrink_600_2000/article-cover_image-shrink_600_2000/0/1687101703871?e=2147483647&amp;v=beta&amp;t=5dL9K_PU8JZedBPh67hVx71LDc_K-GND1Y5vB8i0sOA" /></a></p>
-<p>The <span class="arithmatex">\(t\)</span> and <span class="arithmatex">\(c\)</span> are concated as lenght-two sequence, and act as <span class="arithmatex">\(K\)</span> and <span class="arithmatex">\(V\)</span> in the cross attention block as show in the above picture.</p>
+<p>The <span class="arithmatex">\(t\)</span> and <span class="arithmatex">\(c\)</span> are concatenated as a length-two sequence and act as <span class="arithmatex">\(K\)</span> and <span class="arithmatex">\(V\)</span> in the cross-attention block, as shown in the above picture.</p>
 <h3 id="23-adaptive-layer-norm-adaln">2.3 Adaptive Layer Norm (adaLN)<a class="headerlink" href="#23-adaptive-layer-norm-adaln" title="Permanent link">&para;</a></h3>
 <p><a class="glightbox" href="https://theaisummer.com/static/ac89fbcf1c115f07ae68af695c28c4a0/ee604/normalization.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://theaisummer.com/static/ac89fbcf1c115f07ae68af695c28c4a0/ee604/normalization.png" /></a></p>
-<p>Borrow idea from the style gan AdaIN</p>
-<p>Here is a comparison of <strong>Adaptive Layer Normalization (adaLN)</strong> in <strong>DiT</strong> and <strong>Adaptive Instance Normalization (AdaIN)</strong> in <strong>StyleGAN</strong> in a tabular format:</p>
+<p>Borrowing ideas from StyleGAN's AdaIN, here is a comparison of <strong>Adaptive Layer Normalization (adaLN)</strong> in <strong>DiT</strong> and <strong>Adaptive Instance Normalization (AdaIN)</strong> in <strong>StyleGAN</strong> in tabular format:</p>
 <table>
 <thead>
 <tr>
@@ -2596,53 +2594,7 @@
 </tr>
 </tbody>
 </table>
-<p>Here is the structure of AdaLN.</p>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-2-1"> 1</a></span>
-<span class="normal"><a href="#__codelineno-2-2"> 2</a></span>
-<span class="normal"><a href="#__codelineno-2-3"> 3</a></span>
-<span class="normal"><a href="#__codelineno-2-4"> 4</a></span>
-<span class="normal"><a href="#__codelineno-2-5"> 5</a></span>
-<span class="normal"><a href="#__codelineno-2-6"> 6</a></span>
-<span class="normal"><a href="#__codelineno-2-7"> 7</a></span>
-<span class="normal"><a href="#__codelineno-2-8"> 8</a></span>
-<span class="normal"><a href="#__codelineno-2-9"> 9</a></span>
-<span class="normal"><a href="#__codelineno-2-10">10</a></span>
-<span class="normal"><a href="#__codelineno-2-11">11</a></span>
-<span class="normal"><a href="#__codelineno-2-12">12</a></span>
-<span class="normal"><a href="#__codelineno-2-13">13</a></span>
-<span class="normal"><a href="#__codelineno-2-14">14</a></span>
-<span class="normal"><a href="#__codelineno-2-15">15</a></span>
-<span class="normal"><a href="#__codelineno-2-16">16</a></span>
-<span class="normal"><a href="#__codelineno-2-17">17</a></span>
-<span class="normal"><a href="#__codelineno-2-18">18</a></span>
-<span class="normal"><a href="#__codelineno-2-19">19</a></span>
-<span class="normal"><a href="#__codelineno-2-20">20</a></span>
-<span class="normal"><a href="#__codelineno-2-21">21</a></span>
-<span class="normal"><a href="#__codelineno-2-22">22</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="k">class</span> <span class="nc">DiTBlock</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3"></a><span class="sd">    A DiT block with adaptive layer norm zero (adaLN-Zero) conditioning.</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">num_heads</span><span class="p">,</span> <span class="n">mlp_ratio</span><span class="o">=</span><span class="mf">4.0</span><span class="p">,</span> <span class="o">**</span><span class="n">block_kwargs</span><span class="p">):</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">norm1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">elementwise_affine</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">attn</span> <span class="o">=</span> <span class="n">Attention</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">num_heads</span><span class="o">=</span><span class="n">num_heads</span><span class="p">,</span> <span class="n">qkv_bias</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">block_kwargs</span><span class="p">)</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">norm2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">elementwise_affine</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10"></a>        <span class="n">mlp_hidden_dim</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">hidden_size</span> <span class="o">*</span> <span class="n">mlp_ratio</span><span class="p">)</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11"></a>        <span class="n">approx_gelu</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">GELU</span><span class="p">(</span><span class="n">approximate</span><span class="o">=</span><span class="s2">&quot;tanh&quot;</span><span class="p">)</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">mlp</span> <span class="o">=</span> <span class="n">Mlp</span><span class="p">(</span><span class="n">in_features</span><span class="o">=</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">hidden_features</span><span class="o">=</span><span class="n">mlp_hidden_dim</span><span class="p">,</span> <span class="n">act_layer</span><span class="o">=</span><span class="n">approx_gelu</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">adaLN_modulation</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14"></a>            <span class="n">nn</span><span class="o">.</span><span class="n">SiLU</span><span class="p">(),</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15"></a>            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="mi">6</span> <span class="o">*</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16"></a>        <span class="p">)</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17"></a>
-<a id="__codelineno-2-18" name="__codelineno-2-18"></a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19"></a>        <span class="n">shift_msa</span><span class="p">,</span> <span class="n">scale_msa</span><span class="p">,</span> <span class="n">gate_msa</span><span class="p">,</span> <span class="n">shift_mlp</span><span class="p">,</span> <span class="n">scale_mlp</span><span class="p">,</span> <span class="n">gate_mlp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">adaLN_modulation</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="o">.</span><span class="n">chunk</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20"></a>        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">gate_msa</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">attn</span><span class="p">(</span><span class="n">modulate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">norm1</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">shift_msa</span><span class="p">,</span> <span class="n">scale_msa</span><span class="p">))</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21"></a>        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">gate_mlp</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">mlp</span><span class="p">(</span><span class="n">modulate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">norm2</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">shift_mlp</span><span class="p">,</span> <span class="n">scale_mlp</span><span class="p">))</span>
-<a id="__codelineno-2-22" name="__codelineno-2-22"></a>        <span class="k">return</span> <span class="n">x</span>
-</code></pre></div></td></tr></table></div>
-<p><a class="glightbox" href="../../images/image-82.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="../../images/image-82.png" width="200" /></a></p>
-<p>here <code>adaLN_modulation</code> predicts the parameters <span class="arithmatex">\(\alpha_1\)</span>, <span class="arithmatex">\(\alpha_2\)</span>, <span class="arithmatex">\(\beta_1\)</span>, <span class="arithmatex">\(\beta_2\)</span>, <span class="arithmatex">\(\gamma_1\)</span>, <span class="arithmatex">\(\gamma_2\)</span>.</p>
+<p>Here <code>adaLN_modulation</code> predicts the parameters <span class="arithmatex">\(\alpha_1\)</span>, <span class="arithmatex">\(\alpha_2\)</span>, <span class="arithmatex">\(\beta_1\)</span>, <span class="arithmatex">\(\beta_2\)</span>, <span class="arithmatex">\(\gamma_1\)</span>, <span class="arithmatex">\(\gamma_2\)</span>.</p>
 <p>The <strong>DiTBlock with Adaptive Layer Norm Zero (adaLN-Zero)</strong> can be mathematically represented by the following function:</p>
 <div class="arithmatex">\[
 (S_{\text{MSA}}, \alpha_{\text{MSA}}, G_{\text{MSA}}, S_{\text{MLP}}, \alpha_{\text{MLP}}, G_{\text{MLP}}) = f_{\text{adaLN}}(C)
@@ -2659,63 +2611,59 @@
 <div class="arithmatex">\[
  X'' = X' + G_{\text{MLP}} \cdot \text{MLP} \left( \alpha_{\text{MLP}} \cdot \frac{X' - \mu_{X'}}{\sigma_{X'} + \epsilon} + S_{\text{MLP}} \right)
 \]</div>
-<h3 id="24-adaln-zero-initial">2.4 adaLN Zero Initial<a class="headerlink" href="#24-adaln-zero-initial" title="Permanent link">&para;</a></h3>
-<p>Assume that zero initial for residule network is benifitial, we add the parameter <span class="arithmatex">\(scale\)</span> to control the effects of adaLN. And at initial we initial all the parameters of linear layers to 0.</p>
-<h3 id="25-overall-structure-of-dit">2.5 Overall structure of DiT<a class="headerlink" href="#25-overall-structure-of-dit" title="Permanent link">&para;</a></h3>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-3-1"> 1</a></span>
-<span class="normal"><a href="#__codelineno-3-2"> 2</a></span>
-<span class="normal"><a href="#__codelineno-3-3"> 3</a></span>
-<span class="normal"><a href="#__codelineno-3-4"> 4</a></span>
-<span class="normal"><a href="#__codelineno-3-5"> 5</a></span>
-<span class="normal"><a href="#__codelineno-3-6"> 6</a></span>
-<span class="normal"><a href="#__codelineno-3-7"> 7</a></span>
-<span class="normal"><a href="#__codelineno-3-8"> 8</a></span>
-<span class="normal"><a href="#__codelineno-3-9"> 9</a></span>
-<span class="normal"><a href="#__codelineno-3-10">10</a></span>
-<span class="normal"><a href="#__codelineno-3-11">11</a></span>
-<span class="normal"><a href="#__codelineno-3-12">12</a></span>
-<span class="normal"><a href="#__codelineno-3-13">13</a></span>
-<span class="normal"><a href="#__codelineno-3-14">14</a></span>
-<span class="normal"><a href="#__codelineno-3-15">15</a></span>
-<span class="normal"><a href="#__codelineno-3-16">16</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1"></a>  <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3"></a><span class="sd">        Forward pass of DiT.</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4"></a><span class="sd">        x: (N, C, H, W) tensor of spatial inputs (images or latent representations of images)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5"></a><span class="sd">        t: (N,) tensor of diffusion timesteps</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6"></a><span class="sd">        y: (N,) tensor of class labels</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7"></a><span class="sd">        &quot;&quot;&quot;</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8"></a>        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_embedder</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos_embed</span>  <span class="c1"># (N, T, D), where T = H * W / patch_size ** 2</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9"></a>        <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_embedder</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>                   <span class="c1"># (N, D)</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10"></a>        <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_embedder</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">)</span>    <span class="c1"># (N, D)</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11"></a>        <span class="n">c</span> <span class="o">=</span> <span class="n">t</span> <span class="o">+</span> <span class="n">y</span>                                <span class="c1"># (N, D)</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12"></a>        <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">:</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13"></a>            <span class="n">x</span> <span class="o">=</span> <span class="n">block</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>                      <span class="c1"># (N, T, D)</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14"></a>        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">final_layer</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>                <span class="c1"># (N, T, patch_size ** 2 * out_channels)</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15"></a>        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unpatchify</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>                   <span class="c1"># (N, out_channels, H, W)</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16"></a>        <span class="k">return</span> <span class="n">x</span>
+<h3 id="24-adaln-zero-initialization">2.4 adaLN Zero Initialization<a class="headerlink" href="#24-adaln-zero-initialization" title="Permanent link">&para;</a></h3>
+<p>Assuming that zero initialization for residual networks is beneficial, we add the parameter <span class="arithmatex">\(scale\)</span> to control the effects of adaLN. Initially, we set all the parameters of linear layers to 0.</p>
+<h3 id="25-overall-structure-of-dit">2.5 Overall Structure of DiT<a class="headerlink" href="#25-overall-structure-of-dit" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-2-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-2-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-2-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-2-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-2-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-2-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-2-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-2-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-2-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-2-10">10</a></span>
+<span class="normal"><a href="#__codelineno-2-11">11</a></span>
+<span class="normal"><a href="#__codelineno-2-12">12</a></span>
+<span class="normal"><a href="#__codelineno-2-13">13</a></span>
+<span class="normal"><a href="#__codelineno-2-14">14</a></span>
+<span class="normal"><a href="#__codelineno-2-15">15</a></span>
+<span class="normal"><a href="#__codelineno-2-16">16</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1"></a>  <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3"></a><span class="sd">        Forward pass of DiT.</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4"></a><span class="sd">        x: (N, C, H, W) tensor of spatial inputs (images or latent representations of images)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5"></a><span class="sd">        t: (N,) tensor of diffusion timesteps</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6"></a><span class="sd">        y: (N,) tensor of class labels</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8"></a>        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_embedder</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos_embed</span>  <span class="c1"># (N, T, D), where T = H * W / patch_size ** 2</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9"></a>        <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_embedder</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>                   <span class="c1"># (N, D)</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10"></a>        <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_embedder</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">)</span>    <span class="c1"># (N, D)</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11"></a>        <span class="n">c</span> <span class="o">=</span> <span class="n">t</span> <span class="o">+</span> <span class="n">y</span>                                <span class="c1"># (N, D)</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12"></a>        <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">:</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13"></a>            <span class="n">x</span> <span class="o">=</span> <span class="n">block</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>                      <span class="c1"># (N, T, D)</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14"></a>        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">final_layer</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>                <span class="c1"># (N, T, patch_size ** 2 * out_channels)</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15"></a>        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unpatchify</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>                   <span class="c1"># (N, out_channels, H, W)</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16"></a>        <span class="k">return</span> <span class="n">x</span>
 </code></pre></div></td></tr></table></div>
-<p>The stucture of DiT is quite simple.</p>
+<p>The structure of DiT is quite simple:</p>
 <ol>
-<li>patchfy the input <span class="arithmatex">\(x\)</span>, which is shape [B,C,H,W]</li>
-<li>position embedding of shape [B,T,D] on the patched tokens</li>
-<li>class/label embedding of shape [B,D] on the patched tokens</li>
-<li>combine time and class embedding <span class="arithmatex">\(c = t+y\)</span></li>
-<li>go through the attention blocks</li>
-<li>final layer that re-patchify</li>
-<li>convert to original shaoe [B,C',H,W]</li>
+<li>Patchify the input <span class="arithmatex">\(x\)</span>, which has the shape [B, C, H, W].</li>
+<li>Apply position embedding of shape [B, T, D] on the patched tokens.</li>
+<li>Apply class/label embedding of shape [B, D] on the patched tokens.</li>
+<li>Combine time and class embedding <span class="arithmatex">\(c = t + y\)</span>.</li>
+<li>Process through the attention blocks.</li>
+<li>Apply the final layer to re-patchify.</li>
+<li>Convert to the original shape [B, C', H, W].</li>
 </ol>
 <h2 id="3-results">3. Results<a class="headerlink" href="#3-results" title="Permanent link">&para;</a></h2>
 <ol>
-<li>Large size improved FID
+<li>Larger size improves FID.
    <a class="glightbox" href="../../../images/image-83.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="alt text" src="../../../images/image-83.png" /></a>
-    <a class="glightbox" href="../../../images/image-84.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="alt text" src="../../../images/image-84.png" /></a></li>
-<li>
-<p>In samve computation cost, large model performs better
-    <a class="glightbox" href="../../../images/image-85.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="alt text" src="../../../images/image-85.png" /></a></p>
-</li>
-<li>
-<p>Sota</p>
-</li>
+   <a class="glightbox" href="../../../images/image-84.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="alt text" src="../../../images/image-84.png" /></a></li>
+<li>With the same computational cost, larger models perform better.
+   <a class="glightbox" href="../../../images/image-85.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="alt text" src="../../../images/image-85.png" /></a></li>
+<li>State-of-the-art results</li>
 </ol>
 <table>
 <thead>
