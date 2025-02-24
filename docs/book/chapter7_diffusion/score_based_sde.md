@@ -19,6 +19,7 @@ $$
 dx = f(x, t) dt + g(t) dw
 $$
 
+
 where:
 
 - \( f(x, t) \) is the **drift term** (controls decay).
@@ -36,30 +37,39 @@ $$
 p_t(x_t | x_0) = \mathcal{N}(\mu_t(x_0), \Sigma_t)
 $$
 
+
 where:
 
 - **\( \mu_t(x_0) \)** is the mean (drifted input).
 - **\( \Sigma_t \)** is the variance (accumulated noise).
 
 ### **VPSDE (Variance Preserving SDE)**
+
 $$
 dx = -\frac{1}{2} \beta(t) x dt + \sqrt{\beta(t)} dw
 $$
 
+
 Solution:
+
 $$
 x_t = x_0 e^{-\frac{1}{2} \int_0^t \beta(s) ds} + \sqrt{1 - e^{-\int_0^t \beta(s) ds}} \epsilon, \quad \epsilon \sim \mathcal{N}(0, I)
 $$
 
+
 ### **VESDE (Variance Exploding SDE)**
+
 $$
 dx = \sigma(t) dw
 $$
 
+
 Solution:
+
 $$
 x_t = x_0 + \sqrt{\int_0^t \sigma^2(s) ds} \epsilon, \quad \epsilon \sim \mathcal{N}(0, I)
 $$
+
 
 ### **Sub-VPSDE**
 Sub-VPSDE is a modification of VPSDE that **controls the noise level more finely**:
@@ -68,10 +78,13 @@ $$
 dx = -\frac{1}{2} \beta(t) x dt + \sqrt{\beta(t) (1 - e^{-2 \int_0^t \beta(s) ds})} dw
 $$
 
+
 Solution:
+
 $$
 x_t = x_0 e^{-\frac{1}{2} \int_0^t \beta(s) ds} + \sqrt{(1 - e^{-\int_0^t \beta(s) ds})} \epsilon, \quad \epsilon \sim \mathcal{N}(0, I)
 $$
+
 
 - **This keeps the noise level lower than VPSDE, helping preserve some structure in the data.**
 
@@ -84,20 +97,27 @@ $$
 \nabla_x \log p_t(x_t | x_0) = -\Sigma_t^{-1} (x_t - \mu_t(x_0))
 $$
 
+
 ### **For VPSDE:**
+
 $$
 \nabla_x \log p_t(x_t | x_0) = -\frac{x_t - x_0 e^{-\frac{1}{2} \int_0^t \beta(s) ds}}{(1 - e^{-\int_0^t \beta(s) ds})}
 $$
 
+
 ### **For VESDE:**
+
 $$
 \nabla_x \log p_t(x_t | x_0) = -\frac{x_t - x_0}{\int_0^t \sigma^2(s) ds}
 $$
 
+
 ### **For Sub-VPSDE:**
+
 $$
 \nabla_x \log p_t(x_t | x_0) = -\frac{x_t - x_0 e^{-\frac{1}{2} \int_0^t \beta(s) ds}}{(1 - e^{-\int_0^t \beta(s) ds})}
 $$
+
 
 - The score function is similar to VPSDE but adapted to Sub-VPSDE's noise control.
 
@@ -110,11 +130,13 @@ $$
 s_\theta(x, t) \approx \nabla_x \log p_t(x)
 $$
 
+
 The training loss is:
 
 $$
 \mathcal{L}(\theta) = \mathbb{E}_{t, x_0, \epsilon} \left[ \lambda(t) \| s_\theta(x_t, t) - \nabla_x \log p_t(x_t | x_0) \|^2 \right]
 $$
+
 
 where \( \lambda(t) \) is a weighting function.
 
@@ -174,6 +196,7 @@ $$
 dx = \left[f(x, t) - g(t)^2 s_\theta(x, t) \right] dt + g(t) d\bar{w}
 $$
 
+
 ### **Sampling Code (Euler-Maruyama)**
 
 ```python
@@ -199,11 +222,13 @@ $$
 dx = f(x,t)\,dt + g(x,t)\,dw,
 $$
 
+
 where \(w\) is a standard Brownian motion and \(p_t(x)\) is the marginal density at time \(t\). The score function is defined as the gradient of the log probability density:
 
 $$
 s(x,t) = \nabla_x \log p_t(x) = \frac{\nabla_x p_t(x)}{p_t(x)}.
 $$
+
 
 In practice, a neural network \(s_\theta(x,t)\) approximates this score function to guide the reverse diffusion process in generative models.
 
@@ -215,11 +240,13 @@ $$
 p_{t|0}(x \mid x_0) = \frac{1}{\sqrt{2\pi\,\sigma_t^2}} \exp\left(-\frac{\left(x - m(x_0,t)\right)^2}{2\sigma_t^2}\right).
 $$
 
+
 Given an initial density \(p_0(x_0)\), the marginal density is
 
 $$
 p_t(x) = \int p_{t|0}(x \mid x_0) \, p_0(x_0) \, dx_0.
 $$
+
 
 #### Marginal Score Function
 
@@ -229,11 +256,13 @@ $$
 \nabla_x p_t(x) = -\frac{1}{\sigma_t^2}\int \bigl(x - m(x_0,t)\bigr)\, p_{t|0}(x \mid x_0)\, p_0(x_0) \, dx_0.
 $$
 
+
 Recognizing the conditional expectation
 
 $$
 \mathbb{E}[m(x_0,t) \mid x] = \frac{\int m(x_0,t) \, p_{t|0}(x \mid x_0)\, p_0(x_0) \, dx_0}{p_t(x)},
 $$
+
 
 the **marginal score function** becomes
 
@@ -241,11 +270,13 @@ $$
 s(x,t) = \nabla_x \log p_t(x) = -\frac{x - \mathbb{E}[m(x_0,t) \mid x]}{\sigma_t^2}.
 $$
 
+
 A notable special case is when \(m(x_0,t) = x_0\), which leads to the well-known Tweedie's formula:
 
 $$
 s(x,t) = -\frac{x - \mathbb{E}[x_0 \mid x]}{\sigma_t^2}.
 $$
+
 
 #### Conditional Score Function
 
@@ -255,11 +286,13 @@ $$
 s(x,t\mid x_0) = \nabla_x \log p_{t|0}(x \mid x_0).
 $$
 
+
 Since the conditional density is Gaussian,
 
 $$
 p_{t|0}(x \mid x_0) = \frac{1}{\sqrt{2\pi\,\sigma_t^2}} \exp\left(-\frac{\left(x - m(x_0,t)\right)^2}{2\sigma_t^2}\right),
 $$
+
 
 its log-density is
 
@@ -267,11 +300,13 @@ $$
 \log p_{t|0}(x \mid x_0) = -\frac{1}{2}\log(2\pi\,\sigma_t^2) - \frac{\left(x - m(x_0,t)\right)^2}{2\sigma_t^2}.
 $$
 
+
 Taking the gradient with respect to \(x\) yields
 
 $$
 s(x,t\mid x_0) = \nabla_x \log p_{t|0}(x \mid x_0) = -\frac{x - m(x_0,t)}{\sigma_t^2}.
 $$
+
 
 This expression explicitly quantifies how the log-probability of \(x\) given \(x_0\) changes with \(x\) under the Gaussian assumption.
 
@@ -285,6 +320,7 @@ $$
 \frac{\partial p(x,t)}{\partial t} = -\frac{\partial}{\partial x}\Bigl(f(x,t)\,p(x,t)\Bigr) + \frac{1}{2}\frac{\partial^2}{\partial x^2}\Bigl(g(x,t)^2\,p(x,t)\Bigr).
 $$
 
+
 For the Gaussian form of \(p(x,t)\) to be preserved over time, the following conditions are necessary:
 
 1. **Linear (or Affine) Drift:**
@@ -293,6 +329,7 @@ For the Gaussian form of \(p(x,t)\) to be preserved over time, the following con
    $$
    f(x,t) = A(t)x + b(t),
    $$
+
 
    where \(A(t)\) is a matrix (or scalar) and \(b(t)\) is a bias term. This ensures that applying the drift to a Gaussian density results in another Gaussian (or an affine-transformed Gaussian).
 
@@ -303,6 +340,7 @@ For the Gaussian form of \(p(x,t)\) to be preserved over time, the following con
    g(x,t) = g(t).
    $$
 
+
    When the noise is additive (i.e., \(g(x,t)\) does not depend on \(x\)), the diffusion term in the Fokker–Planck equation preserves the quadratic form in \(x\) and, therefore, the Gaussian shape of the density.
 
 For example, the Ornstein–Uhlenbeck process
@@ -310,6 +348,7 @@ For example, the Ornstein–Uhlenbeck process
 $$
 dx = -\lambda x\,dt + \sigma\,dw,
 $$
+
 
 satisfies these conditions, resulting in a Gaussian transition probability.
 
@@ -321,11 +360,13 @@ $$
 \frac{d}{dt}\Psi(t) = A(t)\,\Psi(t), \quad \Psi(0)=I,
 $$
 
+
 where \(I\) is the identity matrix. This matrix propagates the initial state \(x_0\) to the state at time \(t\) through the relation:
 
 $$
 x(t) = \Psi(t)x_0 + \int_0^t \Psi(t,s)\,b(s)\,ds + \int_0^t \Psi(t,s)\,g(s)\,dw(s).
 $$
+
 
 #### Closed-Forms Expression for \(\Psi(t)\)
 
@@ -335,11 +376,13 @@ $$
 \Psi(t) = e^{At}.
 $$
 
+
 Even if \(A(t)\) is time-dependent, if it commutes with itself at different times (i.e., \([A(t_1), A(t_2)] = 0\) for all \(t_1, t_2\)), the closed-form solution can be written as:
 
 $$
 \Psi(t) = \exp\left(\int_0^t A(s)\,ds\right).
 $$
+
 
 In cases where \(A(t)\) does not commute at different times, the closed-form expression might not be available, and one must resort to numerical integration or approximation methods.
 
@@ -353,11 +396,13 @@ $$
 dx = \bigl(A(t)x + b(t)\bigr)dt + g(t)\,dw.
 $$
 
+
 Its solution can be written as:
 
 $$
 x(t) = \Psi(t)x_0 + \mu(t) + \int_0^t \Psi(t,s) g(s)\, dw(s),
 $$
+
 
 where:
 
@@ -369,11 +414,13 @@ where:
   \Sigma(t) = \int_0^t \Psi(t,s)\,g(s)^2\,\Psi(t,s)^\top ds.
   $$
 
+
 Thus, the conditional (or transition) probability is given by
 
 $$
 p_{t|0}(x \mid x_0) = \mathcal{N}\Bigl(x; \Psi(t)x_0 + \mu(t),\, \Sigma(t)\Bigr).
 $$
+
 
 Assuming the initial distribution \(p_0(x_0)\) is also Gaussian, the marginal distribution \(p_t(x)\) remains Gaussian:
 
@@ -381,11 +428,13 @@ $$
 p_t(x) = \mathcal{N}\Bigl(x; m(t),\, \Sigma(t)\Bigr),
 $$
 
+
 with mean
 
 $$
 m(t) = \Psi(t)m_0 + \mu(t),
 $$
+
 
 where \(m_0\) is the mean of \(p_0(x_0)\).
 
@@ -395,17 +444,20 @@ $$
 s(x,t) = \nabla_x \log p_t(x) = -\Sigma(t)^{-1}\bigl(x - m(t)\bigr).
 $$
 
+
 Recall that the **conditional score function** for \(p_{t|0}(x \mid x_0)\) is
 
 $$
 s(x,t\mid x_0) = \nabla_x \log p_{t|0}(x \mid x_0).
 $$
 
+
 Given the Gaussian form of \(p_{t|0}(x \mid x_0)\), we obtain
 
 $$
 s(x,t\mid x_0) = -\frac{x - (\Psi(t)x_0 + \mu(t))}{\sigma_t^2},
 $$
+
 
 where, in this context, \(\sigma_t^2\) relates to the covariance \(\Sigma(t)\) (or is a scalar if the state is one-dimensional). This expression quantifies how the log-probability of \(x\) given \(x_0\) changes with \(x\) under the Gaussian assumption.
 
@@ -419,11 +471,13 @@ $$
 dx = \mu x\,dt + \sigma x\,dw.
 $$
 
+
 Here, both the drift \(f(x,t) = \mu x\) and the diffusion \(g(x,t)=\sigma x\) depend linearly on \(x\). Although the drift is linear, the diffusion is state-dependent (multiplicative noise). The solution to this SDE is
 
 $$
 x(t)= x_0\,\exp\Bigl\{\left(\mu - \frac{1}{2}\sigma^2\right)t + \sigma w_t\Bigr\},
 $$
+
 
 and the resulting distribution of \(x(t)\) is **log-normal**, not Gaussian. This deviation occurs because the multiplicative nature of the noise distorts the Gaussian structure through a nonlinear transformation, resulting in a distribution with asymmetry (skewness) and a long tail.
 
@@ -440,17 +494,20 @@ $$
 f(x,t) = 0.
 $$
 
+
 Then the SDE becomes a pure diffusion process
 
 $$
 dx = g(t)\,dw,
 $$
 
+
 and since there is no deterministic shift, we have
 
 $$
 E[x(t) \mid x_0] = x_0.
 $$
+
 
 #### Centered Linear Drift
 
@@ -460,11 +517,13 @@ $$
 f(x,t) = -a(t)\bigl(x - x_0\bigr),
 $$
 
+
 where \(a(t)\) is a nonnegative function (or a positive function) of time. To see why this preserves the conditional mean, define
 
 $$
 y(t)=x(t)-x_0.
 $$
+
 
 Then the SDE for \(y(t)\) becomes
 
@@ -472,17 +531,20 @@ $$
 dy = -a(t)y\,dt + g(t)\,dw,
 $$
 
+
 with initial condition \(y(0)=0\). Since the drift term in \(y(t)\) is proportional to \(y\) and \(y(0)=0\), it follows by uniqueness and linearity of expectation that
 
 $$
 E[y(t)] = 0,
 $$
 
+
 which implies
 
 $$
 E[x(t) \mid x_0] = x_0.
 $$
+
 
 #### Symmetric (Odd) Drift Functions Around \(x_0\)
 
@@ -492,11 +554,13 @@ $$
 f(x_0,t)=0 \quad \text{and} \quad f(x_0+\delta,t)=-f(x_0-\delta,t)
 $$
 
+
 for all small \(\delta\) and for all \(t\) will not induce a bias in the conditional mean. For example, one might choose
 
 $$
 f(x,t) = -a(t)\,\tanh\bigl(x - x_0\bigr),
 $$
+
 
 where \(\tanh\) is an odd function. Near \(x=x_0\) (where \(\tanh(z) \approx z\) for small \(z\)), this behaves similarly to the linear case, ensuring that \(f(x_0,t)=0\) and that the “push” is symmetric about \(x_0\). Hence, the conditional mean remains unchanged.
 
@@ -518,6 +582,7 @@ $$
 dx = -\frac{1}{2}\beta(t)x\,dt + \sqrt{\beta(t)}\,dw.
 $$
 
+
 **Mean Behavior:**
 Its solution is
 
@@ -525,11 +590,13 @@ $$
 x(t) = e^{-\frac{1}{2}\int_0^t \beta(s)\,ds}\,x_0 + \sqrt{1-e^{-\int_0^t \beta(s)\,ds}}\,z,
 $$
 
+
 where \(z\sim\mathcal{N}(0,I)\). Therefore, the conditional mean is
 
 $$
 m(x_0,t) = e^{-\frac{1}{2}\int_0^t \beta(s)\,ds}\,x_0,
 $$
+
 
 which is not equal to \(x_0\) unless \(x_0=0\) or \(\beta(t)\) is zero. Hence, VP SDE does not preserve the mean.
 
@@ -540,11 +607,13 @@ $$
 p_{t|0}(x\mid x_0)=\mathcal{N}\Bigl(x;\, e^{-\frac{1}{2}\int_0^t \beta(s)\,ds}\,x_0,\; 1-e^{-\int_0^t \beta(s)\,ds}\Bigr),
 $$
 
+
 its conditional score function is
 
 $$
 s(x,t\mid x_0) = \nabla_x \log p_{t|0}(x\mid x_0) = -\frac{x - e^{-\frac{1}{2}\int_0^t \beta(s)\,ds}\,x_0}{\,1-e^{-\int_0^t \beta(s)\,ds}\,}.
 $$
+
 
 ---
 
@@ -557,6 +626,7 @@ $$
 dx = \sqrt{\frac{d\sigma^2(t)}{dt}}\,dw.
 $$
 
+
 **Mean Behavior:**
 Because there is no drift term, the solution is
 
@@ -564,11 +634,13 @@ $$
 x(t) = x_0 + \sigma(t)\,z,
 $$
 
+
 with \(z\sim\mathcal{N}(0,I)\). Thus, the conditional mean is
 
 $$
 m(x_0,t)= x_0,
 $$
+
 
 i.e. the mean is preserved.
 
@@ -579,11 +651,13 @@ $$
 p_{t|0}(x\mid x_0)=\mathcal{N}\Bigl(x;\, x_0,\; \sigma^2(t)\Bigr),
 $$
 
+
 the conditional score function becomes
 
 $$
 s(x,t\mid x_0) = -\frac{x-x_0}{\sigma^2(t)}.
 $$
+
 
 ##### sub-VP SDE (Sub-Variance Preserving SDE)
 
@@ -594,11 +668,13 @@ $$
 m(x_0,t)= x_0.
 $$
 
+
 Although several equivalent formulations exist, a common interpretation is that the reparameterized process has a conditional distribution
 
 $$
 p_{t|0}(x\mid x_0)=\mathcal{N}\Bigl(x;\, x_0,\; \tilde{\sigma}^2(t)\Bigr),
 $$
+
 
 with a suitably defined variance schedule \(\tilde{\sigma}^2(t)\).
 
@@ -609,28 +685,35 @@ $$
 s(x,t\mid x_0) = -\frac{x-x_0}{\tilde{\sigma}^2(t)}.
 $$
 
+
 ### Summary
 
 - **VP SDE:**
   - **Mean:** \(m(x_0,t)= e^{-\frac{1}{2}\int_0^t \beta(s)\,ds}\,x_0\) (not preserved)
   - **Conditional Score:**
-    $$
-    s(x,t\mid x_0) = -\frac{x - e^{-\frac{1}{2}\int_0^t \beta(s)\,ds}\,x_0}{\,1-e^{-\int_0^t \beta(s)\,ds}\,}.
-    $$
+
+$$
+s(x,t\mid x_0) = -\frac{x - e^{-\frac{1}{2}\int_0^t \beta(s)\,ds}\,x_0}{\,1-e^{-\int_0^t \beta(s)\,ds}\,}.
+$$
+
 
 - **VE SDE:**
   - **Mean:** \(m(x_0,t)= x_0\) (preserved)
   - **Conditional Score:**
-    $$
-    s(x,t\mid x_0) = -\frac{x-x_0}{\sigma^2(t)}.
-    $$
+
+$$
+s(x,t\mid x_0) = -\frac{x-x_0}{\sigma^2(t)}.
+$$
+
 
 - **sub-VP SDE:**
   - **Mean:** \(m(x_0,t)= x_0\) (by design)
   - **Conditional Score:**
-    $$
-    s(x,t\mid x_0) = -\frac{x-x_0}{\tilde{\sigma}^2(t)}.
-    $$
+
+$$
+s(x,t\mid x_0) = -\frac{x-x_0}{\tilde{\sigma}^2(t)}.
+$$
+
 
 ### Conclusion
 
@@ -638,30 +721,44 @@ To summarize:
 
 - **Score Functions:**
   - The **marginal score function** is defined as \(\nabla_x \log p_t(x)\). Under Gaussian assumptions, we derived
-    $$
-    s(x,t) = -\frac{x - \mathbb{E}[m(x_0,t) \mid x]}{\sigma_t^2} \quad \text{or} \quad s(x,t) = -\Sigma(t)^{-1}\bigl(x - m(t)\bigr).
-    $$
-  - The **conditional score function** for the transition density \(p_{t|0}(x \mid x_0)\) is
-    $$
-    s(x,t\mid x_0) = -\frac{x - m(x_0,t)}{\sigma_t^2},
-    $$
+
+$$
+s(x,t) = -\frac{x - \mathbb{E}[m(x_0,t) \mid x]}{\sigma_t^2} \quad \text{or} \quad s(x,t) = -\Sigma(t)^{-1}\bigl(x - m(t)\bigr).
+$$
+
+
+- The **conditional score function** for the transition density \(p_{t|0}(x \mid x_0)\) is
+
+$$
+s(x,t\mid x_0) = -\frac{x - m(x_0,t)}{\sigma_t^2},
+$$
+
+
     and under linear drift and state-independent diffusion, this becomes
-    $$
-    s(x,t\mid x_0) = -\frac{x - (\Psi(t)x_0 + \mu(t))}{\sigma_t^2}.
-    $$
+
+$$
+s(x,t\mid x_0) = -\frac{x - (\Psi(t)x_0 + \mu(t))}{\sigma_t^2}.
+$$
+
 
 - **Gaussian Transition Probabilities:**
   The transition probability remains Gaussian if the drift is linear (or affine), \(f(x,t)=A(t)x+b(t)\), and the diffusion is state-independent, \(g(x,t)=g(t)\).
 
 - **State Transition Matrix \(\Psi(t)\) and \(A(t)\):**
   \(\Psi(t)\) satisfies
+
   $$
   \frac{d}{dt}\Psi(t) = A(t)\,\Psi(t) \quad \text{with} \quad \Psi(0)=I.
   $$
+
+
   When \(A(t)\) is time-invariant, \(\Psi(t) = e^{At}\). More generally, if \(A(t)\) commutes with itself at different times, then
+
   $$
   \Psi(t) = \exp\left(\int_0^t A(s)\,ds\right),
   $$
+
+
   providing a closed-form expression for the state transition matrix.
 
 - **Non-Gaussian Example:**
@@ -677,12 +774,15 @@ Here are some additional **Score-based SDEs**:
 This method introduces **momentum variables** to improve sampling efficiency. Unlike VPSDE/VESDE, which use only position updates, CLD-SDE includes velocity to achieve faster convergence.
 
 #### SDE Formulation
+
 $$
 \begin{cases}
-dx = v dt \\
-dv = -\gamma v dt - \lambda^2 x dt + \sigma dw
+dx &= v dt \\
+dv &= -\gamma v dt - \lambda^2 x dt + \sigma dw
 \end{cases}
 $$
+
+
 where:
 
 - \( x \) is the **position**.
@@ -697,8 +797,12 @@ $$
 \nabla_{v_t} \log p(v_t | x_t) = -\frac{v_t + \lambda^2 x_t}{\sigma^2}
 $$
 
+
 - training loss
-    $$|| \nabla_{v_t} \log p(v_t | x_t) - s_\theta(x,v)||^2$$
+
+$$|| \nabla_{v_t} \log p(v_t | x_t) - s_\theta(x,v)||^2$$
+
+
 - initial condition
   - $v=0$
   - $x \sim p_{data}(x)$
@@ -714,9 +818,12 @@ $$
 Instead of traditional diffusion, **Rectified Flow SDE** designs a flow field where trajectories follow a **straight-line path** from data to noise.
 
 #### SDE Formulation
+
 $$
 dx = (x_T - x) dt + g(t) dw
 $$
+
+
 where:
 
 - \( x_T \) is the terminal (noise) state.
@@ -731,9 +838,14 @@ where:
 
 - Loss: MSE loss on score function
 - data construction
-    $$x_t =(1-t) x_0 + t x_T$$
+
+$$x_t =(1-t) x_0 + t x_T$$
+
+
 - score function
-    $$\nabla_x \log p_t (x_t|x_0) = - \frac{x_t - x_0}{\sigma_t}$$
+
+$$\nabla_x \log p_t (x_t|x_0) = - \frac{x_t - x_0}{\sigma_t}$$
+
 
 #### Formula for \( \sigma_t \)
 The variance of the noise term in the Rectified Flow SDE can be written as:
@@ -741,6 +853,7 @@ The variance of the noise term in the Rectified Flow SDE can be written as:
 $$
 \sigma_t^2 = \int_0^t g(s)^2 ds
 $$
+
 
 The function \( g(t) \) is designed to **minimize unnecessary randomness**, leading to **more deterministic trajectories**.
 
@@ -750,6 +863,7 @@ $$
 g(t) = \sigma_0 \sqrt{1 - t}
 $$
 
+
 where \( \sigma_0 \) is a constant that determines the initial noise scale.
 
 Thus, the variance accumulates as:
@@ -758,11 +872,13 @@ $$
 \sigma_t^2 = \int_0^t \sigma_0^2 (1 - s) ds = \sigma_0^2 \left( t - \frac{t^2}{2} \right)
 $$
 
+
 which gives:
 
 $$
 \sigma_t = \sigma_0 \sqrt{t - \frac{t^2}{2}}
 $$
+
 
 This ensures that noise starts **large** at \( t=0 \) and gradually decreases to **zero** as \( t \to 1 \), making the flow almost deterministic near the final state.
 
@@ -772,11 +888,13 @@ $$
 \nabla_x \log p_t(x_t | x_0) = -\frac{x_t - x_0}{\sigma_t^2}
 $$
 
+
 we get:
 
 $$
 \nabla_x \log p_t(x_t | x_0) = -\frac{x_t - x_0}{\sigma_0^2 (t - \frac{t^2}{2})}
 $$
+
 
 which reduces to:
 
@@ -784,18 +902,27 @@ $$
 \nabla_x \log p_t(x_t | x_0) = -\frac{x_t - x_0}{\sigma_0^2 t (1 - \frac{t}{2})}
 $$
 
+
 - **Noise scaling function:**
-  $$
-  g(t) = \sigma_0 \sqrt{1 - t}
-  $$
+
+$$
+g(t) = \sigma_0 \sqrt{1 - t}
+$$
+
+
 - **Variance accumulation:**
-  $$
-  \sigma_t^2 = \sigma_0^2 (t - \frac{t^2}{2})
-  $$
+
+$$
+\sigma_t^2 = \sigma_0^2 (t - \frac{t^2}{2})
+$$
+
+
 - **Score function:**
-  $$
-  \nabla_x \log p_t(x_t | x_0) = -\frac{x_t - x_0}{\sigma_0^2 t (1 - \frac{t}{2})}
-  $$
+
+$$
+\nabla_x \log p_t(x_t | x_0) = -\frac{x_t - x_0}{\sigma_0^2 t (1 - \frac{t}{2})}
+$$
+
 
 ### Continuous-Time Normalizing Flows (CTNF-SDE)
 
@@ -807,6 +934,7 @@ The **CTNF-SDE** is defined as:
 $$
 dx = f(x, t) dt + g(x, t) dw
 $$
+
 
 where:
 
@@ -826,6 +954,7 @@ $$
 \sigma_t^2 = \int_0^t g(x, s)^2 ds
 $$
 
+
 This means:
 
 - \( \sigma_t \) is **data-dependent**.
@@ -837,6 +966,7 @@ The score function is derived as:
 $$
 \nabla_x \log p_t(x_t | x_0) = -\frac{x_t - \mu_t}{\sigma_t^2}
 $$
+
 
 where:
 
@@ -853,11 +983,13 @@ $$
 \mathcal{L}(\theta) = \mathbb{E}_{x_t} \left[ -\log p_t(x_t) \right]
 $$
 
+
 Alternatively, we can use **score matching**:
 
 $$
 \mathbb{E}_{x_t} \left[ || \nabla_x \log p_t(x_t | x_0) - s_\theta(x, t) ||^2 \right]
 $$
+
 
 ---
 
@@ -869,9 +1001,12 @@ $$
 Since \( x_t \) does **not** have an analytical solution, we must **numerically estimate it**:
 
 - **Use SDE discretization**:
+
   $$
   x_{t+\Delta t} = x_t + f(x_t, t) \Delta t + g(x_t, t) \sqrt{\Delta t} \eta_t, \quad \eta_t \sim \mathcal{N}(0, I)
   $$
+
+
 - Compute the **score function** numerically.
 
 ---
@@ -893,6 +1028,7 @@ $$
 dx = f(x, t) dt + \sigma(x, t) dw
 $$
 
+
 where:
 
 - \( \sigma(x, t) \) is **data-dependent** noise.
@@ -911,6 +1047,7 @@ $$
 dx = -\alpha x dt + g(t) dB^H_t
 $$
 
+
 where:
 
 - \( B^H_t \) is a **fractional Brownian motion** with **Hurst parameter \( H \)**.
@@ -927,11 +1064,12 @@ where:
 Some models **combine SDE and ODE approaches** to get the best of both:
 
 $$
-dx = f(x, t) dt + g(t) dw \quad \text{for } t < T_1
+\begin{cases}
+dx = f(x, t) dt + g(t) dw  &\text{for } t < T_1\\
+dx = f(x, t) dt  &\text{for } t \geq T_1
+\end{cases}
 $$
-$$
-dx = f(x, t) dt \quad \text{for } t \geq T_1
-$$
+
 
 where:
 
