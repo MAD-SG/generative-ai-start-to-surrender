@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.50">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.49">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.a40c8224.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.6f8fc17f.min.css">
       
         
         <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
@@ -2496,7 +2496,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../chapter11_hybrid_sota_models/sota_open_models/stable_diffusion_3_paper_reading/" class="md-nav__link">
+      <a href="../../chapter11_hybrid_sota_models/sota_open_models/stable_diffusion_3_paper_reading.md" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2614,27 +2614,27 @@
 <p><span class="arithmatex">\((S, \mathcal{S})\)</span> be a measurable space (typically, <span class="arithmatex">\(S = \mathbb{R}\)</span> or <span class="arithmatex">\(\mathbb{R}^d\)</span> with its Borel <span class="arithmatex">\(\sigma\)</span>-algebra).</p>
 </li>
 </ul>
-<p>A <strong>stochastic process</strong> is a collection (or family) of random variables
-$$
-{X_t : t \in T},
-$$
-where for each <span class="arithmatex">\(t \in T\)</span>, the mapping
-$$
+<p>A <strong>stochastic process</strong> is a collection (or family) of random variables</p>
+<div class="arithmatex">\[
+\{X_t : t \in T\},
+\]</div>
+<p>where for each <span class="arithmatex">\(t \in T\)</span>, the mapping</p>
+<div class="arithmatex">\[
 X_t : \Omega \to S
-$$
-is a random variable; that is, for every <span class="arithmatex">\(B \in \mathcal{S}\)</span>,
-$$
-X_t^{-1}(B) = {\omega \in \Omega : X_t(\omega) \in B} \in \mathcal{F}.
-$$</p>
-<p>Alternatively, one may define a stochastic process as a function
-$$
+\]</div>
+<p>is a random variable; that is, for every <span class="arithmatex">\(B \in \mathcal{S}\)</span>,</p>
+<div class="arithmatex">\[
+X_t^{-1}(B) = \{\omega \in \Omega : X_t(\omega) \in B\} \in \mathcal{F}.
+\]</div>
+<p>Alternatively, one may define a stochastic process as a function</p>
+<div class="arithmatex">\[
 X: T \times \Omega \to S,
-$$
-which is jointly measurable with respect to the product <span class="arithmatex">\(\sigma\)</span>-algebra <span class="arithmatex">\(\mathcal{B}(T) \otimes \mathcal{F}\)</span> and <span class="arithmatex">\(\mathcal{S}\)</span>. In this formulation, for each fixed <span class="arithmatex">\(t \in T\)</span>, the mapping
-$$
+\]</div>
+<p>which is jointly measurable with respect to the product <span class="arithmatex">\(\sigma\)</span>-algebra <span class="arithmatex">\(\mathcal{B}(T) \otimes \mathcal{F}\)</span> and <span class="arithmatex">\(\mathcal{S}\)</span>. In this formulation, for each fixed <span class="arithmatex">\(t \in T\)</span>, the mapping</p>
+<div class="arithmatex">\[
 X(t, \cdot): \Omega \to S
-$$
-is a random variable.</p>
+\]</div>
+<p>is a random variable.</p>
 <hr />
 <p><mark>Intuitive Explanation</mark></p>
 <ul>
@@ -2662,11 +2662,11 @@ The stochastic process encapsulates the idea that the system's behavior is rando
 </li>
 <li>
 <p><strong>Independent Increments:</strong>
-    For any sequence of times <span class="arithmatex">\(0 \leq t_0 &lt; t_1 &lt; \dots &lt; t_n\)</span>, the increments
-    $$
-    W_{t_1} - W_{t_0}, W_{t_2} - W_{t_1}, \dots, W_{t_n} - W_{t_{n-1}}
-    $$
-    are independent random variables.</p>
+    For any sequence of times <span class="arithmatex">\(0 \leq t_0 &lt; t_1 &lt; \dots &lt; t_n\)</span>, the increments</p>
+<div class="arithmatex">\[
+W_{t_1} - W_{t_0},\ W_{t_2} - W_{t_1},\ \dots,\ W_{t_n} - W_{t_{n-1}}
+\]</div>
+<p>are independent random variables.</p>
 </li>
 <li>
 <p><strong>Stationary Increments:</strong>
@@ -2674,15 +2674,15 @@ The stochastic process encapsulates the idea that the system's behavior is rando
 </li>
 <li>
 <p><strong>Gaussian Increments:</strong>
-   For any <span class="arithmatex">\(s, t \geq 0\)</span> with <span class="arithmatex">\(s &gt; 0\)</span>, the increment <span class="arithmatex">\(W_{t+s} - W_t\)</span> is normally distributed with mean 0 and variance <span class="arithmatex">\(s\)</span>:
-   $$
+   For any <span class="arithmatex">\(s, t \geq 0\)</span> with <span class="arithmatex">\(s &gt; 0\)</span>, the increment <span class="arithmatex">\(W_{t+s} - W_t\)</span> is normally distributed with mean 0 and variance <span class="arithmatex">\(s\)</span>:</p>
+</li>
+</ol>
+<p>$$
    W_{t+s} - W_t \sim N(0, s).
    $$</p>
-</li>
-<li>
-<p><strong>Continuous Paths:</strong>
-  With probability 1, the function <span class="arithmatex">\(t \mapsto W_t\)</span> is continuous.</p>
-</li>
+<ol>
+<li><strong>Continuous Paths:</strong>
+  With probability 1, the function <span class="arithmatex">\(t \mapsto W_t\)</span> is continuous.</li>
 </ol>
 <p>In summary, a Wiener process is a model for random continuous motion, encapsulating the idea of both randomness (through independent, normally distributed increments) and continuity in time.</p>
 </div>
@@ -2699,9 +2699,9 @@ The stochastic process encapsulates the idea that the system's behavior is rando
   - Your <strong>next step</strong> depends only on your current position (memoryless property).
   - You have a <strong>fixed set of choices (four directions)</strong>, and each step has the same size.
   - Time is also discrete—you take one step at a time in fixed intervals.
-  - That is given <span class="arithmatex">\(x_t\)</span>, <span class="arithmatex">\(x_{t+1}\)</span> has two possibles
-$$\Delta x = x_{t+1}-x_{t}, p(\Delta x = \Delta t \cdot d_i) = \frac{1}{4}, i\in {上,下,左,右} $$
-where <span class="arithmatex">\(d_i\)</span> is the direction, <span class="arithmatex">\(\Delta t\)</span> is the time step.</p>
+  - That is given <span class="arithmatex">\(x_t\)</span>, <span class="arithmatex">\(x_{t+1}\)</span> has two possibles</p>
+<div class="arithmatex">\[\Delta x = x_{t+1}-x_{t}, p(\Delta x = \Delta t \cdot d_i) = \frac{1}{4}, i\in \{上,下,左,右\} \]</div>
+<p>where <span class="arithmatex">\(d_i\)</span> is the direction, <span class="arithmatex">\(\Delta t\)</span> is the time step.</p>
 </li>
 <li>
 <p><strong>Brownian Motion: Walking in Infinite Directions</strong>
@@ -2711,8 +2711,8 @@ where <span class="arithmatex">\(d_i\)</span> is the direction, <span class="ari
   - Your next move is still <strong>random</strong> (preserving the Markov property).
   - But now, you can move in <strong>any possible direction</strong>, not just four fixed ones.
   - Your steps become <strong>smaller and more frequent</strong>, eventually forming a continuous, smooth path instead of discrete jumps.
-  - that is then <span class="arithmatex">\(\Delta t \rightarrow 0\)</span>  and <span class="arithmatex">\(d_i\)</span> is the whole Euclidean  space. But for Wiener process, usually we assume <span class="arithmatex">\(d_i\)</span> is follow a Standard Gaussian Distribution. Formally, we denote
-$$ \tag{1} X_{t+1}-X_{t}= \Delta x = \mathcal{N}(0,\Delta t) = \sqrt{\Delta t} \mathcal{N}(0,1) = \Delta W$$</p>
+  - that is then <span class="arithmatex">\(\Delta t \rightarrow 0\)</span>  and <span class="arithmatex">\(d_i\)</span> is the whole Euclidean  space. But for Wiener process, usually we assume <span class="arithmatex">\(d_i\)</span> is follow a Standard Gaussian Distribution. Formally, we denote</p>
+<div class="arithmatex">\[ \tag{1} X_{t+1}-X_{t}= \Delta x = \mathcal{N}(0,\Delta t) = \sqrt{\Delta t} \mathcal{N}(0,1) = \Delta W\]</div>
 </li>
 </ul>
 <p><strong>Summary: Brownian Motion as the Limit of a Discrete Markov Chain</strong></p>
@@ -2842,14 +2842,14 @@ W(t+\delta) - W(t) \sim N(0, \delta^2)
 \]</div>
 <p>stems from the definition and fundamental properties of Brownian motion (or the Wiener process), which also reflect physical realities. Here are the key points:</p>
 <ol>
-<li>
-<p><strong>Linear Variance Growth:</strong>
-  A fundamental property of Brownian motion is that the variance of its increments grows linearly with the time interval. Specifically,
-  $$
+<li><strong>Linear Variance Growth:</strong>
+  A fundamental property of Brownian motion is that the variance of its increments grows linearly with the time interval. Specifically,</li>
+</ol>
+<p>$$
   \operatorname{Var}[W(t+\delta) - W(t)] = \delta.
-  $$
-  This relationship reflects the diffusion phenomenon observed in nature—for instance, in molecular diffusion, the mean squared displacement is proportional to time.</p>
-</li>
+  $$</p>
+<p>This relationship reflects the diffusion phenomenon observed in nature—for instance, in molecular diffusion, the mean squared displacement is proportional to time.</p>
+<ol>
 <li>
 <p><strong>Scale Invariance (Self-Similarity):</strong>
   Brownian motion is self-similar. For any positive constant <span class="arithmatex">\( c \)</span>, the process satisfies</p>
@@ -2888,30 +2888,34 @@ Given the first-order ODE:</p>
 \frac{dy}{dx} = -2y
 \]</div>
 <p><strong>Solution Steps:</strong>
-1. <strong>Separate variables</strong>:
-$$
+1. <strong>Separate variables</strong>:</p>
+<div class="arithmatex">\[
 \frac{dy}{y} = -2 dx
-$$
-2. <strong>Integrate</strong>:
-$$
+\]</div>
+<ol>
+<li><strong>Integrate</strong>:</li>
+</ol>
+<div class="arithmatex">\[
 \ln |y| = -2x + C
-$$
-3. <strong>Solve for <span class="arithmatex">\( y \)</span></strong>:
-$$
+\]</div>
+<ol>
+<li><strong>Solve for <span class="arithmatex">\( y \)</span></strong>:</li>
+</ol>
+<div class="arithmatex">\[
 y = C e^{-2x}
-$$</p>
-<p><strong>With Initial Condition <span class="arithmatex">\( y(0) = 5 \)</span></strong>:
-$$
+\]</div>
+<p><strong>With Initial Condition <span class="arithmatex">\( y(0) = 5 \)</span></strong>:</p>
+<div class="arithmatex">\[
 5 = C e^0 \Rightarrow C = 5
-$$
-$$
+\]</div>
+<div class="arithmatex">\[
 y = 5 e^{-2x}
-$$</p>
+\]</div>
 <p>✔ <strong>Final Answer</strong>:</p>
-<p>$$
-y = C e^{-2x} \quad \text{(or <span class="arithmatex">\( y = 5 e^{-2x} \)</span> if <span class="arithmatex">\( y(0) = 5 \)</span>)}
-$$
-From the examle, we know, it the initial condition is not given, there could be infinite solutions of the ODE since the derivative of constant is always zero. Hence in the following, we are always assume the initial condition is given.</p>
+<div class="arithmatex">\[
+y = C e^{-2x} \quad \text{(or \( y = 5 e^{-2x} \) if \( y(0) = 5 \))}
+\]</div>
+<p>From the examle, we know, it the initial condition is not given, there could be infinite solutions of the ODE since the derivative of constant is always zero. Hence in the following, we are always assume the initial condition is given.</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">General method for ODE solution analytically</p>
@@ -2994,19 +2998,19 @@ From the examle, we know, it the initial condition is not given, there could be 
 \lim_{\Delta t \to 0} \sum_{i=0}^{n-1} |W_{t_{i+1}} - W_{t_i}|^2 = T.
 \]</div>
 <p>This irregularity forces a new calculus.
-4. <strong>integra</strong>
-   <span class="arithmatex">\(<span class="arithmatex">\(\int_{s}^{s+\sigma} dW_t = W_{s+\sigma} - W_{s} \sim \mathcal{N}(0,\sigma)=\sqrt{\sigma}Z, Z\sim\mathcal{N}(0,1)\)</span>\)</span></p>
+4. <strong>integra</strong></p>
 </li>
 </ol>
+<p><span class="arithmatex">\(<span class="arithmatex">\(\int_{s}^{s+\sigma} dW_t = W_{s+\sigma} - W_{s} \sim \mathcal{N}(0,\sigma)=\sqrt{\sigma}Z, Z\sim\mathcal{N}(0,1)\)</span>\)</span></p>
 <h3 id="54-itos-lemma">5.4 Itô’s Lemma<a class="headerlink" href="#54-itos-lemma" title="Permanent link">&para;</a></h3>
 <p>Itô’s Lemma is a fundamental result in stochastic calculus, often described as the stochastic analog of the chain rule from classical calculus. It provides a way to compute the differential of a function of a stochastic process that evolves according to an Itô process.</p>
 <div class="admonition thm">
 <p class="admonition-title">Itô’s Lemma</p>
-<p>Suppose you have an Itô process <span class="arithmatex">\( X_t \)</span> defined by the stochastic differential equation (SDE)
-$$
+<p>Suppose you have an Itô process <span class="arithmatex">\( X_t \)</span> defined by the stochastic differential equation (SDE)</p>
+<div class="arithmatex">\[
 dX_t = a(t, X_t)\,dt + b(t, X_t)\,dW_t,
-$$
-where:
+\]</div>
+<p>where:
 - <span class="arithmatex">\( a(t, X_t) \)</span> is the drift coefficient,
 - <span class="arithmatex">\( b(t, X_t) \)</span> is the diffusion coefficient, and
 - <span class="arithmatex">\( W_t \)</span> is a standard Brownian motion.</p>
@@ -3076,53 +3080,81 @@ X_t = X_0 e^{-\lambda t} + \sigma \int_0^t e^{-\lambda (t-s)} dW_s
 <h4 id="561-solutions-of-sde">5.6.1 Solutions of SDE<a class="headerlink" href="#561-solutions-of-sde" title="Permanent link">&para;</a></h4>
 <p>Some SDEs admit exact solutions formula, often when they fall into these categories:</p>
 <ol>
-<li><strong>Linear SDEs</strong>: <span class="arithmatex">\( dX_t = a(t) X_t dt + b(t) dW_t \)</span>
-    Using an Integrating Factor <span class="arithmatex">\( I_t = e^{-\int_0^t a(s) ds} \)</span>:
-    $$
-    X_t = X_0 e<sup>{\int_0</sup>t a(s) ds} + e<sup>{\int_0</sup>t a(s) ds} \int_0^t e<sup>{-\int_0</sup>s a(r) dr} b(s) dW_s
-    $$</li>
 <li>
-<p>Example: <strong>Geometric Brownian Motion (GBM)</strong>
-     $$
-     dX_t = \mu X_t dt + \sigma X_t dW_t
-     $$
-     Solution:
-     $$
-     X_t = X_0 \exp \left( (\mu - \frac{1}{2} \sigma^2)t + \sigma W_t \right)
-     $$</p>
+<p><strong>Linear SDEs</strong>: <span class="arithmatex">\( dX_t = a(t) X_t dt + b(t) dW_t \)</span>
+    Using an Integrating Factor <span class="arithmatex">\( I_t = e^{-\int_0^t a(s) ds} \)</span>:</p>
+<div class="arithmatex">\[
+X_t = X_0 e^{\int_0^t a(s) ds} + e^{\int_0^t a(s) ds} \int_0^t e^{-\int_0^s a(r) dr} b(s) dW_s
+\]</div>
 </li>
 <li>
-<p><strong>Separable SDEs</strong>: If it can be rewritten as:
-   $$
+<p>Example: <strong>Geometric Brownian Motion (GBM)</strong></p>
+<p>$$
+ dX_t = \mu X_t dt + \sigma X_t dW_t
+ $$</p>
+<p>Solution:</p>
+<p>$$
+ X_t = X_0 \exp \left( (\mu - \frac{1}{2} \sigma^2)t + \sigma W_t \right)
+ $$</p>
+</li>
+<li>
+<p><strong>Separable SDEs</strong>: If it can be rewritten as:</p>
+</li>
+</ol>
+<p>$$
    f(X_t) dX_t = g(t) dt + h(t) dW_t
-   $$
-   then explicit integration is possible.</p>
-<p><strong>Solution</strong> (Using direct integration when separable):
+   $$</p>
+<p>then explicit integration is possible.</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span></pre></div></td><td class="code"><div><pre><span></span><code>**Solution** (Using direct integration when separable):
+
 $$
 \int \frac{1}{f(X_t)} dX_t = \int g(t) dt + \int h(t) dW_t
-$$</p>
-<p>For example, if the equation is:
+$$
+
+
+For example, if the equation is:
+
 $$
 dX_t = (\alpha X_t + \beta) dt + \sigma dW_t
 $$
-- The <strong>solution</strong> can be derived as:
+
+- The **solution** can be derived as:
+
 $$
 X_t = e^{\alpha t} \left( X_0 + \int_0^t e^{-\alpha s} (\beta ds + \sigma dW_s) \right)
-$$</p>
-</li>
-<li>
-<p><strong>Exact Differential Form</strong>: When an integrating factor transforms the SDE into an explicit integral.
-    $$
-    dX_t + P(t) X_t dt = Q(t) dW_t
-    $$</p>
-<ul>
-<li>Multiply by the integrating factor <span class="arithmatex">\( I_t = e^{\int P(t) dt} \)</span>, then integrate:
 $$
-X_t = e<sup>{-\int_0</sup>t P(s) ds} \left( X_0 + \int_0^t e<sup>{\int_0</sup>s P(r) dr} Q(s) dW_s \right)
-$$</li>
+</code></pre></div></td></tr></table></div>
+<ol>
+<li>
+<p><strong>Exact Differential Form</strong>: When an integrating factor transforms the SDE into an explicit integral.</p>
+<div class="arithmatex">\[
+dX_t + P(t) X_t dt = Q(t) dW_t
+\]</div>
+<ul>
+<li>Multiply by the integrating factor <span class="arithmatex">\( I_t = e^{\int P(t) dt} \)</span>, then integrate:</li>
 </ul>
 </li>
 </ol>
+<div class="arithmatex">\[
+X_t = e^{-\int_0^t P(s) ds} \left( X_0 + \int_0^t e^{\int_0^s P(r) dr} Q(s) dW_s \right)
+\]</div>
 <h3 id="57-famus-sdes">5.7 Famus SDEs<a class="headerlink" href="#57-famus-sdes" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -3221,20 +3253,28 @@ $$</li>
 <hr />
 <h3 id="63-3-gaussian-increments">6.3 3. <strong>Gaussian Increments</strong><a class="headerlink" href="#63-3-gaussian-increments" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>Property</strong>: Increments <span class="arithmatex">\(W_t - W_s\)</span> follow a normal distribution:
-     $$
-     W_t - W_s \sim \mathcal{N}(0, t-s).
-     $$</li>
-<li><strong>Implication</strong>: The Itô integral inherits Gaussian structure, making it analytically tractable.</li>
+<li>
+<p><strong>Property</strong>: Increments <span class="arithmatex">\(W_t - W_s\)</span> follow a normal distribution:</p>
+<p>$$
+ W_t - W_s \sim \mathcal{N}(0, t-s).
+ $$</p>
+</li>
+<li>
+<p><strong>Implication</strong>: The Itô integral inherits Gaussian structure, making it analytically tractable.</p>
+</li>
 </ul>
 <hr />
 <h3 id="64-4-quadratic-variation">6.4 4. <strong>Quadratic Variation</strong><a class="headerlink" href="#64-4-quadratic-variation" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>Property</strong>: The quadratic variation of <span class="arithmatex">\(W_t\)</span> over <span class="arithmatex">\([0, T]\)</span> is <span class="arithmatex">\(T\)</span>:
-     $$
-     \langle W \rangle_T = \lim_{\Delta t \to 0} \sum_{i=0}^{n-1} |W_{t_{i+1}} - W_{t_i}|^2 = T.
-     $$</li>
-<li><strong>Heuristic Rule</strong>: <span class="arithmatex">\((dW_t)^2 = dt\)</span> in stochastic calculus.</li>
+<li>
+<p><strong>Property</strong>: The quadratic variation of <span class="arithmatex">\(W_t\)</span> over <span class="arithmatex">\([0, T]\)</span> is <span class="arithmatex">\(T\)</span>:</p>
+<p>$$
+ \langle W \rangle_T = \lim_{\Delta t \to 0} \sum_{i=0}^{n-1} |W_{t_{i+1}} - W_{t_i}|^2 = T.
+ $$</p>
+</li>
+<li>
+<p><strong>Heuristic Rule</strong>: <span class="arithmatex">\((dW_t)^2 = dt\)</span> in stochastic calculus.</p>
+</li>
 <li><strong>Implication</strong>: This drives the "extra term" in Itô’s Lemma (e.g., <span class="arithmatex">\(\frac{1}{2} \sigma^2 \frac{\partial^2 f}{\partial x^2} dt\)</span>).</li>
 </ul>
 <h3 id="65-5-martingale-property">6.5 5. <strong>Martingale Property (鞅性质)</strong><a class="headerlink" href="#65-5-martingale-property" title="Permanent link">&para;</a></h3>
@@ -3374,8 +3414,8 @@ y_{n+1} = y_n + \frac{h}{6} (k_1 + 2k_2 + 2k_3 + k_4).
 <p>Similar to the ODE solver, we can solve th SDE by the similar numerical methods</p>
 <div class="admonition note">
 <p class="admonition-title">One thing need to note is that</p>
-<p><span class="arithmatex">\(<span class="arithmatex">\(dW_t \sim \sqrt{dt}\)</span>\)</span>
-when using Talay expansion</p>
+<div class="arithmatex">\[dW_t \sim \sqrt{dt}\]</div>
+<p>when using Talay expansion</p>
 </div>
 <h3 id="71-euler-maruyama-discretization">7.1 Euler-Maruyama Discretization<a class="headerlink" href="#71-euler-maruyama-discretization" title="Permanent link">&para;</a></h3>
 <p>For a time step <span class="arithmatex">\(\Delta t\)</span>, the numerical approximation is:</p>
@@ -3532,10 +3572,10 @@ g'(X_n)\,g(X_{n})\,\bigl(W_{s} - W_{t_n}\bigr)\,dW_{s},
 \]</div>
 <p>because the <span class="arithmatex">\(\,f\)</span>-related terms contribute at a higher order in <span class="arithmatex">\(\Delta t\)</span>.</p>
 <h5 id="evaluating-the-second-stochastic-integral">Evaluating the second stochastic integral<a class="headerlink" href="#evaluating-the-second-stochastic-integral" title="Permanent link">&para;</a></h5>
-<p>The integral
-$$
+<p>The integral</p>
+<div class="arithmatex">\[
 \int_{t_n}^{t_{n+1}} (W_{s} - W_{t_n})\,dW_{s}
-$$</p>
+\]</div>
 <p>in the Itô sense is well-known to satisfy:</p>
 <div class="arithmatex">\[
 \int_{t_n}^{t_{n+1}} (W_{s} - W_{t_n})\,dW_{s}
@@ -4032,67 +4072,67 @@ x_n = x_{n-1} + r x_{n-1} \left(1 - \frac{x_{n-1}}{K} \right) \Delta t + \sqrt{2
 <h2 id="8-extension-other-sde-type">8. Extension: Other SDE type<a class="headerlink" href="#8-extension-other-sde-type" title="Permanent link">&para;</a></h2>
 <p>Below are several common forms of stochastic differential equations (SDEs) when different types of noise are used as the driving term, along with their corresponding integral forms:</p>
 <h3 id="81-1-sde-driven-by-brownian-motion">8.1 1. SDE Driven by Brownian Motion<a class="headerlink" href="#81-1-sde-driven-by-brownian-motion" title="Permanent link">&para;</a></h3>
-<p><strong>Differential Form:</strong>
-$$
+<p><strong>Differential Form:</strong></p>
+<div class="arithmatex">\[
 dX_t = b(X_t, t)\,dt + \sigma(X_t, t)\,dW_t,
-$$
-where:</p>
+\]</div>
+<p>where:</p>
 <ul>
 <li><span class="arithmatex">\(b(X_t, t)\)</span> is the drift coefficient,</li>
 <li><span class="arithmatex">\(\sigma(X_t, t)\)</span> is the diffusion coefficient, and</li>
 <li><span class="arithmatex">\(W_t\)</span> is a standard Brownian motion.</li>
 </ul>
-<p><strong>Integral Form:</strong>
-$$
+<p><strong>Integral Form:</strong></p>
+<div class="arithmatex">\[
 X_t = X_0 + \int_0^t b(X_s, s)\,ds + \int_0^t \sigma(X_s, s)\,dW_s.
-$$
-Here, the stochastic integral <span class="arithmatex">\(\int_0^t \sigma(X_s, s)\,dW_s\)</span> is interpreted in the Itô sense.</p>
+\]</div>
+<p>Here, the stochastic integral <span class="arithmatex">\(\int_0^t \sigma(X_s, s)\,dW_s\)</span> is interpreted in the Itô sense.</p>
 <hr />
 <h3 id="82-2-sde-driven-by-a-levy-process-including-jumps">8.2 2. SDE Driven by a Lévy Process (Including Jumps)<a class="headerlink" href="#82-2-sde-driven-by-a-levy-process-including-jumps" title="Permanent link">&para;</a></h3>
 <p>Lévy processes generalize Brownian motion by allowing jumps. In many models, a Lévy process is represented as a combination of a continuous part (often still a Brownian motion) and a jump part, typically modeled using a compensated Poisson random measure.</p>
-<p><strong>Differential Form:</strong>
-$$
+<p><strong>Differential Form:</strong></p>
+<div class="arithmatex">\[
 dX_t = b(X_{t-}, t)\,dt + \sigma(X_{t-}, t)\,dW_t + \int_{\mathbb{R}} \gamma(X_{t-}, t, z)\,\tilde{N}(dt,dz),
-$$
-where:</p>
+\]</div>
+<p>where:</p>
 <ul>
 <li><span class="arithmatex">\(X_{t-}\)</span> denotes the left-limit of <span class="arithmatex">\(X\)</span> at time <span class="arithmatex">\(t\)</span> (to handle jump discontinuities),</li>
 <li><span class="arithmatex">\(\tilde{N}(dt,dz)\)</span> is the compensated Poisson random measure, and</li>
 <li><span class="arithmatex">\(\gamma(X_{t-}, t, z)\)</span> describes the impact on <span class="arithmatex">\(X_t\)</span> when a jump of size <span class="arithmatex">\(z\)</span> occurs.</li>
 </ul>
-<p><strong>Integral Form:</strong>
-$$
+<p><strong>Integral Form:</strong></p>
+<div class="arithmatex">\[
 X_t = X_0 + \int_0^t b(X_{s-}, s)\,ds + \int_0^t \sigma(X_{s-}, s)\,dW_s + \int_0^t\int_{\mathbb{R}} \gamma(X_{s-}, s, z)\,\tilde{N}(ds,dz).
-$$</p>
+\]</div>
 <hr />
 <h3 id="83-3-sde-driven-by-a-pure-jump-process-jump-diffusion-model">8.3 3. SDE Driven by a Pure Jump Process (Jump-Diffusion Model)<a class="headerlink" href="#83-3-sde-driven-by-a-pure-jump-process-jump-diffusion-model" title="Permanent link">&para;</a></h3>
 <p>In some models, the jump component is emphasized. Here, the SDE might include both a continuous part (from Brownian motion) and a pure jump part, often represented by a Poisson random measure.</p>
-<p><strong>Differential Form:</strong>
-$$
+<p><strong>Differential Form:</strong></p>
+<div class="arithmatex">\[
 dX_t = b(X_{t-}, t)\,dt + \sigma(X_{t-}, t)\,dW_t + dJ_t,
-$$
-where the jump process <span class="arithmatex">\(J_t\)</span> is given by
-$$
+\]</div>
+<p>where the jump process <span class="arithmatex">\(J_t\)</span> is given by</p>
+<div class="arithmatex">\[
 J_t = \int_0^t\int_{\mathbb{R}} z\,N(ds,dz),
-$$
-with <span class="arithmatex">\(N(ds,dz)\)</span> being the (non-compensated) Poisson random measure.</p>
-<p><strong>Integral Form:</strong>
-$$
+\]</div>
+<p>with <span class="arithmatex">\(N(ds,dz)\)</span> being the (non-compensated) Poisson random measure.</p>
+<p><strong>Integral Form:</strong></p>
+<div class="arithmatex">\[
 X_t = X_0 + \int_0^t b(X_{s-}, s)\,ds + \int_0^t \sigma(X_{s-}, s)\,dW_s + \int_0^t\int_{\mathbb{R}} z\,N(ds,dz).
-$$</p>
+\]</div>
 <hr />
 <h3 id="84-4-sde-driven-by-fractional-brownian-motion-fbm">8.4 4. SDE Driven by Fractional Brownian Motion (fBm)<a class="headerlink" href="#84-4-sde-driven-by-fractional-brownian-motion-fbm" title="Permanent link">&para;</a></h3>
 <p>Fractional Brownian motion <span class="arithmatex">\(B^H_t\)</span> is a generalization of standard Brownian motion that exhibits self-similarity and long-range dependence. Its increments are not independent, which means that the standard Itô calculus does not apply; one must use other definitions of stochastic integration (e.g., Young integration or the rough paths approach).</p>
-<p><strong>Differential Form:</strong>
-$$
+<p><strong>Differential Form:</strong></p>
+<div class="arithmatex">\[
 dX_t = b(X_t, t)\,dt + \sigma(X_t, t)\,dB^H_t,
-$$
-where <span class="arithmatex">\(B^H_t\)</span> is a fractional Brownian motion with Hurst parameter <span class="arithmatex">\(H \in (0,1)\)</span>.</p>
-<p><strong>Integral Form:</strong>
-$$
+\]</div>
+<p>where <span class="arithmatex">\(B^H_t\)</span> is a fractional Brownian motion with Hurst parameter <span class="arithmatex">\(H \in (0,1)\)</span>.</p>
+<p><strong>Integral Form:</strong></p>
+<div class="arithmatex">\[
 X_t = X_0 + \int_0^t b(X_s, s)\,ds + \int_0^t \sigma(X_s, s)\,dB^H_s.
-$$
-The integral <span class="arithmatex">\(\int_0^t \sigma(X_s, s)\,dB^H_s\)</span> is defined according to a theory appropriate for fractional Brownian motion, such as Young integration or the rough paths framework.</p>
+\]</div>
+<p>The integral <span class="arithmatex">\(\int_0^t \sigma(X_s, s)\,dB^H_s\)</span> is defined according to a theory appropriate for fractional Brownian motion, such as Young integration or the rough paths framework.</p>
 <hr />
 <h3 id="85-summary">8.5 Summary<a class="headerlink" href="#85-summary" title="Permanent link">&para;</a></h3>
 <ul>
@@ -4220,7 +4260,7 @@ The integral <span class="arithmatex">\(\int_0^t \sigma(X_s, s)\,dB^H_s\)</span>
       
     
     <a href="https://mad-sg.github.io/generative-ai-start-to-surrender/" target="_blank" rel="noopener" title="mad-sg.github.io" class="md-social__link">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
     </a>
   
     
@@ -4231,7 +4271,7 @@ The integral <span class="arithmatex">\(\int_0^t \sigma(X_s, s)\,dB^H_s\)</span>
       
     
     <a href="https://hub.docker.com/r/squidfunk/mkdocs-material/" target="_blank" rel="noopener" title="hub.docker.com" class="md-social__link">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M349.9 236.3h-66.1v-59.4h66.1zm0-204.3h-66.1v60.7h66.1zm78.2 144.8H362v59.4h66.1zm-156.3-72.1h-66.1v60.1h66.1zm78.1 0h-66.1v60.1h66.1zm276.8 100c-14.4-9.7-47.6-13.2-73.1-8.4-3.3-24-16.7-44.9-41.1-63.7l-14-9.3-9.3 14c-18.4 27.8-23.4 73.6-3.7 103.8-8.7 4.7-25.8 11.1-48.4 10.7H2.4c-8.7 50.8 5.8 116.8 44 162.1 37.1 43.9 92.7 66.2 165.4 66.2 157.4 0 273.9-72.5 328.4-204.2 21.4.4 67.6.1 91.3-45.2 1.5-2.5 6.6-13.2 8.5-17.1zm-511.1-27.9h-66v59.4h66.1v-59.4zm78.1 0h-66.1v59.4h66.1zm78.1 0h-66.1v59.4h66.1zm-78.1-72.1h-66.1v60.1h66.1z"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M349.9 236.3h-66.1v-59.4h66.1zm0-204.3h-66.1v60.7h66.1zm78.2 144.8H362v59.4h66.1zm-156.3-72.1h-66.1v60.1h66.1zm78.1 0h-66.1v60.1h66.1zm276.8 100c-14.4-9.7-47.6-13.2-73.1-8.4-3.3-24-16.7-44.9-41.1-63.7l-14-9.3-9.3 14c-18.4 27.8-23.4 73.6-3.7 103.8-8.7 4.7-25.8 11.1-48.4 10.7H2.4c-8.7 50.8 5.8 116.8 44 162.1 37.1 43.9 92.7 66.2 165.4 66.2 157.4 0 273.9-72.5 328.4-204.2 21.4.4 67.6.1 91.3-45.2 1.5-2.5 6.6-13.2 8.5-17.1zm-511.1-27.9h-66v59.4h66.1v-59.4zm78.1 0h-66.1v59.4h66.1zm78.1 0h-66.1v59.4h66.1zm-78.1-72.1h-66.1v60.1h66.1z"/></svg>
     </a>
   
     
@@ -4242,7 +4282,7 @@ The integral <span class="arithmatex">\(\int_0^t \sigma(X_s, s)\,dB^H_s\)</span>
       
     
     <a href="https://pypi.org/project/mkdocs-material/" target="_blank" rel="noopener" title="pypi.org" class="md-social__link">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.8 200.5c-7.7-30.9-22.3-54.2-53.4-54.2h-40.1v47.4c0 36.8-31.2 67.8-66.8 67.8H172.7c-29.2 0-53.4 25-53.4 54.3v101.8c0 29 25.2 46 53.4 54.3 33.8 9.9 66.3 11.7 106.8 0 26.9-7.8 53.4-23.5 53.4-54.3v-40.7H226.2v-13.6h160.2c31.1 0 42.6-21.7 53.4-54.2 11.2-33.5 10.7-65.7 0-108.6M286.2 404c11.1 0 20.1 9.1 20.1 20.3 0 11.3-9 20.4-20.1 20.4-11 0-20.1-9.2-20.1-20.4.1-11.3 9.1-20.3 20.1-20.3M167.8 248.1h106.8c29.7 0 53.4-24.5 53.4-54.3V91.9c0-29-24.4-50.7-53.4-55.6-35.8-5.9-74.7-5.6-106.8.1-45.2 8-53.4 24.7-53.4 55.6v40.7h106.9v13.6h-147c-31.1 0-58.3 18.7-66.8 54.2-9.8 40.7-10.2 66.1 0 108.6 7.6 31.6 25.7 54.2 56.8 54.2H101v-48.8c0-35.3 30.5-66.4 66.8-66.4m-6.7-142.6c-11.1 0-20.1-9.1-20.1-20.3.1-11.3 9-20.4 20.1-20.4 11 0 20.1 9.2 20.1 20.4s-9 20.3-20.1 20.3"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.8 200.5c-7.7-30.9-22.3-54.2-53.4-54.2h-40.1v47.4c0 36.8-31.2 67.8-66.8 67.8H172.7c-29.2 0-53.4 25-53.4 54.3v101.8c0 29 25.2 46 53.4 54.3 33.8 9.9 66.3 11.7 106.8 0 26.9-7.8 53.4-23.5 53.4-54.3v-40.7H226.2v-13.6h160.2c31.1 0 42.6-21.7 53.4-54.2 11.2-33.5 10.7-65.7 0-108.6M286.2 404c11.1 0 20.1 9.1 20.1 20.3 0 11.3-9 20.4-20.1 20.4-11 0-20.1-9.2-20.1-20.4.1-11.3 9.1-20.3 20.1-20.3M167.8 248.1h106.8c29.7 0 53.4-24.5 53.4-54.3V91.9c0-29-24.4-50.7-53.4-55.6-35.8-5.9-74.7-5.6-106.8.1-45.2 8-53.4 24.7-53.4 55.6v40.7h106.9v13.6h-147c-31.1 0-58.3 18.7-66.8 54.2-9.8 40.7-10.2 66.1 0 108.6 7.6 31.6 25.7 54.2 56.8 54.2H101v-48.8c0-35.3 30.5-66.4 66.8-66.4m-6.7-142.6c-11.1 0-20.1-9.1-20.1-20.3.1-11.3 9-20.4 20.1-20.4 11 0 20.1 9.2 20.1 20.4s-9 20.3-20.1 20.3"/></svg>
     </a>
   
     
@@ -4253,7 +4293,7 @@ The integral <span class="arithmatex">\(\int_0^t \sigma(X_s, s)\,dB^H_s\)</span>
       
     
     <a href="https://bsky.app/profile/squidfunk.bsky.social" target="_blank" rel="noopener" title="bsky.app" class="md-social__link">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M111.8 62.2C170.2 105.9 233 194.7 256 242.4c23-47.6 85.8-136.4 144.2-180.2 42.1-31.6 110.3-56 110.3 21.8 0 15.5-8.9 130.5-14.1 149.2-18.2 64.8-84.4 81.4-143.3 71.3C456 322 482.2 380 425.6 438c-107.4 110.2-154.3-27.6-166.3-62.9-1.7-4.9-2.6-7.8-3.3-7.8s-1.6 3-3.3 7.8c-12 35.3-59 173.1-166.3 62.9-56.5-58-30.4-116 72.5-133.5C100 314.6 33.8 298 15.7 233.1 10.4 214.4 1.5 99.4 1.5 83.9c0-77.8 68.2-53.4 110.3-21.8z"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M111.8 62.2C170.2 105.9 233 194.7 256 242.4c23-47.6 85.8-136.4 144.2-180.2 42.1-31.6 110.3-56 110.3 21.8 0 15.5-8.9 130.5-14.1 149.2-18.2 64.8-84.4 81.4-143.3 71.3C456 322 482.2 380 425.6 438c-107.4 110.2-154.3-27.6-166.3-62.9-1.7-4.9-2.6-7.8-3.3-7.8s-1.6 3-3.3 7.8c-12 35.3-59 173.1-166.3 62.9-56.5-58-30.4-116 72.5-133.5C100 314.6 33.8 298 15.7 233.1 10.4 214.4 1.5 99.4 1.5 83.9c0-77.8 68.2-53.4 110.3-21.8z"/></svg>
     </a>
   
     
@@ -4266,7 +4306,7 @@ The integral <span class="arithmatex">\(\int_0^t \sigma(X_s, s)\,dB^H_s\)</span>
       
     
     <a href="https://fosstodon.org/@squidfunk" target="_blank" rel="noopener me" title="fosstodon.org" class="md-social__link">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M433 179.11c0-97.2-63.71-125.7-63.71-125.7-62.52-28.7-228.56-28.4-290.48 0 0 0-63.72 28.5-63.72 125.7 0 115.7-6.6 259.4 105.63 289.1 40.51 10.7 75.32 13 103.33 11.4 50.81-2.8 79.32-18.1 79.32-18.1l-1.7-36.9s-36.31 11.4-77.12 10.1c-40.41-1.4-83-4.4-89.63-54a102.5 102.5 0 0 1-.9-13.9c85.63 20.9 158.65 9.1 178.75 6.7 56.12-6.7 105-41.3 111.23-72.9 9.8-49.8 9-121.5 9-121.5m-75.12 125.2h-46.63v-114.2c0-49.7-64-51.6-64 6.9v62.5h-46.33V197c0-58.5-64-56.6-64-6.9v114.2H90.19c0-122.1-5.2-147.9 18.41-175 25.9-28.9 79.82-30.8 103.83 6.1l11.6 19.5 11.6-19.5c24.11-37.1 78.12-34.8 103.83-6.1 23.71 27.3 18.4 53 18.4 175z"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M433 179.11c0-97.2-63.71-125.7-63.71-125.7-62.52-28.7-228.56-28.4-290.48 0 0 0-63.72 28.5-63.72 125.7 0 115.7-6.6 259.4 105.63 289.1 40.51 10.7 75.32 13 103.33 11.4 50.81-2.8 79.32-18.1 79.32-18.1l-1.7-36.9s-36.31 11.4-77.12 10.1c-40.41-1.4-83-4.4-89.63-54a102.5 102.5 0 0 1-.9-13.9c85.63 20.9 158.65 9.1 178.75 6.7 56.12-6.7 105-41.3 111.23-72.9 9.8-49.8 9-121.5 9-121.5m-75.12 125.2h-46.63v-114.2c0-49.7-64-51.6-64 6.9v62.5h-46.33V197c0-58.5-64-56.6-64-6.9v114.2H90.19c0-122.1-5.2-147.9 18.41-175 25.9-28.9 79.82-30.8 103.83 6.1l11.6 19.5 11.6-19.5c24.11-37.1 78.12-34.8 103.83-6.1 23.71 27.3 18.4 53 18.4 175z"/></svg>
     </a>
   
     
@@ -4277,7 +4317,7 @@ The integral <span class="arithmatex">\(\int_0^t \sigma(X_s, s)\,dB^H_s\)</span>
       
     
     <a href="https://x.com/squidfunk" target="_blank" rel="noopener" title="x.com" class="md-social__link">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8l164.9-188.5L26.8 48h145.6l100.5 132.9zm-24.8 373.8h39.1L151.1 88h-42z"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8l164.9-188.5L26.8 48h145.6l100.5 132.9zm-24.8 373.8h39.1L151.1 88h-42z"/></svg>
     </a>
   
 </div>
@@ -4292,10 +4332,10 @@ The integral <span class="arithmatex">\(\int_0^t \sigma(X_s, s)\,dB^H_s\)</span>
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "toc.integrate", "content.code.copy", "content.code.select", "content.code.annotate", "content.tabs.link", "content.footnote.tooltips", "content.tooltips", "navigation.tracking", "search.highlight", "search.share", "search.suggest", "toc.follow", "announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.expand", "search.share", "search.suggest"], "search": "../../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "toc.integrate", "content.code.copy", "content.code.select", "content.code.annotate", "content.tabs.link", "content.footnote.tooltips", "content.tooltips", "navigation.tracking", "search.highlight", "search.share", "search.suggest", "toc.follow", "announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.expand", "search.share", "search.suggest"], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.60a45f97.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.88dd0f4e.min.js"></script>
       
         <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
       
