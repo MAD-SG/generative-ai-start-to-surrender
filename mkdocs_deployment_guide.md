@@ -36,14 +36,14 @@
 4. **Configure Navigation**:
    - Edit `mkdocs.yml` to define the site's navigation.
 
-6. **Add number plugin**
+5. **Add number plugin**
 
     ```bash
     # Follow the guide here: https://github.com/ignorantshr/mkdocs-add-number-plugin
     pip install mkdocs-add-number-plugin
     ```
 
-5. **Build and Serve Locally**:
+6. **Build and Serve Locally**:
 
    ```bash
    mkdocs build
@@ -311,6 +311,7 @@ $$
 \int_a^b f(x) dx
 $$
 
+
 ```
 
 ✅ **Result**:
@@ -390,6 +391,7 @@ includes/
 \int_a^b f(x) dx
 $$
 
+
 ```
 
 ---
@@ -463,6 +465,7 @@ You can create interactive buttons inside your documentation.
 | ✅ Highlight Text | `==highlight==` |
 
 | ✅ Math Equations | `$$ E=mc^2 $$` |
+
 
 | ✅ Mermaid Diagrams | ` ```mermaid` |
 | ✅ Variable References | `:einstein:` |
