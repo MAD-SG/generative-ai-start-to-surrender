@@ -1,33 +1,31 @@
 # Scalable Diffusion Models with Transformers (DiT)
 
-- Year 2023 Mar
-- Author:
-  - 威廉·皮布尔斯（William Peebles）
-    - DiT model (UC Berkely)
-    - SORA project (open ai)
-  - 谢赛宁（Saining Xie）
+- Year: March 2023
+- Authors:
+  - William Peebles
+    - DiT model (UC Berkeley)
+    - SORA project (OpenAI)
+  - Saining Xie
     - DiT model (New York University)
     - ResNeXt
-    - Cambrian-1 with Yan Lecun
-- Main contribution
-  - replace the U-Net backbone with transformers
-  - Analyze the scalability properties
-- repo: <https://github.com/facebookresearch/DiT/tree/main>
-
-![alt text](../../images/image-80.png)
+    - Cambrian-1 with Yann LeCun
+- Main Contributions:
+  - Replaced the U-Net backbone with transformers
+  - Analyzed scalability properties
+- Repository: <https://github.com/facebookresearch/DiT/tree/main>
 
 ## Diffusion Transformer Design
 
 !!! note ""
-    The transformer diffusion is also trained with the latent diffusion model. Thus the transformer diffusion is desinged on the latent space.
+    The transformer diffusion is also trained with the latent diffusion model. Thus, the transformer diffusion is designed on the latent space.
 
 ### Patchify
 
-- convert spatial input into a sequence of $T$ tokens
-- suppose the input size if [64, 64, 4], $p=16$, then for each $16\times16$ sqaure, we flatten into the single token with a linear embedding layer. totally, we obtained $64\times 64 / (p^2) = 16$ tokens. The output shape should be [16,d]
-- In the design, the patchsize  $p$ is regarded as a parameter
+- Converts spatial input into a sequence of $T$ tokens.
+- Suppose the input size is [64, 64, 4], $p=16$. For each $16\times16$ square, we flatten it into a single token with a linear embedding layer. In total, we obtain $64\times 64 / (p^2) = 16$ tokens. The output shape should be [16, d].
+- In the design, the patch size $p$ is regarded as a parameter.
 
-We can use the conv2d to do the patchify, then we can use the flatten and transpose to reshape the output.
+We can use `conv2d` to perform patchification, followed by flattening and transposing to reshape the output.
 
 ```py3
 import torch
@@ -55,8 +53,8 @@ patches = patches.transpose(1, 2)  # Shape: (batch_size, num_patches, embedding_
 print(patches.shape)  # Output: torch.Size([batch_size, 16, 768])
 ```
 
-### positional encoding
-Similar to the normal sine-cosine positional encoding, we can also use the conv2d to do the positional encoding.
+### Positional Encoding
+Similar to the standard sine-cosine positional encoding, we can also use `conv2d` for positional encoding.
 
 ```py3
 import torch
@@ -87,7 +85,7 @@ class PositionalEncoding(nn.Module):
         return x
 ```
 
-In transformer models, positional encoding is used to inject information about the position of tokens in a sequence, since the model itself doesn't inherently capture positional information. A common method is to use sinusoidal functions to generate these encodings. The formulas for sine and cosine positional encodings are as follows:
+In transformer models, positional encoding is used to inject information about the position of tokens in a sequence, as the model itself doesn't inherently capture positional information. A common method is to use sinusoidal functions to generate these encodings. The formulas for sine and cosine positional encodings are as follows:
 
 For a given position \( \text{pos} \) and embedding dimension \( i \):
 
@@ -98,50 +96,48 @@ $$ \text{PE}(\text{pos}, i) = \sin\left(\frac{\text{pos}}{10000^{\frac{i}{d_{\te
 
 - When \( i \) is odd:
 
-$$\text{PE}(\text{pos}, i) = \cos\left(\frac{\text{pos}}{10000^{\frac{i}{d_{\text{model}}}}}\right) $$
+$$ \text{PE}(\text{pos}, i) = \cos\left(\frac{\text{pos}}{10000^{\frac{i}{d_{\text{model}}}}}\right) $$
 
 
 Here, \( d_{\text{model}} \) represents the dimensionality of the model's embeddings. These functions use different frequencies to encode each dimension, allowing the model to distinguish between different positions in the sequence. This approach was introduced in the "Attention Is All You Need" paper.
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/8DDDAT9JCu0" frameborder="0" allowfullscreen></iframe>
 
-## Dit Block Design
+## DiT Block Design
 
-The core is to design how to accept condition information like
+The core challenge is to design how to incorporate conditional information such as:
 
-- timestep $t$
-- class label $c$
-- guided text
-- guided spatial information such as depth, etc.
+- Timestep $t$
+- Class label $c$
+- Guided text
+- Guided spatial information such as depth, etc.
 
-To implement this, the paper design four different blocks to accept the condition
-### In-context conditioning
+To implement this, the paper designs four different blocks to accept the conditions.
+### In-context Conditioning
 
-Similar to the `cls` token in ViT, treat the embeddings of $t$ and $c$ as two additional tokens in the input sequence, which is
+Similar to the `cls` token in ViT, treat the embeddings of $t$ and $c$ as two additional tokens in the input sequence:
 
 $$
-[e_t, e_c, patch_1, patch_2, ...,patch_N]
+[e_t, e_c, \text{patch}_1, \text{patch}_2, ..., \text{patch}_N]
 $$
 
 
 Then the input sequence is passed through a transformer encoder to extract context information.
 
-### Cross Attenstion Block
+### Cross Attention Block
 
-Similar in the Latent Diffusion [latent diffusion handson](./ldm_handson.md)
+Similar to the Latent Diffusion [latent diffusion hands-on](./ldm_handson.md)
 
 <img src="../../images/image-81.png" width="200" />
 
 ![](https://media.licdn.com/dms/image/v2/D5612AQG0az4xyd5ODQ/article-cover_image-shrink_600_2000/article-cover_image-shrink_600_2000/0/1687101703871?e=2147483647&v=beta&t=5dL9K_PU8JZedBPh67hVx71LDc_K-GND1Y5vB8i0sOA)
 
-The $t$ and $c$ are concated as lenght-two sequence, and act as $K$ and $V$ in the cross attention block as show in the above picture.
+The $t$ and $c$ are concatenated as a length-two sequence and act as $K$ and $V$ in the cross-attention block, as shown in the above picture.
 
 ### Adaptive Layer Norm (adaLN)
 ![](https://theaisummer.com/static/ac89fbcf1c115f07ae68af695c28c4a0/ee604/normalization.png)
 
-Borrow idea from the style gan AdaIN
-
-Here is a comparison of **Adaptive Layer Normalization (adaLN)** in **DiT** and **Adaptive Instance Normalization (AdaIN)** in **StyleGAN** in a tabular format:
+Borrowing ideas from StyleGAN's AdaIN, here is a comparison of **Adaptive Layer Normalization (adaLN)** in **DiT** and **Adaptive Instance Normalization (AdaIN)** in **StyleGAN** in tabular format:
 
 | Feature            | **adaLN (DiT)** | **AdaIN (StyleGAN)** |
 |--------------------|----------------|----------------------|
@@ -152,36 +148,7 @@ Here is a comparison of **Adaptive Layer Normalization (adaLN)** in **DiT** and 
 | **Dependency** | Learns conditioning through a neural network (e.g., MLP). | Uses statistics (mean & variance) directly from the style input. |
 | **Application** | Used in transformer-based models like DiT to condition the model on auxiliary data (e.g., text, class labels). | Used in StyleGAN for style transfer and control of image synthesis. |
 
-Here is the structure of AdaLN.
-
-```py3
-class DiTBlock(nn.Module):
-    """
-    A DiT block with adaptive layer norm zero (adaLN-Zero) conditioning.
-    """
-    def __init__(self, hidden_size, num_heads, mlp_ratio=4.0, **block_kwargs):
-        super().__init__()
-        self.norm1 = nn.LayerNorm(hidden_size, elementwise_affine=False, eps=1e-6)
-        self.attn = Attention(hidden_size, num_heads=num_heads, qkv_bias=True, **block_kwargs)
-        self.norm2 = nn.LayerNorm(hidden_size, elementwise_affine=False, eps=1e-6)
-        mlp_hidden_dim = int(hidden_size * mlp_ratio)
-        approx_gelu = lambda: nn.GELU(approximate="tanh")
-        self.mlp = Mlp(in_features=hidden_size, hidden_features=mlp_hidden_dim, act_layer=approx_gelu, drop=0)
-        self.adaLN_modulation = nn.Sequential(
-            nn.SiLU(),
-            nn.Linear(hidden_size, 6 * hidden_size, bias=True)
-        )
-
-    def forward(self, x, c):
-        shift_msa, scale_msa, gate_msa, shift_mlp, scale_mlp, gate_mlp = self.adaLN_modulation(c).chunk(6, dim=1)
-        x = x + gate_msa.unsqueeze(1) * self.attn(modulate(self.norm1(x), shift_msa, scale_msa))
-        x = x + gate_mlp.unsqueeze(1) * self.mlp(modulate(self.norm2(x), shift_mlp, scale_mlp))
-        return x
-```
-
-<img src="../../images/image-82.png" width="200" />
-
-here `adaLN_modulation` predicts the parameters $\alpha_1$, $\alpha_2$, $\beta_1$, $\beta_2$, $\gamma_1$, $\gamma_2$.
+Here `adaLN_modulation` predicts the parameters $\alpha_1$, $\alpha_2$, $\beta_1$, $\beta_2$, $\gamma_1$, $\gamma_2$.
 
 The **DiTBlock with Adaptive Layer Norm Zero (adaLN-Zero)** can be mathematically represented by the following function:
 
@@ -204,10 +171,10 @@ $$
 $$
 
 
-### adaLN Zero Initial
-Assume that zero initial for residule network is benifitial, we add the parameter $scale$ to control the effects of adaLN. And at initial we initial all the parameters of linear layers to 0.
+### adaLN Zero Initialization
+Assuming that zero initialization for residual networks is beneficial, we add the parameter $scale$ to control the effects of adaLN. Initially, we set all the parameters of linear layers to 0.
 
-### Overall structure of DiT
+### Overall Structure of DiT
 
 ```py3
   def forward(self, x, t, y):
@@ -228,25 +195,24 @@ Assume that zero initial for residule network is benifitial, we add the paramete
         return x
 ```
 
-The stucture of DiT is quite simple.
+The structure of DiT is quite simple:
 
-1. patchfy the input $x$, which is shape [B,C,H,W]
-2. position embedding of shape [B,T,D] on the patched tokens
-3. class/label embedding of shape [B,D] on the patched tokens
-4. combine time and class embedding $c = t+y$
-5. go through the attention blocks
-6. final layer that re-patchify
-7. convert to original shaoe [B,C',H,W]
+1. Patchify the input $x$, which has the shape [B, C, H, W].
+2. Apply position embedding of shape [B, T, D] on the patched tokens.
+3. Apply class/label embedding of shape [B, D] on the patched tokens.
+4. Combine time and class embedding $c = t + y$.
+5. Process through the attention blocks.
+6. Apply the final layer to re-patchify.
+7. Convert to the original shape [B, C', H, W].
 
 ## Results
 
-1. Large size improved FID
+1. Larger size improves FID.
    ![alt text](../../images/image-83.png)
-    ![alt text](../../images/image-84.png)
-2. In samve computation cost, large model performs better
-    ![alt text](../../images/image-85.png)
-
-3. Sota
+   ![alt text](../../images/image-84.png)
+2. With the same computational cost, larger models perform better.
+   ![alt text](../../images/image-85.png)
+3. State-of-the-art results
 
 |![alt text](../../images/image-86.png)|![alt text](../../images/image-87.png)|
 |---|---|
