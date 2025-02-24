@@ -493,9 +493,11 @@ Some SDEs admit exact solutions formula, often when they fall into these categor
 
 1. **Linear SDEs**: \( dX_t = a(t) X_t dt + b(t) dW_t \)
     Using an Integrating Factor \( I_t = e^{-\int_0^t a(s) ds} \):
+
     $$
     X_t = X_0 e^{\int_0^t a(s) ds} + e^{\int_0^t a(s) ds} \int_0^t e^{-\int_0^s a(r) dr} b(s) dW_s
     $$
+
    - Example: **Geometric Brownian Motion (GBM)**
      $$
      dX_t = \mu X_t dt + \sigma X_t dW_t
@@ -530,6 +532,7 @@ Some SDEs admit exact solutions formula, often when they fall into these categor
     dX_t + P(t) X_t dt = Q(t) dW_t
     $$
     - Multiply by the integrating factor \( I_t = e^{\int P(t) dt} \), then integrate:
+
     $$
     X_t = e^{-\int_0^t P(s) ds} \left( X_0 + \int_0^t e^{\int_0^s P(r) dr} Q(s) dW_s \right)
     $$

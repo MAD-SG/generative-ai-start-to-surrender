@@ -42,11 +42,13 @@ where:
 - **\( \Sigma_t \)** is the variance (accumulated noise).
 
 ### **VPSDE (Variance Preserving SDE)**
+
 $$
 dx = -\frac{1}{2} \beta(t) x dt + \sqrt{\beta(t)} dw
 $$
 
 Solution:
+
 $$
 x_t = x_0 e^{-\frac{1}{2} \int_0^t \beta(s) ds} + \sqrt{1 - e^{-\int_0^t \beta(s) ds}} \epsilon, \quad \epsilon \sim \mathcal{N}(0, I)
 $$
@@ -69,6 +71,7 @@ dx = -\frac{1}{2} \beta(t) x dt + \sqrt{\beta(t) (1 - e^{-2 \int_0^t \beta(s) ds
 $$
 
 Solution:
+
 $$
 x_t = x_0 e^{-\frac{1}{2} \int_0^t \beta(s) ds} + \sqrt{(1 - e^{-\int_0^t \beta(s) ds})} \epsilon, \quad \epsilon \sim \mathcal{N}(0, I)
 $$
@@ -365,9 +368,9 @@ where:
 - \(\mu(t) = \int_0^t \Psi(t,s)\,b(s)\, ds\),
 - The noise integral is Gaussian with covariance
 
-  $$
-  \Sigma(t) = \int_0^t \Psi(t,s)\,g(s)^2\,\Psi(t,s)^\top ds.
-  $$
+$$
+\Sigma(t) = \int_0^t \Psi(t,s)\,g(s)^2\,\Psi(t,s)^\top ds.
+$$
 
 Thus, the conditional (or transition) probability is given by
 
@@ -614,9 +617,10 @@ $$
 - **VP SDE:**
   - **Mean:** \(m(x_0,t)= e^{-\frac{1}{2}\int_0^t \beta(s)\,ds}\,x_0\) (not preserved)
   - **Conditional Score:**
-    $$
-    s(x,t\mid x_0) = -\frac{x - e^{-\frac{1}{2}\int_0^t \beta(s)\,ds}\,x_0}{\,1-e^{-\int_0^t \beta(s)\,ds}\,}.
-    $$
+
+$$
+s(x,t\mid x_0) = -\frac{x - e^{-\frac{1}{2}\int_0^t \beta(s)\,ds}\,x_0}{\,1-e^{-\int_0^t \beta(s)\,ds}\,}.
+$$
 
 - **VE SDE:**
   - **Mean:** \(m(x_0,t)= x_0\) (preserved)
@@ -698,7 +702,9 @@ $$
 $$
 
 - training loss
-    $$|| \nabla_{v_t} \log p(v_t | x_t) - s_\theta(x,v)||^2$$
+
+$$|| \nabla_{v_t} \log p(v_t | x_t) - s_\theta(x,v)||^2$$
+
 - initial condition
   - $v=0$
   - $x \sim p_{data}(x)$
@@ -731,9 +737,12 @@ where:
 
 - Loss: MSE loss on score function
 - data construction
-    $$x_t =(1-t) x_0 + t x_T$$
+
+$$x_t =(1-t) x_0 + t x_T$$
+
 - score function
-    $$\nabla_x \log p_t (x_t|x_0) = - \frac{x_t - x_0}{\sigma_t}$$
+
+$$\nabla_x \log p_t (x_t|x_0) = - \frac{x_t - x_0}{\sigma_t}$$
 
 #### Formula for \( \sigma_t \)
 The variance of the noise term in the Rectified Flow SDE can be written as:
@@ -904,7 +913,7 @@ where:
 
 ---
 
-## **6. Fractional Brownian Motion SDE (FBM-SDE)**
+## Fractional Brownian Motion SDE (FBM-SDE)
 Instead of using standard **Brownian motion**, FBM-SDE incorporates **long-range dependencies**.
 
 $$
@@ -923,14 +932,14 @@ where:
 
 ---
 
-## **7. Hybrid SDE-ODE Models**
+## Hybrid SDE-ODE Models
 Some models **combine SDE and ODE approaches** to get the best of both:
 
 $$
-dx = f(x, t) dt + g(t) dw \quad \text{for } t < T_1
-$$
-$$
-dx = f(x, t) dt \quad \text{for } t \geq T_1
+\begin{cases}
+dx = f(x, t) dt + g(t) dw \quad &\text{for } t < T_1\\
+dx = f(x, t) dt \quad \text{for } &\text{for } t \geq T_1
+\end{cases}
 $$
 
 where:
@@ -945,7 +954,7 @@ where:
 
 ---
 
-## **8. Summary of Score-Based SDEs**
+## Summary of Score-Based SDEs
 
 | **SDE Type** | **Equation** | **Key Features** |
 |-------------|-------------|------------------|
