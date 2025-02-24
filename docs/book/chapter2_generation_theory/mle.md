@@ -31,13 +31,11 @@ $$
  \int_{x\sim p_{\text {data }}} p_{\text {data }}(x) \log p_{\theta}(x) d x
 $$
 
-
 从离散的角度，最大似然估计表示为
 
 $$
  \sum_{x\sim p_{\text {data }}}  \log p_{\theta}(x)
 $$
-
 
 ---
 
@@ -50,7 +48,6 @@ $$
 D_{\text{KL}}(p_{\text{data}} || p_\theta)
 $$
 
-
 因此，MLE 可以被认为是以 **KL 散度**  作为距离衡量标准的特例。
 下面我们只要证明MLP目标等价于优化KL散度就行。
 
@@ -58,11 +55,9 @@ $$
 
 $$D_{\mathrm{KL}}\left(p_{\text {data }} \| p_\theta\right)=\int p_{\text {data }}(x) \log \frac{p_{\text {data }}(x)}{p_\theta(x)} d x$$
 
-
 展开为
 
 $$D_{\mathrm{KL}}\left(p_{\text {data }} \| p_\theta\right)=\int p_{\text {data }}(x) \log p_{\text {data }}(x) d x-\int p_{\text {data }}(x) \log p_\theta(x) d x$$
-
 
 第一项和$\theta$ 也就是模型无关，因此可以忽略。第二项和$\theta$有关，因此可以看成KL的目标。
 
@@ -73,7 +68,6 @@ $$
 == \arg\max_{\theta} E_{x \sim p_{\text {data }}}[\log p_{\theta}(x)]\\
 = \arg\min_{\theta} - \int p_{\text {data }}(x) \log p_{\theta}(x) d x
 $$
-
 
 ---
 
@@ -113,7 +107,6 @@ $$
  \mathcal{L}(D) = \mathbb{E}_{x \sim p_{\text{data}}} [\log D(x)] + \mathbb{E}_{x \sim p_\theta} [\log (1 - D(x))]
 $$
 
-
 优化 $D(x)$：
 
 假设 $D(x)$ 输出的值是 $D(x) \in [0, 1]$，对其求导并找到最优解
@@ -121,7 +114,6 @@ $$
 $$
 D^*(x) = \frac{p_{\text{data}}(x)}{p_{\text{data}}(x) + p_\theta(x)}
 $$
-
 
 此时最优判别器 $D^*(x)$ 表示输入样本来自真实分布的概率。
 
@@ -133,20 +125,17 @@ $$
  \min_G \max_D \mathcal{L}(D) = \mathbb{E}*{x \sim p*{\text{data}}} \left[\log \frac{p_{\text{data}}(x)}{p_{\text{data}}(x) + p_\theta(x)} \right] + \mathbb{E}*{x \sim p*\theta} \left[\log \frac{p_\theta(x)}{p_{\text{data}}(x) + p_\theta(x)} \right]
 $$
 
-
 化简：
 
 $$
  \mathcal{L}(G) = -\log(4) + 2 \cdot D_{\text{JS}}(p_{\text{data}} || p_\theta)
 $$
 
-
 其中 $D_{\text{JS}}$ 是 **Jensen-Shannon 散度** ，定义为：
 
 $$
  D_{\text{JS}}(p_{\text{data}} || p_\theta) = \frac{1}{2} D_{\text{KL}}(p_{\text{data}} || m) + \frac{1}{2} D_{\text{KL}}(p_\theta || m)
 $$
-
 
 $m = \frac{1}{2}(p_{\text{data}} + p_\theta)$。**结论：**
 Vanilla GAN 的优化目标是最小化生成分布和数据分布之间的 Jensen-Shannon 散度。
@@ -160,7 +149,6 @@ WGAN 的目标函数是：
 $$
  \mathcal{L}(G, D) = \min_G \max_{D \in \text{Lip-1}} \mathbb{E}_{x \sim p_{\text{data}}} [D(x)] - \mathbb{E}_{x \sim p_\theta} [D(x)]
 $$
-
 
 **2.1 约束条件：**
 
@@ -210,7 +198,6 @@ $\min _\theta \max _\omega F(\theta, \omega)=\mathbb{E}_{x \sim P}\left[T_\omega
 从而KL散度对应的loss 则为
 
 $$E_{x\sim P}\left[\log D(x)\right]-E_{x\sim Q_\theta}\left[\log D(x)\right]$$
-
 
 参考这个论文 <https://arxiv.org/pdf/1606.00709> 了解更多散度对应的loss
 
@@ -267,8 +254,7 @@ $$
  \log p_\theta(x) = \mathbb{E}_{q_\phi(z \mid x)} \left[ \log \frac{p_\theta(x, z)}{q_\phi(z \mid x)} \right] + \mathrm{KL}(q_\phi(z \mid x) \| p_\theta(z \mid x))
 $$
 
-
-证明细节请看 [ELBP证明](../chapter1_Introduction/1.4statistics.md#elbo)。ELBO也可以由凸函数的性质利用 Jensen's inequality直接推导出不等式(https://en.wikipedia.org/wiki/Evidence_lower_bound).
+证明细节请看 [ELBP证明](../chapter1_Introduction/1.4statistics.md#elbo)。ELBO也可以由凸函数的性质利用 Jensen's inequality直接推导出不等式(<https://en.wikipedia.org/wiki/Evidence_lower_bound>).
 
 其中：
 
@@ -286,13 +272,11 @@ $$
  \mathcal{L}(\theta, \phi; x) = \mathbb{E}_{q_\phi(z \mid x)} \left[ \log p_\theta(x, z) - \log q_\phi(z \mid x) \right]
 $$
 
-
 进一步分解联合概率 $p_\theta(x, z) = p_\theta(x \mid z)p(z)$，得到：
 
 $$
  \mathcal{L}(\theta, \phi; x) = \mathbb{E}_{q_\phi(z \mid x)} \left[ \log p_\theta(x \mid z) \right] - \mathrm{KL}(q_\phi(z \mid x) \| p(z))
 $$
-
 
 **第一项**  $\mathbb{E}_{q_\phi(z \mid x)} [\log p_\theta(x \mid z)]$：重构误差（Reconstruction Error），鼓励生成器能够生成接近真实数据 $x$ 的分布。 这个没法直接计算。如果用蒙特卡洛采样的话，也需要有 $p_\theta(z|x)$的值，但是这个值也是不可解析的。 因此在原始的论文里，假设 $p_\theta(z|x)$是一个高斯分布，这样就可以计算。
 
@@ -312,7 +296,6 @@ $$
 \end{aligned}
 $$
 
-
 其中 $d$ 是 $x$ 的维度。
 
 重构误差等价于负对数似然，忽略常数项后为：
@@ -321,22 +304,20 @@ $$
 \mathbb{E}_{q_\phi(z|x)}[-\log p_\theta(x|z)] \propto \mathbb{E}_{q_\phi(z|x)}[\|x - \hat{x}\|^2].
 $$
 
-
-3. 重建误差简化为 $|x - \hat{x}|$** 在具体实现中，通常假设方差 $\sigma^2 = 1$ 且重建误差仅考虑均值估计，此时：**
+3. 重建误差简化为 $|x - \hat{x}|$**在具体实现中，通常假设方差 $\sigma^2 = 1$ 且重建误差仅考虑均值估计，此时：**
 
 $$
 \mathbb{E}_{q_\phi(z|x)}[\|x - \hat{x}\|^2] \approx \|x - \hat{x}\|^2,
 $$
 
-
 对应的差项为 $|x - \hat{x}|$ 或其平方形式。
 
 当然如果我们假设 $p_\theta(x|z)$ 是属于其他分布，那就会导出不同的重构误差。更进一步，对于任意一个重建差的度量，其实都对应着一个$p_\theta(x|z)$, 这个可以由度量函数去构建一个密度函数。
-具体，查看 [VAE: introduction](../chapter2_VAE/2.1introduction.md)
+具体，查看 [VAE: introduction](../chapter6_VAE/vae_introduction.md)
 
 - **第二项**  $\mathrm{KL}(q_\phi(z \mid x) \| p(z))$：正则化项，约束 $q_\phi(z \mid x)$ 的分布接近先验 $p(z)$。
 
-5. 最终形式（VAE 损失函数）
+1. 最终形式（VAE 损失函数）
 为了优化上述目标，我们需要进行采样 $z \sim q_\phi(z \mid x)$。为了解决采样过程中不可微的问题，使用 **重参数化技巧（Reparameterization Trick）** ：将 $q_\phi(z \mid x)$ 定义为高斯分布 $\mathcal{N}(\mu_\phi(x), \sigma_\phi(x)^2)$，通过如下方式采样：
 
 $$
@@ -348,7 +329,6 @@ $$
 $$
  \mathcal{L}(\theta, \phi; x) = \mathbb{E}_{z \sim q_\phi(z \mid x)} [\log p_\theta(x \mid z)] - \mathrm{KL}(q_\phi(z \mid x) \| p(z))
 $$
-
 
 这对应于：
 
@@ -392,9 +372,9 @@ $$
 值得注意的是，这里VAE 都是在极大似然估计的情况下进行推导的。但是衡量两个分布的距离也可以用其他的度量。
 可以参考
 
-- (Wasserstein AE) https://arxiv.org/pdf/1711.01558
+- (Wasserstein AE) <https://arxiv.org/pdf/1711.01558>
 
-- (GW-AE) https://arxiv.org/pdf/2209.07007
+- (GW-AE) <https://arxiv.org/pdf/2209.07007>
 
 对于不同的假设条件，可以得出不同的实现方案。
 
@@ -473,13 +453,11 @@ $$
  \log p_X(x) = \log p_Z(f^{-1}(x)) - \log \left| \det \frac{\partial f(x)}{\partial x} \right|.
 $$
 
-
 训练的目标是**最大化这个对数似然** ，即最小化负对数似然（Negative Log-Likelihood, NLL）：
 
 $$
  \text{Loss} = -\mathbb{E}_{x \sim p_X} \left[ \log p_Z(f^{-1}(x)) - \log \left| \det \frac{\partial f(x)}{\partial x} \right| \right].
 $$
-
 
 从直观角度，Loss 的两个部分可以理解为：
 
@@ -531,20 +509,17 @@ $$
  \log p_\theta(x_0) = \log \int p_\theta(x_0, x_{1:T}) \, dx_{1:T}.
 $$
 
-
 通过引入分布 $q(x_{1:T} \mid x_0)$，利用对数分解：
 
 $$
  \log p_\theta(x_0) = \mathbb{E}_{q(x_{1:T} \mid x_0)} \left[ \log \frac{p_\theta(x_0, x_{1:T})}{q(x_{1:T} \mid x_0)} \right] + D_{\text{KL}}(q(x_{1:T} \mid x_0) \| p_\theta(x_{1:T} \mid x_0)).
 $$
 
-
 由于 KL 散度非负，得到变分下界（ELBO）：
 
 $$
  \log p_\theta(x_0) \geq \mathbb{E}_{q(x_{1:T} \mid x_0)} \left[ \log \frac{p_\theta(x_0, x_{1:T})}{q(x_{1:T} \mid x_0)} \right].
 $$
-
 
 ---
 
@@ -556,18 +531,15 @@ $$
  p_\theta(x_0, x_{1:T}) = p(x_T) \prod_{t=1}^T p_\theta(x_{t-1} \mid x_t),
 $$
 
-
 $$
  q(x_{1:T} \mid x_0) = \prod_{t=1}^T q(x_t \mid x_{t-1}),
 $$
-
 
 代入 ELBO：
 
 $$
  \log p_\theta(x_0) \geq \mathbb{E}*{q(x*{1:T} \mid x_0)} \left[ \log \frac{p(x_T) \prod_{t=1}^T p_\theta(x_{t-1} \mid x_t)}{\prod_{t=1}^T q(x_t \mid x_{t-1})} \right].
 $$
-
 
 ---
 
@@ -578,7 +550,6 @@ $$
 $$
  \log p_\theta(x_0) \geq \mathbb{E}*{q(x*{1:T} \mid x_0)} \Bigg[ \log p(x_T) + \sum_{t=1}^T \log p_\theta(x_{t-1} \mid x_t) - \sum_{t=1}^T \log q(x_t \mid x_{t-1}) \Bigg].
 $$
-
 
 注意 $q(x_t \mid x_{t-1})$ 是扩散过程的已知高斯分布，下一步将重点分析。
 
@@ -592,7 +563,6 @@ $$
  \mathbb{E}_{q(x_{1:T} \mid x_0)} \Bigg[ \sum_{t=1}^T \log \frac{p_\theta(x_{t-1} \mid x_t)}{q(x_t \mid x_{t-1})} \Bigg] = \mathbb{E}_{q(x_{1:T} \mid x_0)} \Bigg[ \log \frac{p_\theta(x_{t-1} \mid x_t)}{q(x_{t-1} \mid x_t, x_0)} \Bigg].
 $$
 
-
 于是，目标分解为以下几部分：
 
 1. **重建误差（Reconstruction Term）：**
@@ -601,20 +571,17 @@ $$
  \mathbb{E}_{q(x_{1:T} \mid x_0)} \Big[ \log p_\theta(x_0 \mid x_1) \Big].
 $$
 
-
 2. **先验匹配误差（Prior Matching Term）：**
 
 $$
  \mathbb{E}_{q(x_T \mid x_0)} \Big[ \log p(x_T) - \log q(x_T \mid x_0) \Big] = -D_{\text{KL}}(q(x_T \mid x_0) \| p(x_T)).
 $$
 
-
 3. **去噪误差（Denoising Matching Term）：**
 
 $$
  \sum_{t=2}^T \mathbb{E}_{q(x_t \mid x_0)} \Big[ D_{\text{KL}}(q(x_{t-1} \mid x_t, x_0) \| p_\theta(x_{t-1} \mid x_t)) \Big].
 $$
-
 
 ---
 
@@ -626,7 +593,6 @@ $$
  \mathcal{L} = \mathbb{E}_{q(x_{1:T} \mid x_0)} \Big[ \underbrace{-\log p_\theta(x_0 \mid x_1)}_{\text{重建误差}} + \underbrace{D_{\text{KL}}(q(x_T \mid x_0) \| p(x_T))}_{\text{先验匹配误差}} + \underbrace{\sum_{t=2}^T D_{\text{KL}}(q(x_{t-1} \mid x_t, x_0) \| p_\theta(x_{t-1} \mid x_t))}_{\text{去噪误差}} \Big].
 $$
 
-
 ---
 
 **6. 简化与优化**
@@ -637,25 +603,21 @@ $$
  \mathcal{L}_{\text{DDPM}} = \mathbb{E}_{x_0, \epsilon, t} \Big[ \| \epsilon - \epsilon_\theta(x_t, t) \|^2 \Big].
 $$
 
-
 ## 自回归模型
 
 1. **图片表示与最大似然目标**
 
 对于一张图片 $$\mathbf{x}$$，我们可以将其表示为像素值的序列：
 
-
 $$
  \mathbf{x} = (x_1, x_2, \ldots, x_T)
 $$
-
 
 其中 $T$ 是图片像素的总数。生成图片的目标是最大化图片在模型下的概率：
 
 $$
  P(\mathbf{x}|\theta) = P(x_1, x_2, \ldots, x_T|\theta)
 $$
-
 
 这里，$\theta$ 是模型的参数。
 
@@ -665,7 +627,6 @@ $$
 $$
  P(\mathbf{x}|\theta) = \prod_{t=1}^T P(x_t | x_1, x_2, \ldots, x_{t-1}, \theta)
 $$
-
 
 这表示当前像素 $x_t$ 的生成依赖于之前生成的像素值。
 
@@ -677,7 +638,6 @@ $$
  \log P(\mathbf{x}|\theta) = \sum_{t=1}^T \log P(x_t | x_1, x_2, \ldots, x_{t-1}, \theta)
 $$
 
-
 4. **负对数似然作为损失函数**
 
 为了进行最小化优化，转化为负对数似然形式：
@@ -686,15 +646,13 @@ $$
  \mathcal{L}(\theta) = - \log P(\mathbf{x}|\theta) = - \sum_{t=1}^T \log P(x_t | x_1, x_2, \ldots, x_{t-1}, \theta)
 $$
 
-
 这就是自回归生成模型的损失函数。
 
 5. **像素分布建模**
 
 为了计算条件概率 $$P(x_t | x_1, x_2, \ldots, x_{t-1}, \theta)$$，需要对像素值的分布进行建模。常见的选择包括：
 
-
-1.  离散像素值
+1. 离散像素值
 
     如果像素值是离散的（如 $[0, 255]$ 的整数值)),条件概率 $P(x_t|\cdot)$ 可以通过分类器（如 softmax 输出层）建模：
 
@@ -702,13 +660,11 @@ $$
     P(x_t | x_1, x_2, \ldots, x_{t-1}, \theta) = \text{Softmax}(f_\theta(x_1, x_2, \ldots, x_{t-1}))
     $$
 
-
     此时，损失函数可以具体化为交叉熵损失：
 
     $$
     \mathcal{L}(\theta) = - \sum_{t=1}^T \log P(x_t | x_1, x_2, \ldots, x_{t-1}, \theta)
     $$
-
 
 2. 连续像素值
 
@@ -718,17 +674,16 @@ $$
     P(x_t | x_1, x_2, \ldots, x_{t-1}, \theta) = \mathcal{N}(x_t | \mu_\theta, \sigma_\theta)
     $$
 
-
     其中 $\mu_\theta$ 和 $\sigma_\theta$ 是条件均值和标准差，由模型预测得到。负对数似然损失在这种情况下等价于均方误差（MSE）：
 
     $$
     \mathcal{L}(\theta) = \frac{1}{2} \sum_{t=1}^T \left(x_t - \mu_\theta(x_1, x_2, \ldots, x_{t-1})\right)^2
     $$
 
-
 6. **生成图片的像素顺序**
 
 为了定义序列生成顺序，自回归模型需要明确像素的生成方式。常见方法包括：
+
 - **行优先生成** ：逐行从左到右、从上到下生成像素。
 - **块优先生成** ：以块的形式生成像素。
 - **自定义顺序** ：基于特定的排列规则生成。
@@ -741,7 +696,6 @@ $$
 $$
  \mathcal{L}(\theta) = - \sum_{t=1}^T \log P(x_t | x_1, x_2, \ldots, x_{t-1}, \theta)
 $$
-
 
 - 对于离散像素，使用交叉熵损失。
 

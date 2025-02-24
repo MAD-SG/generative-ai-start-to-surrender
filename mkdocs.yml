@@ -10,6 +10,8 @@ nav:
   - Generation Theory:
       - Maximal Likelihood: "book/chapter2_generation_theory/mle.md"
       - Manifold Hypothesis: "book/chapter2_generation_theory/manifold_hypothesis.md"
+      - Generative Model Category: "book/chapter2_generation_theory/generative_model_category.md"
+
   - Energy Based Models:
       - Introduction: "book/chapter3_energy_based_model/introduction.md"
       - Score Functions: "book/chapter3_energy_based_model/score_function.md"
@@ -17,7 +19,7 @@ nav:
       - Contrastive Divergence: "book/chapter3_energy_based_model/cd.md"
       - Score Matching: "book/chapter3_energy_based_model/score_matching.md"
   - VAE:
-      - Introduction: "book/chapter6_VAE/2.1introduction.md"
+      - Introduction: "book/chapter6_VAE/vae_introduction.md"
       - VA-VAE: "book/chapter6_VAE/vq_vae.md"
   - GANs:
       - From GAN to StyleGAN: "book/chapter5_GAN/3.1from_gan_to_stylegan/paper.md"
@@ -41,15 +43,20 @@ nav:
           - SDE for DDPM: "book/chapter7_diffusion/from_ddpm_2_sde.md"
           - Score Based SDE: "book/chapter7_diffusion/score_based_sde.md"
           - Probability Flow ODE: "book/chapter7_diffusion/probability_flow_ode.md"
+          - SDE Diffusion Speedup: "book/chapter7_diffusion/sde_diffusion_speedup.md"
 
   - Flow Matching:
       - Introduction: "book/chapter9_flow_matching/introduction.md"
       - Probability Path and Velocity Fields: "book/chapter9_flow_matching/probability_with_velocity_field.md"
       - Flow Matching Theorem: "book/chapter9_flow_matching/flow_matching_theory.md"
+      - Affine Conditional Flow: "book/chapter9_flow_matching/affine_conditional_flows.md"
+      - Optimal Transport Flow: "book/chapter9_flow_matching/optimal_transport_flow.md"
+      - Rectified Flow: "book/chapter9_flow_matching/rectified_flow.md"
   - Hybrid SOTA Models:
       - Hybrid Methods: "book/chapter11_hybrid_sota_models/hybrid_methods.md"
       - Closed Models: "book/chapter11_hybrid_sota_models/sota_closed_models.md"
       - Open Models:
+        - Dalle Series: "book/chapter11_hybrid_sota_models/sota_open_models/dalle_series.md"
         - Stable Diffusion Series: "book/chapter11_hybrid_sota_models/sota_open_models/stable_diffusion_series.md"
         - Stable Diffusion 3 paper reading: "book/chapter11_hybrid_sota_models/sota_open_models/stable_diffusion_3_paper_reading.md"
         - Flux.1: "book/chapter11_hybrid_sota_models/sota_open_models/flux1.md"

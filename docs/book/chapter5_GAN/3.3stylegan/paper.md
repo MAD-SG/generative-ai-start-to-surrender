@@ -58,7 +58,6 @@
      x = x \times (\text{style\_split}[:, 0] + 1) + \text{style\_split}[:, 1]
     $$
 
-
    - **目的**: 显式调整特征图方差和均值，表示图片风格。
 
 4. **截断技巧 (Truncation Trick)**:
@@ -145,7 +144,6 @@ w = mapping_results['w']
 
     $$w = f(z) $$
 
-
     其中 $f$ 是映射网络，输出 $w$ 的形状为 $[B, w\_dim]$，  通常 $w\_dim = 512$。
 - **输出** :
   - $w$: 样式向量，作为后续生成过程中的特征控制参数。
@@ -173,7 +171,6 @@ if self.training and w_moving_decay < 1:
     $$
     w_{avg} \gets w_{avg} \cdot \text{decay} + \text{batch-w-avg} \cdot (1 - \text{decay})
     $$
-
 
 #### 3. 样式混合 (Style Mixing)
 
@@ -226,7 +223,6 @@ if w.ndim == 2:
     w'_i = w_{avg} + \psi \cdot (w_i - w_{avg}), \quad \text{for layers } i < \text{trunclayers}
     $$
 
-
   - 截断操作可以减小样式空间中样式向量的偏离程度，从而生成更稳定的图像。
 - **输出** :
   - $wp$: 每一层的样式向量，形状为 $[B, \text{num\_layers}, w\_dim]$。
@@ -238,7 +234,6 @@ if w.ndim == 2:
     $$
     wp = w_{avg} + (wp - w_{avg}) \cdot \text{trunc-psi}
     $$
-
 
     观察公式可以看出：
     1. 样式向量 $wp$ 被重新调整到一个以 $w_{avg}$ 为中心的范围内。
@@ -518,14 +513,14 @@ x, style = f"self.layer{2k}"(x, wp[:, 2 * block_idx],randomize_noise)
     ```
 
     卷积的过程中会利用可学习的一个$w_{scale}$对卷积的权重进行缩放。这个想法来自于
-    [progressive growing of gan](../3.2pggan/paper.md)中。
+    [progressive growing of gan](../3.1from_gan_to_stylegan/paper.md)中。
 
     其中，如果是init 输入 只会将可以学习的init在batch 维度进行复制
 2. 增加bias
 可学习的一个bias。这个应该不重要。
-3. 增加噪声
+1. 增加噪声
 
-```
+```python
 if randomize_noise:
     if self.noise_type == 'spatial':
         noise = torch.randn(x.shape[0], 1, self.res, self.res).to(x)
@@ -540,9 +535,10 @@ elif self.noise_type == 'channel':
 ```
 
 噪音的增加有两种法案。一个是增加在空间上，一个是增加在channel 上。
-4. 非线性激活函数
 
-```
+1. 非线性激活函数
+
+```py3
 self.activate = nn.LeakyReLU(negative_slope=0.2, inplace=True)
 ```
 
