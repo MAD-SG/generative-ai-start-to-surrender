@@ -758,6 +758,7 @@ $$
   \Psi(t) = \exp\left(\int_0^t A(s)\,ds\right),
   $$
 
+
   providing a closed-form expression for the state transition matrix.
 
 - **Non-Gaussian Example:**
