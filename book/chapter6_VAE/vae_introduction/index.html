@@ -9,6 +9,10 @@
       
       
       
+        <link rel="prev" href="../../chapter3_energy_based_model/score_matching/">
+      
+      
+        <link rel="next" href="../vq_vae/">
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
@@ -16,7 +20,7 @@
     
     
       
-        <title>Sota open models - Generative AI: From Start to Surrender</title>
+        <title>Introduction - Generative AI: From Start to Surrender</title>
       
     
     
@@ -90,6 +94,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#vae" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -120,7 +129,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Sota open models
+              Introduction
             
           </span>
         </div>
@@ -307,11 +316,13 @@
         
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../chapter6_VAE/2.1introduction/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
           
   
     
@@ -400,7 +411,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../hybrid_methods/" class="md-tabs__link">
+        <a href="../../chapter11_hybrid_sota_models/hybrid_methods/" class="md-tabs__link">
           
   
     
@@ -647,6 +658,8 @@
       
         
       
+        
+      
     
     
       
@@ -715,6 +728,27 @@
   
   <span class="md-ellipsis">
     Manifold Hypothesis
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter2_generation_theory/generative_model_category/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Generative Model Category
   </span>
   
 
@@ -901,8 +935,10 @@
       
   
   
+    
   
   
+  
     
     
       
@@ -913,21 +949,22 @@
     
     
       
+        
+        
+      
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
-        
-          
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
             
   
   <span class="md-ellipsis">
@@ -938,7 +975,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             VAE
@@ -949,10 +986,30 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../chapter6_VAE/2.1introduction/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -961,6 +1018,137 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-1-p_theta" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. 1. \(p_\theta\) 为高斯分布
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. 1. \(p_\theta\) 为高斯分布">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-11-variational-autoencoder-vae-p_thetaxz" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.1 1.1 Variational Autoencoder (VAE) 中关于 \(P_\theta(x|z)\) 是高斯分布的假设
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-12-p_thetaxz" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.2 1.2 为什么假设 \(P_\theta(x|z)\) 为高斯分布？
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-13" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.3 1.3 数学形式
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. 2. 其他分布
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. 2. 其他分布">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-21-l_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.1 2.1 拉普拉斯分布与 \(L_1\) 范数
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.2 2.2 伯努利分布与交叉熵
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-23" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.3 2.3 多项分布与多分类交叉熵
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-24" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.4 2.4 混合高斯分布
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-25" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.5 2.5 总结
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-26" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.6 2.6 相关论文
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -973,7 +1161,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../chapter6_VAE/vq_vae/" class="md-nav__link">
+      <a href="../vq_vae/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1492,6 +1680,8 @@
       
         
       
+        
+      
     
     
       
@@ -1611,6 +1801,27 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter7_diffusion/sde_diffusion_speedup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SDE Diffusion Speedup
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1634,6 +1845,12 @@
   
     
     
+      
+        
+      
+        
+      
+        
       
         
       
@@ -1739,6 +1956,69 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter9_flow_matching/affine_conditional_flows/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Affine Conditional Flow
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter9_flow_matching/optimal_transport_flow/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Optimal Transport Flow
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter9_flow_matching/rectified_flow/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Rectified Flow
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1805,7 +2085,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../hybrid_methods/" class="md-nav__link">
+      <a href="../../chapter11_hybrid_sota_models/hybrid_methods/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1826,7 +2106,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sota_closed_models/" class="md-nav__link">
+      <a href="../../chapter11_hybrid_sota_models/sota_closed_models/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1848,6 +2128,8 @@
   
     
     
+      
+        
       
         
       
@@ -1897,7 +2179,28 @@
   
   
     <li class="md-nav__item">
-      <a href="stable_diffusion_series/" class="md-nav__link">
+      <a href="../../chapter11_hybrid_sota_models/sota_open_models/dalle_series/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dalle Series
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter11_hybrid_sota_models/sota_open_models/stable_diffusion_series/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1918,7 +2221,7 @@
   
   
     <li class="md-nav__item">
-      <a href="stable_diffusion_3_paper_reading/" class="md-nav__link">
+      <a href="../../chapter11_hybrid_sota_models/sota_open_models/stable_diffusion_3_paper_reading/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1939,7 +2242,7 @@
   
   
     <li class="md-nav__item">
-      <a href="flux1/" class="md-nav__link">
+      <a href="../../chapter11_hybrid_sota_models/sota_open_models/flux1/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1968,10 +2271,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../trends_future/" class="md-nav__link">
+      <a href="../../chapter11_hybrid_sota_models/trends_future/" class="md-nav__link">
         
-  
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2 1 21h22M12 6l7.53 13H4.47M11 10v4h2v-4m-2 6v2h2v-2"/></svg>
   
   <span class="md-ellipsis">
     Future Trends
@@ -2006,9 +2307,156 @@
                   
 
 
-  <h1>Sota open models</h1>
-
-
+<h1 id="vae">VAE 理论<a class="headerlink" href="#vae" title="Permanent link">&para;</a></h1>
+<h2 id="1-1-p_theta">1. 1. <span class="arithmatex">\(p_\theta\)</span> 为高斯分布<a class="headerlink" href="#1-1-p_theta" title="Permanent link">&para;</a></h2>
+<h3 id="11-11-variational-autoencoder-vae-p_thetaxz">1.1 1.1 Variational Autoencoder (VAE) 中关于 <span class="arithmatex">\(P_\theta(x|z)\)</span> 是高斯分布的假设<a class="headerlink" href="#11-11-variational-autoencoder-vae-p_thetaxz" title="Permanent link">&para;</a></h3>
+<p>在 VAE 的框架中，解码器 <span class="arithmatex">\( P_\theta(x|z) \)</span> 通常被假设为 <strong>高斯分布</strong>。这种假设是 VAE 的基础之一，对模型的重建误差定义和优化目标至关重要。以下是关于这个假设的相关知识。</p>
+<hr />
+<h3 id="12-12-p_thetaxz">1.2 1.2 为什么假设 <span class="arithmatex">\(P_\theta(x|z)\)</span> 为高斯分布？<a class="headerlink" href="#12-12-p_thetaxz" title="Permanent link">&para;</a></h3>
+<h4 id="121-121">1.2.1 1.2.1 简化问题<a class="headerlink" href="#121-121" title="Permanent link">&para;</a></h4>
+<ul>
+<li>高斯分布是一种连续型概率分布，数学性质良好，易于计算。</li>
+<li>对于连续型数据（如图像像素值、音频信号等），高斯分布能很好地拟合大多数数据点的波动特性。</li>
+</ul>
+<h4 id="122-122">1.2.2 1.2.2 符合重建误差的定义<a class="headerlink" href="#122-122" title="Permanent link">&para;</a></h4>
+<ul>
+<li>高斯分布的对数似然具有以下形式：</li>
+</ul>
+<p>$$
+  \log P_\theta(x|z) = -\frac{|x - \mu_\theta(z)|<sup>2}{2\sigma</sup>2} - \frac{1}{2}\log(2\pi\sigma^2)
+  $$</p>
+<ul>
+<li>这里，<span class="arithmatex">\(\mu_\theta(z)\)</span> 是解码器预测的高斯分布均值，<span class="arithmatex">\(\sigma^2\)</span> 是方差（通常可以假设为常量或由解码器预测）。</li>
+<li>
+<p>最大化 <span class="arithmatex">\(\log P_\theta(x|z)\)</span> 等价于最小化均方误差（MSE）：</p>
+<div class="arithmatex">\[
+\|x - \mu_\theta(z)\|^2
+\]</div>
+</li>
+</ul>
+<h4 id="123-123">1.2.3 1.2.3 允许建模数据的不确定性<a class="headerlink" href="#123-123" title="Permanent link">&para;</a></h4>
+<ul>
+<li>假设 <span class="arithmatex">\(P_\theta(x|z)\)</span> 为高斯分布，解码器不仅预测重构的均值 <span class="arithmatex">\(\mu_\theta(z)\)</span>，还可以通过方差 <span class="arithmatex">\(\sigma^2_\theta(z)\)</span> 捕捉数据的不确定性。</li>
+<li>方差的引入有助于避免过度拟合，尤其是在训练数据存在噪声的情况下。</li>
+</ul>
+<hr />
+<h3 id="13-13">1.3 1.3 数学形式<a class="headerlink" href="#13-13" title="Permanent link">&para;</a></h3>
+<h4 id="131-131">1.3.1 1.3.1 解码器分布<a class="headerlink" href="#131-131" title="Permanent link">&para;</a></h4>
+<p>在 VAE 中，解码器定义为条件概率分布 <span class="arithmatex">\(P_\theta(x|z)\)</span>，假设为高斯分布：</p>
+<div class="arithmatex">\[
+P_\theta(x|z) = \mathcal{N}(x; \mu_\theta(z), \sigma_\theta^2(z))
+\]</div>
+<ul>
+<li><span class="arithmatex">\(\mu_\theta(z)\)</span>：解码器预测的重构均值，通常由神经网络建模。</li>
+<li><span class="arithmatex">\(\sigma_\theta^2(z)\)</span>：解码器预测的重构方差，可以是固定常量，也可以由网络建模。</li>
+</ul>
+<hr />
+<h2 id="2-2">2. 2. 其他分布<a class="headerlink" href="#2-2" title="Permanent link">&para;</a></h2>
+<h3 id="21-21-l_1">2.1 2.1 拉普拉斯分布与 <span class="arithmatex">\(L_1\)</span> 范数<a class="headerlink" href="#21-21-l_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>假设分布</strong>:
+  <span class="arithmatex">\(P_\theta(x|z) = \text{Laplace}(x; \mu_\theta(z), b)\)</span></li>
+<li><strong>对数似然</strong>:</li>
+</ul>
+<p>$$
+  \log P_\theta(x|z) = -\frac{|x - \mu_\theta(z)|_1}{b} - \log(2b)
+  $$</p>
+<ul>
+<li><strong>损失函数</strong>:</li>
+</ul>
+<p>$$
+  L = \frac{1}{b}|x - \mu_\theta(z)|_1
+  $$</p>
+<ul>
+<li><strong>对应形式</strong>: 绝对误差（MAE）。</li>
+</ul>
+<h3 id="22-22">2.2 2.2 伯努利分布与交叉熵<a class="headerlink" href="#22-22" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>假设分布</strong>:
+  <span class="arithmatex">\(P_\theta(x|z) = \text{Bernoulli}(x; p_\theta(z))\)</span></li>
+<li><strong>对数似然</strong>:</li>
+</ul>
+<p>$$
+  \log P_\theta(x|z) = x \log p_\theta(z) + (1-x) \log (1-p_\theta(z))
+  $$</p>
+<ul>
+<li><strong>损失函数</strong>:</li>
+</ul>
+<p>$$
+  L = -[x \log p_\theta(z) + (1-x) \log (1-p_\theta(z))]
+  $$</p>
+<ul>
+<li><strong>对应形式</strong>: 二元交叉熵损失。</li>
+</ul>
+<h3 id="23-23">2.3 2.3 多项分布与多分类交叉熵<a class="headerlink" href="#23-23" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>假设分布</strong>:
+  <span class="arithmatex">\(P_\theta(x|z) = \text{Categorical}(x; \mathbf{p}_\theta(z))\)</span></li>
+<li><strong>对数似然</strong>:</li>
+</ul>
+<p>$$
+  \log P_\theta(x|z) = \sum_i x_i \log p_{\theta,i}(z)
+  $$</p>
+<ul>
+<li><strong>损失函数</strong>:</li>
+</ul>
+<p>$$
+  L = -\sum_i x_i \log p_{\theta,i}(z)
+  $$</p>
+<ul>
+<li><strong>对应形式</strong>: 多分类交叉熵。</li>
+</ul>
+<h3 id="24-24">2.4 2.4 混合高斯分布<a class="headerlink" href="#24-24" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>假设分布</strong>:
+  <span class="arithmatex">\(P_\theta(x|z) = \sum_k \pi_k \mathcal{N}(x; \mu_k(z), \sigma_k^2(z))\)</span></li>
+<li><strong>对数似然</strong>:</li>
+</ul>
+<p>$$
+  \log P_\theta(x|z) = \log \sum_k \pi_k \mathcal{N}(x; \mu_k(z), \sigma_k^2(z))
+  $$</p>
+<ul>
+<li><strong>特点</strong>: 用于多模态数据建模，计算损失需要数值近似。</li>
+</ul>
+<hr />
+<h3 id="25-25">2.5 2.5 总结<a class="headerlink" href="#25-25" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p><strong>核心思想</strong>:
+  损失函数与概率分布的关系为我们提供了统一的视角，用于设计和优化机器学习模型。常见损失函数（如 MSE、MAE、交叉熵）均可以从对应的分布假设中推导而来。</p>
+</li>
+<li>
+<p><strong>实际应用</strong>:
+  根据数据特性选择合适的分布假设和损失函数可以提高模型的性能。例如：</p>
+</li>
+<li>连续值数据适用高斯分布（MSE）。</li>
+<li>二值数据适用伯努利分布（交叉熵）。</li>
+<li>稀疏数据适用拉普拉斯分布（MAE）。</li>
+</ul>
+<hr />
+<h3 id="26-26">2.6 2.6 相关论文<a class="headerlink" href="#26-26" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>《Auto-Encoding Variational Bayes》</strong></li>
+<li><strong>作者</strong>: Kingma, D.P., Welling, M.</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/1312.6114">https://arxiv.org/abs/1312.6114</a></li>
+<li>
+<p><strong>内容</strong>: 提出变分自编码器（VAE），推导出重建误差项与分布假设的关系。</p>
+</li>
+<li>
+<p><strong>《Hybridised Loss Functions for Improved Neural Network Generalisation》</strong></p>
+</li>
+<li><strong>作者</strong>: Matthew C. Malan 等</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2204.12241">https://arxiv.org/abs/2204.12241</a></li>
+<li>
+<p><strong>内容</strong>: 探讨交叉熵和均方误差的混合损失及其影响。</p>
+</li>
+<li>
+<p><strong>《p-Huber损失函数及其鲁棒性研究》</strong></p>
+</li>
+<li><strong>作者</strong>: 余博天</li>
+<li><strong>链接</strong>: <a href="https://pdf.hanspub.org/AAM20201200000_75579140.pdf">https://pdf.hanspub.org/AAM20201200000_75579140.pdf</a></li>
+<li><strong>内容</strong>: 研究 p-Huber 损失在有噪声数据中的表现。</li>
+</ol>
 
 
 
@@ -2043,6 +2491,44 @@
       
         <footer class="md-footer">
   
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../../chapter3_energy_based_model/score_matching/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Score Matching">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Score Matching
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../vq_vae/" class="md-footer__link md-footer__link--next" aria-label="Next: VA-VAE">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                VA-VAE
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
     
   
   <div class="md-footer-meta md-typeset">

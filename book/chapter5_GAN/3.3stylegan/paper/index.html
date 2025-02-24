@@ -320,7 +320,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../chapter6_VAE/2.1introduction/" class="md-tabs__link">
+        <a href="../../../chapter6_VAE/vae_introduction/" class="md-tabs__link">
           
   
     
@@ -658,6 +658,8 @@
       
         
       
+        
+      
     
     
       
@@ -726,6 +728,27 @@
   
   <span class="md-ellipsis">
     Manifold Hypothesis
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter2_generation_theory/generative_model_category/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Generative Model Category
   </span>
   
 
@@ -963,7 +986,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../chapter6_VAE/2.1introduction/" class="md-nav__link">
+      <a href="../../../chapter6_VAE/vae_introduction/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1609,6 +1632,8 @@
       
         
       
+        
+      
     
     
       
@@ -1728,6 +1753,27 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter7_diffusion/sde_diffusion_speedup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SDE Diffusion Speedup
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1751,6 +1797,12 @@
   
     
     
+      
+        
+      
+        
+      
+        
       
         
       
@@ -1847,6 +1899,69 @@
   
   <span class="md-ellipsis">
     Flow Matching Theorem
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter9_flow_matching/affine_conditional_flows/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Affine Conditional Flow
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter9_flow_matching/optimal_transport_flow/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Optimal Transport Flow
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter9_flow_matching/rectified_flow/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Rectified Flow
   </span>
   
 
@@ -1972,6 +2087,8 @@
       
         
       
+        
+      
     
     
       
@@ -2006,6 +2123,27 @@
             Open Models
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter11_hybrid_sota_models/sota_open_models/dalle_series/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dalle Series
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -2087,8 +2225,6 @@
     <li class="md-nav__item">
       <a href="../../../chapter11_hybrid_sota_models/trends_future/" class="md-nav__link">
         
-  
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2 1 21h22M12 6l7.53 13H4.47M11 10v4h2v-4m-2 6v2h2v-2"/></svg>
   
   <span class="md-ellipsis">
     Future Trends
@@ -2843,11 +2979,11 @@ lod_transition_img = 300,000（过渡阶段30万张图像）,
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-15-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1"></a><span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">scale_factor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scale_factor</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
 <p>卷积的过程中会利用可学习的一个<span class="arithmatex">\(w_{scale}\)</span>对卷积的权重进行缩放。这个想法来自于
-<a href="../3.2pggan/paper.md">progressive growing of gan</a>中。</p>
+<a href="../../3.1from_gan_to_stylegan/paper/">progressive growing of gan</a>中。</p>
 <p>其中，如果是init 输入 只会将可以学习的init在batch 维度进行复制
 2. 增加bias
 可学习的一个bias。这个应该不重要。
-3. 增加噪声</p>
+1. 增加噪声</p>
 </li>
 </ol>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-16-1"> 1</a></span>
@@ -2860,21 +2996,23 @@ lod_transition_img = 300,000（过渡阶段30万张图像）,
 <span class="normal"><a href="#__codelineno-16-8"> 8</a></span>
 <span class="normal"><a href="#__codelineno-16-9"> 9</a></span>
 <span class="normal"><a href="#__codelineno-16-10">10</a></span>
-<span class="normal"><a href="#__codelineno-16-11">11</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1"></a>if randomize_noise:
-<a id="__codelineno-16-2" name="__codelineno-16-2"></a>    if self.noise_type == &#39;spatial&#39;:
-<a id="__codelineno-16-3" name="__codelineno-16-3"></a>        noise = torch.randn(x.shape[0], 1, self.res, self.res).to(x)
-<a id="__codelineno-16-4" name="__codelineno-16-4"></a>    elif self.noise_type == &#39;channel&#39;:
-<a id="__codelineno-16-5" name="__codelineno-16-5"></a>        noise = torch.randn(x.shape[0], self.channels, 1, 1).to(x)
-<a id="__codelineno-16-6" name="__codelineno-16-6"></a>else:
-<a id="__codelineno-16-7" name="__codelineno-16-7"></a>    noise = self.noise
-<a id="__codelineno-16-8" name="__codelineno-16-8"></a>if self.noise_type == &#39;spatial&#39;:
-<a id="__codelineno-16-9" name="__codelineno-16-9"></a>    x = x + noise * self.weight.view(1, self.channels, 1, 1)
-<a id="__codelineno-16-10" name="__codelineno-16-10"></a>elif self.noise_type == &#39;channel&#39;:
-<a id="__codelineno-16-11" name="__codelineno-16-11"></a>    x = x + noise * self.weight.view(1, 1, self.res, self.res)
+<span class="normal"><a href="#__codelineno-16-11">11</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1"></a><span class="k">if</span> <span class="n">randomize_noise</span><span class="p">:</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2"></a>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise_type</span> <span class="o">==</span> <span class="s1">&#39;spatial&#39;</span><span class="p">:</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3"></a>        <span class="n">noise</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4"></a>    <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise_type</span> <span class="o">==</span> <span class="s1">&#39;channel&#39;</span><span class="p">:</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5"></a>        <span class="n">noise</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">channels</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6"></a><span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7"></a>    <span class="n">noise</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8"></a><span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise_type</span> <span class="o">==</span> <span class="s1">&#39;spatial&#39;</span><span class="p">:</span>
+<a id="__codelineno-16-9" name="__codelineno-16-9"></a>    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">noise</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">channels</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<a id="__codelineno-16-10" name="__codelineno-16-10"></a><span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise_type</span> <span class="o">==</span> <span class="s1">&#39;channel&#39;</span><span class="p">:</span>
+<a id="__codelineno-16-11" name="__codelineno-16-11"></a>    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">noise</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
-<p>噪音的增加有两种法案。一个是增加在空间上，一个是增加在channel 上。
-4. 非线性激活函数</p>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-17-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1"></a>self.activate = nn.LeakyReLU(negative_slope=0.2, inplace=True)
+<p>噪音的增加有两种法案。一个是增加在空间上，一个是增加在channel 上。</p>
+<ol>
+<li>非线性激活函数</li>
+</ol>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-17-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1"></a><span class="bp">self</span><span class="o">.</span><span class="n">activate</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">(</span><span class="n">negative_slope</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
 <p><a class="glightbox" href="../../../../images/image-15.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="alt text" src="../../../../images/image-15.png" /></a>
 LeakyReLU 的好处主要体现在以下几个方面：</p>

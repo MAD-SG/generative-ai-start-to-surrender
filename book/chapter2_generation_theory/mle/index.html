@@ -322,7 +322,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../chapter6_VAE/2.1introduction/" class="md-tabs__link">
+        <a href="../../chapter6_VAE/vae_introduction/" class="md-tabs__link">
           
   
     
@@ -660,6 +660,8 @@
       
         
       
+        
+      
     
     
       
@@ -898,6 +900,27 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generative_model_category/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Generative Model Category
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1126,7 +1149,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../chapter6_VAE/2.1introduction/" class="md-nav__link">
+      <a href="../../chapter6_VAE/vae_introduction/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1666,6 +1689,8 @@
       
         
       
+        
+      
     
     
       
@@ -1785,6 +1810,27 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter7_diffusion/sde_diffusion_speedup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SDE Diffusion Speedup
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1808,6 +1854,12 @@
   
     
     
+      
+        
+      
+        
+      
+        
       
         
       
@@ -1904,6 +1956,69 @@
   
   <span class="md-ellipsis">
     Flow Matching Theorem
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter9_flow_matching/affine_conditional_flows/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Affine Conditional Flow
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter9_flow_matching/optimal_transport_flow/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Optimal Transport Flow
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter9_flow_matching/rectified_flow/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Rectified Flow
   </span>
   
 
@@ -2029,6 +2144,8 @@
       
         
       
+        
+      
     
     
       
@@ -2063,6 +2180,27 @@
             Open Models
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter11_hybrid_sota_models/sota_open_models/dalle_series/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dalle Series
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -2144,8 +2282,6 @@
     <li class="md-nav__item">
       <a href="../../chapter11_hybrid_sota_models/trends_future/" class="md-nav__link">
         
-  
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2 1 21h22M12 6l7.53 13H4.47M11 10v4h2v-4m-2 6v2h2v-2"/></svg>
   
   <span class="md-ellipsis">
     Future Trends
@@ -2499,7 +2635,7 @@ Vanilla GAN 的优化目标是最小化生成分布和数据分布之间的 Jens
 <div class="arithmatex">\[
  \log p_\theta(x) = \mathbb{E}_{q_\phi(z \mid x)} \left[ \log \frac{p_\theta(x, z)}{q_\phi(z \mid x)} \right] + \mathrm{KL}(q_\phi(z \mid x) \| p_\theta(z \mid x))
 \]</div>
-<p>证明细节请看 <a href="../../chapter1_Introduction/1.4statistics/#elbo">ELBP证明</a>。ELBO也可以由凸函数的性质利用 Jensen's inequality直接推导出不等式(https://en.wikipedia.org/wiki/Evidence_lower_bound).</p>
+<p>证明细节请看 <a href="../../chapter1_Introduction/1.4statistics/#elbo">ELBP证明</a>。ELBO也可以由凸函数的性质利用 Jensen's inequality直接推导出不等式(<a href="https://en.wikipedia.org/wiki/Evidence_lower_bound">https://en.wikipedia.org/wiki/Evidence_lower_bound</a>).</p>
 <p>其中：</p>
 <ul>
 <li>
@@ -2540,14 +2676,14 @@ p_\theta(x|z) = \mathcal{N}(\hat{x}, \sigma^2 I)
 \mathbb{E}_{q_\phi(z|x)}[-\log p_\theta(x|z)] \propto \mathbb{E}_{q_\phi(z|x)}[\|x - \hat{x}\|^2].
 \]</div>
 <ol>
-<li>重建误差简化为 <span class="arithmatex">\(|x - \hat{x}|\)</span><strong> 在具体实现中，通常假设方差 <span class="arithmatex">\(\sigma^2 = 1\)</span> 且重建误差仅考虑均值估计，此时：</strong></li>
+<li>重建误差简化为 <span class="arithmatex">\(|x - \hat{x}|\)</span><strong>在具体实现中，通常假设方差 <span class="arithmatex">\(\sigma^2 = 1\)</span> 且重建误差仅考虑均值估计，此时：</strong></li>
 </ol>
 <div class="arithmatex">\[
 \mathbb{E}_{q_\phi(z|x)}[\|x - \hat{x}\|^2] \approx \|x - \hat{x}\|^2,
 \]</div>
 <p>对应的差项为 <span class="arithmatex">\(|x - \hat{x}|\)</span> 或其平方形式。</p>
 <p>当然如果我们假设 <span class="arithmatex">\(p_\theta(x|z)\)</span> 是属于其他分布，那就会导出不同的重构误差。更进一步，对于任意一个重建差的度量，其实都对应着一个<span class="arithmatex">\(p_\theta(x|z)\)</span>, 这个可以由度量函数去构建一个密度函数。
-具体，查看 <a href="../chapter2_VAE/2.1introduction.md">VAE: introduction</a></p>
+具体，查看 <a href="../../chapter6_VAE/vae_introduction/">VAE: introduction</a></p>
 <ul>
 <li>
 <p><strong>第二项</strong>  <span class="arithmatex">\(\mathrm{KL}(q_\phi(z \mid x) \| p(z))\)</span>：正则化项，约束 <span class="arithmatex">\(q_\phi(z \mid x)\)</span> 的分布接近先验 <span class="arithmatex">\(p(z)\)</span>。</p>
@@ -2660,10 +2796,10 @@ z = \mu_\phi(x) + \sigma_\phi(x) \odot \epsilon, \quad \epsilon \sim \mathcal{N}
 可以参考</p>
 <ul>
 <li>
-<p>(Wasserstein AE) https://arxiv.org/pdf/1711.01558</p>
+<p>(Wasserstein AE) <a href="https://arxiv.org/pdf/1711.01558">https://arxiv.org/pdf/1711.01558</a></p>
 </li>
 <li>
-<p>(GW-AE) https://arxiv.org/pdf/2209.07007</p>
+<p>(GW-AE) <a href="https://arxiv.org/pdf/2209.07007">https://arxiv.org/pdf/2209.07007</a></p>
 </li>
 </ul>
 <p>对于不同的假设条件，可以得出不同的实现方案。</p>
@@ -2932,14 +3068,18 @@ P(x_t | x_1, x_2, \ldots, x_{t-1}, \theta) = \mathcal{N}(x_t | \mu_\theta, \sigm
 <p><strong>生成图片的像素顺序</strong></p>
 </li>
 </ol>
-<p>为了定义序列生成顺序，自回归模型需要明确像素的生成方式。常见方法包括：
-- <strong>行优先生成</strong> ：逐行从左到右、从上到下生成像素。
-- <strong>块优先生成</strong> ：以块的形式生成像素。
-- <strong>自定义顺序</strong> ：基于特定的排列规则生成。
+<p>为了定义序列生成顺序，自回归模型需要明确像素的生成方式。常见方法包括：</p>
+<ul>
+<li><strong>行优先生成</strong> ：逐行从左到右、从上到下生成像素。</li>
+<li><strong>块优先生成</strong> ：以块的形式生成像素。</li>
+<li>
+<p><strong>自定义顺序</strong> ：基于特定的排列规则生成。
 顺序的选择直接影响条件概率的建模方式。</p>
-<ol>
-<li><strong>总结：自回归生成图片模型的损失</strong></li>
-</ol>
+</li>
+<li>
+<p><strong>总结：自回归生成图片模型的损失</strong></p>
+</li>
+</ul>
 <p>自回归模型用于图片生成的通用损失函数为：</p>
 <div class="arithmatex">\[
  \mathcal{L}(\theta) = - \sum_{t=1}^T \log P(x_t | x_1, x_2, \ldots, x_{t-1}, \theta)
