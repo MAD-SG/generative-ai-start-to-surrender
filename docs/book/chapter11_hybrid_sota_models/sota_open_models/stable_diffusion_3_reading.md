@@ -25,4 +25,6 @@ Before reading this paper, we suggest reader to undertand the flow matching chap
 
 ## Preliminary
 
+- Refer [](../../chapter7_diffusion/DiT.md) for the details of DiT model
+
 > This section revisted the flow matching scheme
