@@ -60,7 +60,7 @@ nav:
       - Open Models:
         - Dalle Series: "book/chapter11_hybrid_sota_models/sota_open_models/dalle_series.md"
         - Stable Diffusion Series: "book/chapter11_hybrid_sota_models/sota_open_models/stable_diffusion_series.md"
-        - Stable Diffusion 3 paper reading: "book/chapter11_hybrid_sota_models/sota_open_models/stable_diffusion_3_paper_reading.md"
+        - Stable Diffusion 3 paper reading: "book/chapter11_hybrid_sota_models/sota_open_models/stable_diffusion_3_reading.md"
         - Flux.1: "book/chapter11_hybrid_sota_models/sota_open_models/flux1.md"
       - Future Trends: "book/chapter11_hybrid_sota_models/trends_future.md"
 
