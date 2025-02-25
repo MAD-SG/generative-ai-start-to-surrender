@@ -2719,7 +2719,6 @@
 
 
 
-
   <h2 id="__comments">Comments</h2>
   <!-- Insert generated snippet here -->
   <script src="https://giscus.app/client.js"
@@ -2727,63 +2726,7 @@
           data-repo-id="R_kgDONqcETw"
           data-category="comment"
           data-category-id="DIC_kwDONqcET84CnTxw"
-          data-mapping="url"
-          data-strict="0"
-          data-reactions-enabled="1"
-          data-emit-metadata="0"
-          data-input-position="bottom"
-          data-theme="preferred_color_scheme"
-          data-lang="en"
-          crossorigin="anonymous"
-          async>
-  </script>
-  <!-- Synchronize Giscus theme with palette -->
-  <script>
-    var giscus = document.querySelector("script[src*=giscus]")
-
-    // Set palette on initial load
-    var palette = __md_get("__palette")
-    if (palette && typeof palette.color === "object") {
-      var theme = palette.color.scheme === "slate"
-        ? "transparent_dark"
-        : "light"
-
-      // Instruct Giscus to set theme
-      giscus.setAttribute("data-theme", theme)
-    }
-
-    // Register event handlers after documented loaded
-    document.addEventListener("DOMContentLoaded", function() {
-      var ref = document.querySelector("[data-md-component=palette]")
-      ref.addEventListener("change", function() {
-        var palette = __md_get("__palette")
-        if (palette && typeof palette.color === "object") {
-          var theme = palette.color.scheme === "slate"
-            ? "transparent_dark"
-            : "light"
-
-          // Instruct Giscus to change theme
-          var frame = document.querySelector(".giscus-frame")
-          frame.contentWindow.postMessage(
-            { giscus: { setConfig: { theme } } },
-            "https://giscus.app"
-          )
-        }
-      })
-    })
-  </script>
-
-
-
-
-  <h2 id="__comments">Comments</h2>
-  <!-- Insert generated snippet here -->
-  <script src="https://giscus.app/client.js"
-          data-repo="MAD-SG/generative-ai-start-to-surrender"
-          data-repo-id="R_kgDONqcETw"
-          data-category="comment"
-          data-category-id="DIC_kwDONqcET84CnTxw"
-          data-mapping="url"
+          data-mapping="pathname"
           data-strict="0"
           data-reactions-enabled="1"
           data-emit-metadata="0"
@@ -2983,11 +2926,13 @@
     
       <script src="../../../assets/javascripts/bundle.88dd0f4e.min.js"></script>
       
-        <script src="../../../javascripts/text_mml_min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/3.26.1/minified.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
       
         <script src="../../../javascripts/mathjax.js"></script>
       
-        <script src="../../../javascripts/giscus_client.js"></script>
+        <script src="https://giscus.app/client.js"></script>
       
     
   <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
