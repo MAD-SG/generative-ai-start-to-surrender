@@ -882,6 +882,15 @@ $$
 
     The post_attention did the linear transform of the output of the attention function. Increase the model capability, nothing special.
 
+#### Condition Processing
+Next, let's consider where the condition is from.
+
+To have better prompt understanding, we used three text embedding models
+
+- `clip_g.safetensors` (openclip bigG, same as SDXL)
+- `clip_l.safetensors` (OpenAI CLIP-L, same as SDXL)
+- `t5xxl.safetensors` (google T5-v1.1-XXL)
+
 We have studied the network structure of the MM-DiT. To summary, the MM-DiT's contribution is
 
 1. Use same idea of handling condition `c` by ==adaLN==
