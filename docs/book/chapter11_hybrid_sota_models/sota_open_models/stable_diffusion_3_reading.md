@@ -539,7 +539,6 @@ It got three main blocks
             super().**init**()
             self.num_heads = num_heads
             self.head_dim = dim // num_heads
-
             self.qkv = nn.Linear(dim, dim * 3, bias=qkv_bias, dtype=dtype, device=device)
             if not pre_only:
                 self.proj = nn.Linear(dim, dim, dtype=dtype, device=device)
@@ -601,8 +600,295 @@ If a **bias term**  $\beta$ is added, the formula becomes:
 $$
 \text{RMSNorm}(x) = \frac{x}{\text{RMS}(x)} \cdot \gamma + \beta
 $$
+#### MM-Dit
 
-## References
+=== "cropped_pos_embed"
+
+    ```py3
+    def cropped_pos_embed(self, hw):
+        assert self.pos_embed_max_size is not None
+        p = self.x_embedder.patch_size[0]
+        h, w = hw
+        # patched size
+        h = h // p
+        w = w // p
+        assert h <= self.pos_embed_max_size, (h, self.pos_embed_max_size)
+        assert w <= self.pos_embed_max_size, (w, self.pos_embed_max_size)
+        top = (self.pos_embed_max_size - h) // 2
+        left = (self.pos_embed_max_size - w) // 2
+        spatial_pos_embed = rearrange(
+            self.pos_embed,
+            "1 (h w) c -> 1 h w c",
+            h=self.pos_embed_max_size,
+            w=self.pos_embed_max_size,
+        )
+        spatial_pos_embed = spatial_pos_embed[:, top : top + h, left : left + w, :]
+        spatial_pos_embed = rearrange(spatial_pos_embed, "1 h w c -> 1 (h w) c")
+        return spatial_pos_embed
+    ```
+
+    This function **extracts a cropped positional embedding** from a larger precomputed embedding, ensuring spatial alignment in Transformers for varying input sizes.
+
+    **Key Steps:**
+    1. **Compute Patched Size** – Converts input dimensions to patch-based resolution.
+    2. **Validate Size** – Ensures it does not exceed the stored max embedding size.
+    3. **Center Crop** – Extracts the relevant portion of the positional embedding.
+    4. **Format Adjustment** – Reshapes from **(1, H*W, C) → (1, H, W, C) → (1, h*w, C)**.
+
+    **Purpose:**
+    - Adapts positional embeddings for different resolutions.
+    - Maintains spatial awareness in **ViT/DiT** models.
+    - Enables flexibility without retraining embeddings.
+
+    ![alt text](../../../images/image-88.png)
+
+=== "forward_core_with_concat"
+
+    ```py3 title="forward_core_with_concat"
+    def forward_core_with_concat(self, x: torch.Tensor, c_mod: torch.Tensor, context: Optional[torch.Tensor] = None) -> torch.Tensor:
+        if self.register_length > 0:
+            context = torch.cat((repeat(self.register, "1 ... -> b ...", b=x.shape[0]), context if context is not None else torch.Tensor([]).type_as(x)), 1)
+        # context is B, L', D
+        # x is B, L, D
+        for block in self.joint_blocks:
+            context, x = block(context, x, c=c_mod)
+        x = self.final_layer(x, c_mod)  # (N, T, patch_size ** 2 * out_channels)
+        return x
+    ```
+
+    It handles the case when context is None, the empty tensor will be created as context.
+    If register_length>0, it will create 'register_length's tokens appending before the context sequence. Like
+
+    $$[e_{pre_1},e_{pre_2},...,e_{context_1},e_{context_e},...,e_{context_L}]$$
+    The Final Layer is a simple AdaLn module that is Same in DiT.
+
+    The core structure in the function is the  the joint block. Let's device into the joint block further.
+
+    ```py3
+    class JointBlock(nn.Module):
+        def __init__(self, *args, **kwargs):
+            super().__init__()
+            pre_only = kwargs.pop("pre_only")
+            qk_norm = kwargs.pop("qk_norm", None)
+            self.context_block = DismantledBlock(*args, pre_only=pre_only, qk_norm=qk_norm, **kwargs)
+            self.x_block = DismantledBlock(*args, pre_only=False, qk_norm=qk_norm, **kwargs)
+
+        def forward(self, *args, **kwargs):
+            return block_mixing(*args, context_block=self.context_block, x_block=self.x_block, **kwargs)
+    ```
+
+    The joint block is composed of the block mixing, DismantledBlock. Let's check them step by step.
+
+    The overall strucrure of the MM-DiT block is
+
+    ![alt text](../../../images/image-90.png)
+
+=== "Final Layer"
+
+    ```py3
+    class FinalLayer(nn.Module):
+        def __init__(self, hidden_size: int, patch_size: int, out_channels: int, total_out_channels: Optional[int] = None, dtype=None, device=None):
+            super().__init__()
+            self.norm_final = nn.LayerNorm(hidden_size, elementwise_affine=False, eps=1e-6, dtype=dtype, device=device)
+            self.linear = (
+                nn.Linear(hidden_size, patch_size * patch_size * out_channels, bias=True, dtype=dtype, device=device)
+                if (total_out_channels is None)
+                else nn.Linear(hidden_size, total_out_channels, bias=True, dtype=dtype, device=device)
+            )
+            self.adaLN_modulation = nn.Sequential(nn.SiLU(), nn.Linear(hidden_size, 2 * hidden_size, bias=True, dtype=dtype, device=device))
+        def forward(self, x: torch.Tensor, c: torch.Tensor) -> torch.Tensor:
+            shift, scale = self.adaLN_modulation(c).chunk(2, dim=1)
+            x = modulate(self.norm_final(x), shift, scale)
+            x = self.linear(x)
+            return x
+    ```
+
+    It takes the same idea of adaLN which borrows from the paper DiT (style gan). See more details in [DiT](../../chapter7_diffusion/DiT.md).
+
+=== "block_mixing"
+
+    ```py3
+    def block_mixing(context, x, context_block, x_block, c):
+        assert context is not None, "block_mixing called with None context"
+        context_qkv, context_intermediates = context_block.pre_attention(context, c)
+        x_qkv, x_intermediates = x_block.pre_attention(x, c)
+        o = []
+        for t in range(3):
+            o.append(torch.cat((context_qkv[t], x_qkv[t]), dim=1))
+        q, k, v = tuple(o)
+        attn = attention(q, k, v, x_block.attn.num_heads)
+        context_attn, x_attn = (attn[:, : context_qkv[0].shape[1]], attn[:, context_qkv[0].shape[1] :])
+        if not context_block.pre_only:
+            context = context_block.post_attention(context_attn, *context_intermediates)
+        else:
+            context = None
+        x = x_block.post_attention(x_attn, *x_intermediates)
+        return context, x
+    ```
+    ![alt text](../../../images/image-89.png)
+
+    As shown above, the block mixing is a attention block, that first process `context` and `x` seperately, and concat them together to do self attention, (which can be considered as the cross attention from each other by concating the information in the K,V).
+
+    It need further to check what is the context_block, and x_block, which are same attention network structure
+
+=== "DismantledBlock"
+
+    ```py3
+    class DismantledBlock(nn.Module):
+        ATTENTION_MODES = ("xformers", "torch", "torch-hb", "math", "debug")
+        def __init__(
+            self,
+            hidden_size: int,
+            num_heads: int,
+            mlp_ratio: float = 4.0,
+            attn_mode: str = "xformers",
+            qkv_bias: bool = False,
+            pre_only: bool = False,
+            rmsnorm: bool = False,
+            scale_mod_only: bool = False,
+            swiglu: bool = False,
+            qk_norm: Optional[str] = None,
+            dtype=None,
+            device=None,
+            **block_kwargs,
+        ):
+            super().__init__()
+            assert attn_mode in self.ATTENTION_MODES
+            if not rmsnorm:
+                self.norm1 = nn.LayerNorm(hidden_size, elementwise_affine=False, eps=1e-6, dtype=dtype, device=device)
+            else:
+                self.norm1 = RMSNorm(hidden_size, elementwise_affine=False, eps=1e-6)
+            self.attn = SelfAttention(dim=hidden_size, num_heads=num_heads, qkv_bias=qkv_bias, attn_mode=attn_mode, pre_only=pre_only, qk_norm=qk_norm, rmsnorm=rmsnorm, dtype=dtype, device=device)
+            if not pre_only:
+                if not rmsnorm:
+                    self.norm2 = nn.LayerNorm(hidden_size, elementwise_affine=False, eps=1e-6, dtype=dtype, device=device)
+                else:
+                    self.norm2 = RMSNorm(hidden_size, elementwise_affine=False, eps=1e-6)
+            mlp_hidden_dim = int(hidden_size * mlp_ratio)
+            if not pre_only:
+                if not swiglu:
+                    self.mlp = Mlp(in_features=hidden_size, hidden_features=mlp_hidden_dim, act_layer=nn.GELU(approximate="tanh"), dtype=dtype, device=device)
+                else:
+                    self.mlp = SwiGLUFeedForward(dim=hidden_size, hidden_dim=mlp_hidden_dim, multiple_of=256)
+            self.scale_mod_only = scale_mod_only
+            if not scale_mod_only:
+                n_mods = 6 if not pre_only else 2
+            else:
+                n_mods = 4 if not pre_only else 1
+            self.adaLN_modulation = nn.Sequential(nn.SiLU(), nn.Linear(hidden_size, n_mods * hidden_size, bias=True, dtype=dtype, device=device))
+            self.pre_only = pre_only
+        def pre_attention(self, x: torch.Tensor, c: torch.Tensor):
+            assert x is not None, "pre_attention called with None input"
+            if not self.pre_only:
+                if not self.scale_mod_only:
+                    shift_msa, scale_msa, gate_msa, shift_mlp, scale_mlp, gate_mlp = self.adaLN_modulation(c).chunk(6, dim=1)
+                else:
+                    shift_msa = None
+                    shift_mlp = None
+                    scale_msa, gate_msa, scale_mlp, gate_mlp = self.adaLN_modulation(c).chunk(4, dim=1)
+                qkv = self.attn.pre_attention(modulate(self.norm1(x), shift_msa, scale_msa))
+                return qkv, (x, gate_msa, shift_mlp, scale_mlp, gate_mlp)
+            else:
+                if not self.scale_mod_only:
+                    shift_msa, scale_msa = self.adaLN_modulation(c).chunk(2, dim=1)
+                else:
+                    shift_msa = None
+                    scale_msa = self.adaLN_modulation(c)
+                qkv = self.attn.pre_attention(modulate(self.norm1(x), shift_msa, scale_msa))
+                return qkv, None
+        def post_attention(self, attn, x, gate_msa, shift_mlp, scale_mlp, gate_mlp):
+            assert not self.pre_only
+            x = x + gate_msa.unsqueeze(1) * self.attn.post_attention(attn)
+            x = x + gate_mlp.unsqueeze(1) * self.mlp(modulate(self.norm2(x), shift_mlp, scale_mlp))
+            return x
+        def forward(self, x: torch.Tensor, c: torch.Tensor) -> torch.Tensor:
+            assert not self.pre_only
+            (q, k, v), intermediates = self.pre_attention(x, c)
+            attn = attention(q, k, v, self.attn.num_heads)
+            return self.post_attention(attn, *intermediates)
+    ```
+
+
+
+    Since in the mixing_block, only the pre_attention and the post_attention are called, Let's only look at these two functions only.
+
+    ```py3
+    def modulate(x, shift, scale):
+        if shift is None:
+            shift = torch.zeros_like(scale)
+        return x * (1 + scale.unsqueeze(1)) + shift.unsqueeze(1)
+    ```
+
+    It take the idea of the adaIN from DiT paper. which modulate the shift and scale after the layer norm before and after the attention.
+    Also inferit from the idea of DiT, it use the gate parameter to control the strength of the residule network after the self attention of `context` and `x`, which hope in the initial stage, the increament component in residule block could be 0 to obtain the stability of the training.
+
+=== "SelfAttention"
+
+    ```py3
+    class SelfAttention(nn.Module):
+        ATTENTION_MODES = ("xformers", "torch", "torch-hb", "math", "debug")
+        def __init__(
+            self,
+            dim: int,
+            num_heads: int = 8,
+            qkv_bias: bool = False,
+            qk_scale: Optional[float] = None,
+            attn_mode: str = "xformers",
+            pre_only: bool = False,
+            qk_norm: Optional[str] = None,
+            rmsnorm: bool = False,
+            dtype=None,
+            device=None,
+        ):
+            super().__init__()
+            self.num_heads = num_heads
+            self.head_dim = dim // num_heads
+            self.qkv = nn.Linear(dim, dim * 3, bias=qkv_bias, dtype=dtype, device=device)
+            if not pre_only:
+                self.proj = nn.Linear(dim, dim, dtype=dtype, device=device)
+            assert attn_mode in self.ATTENTION_MODES
+            self.attn_mode = attn_mode
+            self.pre_only = pre_only
+            if qk_norm == "rms":
+                self.ln_q = RMSNorm(self.head_dim, elementwise_affine=True, eps=1.0e-6, dtype=dtype, device=device)
+                self.ln_k = RMSNorm(self.head_dim, elementwise_affine=True, eps=1.0e-6, dtype=dtype, device=device)
+            elif qk_norm == "ln":
+                self.ln_q = nn.LayerNorm(self.head_dim, elementwise_affine=True, eps=1.0e-6, dtype=dtype, device=device)
+                self.ln_k = nn.LayerNorm(self.head_dim, elementwise_affine=True, eps=1.0e-6, dtype=dtype, device=device)
+            elif qk_norm is None:
+                self.ln_q = nn.Identity()
+                self.ln_k = nn.Identity()
+            else:
+                raise ValueError(qk_norm)
+        def pre_attention(self, x: torch.Tensor):
+            B, L, C = x.shape
+            qkv = self.qkv(x)
+            q, k, v = split_qkv(qkv, self.head_dim)
+            q = self.ln_q(q).reshape(q.shape[0], q.shape[1], -1)
+            k = self.ln_k(k).reshape(q.shape[0], q.shape[1], -1)
+            return (q, k, v)
+        def post_attention(self, x: torch.Tensor) -> torch.Tensor:
+            assert not self.pre_only
+            x = self.proj(x)
+            return x
+        def forward(self, x: torch.Tensor) -> torch.Tensor:
+            (q, k, v) = self.pre_attention(x)
+            x = attention(q, k, v, self.num_heads)
+            x = self.post_attention(x)
+            return x
+    ```
+    In the Joint Block, only the `pre_attention` and `post_attention` are called.
+    The pre_attention did the linear transform and the layer norm of the Q,K,V in the self attention mechanics before sending to the attention function. The layer norm can be chosed from the standard layer normalization, or the RSM_layer normalization or just Identity
+
+    The post_attention did the linear transform of the output of the attention function. Increase the model capability, nothing special.
+
+We have studied the network structure of the MM-DiT. To summary, the MM-DiT's contribution is
+
+1. Use same idea of handling condition `c` by ==adaLN==
+2. cross attention for the context (text/sequential information) and latent feature `x` by the dual path. Handle `context` and `x` seperatly but fed into attention by concating
+3. use cropping positional embedding to support different resolution
+
+## Refereces
 
 - stable diffusion 3 reading: <https://zhuanlan.zhihu.com/p/684068402?utm_source=chatgpt.com>
 - [sd 3 inference code](https://github.com/Stability-AI/sd3-ref)
