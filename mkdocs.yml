@@ -1,72 +1,73 @@
 site_name: "Generative AI: From Start to Surrender"
 nav:
-  - "Home": index.html
+  - Home: index.html
   - Introduction:
-      - Terms: "book/chapter1_Introduction/1.1terminology.md"
-      - Fourier Transform: "book/chapter1_Introduction/1.2fourier_transform.md"
-      - Signal Processing: "book/chapter1_Introduction/1.3signal_processing.md"
-      - Statistics: "book/chapter1_Introduction/1.4statistics.md"
-      - Tutorials: "book/chapter1_Introduction/tutorials.md"
+      - Terms: book/chapter1_Introduction/1.1terminology.md
+      - Fourier Transform: book/chapter1_Introduction/1.2fourier_transform.md
+      - Signal Processing: book/chapter1_Introduction/1.3signal_processing.md
+      - Statistics: book/chapter1_Introduction/1.4statistics.md
+      - Tutorials: book/chapter1_Introduction/tutorials.md
   - Generation Theory:
-      - Maximal Likelihood: "book/chapter2_generation_theory/mle.md"
-      - Manifold Hypothesis: "book/chapter2_generation_theory/manifold_hypothesis.md"
-      - Generative Model Category: "book/chapter2_generation_theory/generative_model_category.md"
+      - Maximal Likelihood: book/chapter2_generation_theory/mle.md
+      - Manifold Hypothesis: book/chapter2_generation_theory/manifold_hypothesis.md
+      - Generative Model Category: book/chapter2_generation_theory/generative_model_category.md
 
   - Energy Based Models:
-      - Introduction: "book/chapter3_energy_based_model/introduction.md"
-      - Score Functions: "book/chapter3_energy_based_model/score_function.md"
-      - Sampling Methods: "book/chapter3_energy_based_model/sampling.md"
-      - Contrastive Divergence: "book/chapter3_energy_based_model/cd.md"
-      - Score Matching: "book/chapter3_energy_based_model/score_matching.md"
+      - Introduction: book/chapter3_energy_based_model/introduction.md
+      - Score Functions: book/chapter3_energy_based_model/score_function.md
+      - Sampling Methods: book/chapter3_energy_based_model/sampling.md
+      - Contrastive Divergence: book/chapter3_energy_based_model/cd.md
+      - Score Matching: book/chapter3_energy_based_model/score_matching.md
   - VAE:
-      - Introduction: "book/chapter6_VAE/vae_introduction.md"
-      - VA-VAE: "book/chapter6_VAE/vq_vae.md"
+      - Introduction: book/chapter6_VAE/vae_introduction.md
+      - VA-VAE: book/chapter6_VAE/vq_vae.md
   - GANs:
-      - From GAN to StyleGAN: "book/chapter5_GAN/3.1from_gan_to_stylegan/paper.md"
+      - From GAN to StyleGAN: book/chapter5_GAN/3.1from_gan_to_stylegan/paper.md
       - StyleGAN Variants:
-          - StyleGAN: "book/chapter5_GAN/3.3stylegan/paper.md"
-          - StyleGAN2: "book/chapter5_GAN/3.4stylegan2/paper.md"
-          - StyleGAN3: "book/chapter5_GAN/3.5stylegan3/paper.md"
-          - StyleGAN-T: "book/chapter5_GAN/3.6styleganT/paper.md"
-      - R3GAN: "book/chapter5_GAN/3.7R3Gan/paper.md"
-      - VQ-GAN: "book/chapter5_GAN/vq_gan.md"
+          - StyleGAN: book/chapter5_GAN/3.3stylegan/paper.md
+          - StyleGAN2: book/chapter5_GAN/3.4stylegan2/paper.md
+          - StyleGAN3: book/chapter5_GAN/3.5stylegan3/paper.md
+          - StyleGAN-T: book/chapter5_GAN/3.6styleganT/paper.md
+      - R3GAN: book/chapter5_GAN/3.7R3Gan/paper.md
+      - VQ-GAN: book/chapter5_GAN/vq_gan.md
 
   - Diffusion Models:
       - Discrete Diffusion:
-          - DDPM: "book/chapter7_diffusion/ddpm.md"
-          - LDM: "book/chapter7_diffusion/ldm.md"
-          - LDM Handson: "book/chapter7_diffusion/ldm_handson.md"
-          - Diffusion Model Varients: "book/chapter7_diffusion/diffusion_model_varients.md"
-          - General Diffusion Model: "book/chapter7_diffusion/general_diffusion_model.md"
+          - DDPM: book/chapter7_diffusion/ddpm.md
+          - LDM: book/chapter7_diffusion/ldm.md
+          - LDM Handson: book/chapter7_diffusion/ldm_handson.md
+          - Diffusion Model Varients: book/chapter7_diffusion/diffusion_model_varients.md
+          - General Diffusion Model: book/chapter7_diffusion/general_diffusion_model.md
       - SDE Diffusion:
-          - SDE Fundamentals: "book/chapter7_diffusion/introduction_sde.md"
-          - SDE for DDPM: "book/chapter7_diffusion/from_ddpm_2_sde.md"
-          - Score Based SDE: "book/chapter7_diffusion/score_based_sde.md"
-          - Probability Flow ODE: "book/chapter7_diffusion/probability_flow_ode.md"
-          - SDE Diffusion Speedup: "book/chapter7_diffusion/sde_diffusion_speedup.md"
+          - SDE Fundamentals: book/chapter7_diffusion/introduction_sde.md
+          - SDE for DDPM: book/chapter7_diffusion/from_ddpm_2_sde.md
+          - Score Based SDE: book/chapter7_diffusion/score_based_sde.md
+          - Probability Flow ODE: book/chapter7_diffusion/probability_flow_ode.md
+          - SDE Diffusion Speedup: book/chapter7_diffusion/sde_diffusion_speedup.md
       - Diffusion Network:
-          - DiT: "book/chapter7_diffusion/DiT.md"
+          - DiT: book/chapter7_diffusion/DiT.md
 
   - Flow Matching:
-      - Introduction: "book/chapter9_flow_matching/introduction.md"
-      - Probability Path and Velocity Fields: "book/chapter9_flow_matching/probability_with_velocity_field.md"
-      - Flow Matching Theorem: "book/chapter9_flow_matching/flow_matching_theory.md"
-      - Affine Conditional Flow: "book/chapter9_flow_matching/affine_conditional_flows.md"
-      - Optimal Transport Flow: "book/chapter9_flow_matching/optimal_transport_flow.md"
-      - Rectified Flow: "book/chapter9_flow_matching/rectified_flow.md"
+      - Introduction: book/chapter9_flow_matching/introduction.md
+      - Probability Path and Velocity Fields: book/chapter9_flow_matching/probability_with_velocity_field.md
+      - Flow Matching Theorem: book/chapter9_flow_matching/flow_matching_theory.md
+      - Affine Conditional Flow: book/chapter9_flow_matching/affine_conditional_flows.md
+      - Optimal Transport Flow: book/chapter9_flow_matching/optimal_transport_flow.md
+      - Rectified Flow: book/chapter9_flow_matching/rectified_flow.md
   - Hybrid SOTA Models:
-      - Hybrid Methods: "book/chapter11_hybrid_sota_models/hybrid_methods.md"
-      - Closed Models: "book/chapter11_hybrid_sota_models/sota_closed_models.md"
+      - Hybrid Methods: book/chapter11_hybrid_sota_models/hybrid_methods.md
+      - Closed Models: book/chapter11_hybrid_sota_models/sota_closed_models.md
       - Open Models:
-        - Dalle Series: "book/chapter11_hybrid_sota_models/sota_open_models/dalle_series.md"
-        - Stable Diffusion Series: "book/chapter11_hybrid_sota_models/sota_open_models/stable_diffusion_series.md"
-        - Stable Diffusion XL: "book/chapter11_hybrid_sota_models/sota_open_models/stable_diffusion_xl.md"
-        - Stable Diffusion 3: "book/chapter11_hybrid_sota_models/sota_open_models/stable_diffusion_3_reading.md"
-        - Flux.1: "book/chapter11_hybrid_sota_models/sota_open_models/flux1.md"
-      - Future Trends: "book/chapter11_hybrid_sota_models/trends_future.md"
+        - Dalle Series: book/chapter11_hybrid_sota_models/sota_open_models/dalle_series.md
+        - Stable Diffusion Series: book/chapter11_hybrid_sota_models/sota_open_models/stable_diffusion_series.md
+        - Stable Diffusion XL: book/chapter11_hybrid_sota_models/sota_open_models/stable_diffusion_xl.md
+        - Stable Diffusion 3: book/chapter11_hybrid_sota_models/sota_open_models/stable_diffusion_3_reading.md
+        - Flux.1: book/chapter11_hybrid_sota_models/sota_open_models/flux1.md
+      - Future Trends: book/chapter11_hybrid_sota_models/trends_future.md
 
 theme:
   name: material
+  custom_dir: docs/overrides
   features:
     - navigation.tabs
     - toc.integrate  # 集成页内目录
@@ -133,6 +134,7 @@ extra:
   analytics:
     provider: google
     property: !ENV GOOGLE_ANALYTICS_KEY
+  generator: false  #删除页脚显示“使用 MkDocs 材料制造”
   social:
     - icon: fontawesome/brands/github
       link: https://mad-sg.github.io/generative-ai-start-to-surrender/
@@ -227,10 +229,10 @@ markdown_extensions:
 #   - javascripts/katex-init.js  # Custom script to initialize KaTeX
 
 extra_javascript:
-  # - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
-  - https://polyfill.io/v3/polyfill.min.js?features=es6
-  - https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js
+  - https://cdnjs.cloudflare.com/ajax/libs/core-js/3.26.1/minified.min.js
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
   - javascripts/mathjax.js
+  - https://giscus.app/client.js
 
 watch:
   - docs/includes

@@ -1,3 +1,4 @@
+
 # [SD3] Scaling Rectified Flow Transformers for High-Resolution Image Synthesis
 
 > [Paper: Scaling Rectified Flow Transformers for High-Resolution Image Synthesis
@@ -35,6 +36,7 @@ Before reading this paper, we suggest reader to undertand the flow matching chap
 In the previous stable diffusion models, the VAE transform the original image of shape
 
 $$ [H,W,3] \longrightarrow [\frac{H}{8},\frac{W}{8},d], \quad d=4$$
+
 ![alt text](../../../images/image-80.png)
 Increase $d$ can improve the performance as described in the above table.
 
@@ -69,9 +71,11 @@ Let consider the details of the SDVAE carefully
     h = \text{Encoder}(x)
     $$
 
+
     $$
     \mu, \log\sigma^2 = \text{split}(h)
     $$
+
 
     The **log-variance** is clamped to prevent extreme values:
 
@@ -79,11 +83,13 @@ Let consider the details of the SDVAE carefully
     \log \sigma^2 = \text{clamp}(\log \sigma^2, -30, 20)
     $$
 
+
     The standard deviation is computed as:
 
     $$
     \sigma = \exp\left(\frac{1}{2} \log \sigma^2\right)
     $$
+
 
     Using the **reparameterization trick**, the latent variable \( z \) is sampled as:
 
@@ -91,12 +97,14 @@ Let consider the details of the SDVAE carefully
     z = \mu + \sigma \cdot \epsilon, \quad \text{where } \epsilon \sim \mathcal{N}(0, I)
     $$
 
+
     #### **Decoding Step:**
     The decoder takes the latent variable \( z \) and reconstructs the image:
 
     $$
     \hat{x} = \text{Decoder}(z)
     $$
+
 
     where \(\hat{x}\) is the reconstructed image.
 
@@ -307,9 +315,11 @@ Let consider the details of the SDVAE carefully
     F(X) = \text{Conv2} \left( \text{Swish} \left( \text{Norm2} \left( \text{Conv1} \left( \text{Swish} \left( \text{Norm1}(X) \right) \right) \right) \right) \right)
     $$
 
+
     The **final output**  is:
 
     $$   Y = X + F(X) $$
+
 
 ### Patchify
 
@@ -410,6 +420,7 @@ $$
 E_t = \left[ \cos\left(t \cdot f_1\right), \sin\left(t \cdot f_1\right), \cos\left(t \cdot f_2\right), \sin\left(t \cdot f_2\right), \dots, \cos\left(t \cdot f_{\frac{D}{2}}\right), \sin\left(t \cdot f_{\frac{D}{2}}\right) \right]
 $$
 
+
 where:
 
 - \( f_i = e^{-\frac{\log(\text{max\_period})}{D/2} \cdot i} \) are the frequency components.
@@ -422,10 +433,12 @@ $$
 E_t = \left[ E_t, 0 \right]
 $$
 
+
 This vector representation ensures **smooth temporal encoding** and is widely used in **diffusion models, transformers, and time-aware architectures**. 🚀
 
 ### MM-DiT
-![alt text](../../../images/image-81.png)
+
+# ![alt text](../../../images/image-81.png)
 
 The overall structure of the MM-DiT network
 
@@ -584,6 +597,7 @@ $$
 \text{RMSNorm}(x) = \frac{x}{\text{RMS}(x)} \cdot \gamma
 $$
 
+
 where:
 
 - **RMS (Root Mean Square) is calculated as:**
@@ -591,6 +605,7 @@ where:
 $$
 \text{RMS}(x) = \sqrt{\frac{1}{d} \sum_{i=1}^{d} x_i^2 + \epsilon}
 $$
+
 
 - $\epsilon$ is a small constant to prevent division by zero.
 
@@ -600,6 +615,7 @@ If a **bias term**  $\beta$ is added, the formula becomes:
 $$
 \text{RMSNorm}(x) = \frac{x}{\text{RMS}(x)} \cdot \gamma + \beta
 $$
+
 #### MM-Dit
 
 === "cropped_pos_embed"
@@ -660,6 +676,7 @@ $$
     If register_length>0, it will create 'register_length's tokens appending before the context sequence. Like
 
     $$[e_{pre_1},e_{pre_2},...,e_{context_1},e_{context_e},...,e_{context_L}]$$
+
     The Final Layer is a simple AdaLn module that is Same in DiT.
 
     The core structure in the function is the  the joint block. Let's device into the joint block further.

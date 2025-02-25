@@ -1,3 +1,8 @@
+---
+title: Scalable Diffusion Models with Transformers (DiT)
+comments: true
+---
+
 # Scalable Diffusion Models with Transformers (DiT)
 
 - Year: March 2023
