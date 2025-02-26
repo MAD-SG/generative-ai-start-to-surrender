@@ -14,7 +14,7 @@
       <p><strong>如何使用段落注释功能：</strong></p>
       <ol>
         <li>点击右上角的 <img src="https://hypothes.is/assets/images/logo.png" alt="Hypothesis" style="height: 16px; vertical-align: middle;"> 图标打开侧边栏</li>
-        <li>选择任意文本段落即可高亮并添加注</li>
+        <li>选择任意文本段落即可高亮并添加注释</li>
         <li>您还可以对其他人的注释进行回复</li>
       </ol>
     </div>
@@ -30,6 +30,120 @@
 }
 </script>
 <script async src="https://hypothes.is/embed.js"></script>
+
+<!-- Hypothesis 样式美化 -->
+<style>
+  /* 修改高亮效果为下划线和聊天泡泡 */
+  .hypothesis-highlight {
+    background-color: transparent !important; /* 移除高亮背景 */
+    text-decoration: underline !important;
+    text-decoration-color: #4285f4 !important;
+    text-decoration-thickness: 2px !important;
+    text-decoration-style: wavy !important;
+    position: relative !important;
+    cursor: pointer !important;
+    border-bottom: none !important; /* 移除之前的边框 */
+    box-shadow: none !important; /* 移除之前的阴影 */
+  }
+
+  .hypothesis-highlight::after {
+    content: "💬" !important;
+    position: absolute !important;
+    display: inline-block !important;
+    font-size: 14px !important;
+    top: -10px !important;
+    right: -5px !important;
+    opacity: 0.7 !important;
+    transition: opacity 0.3s ease !important;
+  }
+
+  .hypothesis-highlight:hover {
+    background-color: rgba(66, 133, 244, 0.08) !important; /* 鼠标悬停时的轻微背景 */
+  }
+
+  .hypothesis-highlight:hover::after {
+    opacity: 1 !important;
+    transform: scale(1.2) !important;
+  }
+
+  /* 美化 Hypothesis 侧边栏 */
+  hypothesis-sidebar {
+    font-family: var(--md-text-font-family, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif) !important;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  /* 美化卡片样式 */
+  .hypothesis-annotation-card {
+    border-radius: 8px !important;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05) !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+    overflow: hidden !important;
+  }
+
+  .hypothesis-annotation-card:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  /* 美化 Hypothesis 按钮 */
+  .hypothesis-button {
+    border-radius: 4px !important;
+    transition: background-color 0.2s ease !important;
+  }
+
+  /* 美化标签样式 */
+  .hypothesis-tag {
+    border-radius: 12px !important;
+    padding: 2px 8px !important;
+    font-size: 12px !important;
+    background-color: rgba(0, 0, 0, 0.05) !important;
+    color: #606060 !important;
+  }
+
+  /* 美化工具栏 */
+  .hypothesis-toolbar {
+    background: linear-gradient(to right, #f5f5f5, #ffffff) !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+  }
+
+  /* 美化注释面板header */
+  .hypothesis-annotation-header {
+    padding: 10px !important;
+    background-color: #f9f9f9 !important;
+  }
+
+  /* 美化注释内容 */
+  .hypothesis-annotation-body {
+    font-size: 14px !important;
+    line-height: 1.6 !important;
+    color: #333 !important;
+  }
+
+  /* 美化用户名 */
+  .hypothesis-user {
+    font-weight: 600 !important;
+    color: #3f51b5 !important;
+  }
+
+  /* 美化时间戳 */
+  .hypothesis-timestamp {
+    font-size: 12px !important;
+    color: #757575 !important;
+  }
+
+  /* 美化输入框 */
+  .hypothesis-input {
+    border-radius: 4px !important;
+    border: 1px solid #e0e0e0 !important;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+  }
+
+  .hypothesis-input:focus {
+    border-color: #4dabf7 !important;
+    box-shadow: 0 0 0 2px rgba(77, 171, 247, 0.2) !important;
+    outline: none !important;
+  }
+</style>
 
 <!-- 页面评论系统 -->
 <div class="comments-container utterances-container">
