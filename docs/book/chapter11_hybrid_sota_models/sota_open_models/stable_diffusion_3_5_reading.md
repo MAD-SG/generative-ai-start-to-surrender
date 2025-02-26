@@ -129,3 +129,29 @@ Both `pos_out` and `skip_layer_out` use the same positive condition but differ i
 ## MM-DiTX
 
 ## ControlNet in SD 3.5
+
+### CnotrolNet Condition Process
+
+    ```py3
+                controlnet_cond = self._image_to_latent(
+                    controlnet_cond_image, width, height, using_2b, control_type
+                )
+    ...
+    ...
+    def _image_to_latent(
+        self,
+        image,
+        width,
+        height,
+        using_2b_controlnet: bool = False,
+        controlnet_type: int = 0,
+    ) -> torch.Tensor:
+        image_data = Image.open(image)
+        image_data = image_data.resize((width, height), Image.LANCZOS)
+        latent = self.vae_encode(image_data, using_2b_controlnet, controlnet_type)
+        latent = SD3LatentFormat().process_in(latent)
+        return latent
+
+    ```
+
+The controlnet condition, usually the depthmap, blur, canny, is processed in the same way as the input image, and then prepared into a special kind condition with key `controlnet_cond`.
