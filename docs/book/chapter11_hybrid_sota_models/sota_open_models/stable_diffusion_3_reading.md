@@ -948,6 +948,75 @@ Let draw the overrall structure of the diffusion model
 
 ![alt text](../../../images/network_sd3.png)
 
+### SD3 Inference Methods
+
+Let's consider the stable diffusion 3 inference details
+
+    ```py3
+        def get_empty_latent(self, width, height):
+            print("Prep an empty latent...")
+            return torch.ones(1, 16, height // 8, width // 8, device="cpu") * 0.0609
+        def gen_image(self, prompt=PROMPT, width=WIDTH, height=HEIGHT, steps=STEPS, cfg_scale=CFG_SCALE, seed=SEED, output=OUTPUT, init_image=INIT_IMAGE, denoise=DENOISE):
+            latent = self.get_empty_latent(width, height)
+            if init_image:
+                image_data = Image.open(init_image)
+                image_data = image_data.resize((width, height), Image.LANCZOS)
+                latent = self.vae_encode(image_data)
+                latent = SD3LatentFormat().process_in(latent)
+            conditioning = self.get_cond(prompt)
+            neg_cond = self.get_cond("")
+            sampled_latent = self.do_sampling(latent, seed, conditioning, neg_cond, steps, cfg_scale, denoise if init_image else 1.0)
+            image = self.vae_decode(sampled_latent)
+            print(f"Will save to {output}")
+            image.save(output)
+            print("Done")
+    ```
+
+Instead of sampling from the Gaussian distribution, the SD3 samples with either
+
+- a fixed initial value `0.0609`.
+- given initial image
+
+The overall structure is still follow from LDM, that first doing the diffusion steps in latent space and then use VAE decode to recover the RGB image.
+
+For the sampling steps, it includes
+
+1. positive prompt and negative prompt
+2. CFG sampling with Euler steps
+
+#### Positive prompt and negative prompt
+
+    ```py3
+        def do_sampling(self, latent, seed, conditioning, neg_cond, steps, cfg_scale, denoise=1.0) -> torch.Tensor:
+            print("Sampling...")
+            latent = latent.half().cuda()
+            self.sd3.model = self.sd3.model.cuda()
+            noise = self.get_noise(seed, latent).cuda()
+            sigmas = self.get_sigmas(self.sd3.model.model_sampling, steps).cuda()
+            sigmas = sigmas[int(steps * (1 - denoise)):]
+            conditioning = self.fix_cond(conditioning)
+            neg_cond = self.fix_cond(neg_cond)
+            extra_args = { "cond": conditioning, "uncond": neg_cond, "cond_scale": cfg_scale }
+            noise_scaled = self.sd3.model.model_sampling.noise_scaling(sigmas[0], noise, latent, self.max_denoise(sigmas))
+            latent = sample_euler(CFGDenoiser(self.sd3.model), noise_scaled, sigmas, extra_args=extra_args)
+            latent = SD3LatentFormat().process_out(latent)
+            self.sd3.model = self.sd3.model.cpu()
+            print("Sampling done")
+            return latent
+    ```
+
+As mentioned in the above, the prompt will be processed into a pooled global embedding and a non-pooled sequential detail embedding. Consider both positive prompt and negative prompt, we will obtain two set of conditions
+
+- cond
+  - context
+  - y
+- uncond
+  - context
+  - y
+
+In stable diffusion 3,
+![alt text](../../../images/image-91.png)
+
 ## Refereces
 
 - stable diffusion 3 reading: <https://zhuanlan.zhihu.com/p/684068402?utm_source=chatgpt.com>
