@@ -434,3 +434,16 @@ See more details for stable-diffusion xl in [stable diffusion xl](./stable_diffu
 - Resources:
   - applications on stable diffusion: <https://github.com/awesome-stable-diffusion/awesome-stable-diffusion>
   - inference code: <https://github.com/Stability-AI/sd3.5>
+
+- Unchanged
+    1. VAE
+    2. latent diffusion scheme
+    3. prompt processing: all using the clip_l, clip_G, and T5
+    4. $\sigma(t)$: use same scheduling
+    5. euler: same euler sampling method, but sd3.5 have another sampler  "dpmpp_2m"
+- Changes
+    1. sd 3.5 added support for controlnet
+    2. sampling: sd3.5 版本支持多种采样器，如 "dpmpp_2m", "euler" 等，而不仅仅是 "euler". 默认是 "dpmpp_2m"
+    3. sampling: sd3.5 版本增加了对 SkipLayerCFGDenoiser 的支持.
+    4. config: sd3.5 版本默认步数从 50 改为 40，CFG_SCALE 从 5 改为 4.5
+    5.

@@ -5,118 +5,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        .snake-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 997;
-            overflow: hidden;
-        }
-
-        .snake-segment {
-            position: absolute;
-            width: 22px;
-            height: 22px;
-            background: linear-gradient(135deg, #FF69B4, #FFC67D);
-            border-radius: 50%;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-            opacity: 0.9;
-            transition: all 0.2s ease;
-        }
-
-        .snake-segment:first-child {
-            background: linear-gradient(135deg, #C9E4CA, #F7D2C4);
-            transform: scale(1.1);
-        }
-
-        .snake-segment:first-child::after {
-            content: '';
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            background: white;
-            border-radius: 50%;
-            top: 6px;
-            left: 6px;
-            box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
-        }
-
-        .snake-segment:first-child::before {
-            content: '';
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            background: white;
-            border-radius: 50%;
-            top: 6px;
-            right: 6px;
-            box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
-        }
-
-        .snake-segment:first-child::after {
-            content: '';
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: black;
-            border-radius: 50%;
-            top: 12px;
-            left: 10px;
-        }
-
-        .snake-segment:first-child::before {
-            content: '';
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: black;
-            border-radius: 50%;
-            top: 12px;
-            right: 10px;
-        }
-
-        .snake-segment:nth-child(odd) {
-            background: var(--secondary-color);
-        }
-
-        .snake-food {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(135,206,250,0.7) 70%, rgba(135,206,250,0.3) 100%);
-            border-radius: 50%;
-            box-shadow: 0 0 10px rgba(135, 206, 250, 0.7), 0 0 0 2px rgba(0, 0, 0, 0.1);
-            animation: bubbleFloat 3s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-                opacity: 1;
-            }
-            50% {
-                transform: scale(1.2);
-                opacity: 0.8;
-            }
-            100% {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-
-        :root {
-            --primary-color: #4f46e5;
-            --secondary-color: #7c3aed;
-            --accent-color: #ec4899;
-            --bg-gradient: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 50%, var(--accent-color) 100%);
-            --card-bg: rgba(255, 255, 255, 0.95);
-            --text-primary: #1f2937;
-            --text-secondary: #4b5563;
-        }
-
         /* Base styles */
         html {
             font-size: 16px;
@@ -127,14 +15,15 @@
             line-height: 1.6;
             margin: 0;
             padding: 0;
-            color: var(--text-primary);
+            color: #1f2937;
             background: #f8fafc;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
         }
 
+        /* Hero styles */
         .hero {
-            background: var(--bg-gradient);
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
             background-size: 200% 200%;
             animation: gradientShift 15s ease infinite;
             color: white;
@@ -205,94 +94,7 @@
             animation: fade 3s infinite alternate, pulse 5s infinite alternate;
         }
 
-        @keyframes bounce {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-10px); }
-        }
-
-        @keyframes rotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        @keyframes scale {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.2); }
-        }
-
-        @keyframes skew {
-            0% { transform: skewX(0deg); }
-            100% { transform: skewX(10deg); }
-        }
-
-        @keyframes slide {
-            0% {
-                transform: translateX(0);
-            }
-            100% {
-                transform: translateX(10px);
-            }
-        }
-
-        @keyframes fade {
-            0% {
-                opacity: 1;
-            }
-            100% {
-                opacity: 0.5;
-            }
-        }
-
-        @keyframes fadeInScale {
-            0% {
-                opacity: 0;
-                transform: scale(0.8);
-            }
-            50% {
-                opacity: 0.5;
-                transform: scale(1.05);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        @keyframes colorChange {
-            0% {
-                filter: hue-rotate(0deg);
-            }
-            100% {
-                filter: hue-rotate(360deg);
-            }
-        }
-
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.1);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
-
-        .last-updated {
-            font-size: 0.9rem;
-            opacity: 0.9;
-            margin-top: 1rem;
-            animation: fadeIn 1s ease-in;
-        }
-
-        .hero p {
-            font-size: clamp(1rem, 2vw, 1.2rem);
-            max-width: min(90%, 600px);
-            margin: 0 auto;
-            padding: 0 1rem;
-        }
-
+        /* Grid container styles */
         .grid-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
@@ -302,8 +104,9 @@
             margin: 0 auto;
         }
 
+        /* Card styles */
         .card {
-            background: var(--card-bg);
+            background: #ffffff;
             border-radius: clamp(12px, 2vw, 16px);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
             padding: clamp(1.5rem, 3vw, 2rem);
@@ -319,18 +122,19 @@
         .card:hover {
             transform: translateY(-5px) scale(1.02);
             box-shadow: 0 20px 30px rgba(0, 0, 0, 0.15);
-            border-color: var(--primary-color);
+            border-color: #4f46e5;
         }
 
         .card h3 {
-            color: var(--primary-color);
+            color: #4f46e5;
             margin-top: 0;
         }
 
+        /* Feature icon styles */
         .feature-icon {
             font-size: 2.5rem;
             margin-bottom: 1.5rem;
-            background: var(--bg-gradient);
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -340,9 +144,10 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
         }
 
+        /* CTA button styles */
         .cta-button {
             display: inline-block;
-            background: var(--bg-gradient);
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
             color: white;
             padding: 1rem 2rem;
             border-radius: 8px;
@@ -359,303 +164,16 @@
         .cta-button:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
-            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--accent-color) 100%);
+            background: linear-gradient(135deg, #7c3aed, #4f46e5);
         }
 
+        /* Navigation section styles */
         .navigation-section {
             background: #f8f9fa;
             padding: 3rem 2rem;
         }
 
-        #particles-js {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: 1;
-        }
-
-        .hero > *:not(#particles-js) {
-            position: relative;
-            z-index: 2;
-        }
-
-        .site-footer {
-            background: linear-gradient(to bottom, #1a1a1a, #2d2d2d);
-            padding: clamp(2rem, 5vw, 4rem) clamp(1rem, 3vw, 2rem);
-            margin-top: clamp(2rem, 5vw, 4rem);
-        }
-
-        .footer-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
-            gap: clamp(1.5rem, 3vw, 2rem);
-            max-width: min(95%, 1200px);
-            margin: 0 auto;
-            padding: 0 clamp(1rem, 3vw, 2rem);
-        }
-
-        .footer-section {
-            padding: 1rem;
-            color: #e5e7eb;
-        }
-
-        .author-list {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .author-item {
-            padding: 0.5rem 0;
-        }
-
-        .contributors-list {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
-        }
-
-        .github-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.25rem 0;
-        }
-
-        .github-icon {
-            font-size: 1.1em;
-        }
-
-        .footer-section h3 {
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .footer-icon {
-            font-size: 1.2em;
-        }
-
-        .footer-section a {
-            color: #a5b4fc;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .footer-section a:hover {
-            color: #e0e7ff;
-        }
-
-        .footer-section a:hover {
-            text-decoration: underline;
-        }
-
-        .mit-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, #22c55e, #16a34a);
-            color: white !important;
-            color: white !important;
-            padding: 0.25rem 0.75rem;
-            border-radius: 3px;
-            font-size: 0.9em;
-            margin-top: 0.5rem;
-        }
-
-        .copyright {
-            font-size: 0.9em;
-            color: #9ca3af;
-            margin-top: 1rem;
-        }
-
-        .github-section {
-            text-align: center;
-            padding: 3rem 2rem;
-            background: #1a1a1a;
-            color: white;
-        }
-
-        /* Animations */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-                filter: blur(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-                filter: blur(0);
-            }
-        }
-
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes slideInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes scaleIn {
-            from {
-                opacity: 0;
-                transform: scale(0.9);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        @keyframes gradientShift {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-
-        @keyframes float {
-            0% {
-                transform: translateY(0px);
-            }
-            50% {
-                transform: translateY(-10px);
-            }
-            100% {
-                transform: translateY(0px);
-            }
-        }
-
-        /* Animation classes */
-        .fade-in {
-            animation: fadeIn 0.8s ease-out forwards;
-        }
-
-        .slide-in-right {
-            animation: slideInRight 0.8s ease-out forwards;
-        }
-
-        .slide-in-left {
-            animation: slideInLeft 0.8s ease-out forwards;
-        }
-
-        .scale-in {
-            animation: scaleIn 0.8s ease-out forwards;
-        }
-
-        .float {
-            animation: float 3s ease-in-out infinite;
-        }
-
-        /* Scroll reveal classes */
-        .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s ease-out;
-        }
-
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .reveal-delay-1 {
-            transition-delay: 0.2s;
-        }
-
-        .reveal-delay-2 {
-            transition-delay: 0.4s;
-        }
-
-        .reveal-delay-3 {
-            transition-delay: 0.6s;
-        }
-
-        /* Original fadeIn keyframes for compatibility */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-                filter: blur(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-                filter: blur(0);
-            }
-        }
-
-        /* Responsive breakpoints */
-        @media (max-width: 1024px) {
-            html {
-                font-size: 15px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            html {
-                font-size: 14px;
-            }
-
-            .grid-container {
-                grid-template-columns: 1fr;
-                padding: 1rem;
-            }
-
-            .card {
-                margin: 0 1rem;
-            }
-
-            .footer-grid {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            html {
-                font-size: 13px;
-            }
-
-            .hero {
-                padding: 2rem 1rem;
-            }
-
-            .card {
-                padding: 1.25rem;
-                margin: 0 0.5rem;
-            }
-
-            .footer-section {
-                padding: 0.75rem;
-            }
-        }
-
-        /* Reading List Styles */
+        /* Reading list section styles */
         .reading-list-section {
             padding: 3rem 1rem;
             background: linear-gradient(135deg, rgba(245, 247, 250, 0.8), rgba(230, 235, 245, 0.8));
@@ -733,6 +251,301 @@
         .add-reading-btn:hover {
             background-color: #3e8e41;
         }
+
+        /* Word Cloud Styles */
+        .word-cloud-section {
+            padding: 2rem 0;
+            margin: 2rem auto;
+            text-align: center;
+        }
+
+        .word-cloud-container {
+            max-width: 1000px;
+            height: 300px;
+            margin: 0 auto;
+            position: relative;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .word-cloud-title {
+            margin-bottom: 1.5rem;
+            color: #2c3e50;
+            font-size: 2rem;
+            position: relative;
+        }
+
+        .word-cloud-title:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(to right, #3498db, #9b59b6);
+            border-radius: 3px;
+        }
+
+        .cloud-word {
+            position: absolute;
+            transform-origin: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+            z-index: 2;
+        }
+
+        .cloud-word:hover {
+            transform: scale(1.15) !important;
+            z-index: 10;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+            text-decoration: none;
+        }
+
+        /* Topic Cards Styles */
+        .topic-cards-section {
+            padding: 2rem 1rem;
+        }
+
+        .topic-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .topic-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .topic-title {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #f1f1f1;
+            padding-bottom: 0.5rem;
+        }
+
+        .topic-links {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .topic-links li {
+            margin-bottom: 0.75rem;
+        }
+
+        .topic-links a {
+            color: #3498db;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .topic-links a:hover {
+            text-decoration: underline;
+        }
+
+        .topic-icon {
+            margin-right: 0.5rem;
+            font-size: 1.2em;
+        }
+
+        /* Updated Card Styles */
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #3498db;
+        }
+
+        .feature-card h3 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .feature-card p {
+            color: #7f8c8d;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-card ul {
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-card .cta-button {
+            margin-top: auto;
+        }
+
+        /* Integrated Content Section Styles */
+        .integrated-content-section {
+            padding: 3rem 1rem;
+            background: linear-gradient(135deg, rgba(245, 247, 250, 0.9), rgba(230, 235, 245, 0.9));
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            position: relative;
+        }
+
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(to right, #3498db, #9b59b6);
+            border-radius: 3px;
+        }
+
+        .integrated-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .integrated-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+            margin: 0.5rem;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .integrated-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .integrated-card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(to right, #3498db, #9b59b6);
+        }
+
+        .integrated-card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            padding-bottom: 0.8rem;
+        }
+
+        .integrated-card-icon {
+            font-size: 2rem;
+            margin-right: 1rem;
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.2), rgba(124, 58, 237, 0.2));
+            padding: 0.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+
+        .integrated-card-title {
+            margin: 0;
+            color: #2c3e50;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .integrated-card-description {
+            color: #4a5568;
+            margin-bottom: 1.2rem;
+            font-size: 0.95rem;
+        }
+
+        .integrated-card-links {
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .integrated-card-link {
+            display: flex;
+            align-items: center;
+            color: #4f46e5;
+            text-decoration: none;
+            font-size: 0.9rem;
+            padding: 0.5rem;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            background: rgba(79, 70, 229, 0.05);
+        }
+
+        .integrated-card-link:hover {
+            background: rgba(79, 70, 229, 0.1);
+            transform: translateX(3px);
+            text-decoration: none;
+        }
+
+        .integrated-link-icon {
+            margin-right: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 768px) {
+            .integrated-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -744,64 +557,166 @@
         <p>A comprehensive guide to modern generative models, from mathematical foundations to practical implementations</p>
     </div>
 
-    <div class="grid-container">
-        <div class="card">
-            <div class="feature-icon">🧮</div>
-            <h3>Theoretical Foundations</h3>
-            <p>Master the mathematical concepts behind generative models:</p>
-            <ul>
-                <li>Manifold Hypothesis</li>
-                <li>Maximum Likelihood Estimation</li>
-                <li>Score Matching</li>
-            </ul>
-            <a href="book/chapter2_generation_theory/manifold_hypothesis/" class="cta-button">Start Learning</a>
-        </div>
-
-        <div class="card">
-            <div class="feature-icon">⚡</div>
-            <h3>Energy Based Models</h3>
-            <p>Deep dive into energy-based modeling:</p>
-            <ul>
-                <li>Score Functions</li>
-                <li>Sampling Methods</li>
-                <li>Contrastive Divergence</li>
-            </ul>
-            <a href="book/chapter3_energy_based_model/introduction/" class="cta-button">Explore EBMs</a>
-        </div>
-
-        <div class="card">
-            <div class="feature-icon">🎨</div>
-            <h3>Modern Architectures</h3>
-            <p>Study cutting-edge generative models:</p>
-            <ul>
-                <li>StyleGAN Family</li>
-                <li>Diffusion Models</li>
-                <li>Flow Matching</li>
-            </ul>
-            <a href="book/chapter5_GAN/3.1from_gan_to_stylegan/paper/" class="cta-button">Learn Architectures</a>
+    <!-- Word Cloud Section -->
+    <div class="word-cloud-section">
+        <h2 class="word-cloud-title">Explore Topics</h2>
+        <div class="word-cloud-container" id="wordCloud">
+            <!-- Word cloud will be populated by JavaScript -->
         </div>
     </div>
 
-    <div class="navigation-section">
-        <div class="grid-container">
-            <div class="card">
-                <h3>For Beginners</h3>
-                <p>Start with the fundamentals:</p>
-                <ul>
-                    <li><a href="book/chapter1_Introduction/1.1terminology/">Essential Terms</a></li>
-                    <li><a href="book/chapter1_Introduction/1.3signal_processing/">Signal Processing</a></li>
-                    <li><a href="book/chapter1_Introduction/1.4statistics/">Statistics</a></li>
-                </ul>
+
+
+
+    <!-- Integrated Content Section -->
+    <div class="integrated-content-section">
+        <h2 class="section-title">Explore Key Resources</h2>
+        <div class="integrated-grid">
+
+
+            <!-- Theoretical Foundations Card -->
+            <div class="integrated-card">
+                <div class="integrated-card-header">
+                    <div class="integrated-card-icon">🧮</div>
+                    <h3 class="integrated-card-title">Theoretical Foundations</h3>
+                </div>
+                <p class="integrated-card-description">
+                    Master the mathematical concepts behind generative models.
+                </p>
+                <div class="integrated-card-links">
+                    <a href="book/chapter2_generation_theory/manifold_hypothesis/" class="integrated-card-link">
+                        <span class="integrated-link-icon">📘</span> Manifold Hypothesis
+                    </a>
+                    <a href="book/chapter2_generation_theory/probability_view/" class="integrated-card-link">
+                        <span class="integrated-link-icon">📝</span> Maximum Likelihood Estimation
+                    </a>
+                    <a href="book/chapter2_generation_theory/score_matching/" class="integrated-card-link">
+                        <span class="integrated-link-icon">🔍</span> Score Matching
+                    </a>
+                </div>
             </div>
 
-            <div class="card">
-                <h3>For Practitioners</h3>
-                <p>Jump into implementations:</p>
-                <ul>
-                    <li><a href="book/chapter6_VAE/2.1introduction/">VAE Implementation</a></li>
-                    <li><a href="book/chapter7_diffusion/Introduction_diffusion/">Diffusion Models</a></li>
-                    <li><a href="book/chapter9_flow_matching/introduction/">Flow Matching</a></li>
-                </ul>
+            <!-- Energy-Based Models Card -->
+            <div class="integrated-card">
+                <div class="integrated-card-header">
+                    <div class="integrated-card-icon">⚡</div>
+                    <h3 class="integrated-card-title">Energy Based Models</h3>
+                </div>
+                <p class="integrated-card-description">
+                    Deep dive into energy-based modeling approaches.
+                </p>
+                <div class="integrated-card-links">
+                    <a href="book/chapter3_energy_based_model/introduction/" class="integrated-card-link">
+                        <span class="integrated-link-icon">📘</span> Score Functions
+                    </a>
+                    <a href="book/chapter3_energy_based_model/mcmc/" class="integrated-card-link">
+                        <span class="integrated-link-icon">🔍</span> Sampling Methods
+                    </a>
+                    <a href="book/chapter3_energy_based_model/contrastive_divergence/" class="integrated-card-link">
+                        <span class="integrated-link-icon">⚙️</span> Contrastive Divergence
+                    </a>
+                </div>
+            </div>
+
+            <!-- Modern Architectures Card -->
+            <div class="integrated-card">
+                <div class="integrated-card-header">
+                    <div class="integrated-card-icon">🏗️</div>
+                    <h3 class="integrated-card-title">Modern Architectures</h3>
+                </div>
+                <p class="integrated-card-description">
+                    Study cutting-edge generative models and architectures.
+                </p>
+                <div class="integrated-card-links">
+                    <a href="book/chapter5_GAN/3.1from_gan_to_stylegan/paper/" class="integrated-card-link">
+                        <span class="integrated-link-icon">🎨</span> StyleGAN Family
+                    </a>
+                    <a href="book/chapter7_diffusion/general_diffusion_model/" class="integrated-card-link">
+                        <span class="integrated-link-icon">🌊</span> Diffusion Models
+                    </a>
+                    <a href="book/chapter9_flow_matching/introduction/" class="integrated-card-link">
+                        <span class="integrated-link-icon">🔄</span> Flow Matching
+                    </a>
+                </div>
+            </div>
+
+            <!-- Diffusion Models Card -->
+            <div class="integrated-card">
+                <div class="integrated-card-header">
+                    <div class="integrated-card-icon">📊</div>
+                    <h3 class="integrated-card-title">Diffusion Models</h3>
+                </div>
+                <p class="integrated-card-description">
+                    Explore the mathematical foundations of diffusion models and their applications in generative AI.
+                </p>
+                <div class="integrated-card-links">
+                    <a href="book/chapter7_diffusion/general_diffusion_model/" class="integrated-card-link">
+                        <span class="integrated-link-icon">📘</span> General Theory
+                    </a>
+                    <a href="book/chapter7_diffusion/ddpm/" class="integrated-card-link">
+                        <span class="integrated-link-icon">📝</span> DDPM Implementation
+                    </a>
+                    <a href="book/chapter7_diffusion/ldm/" class="integrated-card-link">
+                        <span class="integrated-link-icon">🔍</span> Latent Diffusion
+                    </a>
+                </div>
+            </div>
+
+            <!-- GAN Card -->
+            <div class="integrated-card">
+                <div class="integrated-card-header">
+                    <div class="integrated-card-icon">🎨</div>
+                    <h3 class="integrated-card-title">GAN Evolution</h3>
+                </div>
+                <p class="integrated-card-description">
+                    From original GAN to StyleGAN: The evolution of generative adversarial networks and their capabilities.
+                </p>
+                <div class="integrated-card-links">
+                    <a href="book/chapter5_GAN/3.1from_gan_to_stylegan/paper/" class="integrated-card-link">
+                        <span class="integrated-link-icon">📘</span> StyleGAN Architecture
+                    </a>
+                    <a href="book/chapter5_GAN/3.1from_gan_to_stylegan/paper/#2014gan--generative-adversarial-networks" class="integrated-card-link">
+                        <span class="integrated-link-icon">🔍</span> Original GAN
+                    </a>
+                </div>
+            </div>
+
+            <!-- VAE Card -->
+            <div class="integrated-card">
+                <div class="integrated-card-header">
+                    <div class="integrated-card-icon">🧠</div>
+                    <h3 class="integrated-card-title">Variational Autoencoders</h3>
+                </div>
+                <p class="integrated-card-description">
+                    Understanding variational autoencoders and their probabilistic approach to generative modeling.
+                </p>
+                <div class="integrated-card-links">
+                    <a href="book/chapter6_VAE/vae_introduction/" class="integrated-card-link">
+                        <span class="integrated-link-icon">📘</span> VAE Theory
+                    </a>
+                    <a href="book/chapter6_VAE/vq_vae/" class="integrated-card-link">
+                        <span class="integrated-link-icon">📝</span> Vector Quantized VAE
+                    </a>
+                </div>
+            </div>
+
+            <!-- Stable Diffusion Card -->
+            <div class="integrated-card">
+                <div class="integrated-card-header">
+                    <div class="integrated-card-icon">🚀</div>
+                    <h3 class="integrated-card-title">Stable Diffusion Series</h3>
+                </div>
+                <p class="integrated-card-description">
+                    Deep dive into the Stable Diffusion family of models and their state-of-the-art capabilities.
+                </p>
+                <div class="integrated-card-links">
+                    <a href="book/chapter11_hybrid_sota_models/sota_open_models/stable_diffusion_series/" class="integrated-card-link">
+                        <span class="integrated-link-icon">📘</span> Series Overview
+                    </a>
+                    <a href="book/chapter11_hybrid_sota_models/sota_open_models/stable_diffusion_3_reading/" class="integrated-card-link">
+                        <span class="integrated-link-icon">🔍</span> SD3 Deep Dive
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -819,6 +734,10 @@
                     <li>
                         <input type="checkbox" id="blog1">
                         <label for="blog1"><a href="https://zhuanlan.zhihu.com/p/708565985" target="_blank">Diffusion Models Design Space (Chinese)</a></label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="paper2">
+                        <label for="paper2"><a href="https://arxiv.org/pdf/2302.05543" target="_blank">ControlNet: Conditional Diffusion for Improved Text-to-Image Generation</a></label>
                     </li>
                 </ul>
                 <div class="add-reading-item">
@@ -1000,263 +919,149 @@
         });
     </script>
 
-    <footer class="site-footer">
-        <div class="footer-grid">
-            <div class="footer-section">
-                <h3><span class="footer-icon">ℹ️</span> About</h3>
-                <p>This is an open-source learning project aimed at learning the fundamentals of generative AI.</p>
-                <p>See more in the <a href="https://github.com/MAD-SG/generative-ai-start-to-surrender">github repo</a></p>
-            </div>
-
-            <div class="footer-section">
-                <h3><span class="footer-icon">👥</span> Contact & Contributors</h3>
-                <div class="author-list">
-                    <div class="author-item">
-                        <p><strong>Contact:</strong></p>
-                        <a href="mailto:ssqianlilong@gmail.com">ssqianilong@gmail.com</a>
-                    </div>
-                    <div class="author-item">
-                        <p><strong>Contributors:</strong></p>
-                        <div class="contributors-list">
-                            <a href="https://github.com/tsiendragon" target="_blank" class="github-link">
-                                <span class="github-icon">🔗</span> tsiendragon
-                            </a>
-                            <a href="https://github.com/bigpear123" target="_blank" class="github-link">
-                                <span class="github-icon">🔗</span> bigpear123
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="footer-section">
-                <h3><span class="footer-icon">🤝</span> Contribute</h3>
-                <p>We welcome contributions from the community! Feel free to:</p>
-                <ul>
-                    <li>Submit issues and bug reports</li>
-                    <li>Propose new features</li>
-                    <li>Create pull requests</li>
-                </ul>
-            </div>
-
-            <div class="footer-section">
-                <h3><span class="footer-icon">📜</span> License</h3>
-                <p>This project is licensed under the MIT License.</p>
-                <p class="copyright">Copyright 2025 tsiendragon</p>
-                <a href="#" class="mit-badge">MIT License</a>
-            </div>
-        </div>
-    </footer>
-
     <script>
-        // Update last modified date
-        fetch(window.location.href)
-            .then(response => {
-                const lastModified = response.headers.get('last-modified');
-                if (lastModified) {
-                    const date = new Date(lastModified);
-                    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-                    document.getElementById('lastModified').textContent = date.toLocaleDateString(undefined, options);
-                }
-            })
-            .catch(() => {
-                document.getElementById('lastModified').textContent = new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
-            });
+        // Word Cloud Implementation
+        function createWordCloud() {
+            const words = [
+                { text: "Diffusion", size: 70, color: "#3498db", url: "book/chapter7_diffusion/general_diffusion_model/" },
+                { text: "GAN", size: 65, color: "#e74c3c", url: "book/chapter5_GAN/3.1from_gan_to_stylegan/paper/" },
+                { text: "VAE", size: 60, color: "#2ecc71", url: "book/chapter6_VAE/vae_introduction/" },
+                { text: "StyleGAN", size: 55, color: "#9b59b6", url: "book/chapter5_GAN/3.1from_gan_to_stylegan/paper/" },
+                { text: "Flow Matching", size: 50, color: "#f39c12", url: "book/chapter9_flow_matching/introduction/" },
+                { text: "Score Matching", size: 45, color: "#1abc9c", url: "book/chapter3_energy_based_model/introduction/" },
+                { text: "Stable Diffusion", size: 65, color: "#e67e22", url: "book/chapter11_hybrid_sota_models/sota_open_models/stable_diffusion_series/" },
+                { text: "Manifold", size: 40, color: "#34495e", url: "book/chapter2_generation_theory/manifold_hypothesis/" },
+                { text: "Energy Based", size: 45, color: "#16a085", url: "book/chapter3_energy_based_model/introduction/" },
+                { text: "Latent Space", size: 50, color: "#27ae60", url: "book/chapter6_VAE/vae_introduction/" },
+                { text: "DDPM", size: 55, color: "#d35400", url: "book/chapter7_diffusion/ddpm/" },
+                { text: "SDE", size: 45, color: "#2980b9", url: "book/chapter7_diffusion/introduction_sde/" },
+                { text: "ODE", size: 40, color: "#8e44ad", url: "book/chapter7_diffusion/probability_flow_ode/" },
+                { text: "MLE", size: 35, color: "#c0392b", url: "book/chapter2_generation_theory/mle/" },
+                { text: "Guidance", size: 50, color: "#f1c40f", url: "book/chapter7_diffusion/sde_diffusion_guidance/" }
+            ];
 
-        // Add smooth scrolling for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
+            const cloudContainer = document.getElementById('wordCloud');
+            const containerWidth = cloudContainer.offsetWidth;
+            const containerHeight = 300; // Fixed height
 
-        // Add animation on scroll for cards
-        const cards = document.querySelectorAll('.card');
-        const observer = new IntersectionObserver(
-            entries => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = 1;
-                        entry.target.style.transform = 'translateY(0)';
+            // Set container height explicitly
+            cloudContainer.style.height = `${containerHeight}px`;
+
+            // Clear any existing content
+            cloudContainer.innerHTML = '';
+
+            // Sort words by size (larger words first)
+            const sortedWords = [...words].sort((a, b) => b.size - a.size);
+
+            // Keep track of placed areas to prevent overlap
+            const placedAreas = [];
+
+            // Calculate word dimensions (approximate)
+            function getWordDimensions(word) {
+                const fontSize = word.size / 10;
+                // Approximate width based on text length and font size
+                const width = word.text.length * fontSize * 0.6 * 16;
+                const height = fontSize * 1.5 * 16;
+                return { width, height };
+            }
+
+            // Check if a new placement overlaps with existing words
+            function doesOverlap(x, y, width, height) {
+                const buffer = 10; // Extra space between words
+                for (const area of placedAreas) {
+                    if (
+                        x < area.x + area.width + buffer &&
+                        x + width + buffer > area.x &&
+                        y < area.y + area.height + buffer &&
+                        y + height + buffer > area.y
+                    ) {
+                        return true;
                     }
-                });
-            },
-            { threshold: 0.1 }
-        );
-
-        cards.forEach(card => {
-            card.style.opacity = 0;
-            card.style.transform = 'translateY(20px)';
-            observer.observe(card);
-        });
-    </script>
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    <script>
-        // Snake Animation
-        class SnakeAnimation {
-            constructor() {
-                this.container = document.getElementById('snakeContainer');
-                this.segments = [];
-                this.food = null;
-                this.segmentCount = 3;
-                this.speed = 2;
-                this.target = { x: 0, y: 0 };
-                this.init();
+                }
+                return false;
             }
 
-            init() {
-                // Create initial snake segments
-                for (let i = 0; i < this.segmentCount; i++) {
-                    const segment = document.createElement('div');
-                    segment.className = 'snake-segment';
-                    segment.style.opacity = (1 - i / this.segmentCount).toString();
-                    this.container.appendChild(segment);
-                    this.segments.push({
-                        element: segment,
-                        x: window.innerWidth / 2,
-                        y: window.innerHeight / 2
-                    });
-                }
+            // Find a valid position for each word
+            sortedWords.forEach(word => {
+                const { width, height } = getWordDimensions(word);
 
-                // Create food
-                this.createFood();
+                // Try to place the word in a valid position
+                let placed = false;
+                let attempts = 0;
+                const maxAttempts = 100;
 
-                // Start animation
-                this.animate();
-            }
+                while (!placed && attempts < maxAttempts) {
+                    attempts++;
 
-            createFood() {
-                if (this.food) {
-                    this.container.removeChild(this.food.element);
-                }
-                const food = document.createElement('div');
-                food.className = 'snake-food';
-                this.container.appendChild(food);
-                this.food = {
-                    element: food,
-                    x: Math.random() * (window.innerWidth - 50) + 25,
-                    y: Math.random() * (window.innerHeight - 50) + 25
-                };
-                food.style.left = this.food.x + 'px';
-                food.style.top = this.food.y + 'px';
-            }
+                    // Start with center positions and gradually spiral outward
+                    const centerX = containerWidth / 2;
+                    const centerY = containerHeight / 2;
 
-            animate() {
-                // Update target position (food position)
-                if (this.food) {
-                    this.target.x = this.food.x;
-                    this.target.y = this.food.y;
-                }
+                    // Calculate position with some randomness but focus on center for larger words
+                    const distanceFromCenter = Math.random() * (attempts / 10);
+                    const angle = Math.random() * Math.PI * 2;
 
-                // Move head towards target
-                const head = this.segments[0];
-                const dx = this.target.x - head.x;
-                const dy = this.target.y - head.y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
+                    const x = centerX + Math.cos(angle) * distanceFromCenter * 30 - width / 2;
+                    const y = centerY + Math.sin(angle) * distanceFromCenter * 30 - height / 2;
 
-                if (dist > 1) {
-                    head.x += (dx / dist) * this.speed;
-                    head.y += (dy / dist) * this.speed;
-                }
-
-                // Update head position
-                head.element.style.left = head.x + 'px';
-                head.element.style.top = head.y + 'px';
-
-                // Update body segments
-                for (let i = 1; i < this.segments.length; i++) {
-                    const segment = this.segments[i];
-                    const prevSegment = this.segments[i - 1];
-                    const dx = prevSegment.x - segment.x;
-                    const dy = prevSegment.y - segment.y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-
-                    if (dist > 5) {
-                        segment.x += (dx / dist) * this.speed;
-                        segment.y += (dy / dist) * this.speed;
+                    // Make sure word is within container bounds
+                    if (x < 0 || x + width > containerWidth || y < 0 || y + height > containerHeight) {
+                        continue;
                     }
 
-                    segment.element.style.left = segment.x + 'px';
-                    segment.element.style.top = segment.y + 'px';
+                    // Check if it overlaps with existing words
+                    if (!doesOverlap(x, y, width, height)) {
+                        // Position is valid, place the word
+                        placedAreas.push({ x, y, width, height });
+
+                        const wordElement = document.createElement('a');
+                        wordElement.href = word.url;
+                        wordElement.className = 'cloud-word';
+                        wordElement.textContent = word.text;
+                        wordElement.style.fontSize = `${word.size / 10}rem`;
+                        wordElement.style.color = word.color;
+                        wordElement.style.left = `${x}px`;
+                        wordElement.style.top = `${y}px`;
+
+                        // Random slight rotation (less extreme)
+                        const rotation = Math.random() * 20 - 10;
+                        wordElement.style.transform = `rotate(${rotation}deg)`;
+
+                        cloudContainer.appendChild(wordElement);
+                        placed = true;
+                    }
                 }
 
-                // Check if food is eaten
-                if (dist < 20) {
-                    this.createFood();
-                    this.grow();
+                // Fallback if we couldn't place the word after many attempts
+                if (!placed) {
+                    const wordElement = document.createElement('a');
+                    wordElement.href = word.url;
+                    wordElement.className = 'cloud-word';
+                    wordElement.textContent = word.text;
+                    wordElement.style.fontSize = `${Math.max(1, word.size / 15)}rem`;
+                    wordElement.style.color = word.color;
+
+                    // Place it anywhere available
+                    const x = Math.random() * (containerWidth - 100);
+                    const y = Math.random() * (containerHeight - 30);
+
+                    wordElement.style.left = `${x}px`;
+                    wordElement.style.top = `${y}px`;
+                    wordElement.style.zIndex = '1'; // Lower z-index for fallback words
+
+                    cloudContainer.appendChild(wordElement);
                 }
-
-                requestAnimationFrame(() => this.animate());
-            }
-
-            grow() {
-                const lastSegment = this.segments[this.segments.length - 1];
-                const newSegment = document.createElement('div');
-                newSegment.className = 'snake-segment';
-                newSegment.style.opacity = '0.5';
-                this.container.appendChild(newSegment);
-                this.segments.push({
-                    element: newSegment,
-                    x: lastSegment.x,
-                    y: lastSegment.y
-                });
-            }
+            });
         }
 
-        // Initialize snake animation
+        // Initialize word cloud on page load
         window.addEventListener('load', () => {
-            new SnakeAnimation();
-        });
+            createWordCloud();
 
-        // Initialize particle.js
-        particlesJS("particles-js", {
-            particles: {
-                number: { value: 80, density: { enable: true, value_area: 800 } },
-                color: { value: "#ffffff" },
-                shape: { type: "circle" },
-                opacity: {
-                    value: 0.5,
-                    random: true,
-                    animation: { enable: true, speed: 1, minimumValue: 0.1, sync: false }
-                },
-                size: {
-                    value: 3,
-                    random: true,
-                    animation: { enable: true, speed: 2, minimumValue: 0.1, sync: false }
-                },
-                lineLinked: {
-                    enable: true,
-                    distance: 150,
-                    color: "#ffffff",
-                    opacity: 0.4,
-                    width: 1
-                },
-                move: {
-                    enable: true,
-                    speed: 1,
-                    direction: "none",
-                    random: true,
-                    straight: false,
-                    outMode: "out",
-                    bounce: false,
-                }
-            },
-            interactivity: {
-                detectOn: "canvas",
-                events: {
-                    onHover: { enable: true, mode: "bubble" },
-                    onClick: { enable: true, mode: "push" },
-                    resize: true
-                },
-                modes: {
-                    bubble: { distance: 150, size: 6, duration: 2, opacity: 0.8, speed: 3 },
-                    push: { particles_nb: 4 }
-                }
-            },
-            retina_detect: true
+            // Recreate word cloud on window resize
+            window.addEventListener('resize', () => {
+                createWordCloud();
+            });
         });
     </script>
 </body>
