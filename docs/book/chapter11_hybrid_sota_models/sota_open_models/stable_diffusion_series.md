@@ -447,3 +447,5 @@ See more details for stable-diffusion xl in [stable diffusion xl](./stable_diffu
     3. sampling: sd3.5 版本增加了对 SkipLayerCFGDenoiser 的支持.
     4. config: sd3.5 版本默认步数从 50 改为 40，CFG_SCALE 从 5 改为 4.5
     5. MM-DiT -> MM-DiTX
+
+See more details of the implementatin in [stable diffusion 3.5](./stable_diffusion_3_5_reading.md)
