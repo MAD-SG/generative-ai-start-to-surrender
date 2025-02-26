@@ -1024,7 +1024,116 @@ Next, let's check the detailed sampling steps if we have the condition already.
 
 #### Sampling
 
-## Refereces
+##### CFG Denoiser
+
+Here is the code of the CFG Denoiser, Have more details in [guidance diffusion](docs/book/chapter7_diffusion/sde_diffusion_guidance.md)
+
+    ```py3
+    class CFGDenoiser(torch.nn.Module):
+        """Helper for applying CFG Scaling to diffusion outputs"""
+        def __init__(self, model):
+            super().__init__()
+            self.model = model
+
+        def forward(self, x, timestep, cond, uncond, cond_scale):
+            # Run cond and uncond in a batch together
+            batched = self.model.apply_model(torch.cat([x, x]), torch.cat([timestep, timestep]), c_crossattn=torch.cat([cond["c_crossattn"], uncond["c_crossattn"]]), y=torch.cat([cond["y"], uncond["y"]]))
+            # Then split and apply CFG Scaling
+            pos_out, neg_out = batched.chunk(2)
+            scaled = neg_out + (pos_out - neg_out) * cond_scale
+            return scaled
+    ```
+##### Euler Smaple
+
+    ```py3
+    def to_d(x, sigma, denoised):
+        """Converts a denoiser output to a Karras ODE derivative."""
+        return (x - denoised) / append_dims(sigma, x.ndim)
+
+    @torch.no_grad()
+    @torch.autocast("cuda", dtype=torch.float16)
+    def sample_euler(model, x, sigmas, extra_args=None):
+        """Implements Algorithm 2 (Euler steps) from Karras et al. (2022)."""
+        extra_args = {} if extra_args is None else extra_args
+        s_in = x.new_ones([x.shape[0]])
+        for i in range(len(sigmas) - 1):
+            sigma_hat = sigmas[i]
+            denoised = model(x, sigma_hat * s_in, **extra_args)
+            d = to_d(x, sigma_hat, denoised)
+            dt = sigmas[i + 1] - sigma_hat
+            # Euler method
+            x = x + d * dt
+        return x
+        ```
+
+    The **Euler method** is a simple **numerical integration technique** used to solve ordinary differential equations (ODEs). The code you provided implements a **modified Euler method** for solving the **Karras ODE** in diffusion models. Below, I will compare this **Euler-based sampler** with the **standard Euler method**, highlighting the differences.
+
+
+    ## **1. Standard Euler Method**
+    The **explicit (forward) Euler method** is defined as:
+
+    $$
+    x_{t-1} = x_t + f(x_t, t) \cdot dt
+    $$
+
+    where:
+    - \( x_t \) is the current state,
+    - \( f(x_t, t) \) is the derivative (computed from an ODE),
+    - \( dt \) is the step size.
+
+    This method is used to **approximate the solution of an ODE by taking small discrete steps**.
+
+    ---
+
+    ## **2. Euler Method in Diffusion Models**
+    ### **Equation in Diffusion Models**
+    Diffusion models can be formulated as an **ODE**:
+
+    $$
+    \frac{d x}{d t} = f(x, t) = \frac{x - \text{denoised}(x)}{\sigma}
+    $$
+
+    Using the Euler update rule:
+
+    $$
+    x_{t-1} = x_t + \frac{x_t - \text{denoised}(x_t)}{\sigma} \cdot dt
+    $$
+
+    where:
+    - \( \frac{x_t - \text{denoised}(x_t)}{\sigma} \) acts as the ODE derivative.
+    - \( dt \) is the time step, determined by the noise schedule.
+
+    ### **Implementation in Code**
+    The provided code follows this process:
+
+    ```python
+    d = to_d(x, sigma_hat, denoised)  # Compute ODE derivative
+    dt = sigmas[i + 1] - sigma_hat    # Compute step size
+    x = x + d * dt                    # Euler update
+    ```
+
+    This is an **explicit Euler step** applied to a diffusion model.
+
+
+    | Feature | Standard Euler | Diffusion Euler (Karras ODE) |
+    |---------|---------------|-----------------------------|
+    | **ODE Formulation** | General-purpose ODE | Diffusion-specific ODE |
+    | **Derivative Function \( f(x, t) \)** | Predefined function | Computed via denoiser |
+    | **Step Size \( dt \)** | Fixed | Adaptive (determined by noise schedule) |
+    | **Dynamical Behavior** | General ODE integration | Guides noise removal |
+    | **Goal** | Solve ODE | Generate images from noise |
+
+
+    1. **Standard Euler computes derivatives directly from an ODE function \( f(x, t) \)**.
+       - In contrast, **Diffusion Euler estimates the derivative from the denoising model**.
+
+    2. **Standard Euler uses a fixed step size \( dt \), whereas Diffusion Euler uses an adaptive step size \( dt = \sigma_{t+1} - \sigma_t \)**.
+       - This makes the diffusion process more flexible.
+
+    3. **In diffusion models, the score function (or denoiser) acts as an implicit ODE solver**.
+       - The model learns how to remove noise at different levels, effectively solving the reverse SDE (stochastic differential equation) using an ODE approximation.
+
+## References
 
 - stable diffusion 3 reading: <https://zhuanlan.zhihu.com/p/684068402?utm_source=chatgpt.com>
 - [sd 3 inference code](https://github.com/Stability-AI/sd3-ref)
