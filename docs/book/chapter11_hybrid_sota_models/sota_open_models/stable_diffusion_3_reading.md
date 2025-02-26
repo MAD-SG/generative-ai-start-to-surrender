@@ -1084,8 +1084,6 @@ where:
 
 This method is used to **approximate the solution of an ODE by taking small discrete steps**.
 
----
-
 **Equation in Diffusion Models**
 Diffusion models can be formulated as an **ODE**:
 

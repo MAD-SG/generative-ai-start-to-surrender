@@ -446,4 +446,4 @@ See more details for stable-diffusion xl in [stable diffusion xl](./stable_diffu
     2. sampling: sd3.5 版本支持多种采样器，如 "dpmpp_2m", "euler" 等，而不仅仅是 "euler". 默认是 "dpmpp_2m"
     3. sampling: sd3.5 版本增加了对 SkipLayerCFGDenoiser 的支持.
     4. config: sd3.5 版本默认步数从 50 改为 40，CFG_SCALE 从 5 改为 4.5
-    5.
+    5. MM-DiT -> MM-DiTX
