@@ -1,4 +1,7 @@
-
+---
+title: SD3 Scaling Rectified Flow Transformers for High-Resolution Image Synthesis
+comments: true
+---
 # [SD3] Scaling Rectified Flow Transformers for High-Resolution Image Synthesis
 
 > [Paper: Scaling Rectified Flow Transformers for High-Resolution Image Synthesis
