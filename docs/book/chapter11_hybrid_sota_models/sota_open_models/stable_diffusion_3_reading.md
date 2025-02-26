@@ -27,7 +27,7 @@ Before reading this paper, we suggest reader to undertand the flow matching chap
 
 ## Preliminary
 
-- Refer [](../../chapter7_diffusion/DiT.md) for the details of DiT model
+- Refer [Diffusion Transformer](../../chapter7_diffusion/DiT.md) for the details of DiT model
 
 > This section revisted the flow matching scheme
 
@@ -435,7 +435,7 @@ This vector representation ensures **smooth temporal encoding** and is widely us
 
 ### MM-DiT
 
-# ![alt text](../../../images/image-81.png)
+![alt text](../../../images/image-81.png)
 
 The overall structure of the MM-DiT network
 
