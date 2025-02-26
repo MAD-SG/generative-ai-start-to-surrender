@@ -1066,72 +1066,62 @@ Here is the code of the CFG Denoiser, Have more details in [guidance diffusion](
         return x
         ```
 
-    The **Euler method** is a simple **numerical integration technique** used to solve ordinary differential equations (ODEs). The code you provided implements a **modified Euler method** for solving the **Karras ODE** in diffusion models. Below, I will compare this **Euler-based sampler** with the **standard Euler method**, highlighting the differences.
+The **Euler method** is a simple **numerical integration technique** used to solve ordinary differential equations (ODEs). The code you provided implements a **modified Euler method** for solving the **Karras ODE** in diffusion models. Below, I will compare this **Euler-based sampler** with the **standard Euler method**, highlighting the differences.
 
+**Standard Euler Method**
 
-    ## **1. Standard Euler Method**
-    The **explicit (forward) Euler method** is defined as:
+The **explicit (forward) Euler method** is defined as:
 
-    $$
-    x_{t-1} = x_t + f(x_t, t) \cdot dt
-    $$
+$$
+x_{t-1} = x_t + f(x_t, t) \cdot dt
+$$
 
-    where:
-    - \( x_t \) is the current state,
-    - \( f(x_t, t) \) is the derivative (computed from an ODE),
-    - \( dt \) is the step size.
+where:
 
-    This method is used to **approximate the solution of an ODE by taking small discrete steps**.
+- \( x_t \) is the current state,
+- \( f(x_t, t) \) is the derivative (computed from an ODE),
+- \( dt \) is the step size.
 
-    ---
+This method is used to **approximate the solution of an ODE by taking small discrete steps**.
 
-    ## **2. Euler Method in Diffusion Models**
-    ### **Equation in Diffusion Models**
-    Diffusion models can be formulated as an **ODE**:
+---
 
-    $$
-    \frac{d x}{d t} = f(x, t) = \frac{x - \text{denoised}(x)}{\sigma}
-    $$
+**Equation in Diffusion Models**
+Diffusion models can be formulated as an **ODE**:
 
-    Using the Euler update rule:
+$$
+\frac{d x}{d t} = f(x, t) = \frac{x - \text{denoised}(x)}{\sigma}
+$$
 
-    $$
-    x_{t-1} = x_t + \frac{x_t - \text{denoised}(x_t)}{\sigma} \cdot dt
-    $$
+Using the Euler update rule:
 
-    where:
-    - \( \frac{x_t - \text{denoised}(x_t)}{\sigma} \) acts as the ODE derivative.
-    - \( dt \) is the time step, determined by the noise schedule.
+$$
+x_{t-1} = x_t + \frac{x_t - \text{denoised}(x_t)}{\sigma} \cdot dt
+$$
 
-    ### **Implementation in Code**
-    The provided code follows this process:
+where:
 
-    ```python
-    d = to_d(x, sigma_hat, denoised)  # Compute ODE derivative
-    dt = sigmas[i + 1] - sigma_hat    # Compute step size
-    x = x + d * dt                    # Euler update
-    ```
+- \( \frac{x_t - \text{denoised}(x_t)}{\sigma} \) acts as the ODE derivative.
+- \( dt \) is the time step, determined by the noise schedule.
 
-    This is an **explicit Euler step** applied to a diffusion model.
+This is an **explicit Euler step** applied to a diffusion model.
 
+| Feature | Standard Euler | Diffusion Euler (Karras ODE) |
+|---------|---------------|-----------------------------|
+| **ODE Formulation** | General-purpose ODE | Diffusion-specific ODE |
+| **Derivative Function \( f(x, t) \)** | Predefined function | Computed via denoiser |
+| **Step Size \( dt \)** | Fixed | Adaptive (determined by noise schedule) |
+| **Dynamical Behavior** | General ODE integration | Guides noise removal |
+| **Goal** | Solve ODE | Generate images from noise |
 
-    | Feature | Standard Euler | Diffusion Euler (Karras ODE) |
-    |---------|---------------|-----------------------------|
-    | **ODE Formulation** | General-purpose ODE | Diffusion-specific ODE |
-    | **Derivative Function \( f(x, t) \)** | Predefined function | Computed via denoiser |
-    | **Step Size \( dt \)** | Fixed | Adaptive (determined by noise schedule) |
-    | **Dynamical Behavior** | General ODE integration | Guides noise removal |
-    | **Goal** | Solve ODE | Generate images from noise |
+1. **Standard Euler computes derivatives directly from an ODE function \( f(x, t) \)**.
+    - In contrast, **Diffusion Euler estimates the derivative from the denoising model**.
 
+2. **Standard Euler uses a fixed step size \( dt \), whereas Diffusion Euler uses an adaptive step size \( dt = \sigma_{t+1} - \sigma_t \)**.
+    - This makes the diffusion process more flexible.
 
-    1. **Standard Euler computes derivatives directly from an ODE function \( f(x, t) \)**.
-       - In contrast, **Diffusion Euler estimates the derivative from the denoising model**.
-
-    2. **Standard Euler uses a fixed step size \( dt \), whereas Diffusion Euler uses an adaptive step size \( dt = \sigma_{t+1} - \sigma_t \)**.
-       - This makes the diffusion process more flexible.
-
-    3. **In diffusion models, the score function (or denoiser) acts as an implicit ODE solver**.
-       - The model learns how to remove noise at different levels, effectively solving the reverse SDE (stochastic differential equation) using an ODE approximation.
+3. **In diffusion models, the score function (or denoiser) acts as an implicit ODE solver**.
+    - The model learns how to remove noise at different levels, effectively solving the reverse SDE (stochastic differential equation) using an ODE approximation.
 
 ## References
 

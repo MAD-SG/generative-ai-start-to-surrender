@@ -203,13 +203,11 @@ $$
  x_t = \sqrt{\bar{\alpha}_t}\, x_0 + \sqrt{1 - \bar{\alpha}_t}\, \varepsilon, \quad \varepsilon \sim \mathcal{N}(0, I)
 $$
 
-
 For v-prediction, we reparameterize the process by defining a new variable $v$ as:
 
 $$
  v = \sqrt{\bar{\alpha}_t}\, \varepsilon - \sqrt{1 - \bar{\alpha}_t}\, x_0
 $$
-
 
 This formulation offers certain benefits in terms of training stability and sample quality. With $v$ predicted by the model, one can later recover either the noise $\varepsilon$ or the original image $x_0$ via:
 
@@ -219,13 +217,11 @@ $$
 x_0 = \sqrt{\bar{\alpha}_t}\, x_t - \sqrt{1 - \bar{\alpha}_t}\, v
 $$
 
-
 - Recovering $\varepsilon$:
 
 $$
  \varepsilon = \sqrt{1 - \bar{\alpha}_t}\, x_t + \sqrt{\bar{\alpha}_t}\, v
 $$
-
 
 Different
 ### Other Types of Conditions
@@ -429,8 +425,7 @@ See more details for stable-diffusion xl in [stable diffusion xl](./stable_diffu
   - [Stable Diffusion 3 Fintune Guide](https://stabilityai.notion.site/Stable-Diffusion-3-Medium-Fine-tuning-Tutorial-17f90df74bce4c62a295849f0dc8fb7e)
 
 !!! note "study of sd3"
-
-  See the paper reading in [Stable Diffusion v3](./stable_diffusion_3_reading.md)
+    See the paper reading in [Stable Diffusion v3](./stable_diffusion_3_reading.md)
 
 ## Stable Diffusion v3.5
 
