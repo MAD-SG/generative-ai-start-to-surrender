@@ -1,54 +1,298 @@
-{% if page.meta.comments %}
-  <h2 id="__comments">{{ lang.t("meta.comments") }}</h2>
-  <!-- Insert generated snippet here -->
-  <script src="https://giscus.app/client.js"
-          data-repo="MAD-SG/generative-ai-start-to-surrender"
-          data-repo-id="R_kgDONqcETw"
-          data-category="comment"
-          data-category-id="DIC_kwDONqcET84CnTxw"
-          data-mapping="pathname"
-          data-strict="0"
-          data-reactions-enabled="1"
-          data-emit-metadata="0"
-          data-input-position="bottom"
-          data-theme="preferred_color_scheme"
-          data-lang="en"
-          crossorigin="anonymous"
-          async>
-  </script>
-  <!-- Synchronize Giscus theme with palette -->
-  <script>
-    var giscus = document.querySelector("script[src*=giscus]")
+<!-- 段落注释系统
+<div class="comments-container annotation-container">
+  <div class="comments-header">
+    <h2 id="__annotations" class="comments-title">
+      <span class="comments-icon">🔍</span>
+      段落注释
+      <span class="comments-subtitle">您可以高亮并评论任何文本!</span>
+    </h2>
+    <div class="comments-divider"></div>
+  </div>
 
-    // Set palette on initial load
-    var palette = __md_get("__palette")
-    if (palette && typeof palette.color === "object") {
-      var theme = palette.color.scheme === "slate"
-        ? "transparent_dark"
-        : "light"
+  <div class="comments-wrapper">
+    <div class="hypothesis-instructions">
+      <p><strong>如何使用段落注释功能：</strong></p>
+      <ol>
+        <li>点击右上角的 <img src="https://hypothes.is/assets/images/logo.png" alt="Hypothesis" style="height: 16px; vertical-align: middle;"> 图标打开侧边栏</li>
+        <li>选择任意文本段落即可高亮并添加注释</li>
+        <li>您还可以对其他人的注释进行回复</li>
+      </ol>
+    </div>
+  </div>
+</div> -->
 
-      // Instruct Giscus to set theme
-      giscus.setAttribute("data-theme", theme)
+<!-- 加载  -->
+<script type="application/json" class="js-hypothesis-config">
+{
+  "openSidebar": false,
+  "showHighlights": true,
+  "theme": "clean"
+}
+</script>
+<script async src="https://hypothes.is/embed.js"></script>
+
+<!-- Hypothesis 样式美化 -->
+<style>
+  /* 美化高亮效果 */
+  .hypothesis-highlight {
+    background-color: rgba(255, 236, 179, 0.5) !important;
+    transition: background-color 0.3s ease !important;
+    border-bottom: 2px solid #ffb74d !important;
+    box-shadow: 0 0 0 0.2em rgba(255, 193, 7, 0.1) !important;
+    cursor: pointer !important;
+  }
+  
+  .hypothesis-highlight:hover {
+    background-color: rgba(255, 193, 7, 0.3) !important;
+  }
+  
+  /* 美化 Hypothesis 侧边栏 */
+  hypothesis-sidebar {
+    font-family: var(--md-text-font-family, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif) !important;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  /* 美化卡片样式 */
+  .hypothesis-annotation-card {
+    border-radius: 8px !important;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05) !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+    overflow: hidden !important;
+  }
+  
+  .hypothesis-annotation-card:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  /* 美化 Hypothesis 按钮 */
+  .hypothesis-button {
+    border-radius: 4px !important;
+    transition: background-color 0.2s ease !important;
+  }
+  
+  /* 美化标签样式 */
+  .hypothesis-tag {
+    border-radius: 12px !important;
+    padding: 2px 8px !important;
+    font-size: 12px !important;
+    background-color: rgba(0, 0, 0, 0.05) !important;
+    color: #606060 !important;
+  }
+
+  /* 美化工具栏 */
+  .hypothesis-toolbar {
+    background: linear-gradient(to right, #f5f5f5, #ffffff) !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  /* 美化注释面板header */
+  .hypothesis-annotation-header {
+    padding: 10px !important;
+    background-color: #f9f9f9 !important;
+  }
+  
+  /* 美化注释内容 */
+  .hypothesis-annotation-body {
+    font-size: 14px !important;
+    line-height: 1.6 !important;
+    color: #333 !important;
+  }
+  
+  /* 美化用户名 */
+  .hypothesis-user {
+    font-weight: 600 !important;
+    color: #3f51b5 !important;
+  }
+  
+  /* 美化时间戳 */
+  .hypothesis-timestamp {
+    font-size: 12px !important;
+    color: #757575 !important;
+  }
+
+  /* 美化输入框 */
+  .hypothesis-input {
+    border-radius: 4px !important;
+    border: 1px solid #e0e0e0 !important;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+  }
+  
+  .hypothesis-input:focus {
+    border-color: #4dabf7 !important;
+    box-shadow: 0 0 0 2px rgba(77, 171, 247, 0.2) !important;
+    outline: none !important;
+  }
+</style>
+
+<!-- 页面评论系统 -->
+<div class="comments-container utterances-container">
+  <div class="comments-header">
+    <h2 id="__comments" class="comments-title">
+      <span class="comments-icon">💬</span>
+      Comments
+      <span class="comments-subtitle">Share your thoughts!</span>
+    </h2>
+    <div class="comments-divider"></div>
+  </div>
+
+  <div class="comments-wrapper">
+    <script src="https://utteranc.es/client.js"
+            repo="MAD-SG/generative-ai-start-to-surrender"
+            issue-term="pathname"
+            label="comment"
+            theme="preferred-color-scheme"
+            crossorigin="anonymous"
+            async>
+    </script>
+  </div>
+</div>
+
+<style>
+  .comments-container {
+    margin: 2.5rem auto;
+    padding: 1.5rem;
+    background: var(--md-code-bg-color, rgba(0, 0, 0, 0.05));
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .annotation-container {
+    margin-bottom: 1rem;
+    background: rgba(255, 255, 240, 0.5);
+    border-left: 4px solid #ffeb3b;
+  }
+
+  .utterances-container {
+    background: rgba(240, 248, 255, 0.5);
+    border-left: 4px solid #2196f3;
+  }
+
+  .comments-container:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .comments-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .comments-title {
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+    color: var(--md-primary-fg-color, #2196f3);
+    flex-wrap: wrap;
+  }
+
+  .annotation-container .comments-title {
+    color: #f57c00;
+  }
+
+  .comments-icon {
+    font-size: 1.4em;
+  }
+
+  .comments-subtitle {
+    font-size: 0.7em;
+    font-weight: 400;
+    opacity: 0.8;
+    margin-left: 1rem;
+  }
+
+  .comments-divider {
+    height: 3px;
+    background: linear-gradient(90deg,
+      var(--md-primary-fg-color, #2196f3) 0%,
+      rgba(255, 255, 255, 0) 100%);
+    border-radius: 3px;
+    margin-bottom: 1rem;
+    width: 100%;
+  }
+
+  .annotation-container .comments-divider {
+    background: linear-gradient(90deg,
+      #f57c00 0%,
+      rgba(255, 255, 255, 0) 100%);
+  }
+
+  .comments-wrapper {
+    position: relative;
+    min-height: 150px;
+    width: 100%;
+  }
+
+  .hypothesis-instructions {
+    padding: 1rem;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 6px;
+    margin-bottom: 1rem;
+  }
+
+  .hypothesis-instructions p {
+    margin-top: 0;
+    font-weight: 500;
+  }
+
+  .hypothesis-instructions ol {
+    margin-bottom: 0;
+    padding-left: 1.5rem;
+  }
+
+  .hypothesis-instructions li {
+    margin-bottom: 0.5rem;
+  }
+
+  .hypothesis-instructions li:last-child {
+    margin-bottom: 0;
+  }
+
+  /* 确保utterances的iframe填充可用宽度 */
+  .utterances-container .comments-wrapper iframe {
+    border-radius: 6px;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* 动画效果 */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 20px, 0);
+    }
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  .comments-wrapper {
+    animation: fadeInUp 0.6s ease forwards;
+  }
+
+  /* 响应式设计 - 小屏幕调整 */
+  @media (max-width: 768px) {
+    .comments-container {
+      padding: 1rem;
+      margin: 1.5rem auto;
     }
 
-    // Register event handlers after documented loaded
-    document.addEventListener("DOMContentLoaded", function() {
-      var ref = document.querySelector("[data-md-component=palette]")
-      ref.addEventListener("change", function() {
-        var palette = __md_get("__palette")
-        if (palette && typeof palette.color === "object") {
-          var theme = palette.color.scheme === "slate"
-            ? "transparent_dark"
-            : "light"
+    .comments-title {
+      font-size: 1.3rem;
+    }
 
-          // Instruct Giscus to change theme
-          var frame = document.querySelector(".giscus-frame")
-          frame.contentWindow.postMessage(
-            { giscus: { setConfig: { theme } } },
-            "https://giscus.app"
-          )
-        }
-      })
-    })
-  </script>
-{% endif %}
+    .comments-subtitle {
+      display: block;
+      width: 100%;
+      margin-left: 0;
+      margin-top: 0.3rem;
+    }
+  }
+</style>
