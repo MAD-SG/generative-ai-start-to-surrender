@@ -44,6 +44,7 @@ nav:
           - Score Based SDE: book/chapter7_diffusion/score_based_sde.md
           - Probability Flow ODE: book/chapter7_diffusion/probability_flow_ode.md
           - SDE Diffusion Speedup: book/chapter7_diffusion/sde_diffusion_speedup.md
+          - SDE Diffusion Guidance: book/chapter7_diffusion/sde_diffusion_guidance.md
       - Diffusion Network:
           - DiT: book/chapter7_diffusion/DiT.md
 

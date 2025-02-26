@@ -1017,6 +1017,13 @@ As mentioned in the above, the prompt will be processed into a pooled global emb
 In stable diffusion 3,
 ![alt text](../../../images/image-91.png)
 
+But in practice, the negative prompt is empty string, which take the effect of the CFG, classifier free guidance diffusion. That is, the negative is the case the condition is empty.
+Have more details in [guidance diffusion](docs/book/chapter7_diffusion/sde_diffusion_guidance.md)
+
+Next, let's check the detailed sampling steps if we have the condition already.
+
+#### Sampling
+
 ## Refereces
 
 - stable diffusion 3 reading: <https://zhuanlan.zhihu.com/p/684068402?utm_source=chatgpt.com>
