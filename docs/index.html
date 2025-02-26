@@ -439,11 +439,12 @@
 
         .integrated-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); /* ⬅️ 确保最小 300px，不会挤压 */
+            gap: 8.5rem;
             max-width: 1200px;
             margin: 0 auto;
             padding: 1rem;
+            align-items: stretch; /* ⬅️ 让所有卡片高度一致 */
         }
 
         .integrated-card {
@@ -455,6 +456,7 @@
             display: flex;
             flex-direction: column;
             height: 100%;
+            min-height: 280px; /* ⬅️ 设定一个合理的最小高度 */
             position: relative;
             overflow: hidden;
             margin: 0.5rem;
@@ -726,198 +728,67 @@
             <div class="card">
                 <h3><span class="reading-icon">📚</span> Reading List</h3>
                 <p>Papers and blogs for future reading:</p>
-                <ul class="reading-checklist" id="readingList">
-                    <li>
-                        <input type="checkbox" id="paper1">
-                        <label for="paper1"><a href="https://arxiv.org/pdf/2206.00364" target="_blank">Elucidating the Design Space of Diffusion-Based Generative Models</a></label>
-                    </li>
-                    <li>
-                        <input type="checkbox" id="blog1">
-                        <label for="blog1"><a href="https://zhuanlan.zhihu.com/p/708565985" target="_blank">Diffusion Models Design Space (Chinese)</a></label>
-                    </li>
-                    <li>
-                        <input type="checkbox" id="paper2">
-                        <label for="paper2"><a href="https://arxiv.org/pdf/2302.05543" target="_blank">ControlNet: Conditional Diffusion for Improved Text-to-Image Generation</a></label>
-                    </li>
-                </ul>
-                <div class="add-reading-item">
-                    <input type="text" id="newReadingTitle" placeholder="Title" class="reading-input">
-                    <input type="url" id="newReadingUrl" placeholder="URL (https://...)" class="reading-input">
-                    <button id="addReadingBtn" class="add-reading-btn">Add to Reading List</button>
+                <div id="reading-list-content" class="reading-checklist">
+                    <!-- Content will be loaded from reading_list.md -->
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Last updated date
-        function updateLastModified() {
-            fetch(window.location.pathname + '?' + new Date().getTime())
-                .then(response => response.headers.get('last-modified'))
-                .then(date => {
-                    if (date) {
-                        const formattedDate = new Date(date).toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit'
-                        });
-                        document.getElementById('last-updated-date').textContent = formattedDate;
-                    }
-                })
-                .catch(err => console.error('Error fetching last modified date:', err));
-        }
 
-        // Call updateLastModified when the page loads
-        window.addEventListener('load', updateLastModified);
+        function convertMarkdownCheckbox(line) {
+            // 匹配 Markdown 任务列表格式
+            const checkboxPattern = /^-\s*\[([ xX])\]\s*\[(.*?)\]\((.*?)\)/;
 
-        // Scroll reveal animation
-        function reveal() {
-            var reveals = document.querySelectorAll('.reveal');
+            const match = line.match(checkboxPattern);
+            if (!match) return null; // 不是复选框项，忽略
 
-            reveals.forEach(element => {
-                var windowHeight = window.innerHeight;
-                var elementTop = element.getBoundingClientRect().top;
-                var elementVisible = 150;
+            const checked = match[1].toLowerCase() === 'x' ? 'checked' : ''; // 解析是否已勾选
+            const linkText = match[2]; // 链接文本
+            const linkUrl = match[3]; // 链接 URL
 
-                if (elementTop < windowHeight - elementVisible) {
-                    element.classList.add('active');
-                }
-            });
-        }
-
-        window.addEventListener('scroll', reveal);
-        window.addEventListener('load', reveal);
-    </script>
-
-    <script>
-        // Reading List Checkbox Persistence
-        document.addEventListener('DOMContentLoaded', function() {
-            loadSavedReadingItems();
-            setupCheckboxListeners();
-        });
-
-        function loadSavedReadingItems() {
-            // Get saved reading items from localStorage
-            const savedItems = JSON.parse(localStorage.getItem('customReadingItems') || '[]');
-            const readingList = document.getElementById('readingList');
-
-            // Add each saved item to the list
-            savedItems.forEach(item => {
-                addReadingItemToDOM(item.id, item.title, item.url, item.checked);
-            });
+            return `
+                <div class="reading-item">
+                    <input type="checkbox" class="reading-checkbox" ${checked}>
+                    <a href="${linkUrl}" target="_blank">${linkText}</a>
+                </div>
+            `;
         }
 
         function setupCheckboxListeners() {
-            const checkboxes = document.querySelectorAll('.reading-checklist input[type="checkbox"]');
-
-            // Load saved checkbox states for predefined items
-            checkboxes.forEach(checkbox => {
-                const isChecked = localStorage.getItem(checkbox.id) === 'true';
-                checkbox.checked = isChecked;
-
-                // Update parent li style if checked
-                if (isChecked) {
-                    checkbox.closest('li').style.backgroundColor = 'rgba(220, 240, 220, 0.7)';
-                }
-
-                // Add change event listener
-                checkbox.addEventListener('change', function() {
-                    // Save state to localStorage
-                    localStorage.setItem(this.id, this.checked);
-
-                    // If this is a custom item, update the saved items array
-                    if (this.id.startsWith('custom-')) {
-                        updateCustomItemCheckedState(this.id, this.checked);
-                    }
-
-                    // Update background color
-                    if (this.checked) {
-                        this.closest('li').style.backgroundColor = 'rgba(220, 240, 220, 0.7)';
-                    } else {
-                        this.closest('li').style.backgroundColor = 'rgba(255, 255, 255, 0.7)';
-                    }
+            document.querySelectorAll('.reading-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', (event) => {
+                    console.log(`Checkbox state changed: ${event.target.checked}`);
                 });
             });
         }
 
-        function updateCustomItemCheckedState(id, checked) {
-            const savedItems = JSON.parse(localStorage.getItem('customReadingItems') || '[]');
-            const itemIndex = savedItems.findIndex(item => item.id === id);
+        async function loadReadingList() {
+            try {
+                const response = await fetch('/assets/reading_list.txt'); // 读取 Markdown 文件
+                const text = await response.text();
+                console.log('Reading list content:', text);
 
-            if (itemIndex !== -1) {
-                savedItems[itemIndex].checked = checked;
-                localStorage.setItem('customReadingItems', JSON.stringify(savedItems));
+                const lines = text.split('\n'); // 拆分 Markdown 行
+                const listContent = lines
+                    .map(line => convertMarkdownCheckbox(line)) // 解析 Markdown 复选框
+                    .filter(html => html) // 过滤无效项
+                    .join(''); // 组合 HTML
+
+                document.getElementById('reading-list-content').innerHTML = listContent;
+
+                // 监听复选框变化（不持久化，仅前端交互）
+                setupCheckboxListeners();
+            } catch (error) {
+                console.error('Error loading reading list:', error);
             }
         }
 
-        function addReadingItemToDOM(id, title, url, checked = false) {
-            const readingList = document.getElementById('readingList');
-            const newListItem = document.createElement('li');
-            newListItem.innerHTML = `
-                <input type="checkbox" id="${id}">
-                <label for="${id}"><a href="${url}" target="_blank">${title}</a></label>
-            `;
-            readingList.appendChild(newListItem);
+        loadReadingList();
 
-            // Set checkbox state
-            const checkbox = newListItem.querySelector('input[type="checkbox"]');
-            checkbox.checked = checked;
-
-            // Update background color based on checked state
-            if (checked) {
-                newListItem.style.backgroundColor = 'rgba(220, 240, 220, 0.7)';
-            }
-
-            // Add event listener
-            checkbox.addEventListener('change', function() {
-                localStorage.setItem(this.id, this.checked);
-
-                if (this.id.startsWith('custom-')) {
-                    updateCustomItemCheckedState(this.id, this.checked);
-                }
-
-                if (this.checked) {
-                    this.closest('li').style.backgroundColor = 'rgba(220, 240, 220, 0.7)';
-                } else {
-                    this.closest('li').style.backgroundColor = 'rgba(255, 255, 255, 0.7)';
-                }
-            });
-        }
-
-        // Add new reading item functionality
-        const addReadingBtn = document.getElementById('addReadingBtn');
-        const newReadingTitle = document.getElementById('newReadingTitle');
-        const newReadingUrl = document.getElementById('newReadingUrl');
-
-        addReadingBtn.addEventListener('click', function() {
-            const title = newReadingTitle.value.trim();
-            const url = newReadingUrl.value.trim();
-
-            if (title && url) {
-                // Generate a unique ID for the new item
-                const id = 'custom-' + Date.now();
-
-                // Add to DOM
-                addReadingItemToDOM(id, title, url);
-
-                // Save to localStorage
-                const savedItems = JSON.parse(localStorage.getItem('customReadingItems') || '[]');
-                savedItems.push({
-                    id: id,
-                    title: title,
-                    url: url,
-                    checked: false
-                });
-                localStorage.setItem('customReadingItems', JSON.stringify(savedItems));
-
-                // Clear input fields
-                newReadingTitle.value = '';
-                newReadingUrl.value = '';
-            }
-        });
     </script>
+
 
     <script>
         // Word Cloud Implementation
