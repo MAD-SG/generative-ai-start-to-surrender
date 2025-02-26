@@ -654,6 +654,85 @@
                 padding: 0.75rem;
             }
         }
+
+        /* Reading List Styles */
+        .reading-list-section {
+            padding: 3rem 1rem;
+            background: linear-gradient(135deg, rgba(245, 247, 250, 0.8), rgba(230, 235, 245, 0.8));
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .reading-checklist {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .reading-checklist li {
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .reading-checklist li:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .reading-checklist input[type="checkbox"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+
+        .reading-checklist label {
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .reading-checklist a {
+            color: #2c3e50;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .reading-checklist a:hover {
+            color: #3498db;
+            text-decoration: underline;
+        }
+
+        .reading-icon {
+            margin-right: 0.5rem;
+            font-size: 1.2em;
+        }
+
+        .add-reading-item {
+            margin-top: 1rem;
+        }
+
+        .reading-input {
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+            width: 100%;
+        }
+
+        .add-reading-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            background-color: #4CAF50;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .add-reading-btn:hover {
+            background-color: #3e8e41;
+        }
     </style>
 </head>
 <body>
@@ -727,6 +806,30 @@
         </div>
     </div>
 
+    <div class="reading-list-section">
+        <div class="grid-container">
+            <div class="card">
+                <h3><span class="reading-icon">📚</span> Reading List</h3>
+                <p>Papers and blogs for future reading:</p>
+                <ul class="reading-checklist" id="readingList">
+                    <li>
+                        <input type="checkbox" id="paper1">
+                        <label for="paper1"><a href="https://arxiv.org/pdf/2206.00364" target="_blank">Elucidating the Design Space of Diffusion-Based Generative Models</a></label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="blog1">
+                        <label for="blog1"><a href="https://zhuanlan.zhihu.com/p/708565985" target="_blank">Diffusion Models Design Space (Chinese)</a></label>
+                    </li>
+                </ul>
+                <div class="add-reading-item">
+                    <input type="text" id="newReadingTitle" placeholder="Title" class="reading-input">
+                    <input type="url" id="newReadingUrl" placeholder="URL (https://...)" class="reading-input">
+                    <button id="addReadingBtn" class="add-reading-btn">Add to Reading List</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Last updated date
         function updateLastModified() {
@@ -767,6 +870,134 @@
 
         window.addEventListener('scroll', reveal);
         window.addEventListener('load', reveal);
+    </script>
+
+    <script>
+        // Reading List Checkbox Persistence
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSavedReadingItems();
+            setupCheckboxListeners();
+        });
+
+        function loadSavedReadingItems() {
+            // Get saved reading items from localStorage
+            const savedItems = JSON.parse(localStorage.getItem('customReadingItems') || '[]');
+            const readingList = document.getElementById('readingList');
+
+            // Add each saved item to the list
+            savedItems.forEach(item => {
+                addReadingItemToDOM(item.id, item.title, item.url, item.checked);
+            });
+        }
+
+        function setupCheckboxListeners() {
+            const checkboxes = document.querySelectorAll('.reading-checklist input[type="checkbox"]');
+
+            // Load saved checkbox states for predefined items
+            checkboxes.forEach(checkbox => {
+                const isChecked = localStorage.getItem(checkbox.id) === 'true';
+                checkbox.checked = isChecked;
+
+                // Update parent li style if checked
+                if (isChecked) {
+                    checkbox.closest('li').style.backgroundColor = 'rgba(220, 240, 220, 0.7)';
+                }
+
+                // Add change event listener
+                checkbox.addEventListener('change', function() {
+                    // Save state to localStorage
+                    localStorage.setItem(this.id, this.checked);
+
+                    // If this is a custom item, update the saved items array
+                    if (this.id.startsWith('custom-')) {
+                        updateCustomItemCheckedState(this.id, this.checked);
+                    }
+
+                    // Update background color
+                    if (this.checked) {
+                        this.closest('li').style.backgroundColor = 'rgba(220, 240, 220, 0.7)';
+                    } else {
+                        this.closest('li').style.backgroundColor = 'rgba(255, 255, 255, 0.7)';
+                    }
+                });
+            });
+        }
+
+        function updateCustomItemCheckedState(id, checked) {
+            const savedItems = JSON.parse(localStorage.getItem('customReadingItems') || '[]');
+            const itemIndex = savedItems.findIndex(item => item.id === id);
+
+            if (itemIndex !== -1) {
+                savedItems[itemIndex].checked = checked;
+                localStorage.setItem('customReadingItems', JSON.stringify(savedItems));
+            }
+        }
+
+        function addReadingItemToDOM(id, title, url, checked = false) {
+            const readingList = document.getElementById('readingList');
+            const newListItem = document.createElement('li');
+            newListItem.innerHTML = `
+                <input type="checkbox" id="${id}">
+                <label for="${id}"><a href="${url}" target="_blank">${title}</a></label>
+            `;
+            readingList.appendChild(newListItem);
+
+            // Set checkbox state
+            const checkbox = newListItem.querySelector('input[type="checkbox"]');
+            checkbox.checked = checked;
+
+            // Update background color based on checked state
+            if (checked) {
+                newListItem.style.backgroundColor = 'rgba(220, 240, 220, 0.7)';
+            }
+
+            // Add event listener
+            checkbox.addEventListener('change', function() {
+                localStorage.setItem(this.id, this.checked);
+
+                if (this.id.startsWith('custom-')) {
+                    updateCustomItemCheckedState(this.id, this.checked);
+                }
+
+                if (this.checked) {
+                    this.closest('li').style.backgroundColor = 'rgba(220, 240, 220, 0.7)';
+                } else {
+                    this.closest('li').style.backgroundColor = 'rgba(255, 255, 255, 0.7)';
+                }
+            });
+        }
+
+        // Add new reading item functionality
+        const addReadingBtn = document.getElementById('addReadingBtn');
+        const newReadingTitle = document.getElementById('newReadingTitle');
+        const newReadingUrl = document.getElementById('newReadingUrl');
+
+        addReadingBtn.addEventListener('click', function() {
+            const title = newReadingTitle.value.trim();
+            const url = newReadingUrl.value.trim();
+
+            if (title && url) {
+                // Generate a unique ID for the new item
+                const id = 'custom-' + Date.now();
+
+                // Add to DOM
+                addReadingItemToDOM(id, title, url);
+
+                // Save to localStorage
+                const savedItems = JSON.parse(localStorage.getItem('customReadingItems') || '[]');
+                savedItems.push({
+                    id: id,
+                    title: title,
+                    url: url,
+                    checked: false
+                });
+                localStorage.setItem('customReadingItems', JSON.stringify(savedItems));
+
+                // Clear input fields
+                newReadingTitle.value = '';
+                newReadingUrl.value = '';
+            }
+        });
     </script>
 
     <footer class="site-footer">
