@@ -320,7 +320,6 @@ Let consider the details of the SDVAE carefully
 
     $$   Y = X + F(X) $$
 
-
 ### Patchify
 
 === "PatchEmbed"
@@ -420,7 +419,6 @@ $$
 E_t = \left[ \cos\left(t \cdot f_1\right), \sin\left(t \cdot f_1\right), \cos\left(t \cdot f_2\right), \sin\left(t \cdot f_2\right), \dots, \cos\left(t \cdot f_{\frac{D}{2}}\right), \sin\left(t \cdot f_{\frac{D}{2}}\right) \right]
 $$
 
-
 where:
 
 - \( f_i = e^{-\frac{\log(\text{max\_period})}{D/2} \cdot i} \) are the frequency components.
@@ -432,7 +430,6 @@ If \( D \) is **odd**, an extra zero is appended:
 $$
 E_t = \left[ E_t, 0 \right]
 $$
-
 
 This vector representation ensures **smooth temporal encoding** and is widely used in **diffusion models, transformers, and time-aware architectures**. 🚀
 
@@ -597,7 +594,6 @@ $$
 \text{RMSNorm}(x) = \frac{x}{\text{RMS}(x)} \cdot \gamma
 $$
 
-
 where:
 
 - **RMS (Root Mean Square) is calculated as:**
@@ -605,7 +601,6 @@ where:
 $$
 \text{RMS}(x) = \sqrt{\frac{1}{d} \sum_{i=1}^{d} x_i^2 + \epsilon}
 $$
-
 
 - $\epsilon$ is a small constant to prevent division by zero.
 
@@ -908,11 +903,47 @@ To have better prompt understanding, we used three text embedding models
 - `clip_l.safetensors` (OpenAI CLIP-L, same as SDXL)
 - `t5xxl.safetensors` (google T5-v1.1-XXL)
 
+![alt text](../../../images/image-91.png)
+
+!!! note "sd3 prompt processing"
+
+    The prompt processing in Stable Diffusion 3 involves multiple steps and components designed to transform text input into embedding representations suitable for image generation. Here is a summary of the process:
+
+
+    1. **Text Encoding**:
+          - The input text is encoded using the CLIP model. There are two versions of the CLIP model: `Clip_L` and `Clip_G`, each generating embeddings of different dimensions.
+          - `Clip_L` produces a 77x768 embedding matrix.
+          - `Clip_G` produces a 75x768 embedding matrix.
+
+    2. **Pooling Operation**:
+          - Pooling operations are applied to the CLIP embeddings to generate fixed-size vectors.
+          - `L_pool` generates a 768-dimensional pooled vector.
+          - `G_pool` generates a 1280-dimensional pooled vector.
+
+    3. **Embedding Concatenation**:
+          - Embeddings from different sources are concatenated to create a richer representation.
+          - `L_pool` and `G_pool` are concatenated to form a 2048-dimensional pooled embedding vector.
+          - The embedding sequences from `Clip_L` and `Clip_G` are concatenated to produce a 154x4096 embedding matrix.
+
+    4. **Padding and Alignment**:
+          - Zero padding (zeros padding) may be applied to ensure that the embedding sequences have consistent lengths.
+          - For example, the embedding sequence from `G` is expanded from 75 to 154 to match the length of other embedding sequences.
+
+    5. **Context Processing**:
+          - The final embedding representations are used to provide context for image generation.
+          - These embeddings are fed into the T5 model or other generative models for further processing to generate images.
+
+    In summary, the prompt processing in Stable Diffusion 3 transforms text input into high-dimensional embedding representations through multiple steps. These representations are then used to generate images. The process involves the collaboration of multiple models, including CLIP and T5, to ensure that the generated images are highly relevant to the input text.
+
 We have studied the network structure of the MM-DiT. To summary, the MM-DiT's contribution is
 
 1. Use same idea of handling condition `c` by ==adaLN==
 2. cross attention for the context (text/sequential information) and latent feature `x` by the dual path. Handle `context` and `x` seperatly but fed into attention by concating
 3. use cropping positional embedding to support different resolution
+
+Let draw the overrall structure of the diffusion model
+
+![alt text](../../../images/network_sd3.png)
 
 ## Refereces
 
