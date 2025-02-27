@@ -50,9 +50,13 @@ $$\tag{6}
 \begin{aligned}
 \frac{d x_t}{d t} &= f(t)x_t - \frac{1}{2} g(t)^2\nabla_x \log q_t(x_t)\\
 &= \frac{d \log \alpha_t}{dt} x_t -\frac{1}{2} \left( \frac{d  \sigma_t^2}{dt} - 2 \frac{d \log \alpha_t}{dt}\sigma_t^2 \right) \nabla_x \log q_t(x_t)\\
-& = \frac{d \log \alpha_t}{dt} x_t  +\left( \frac{1}{2} \frac{d  \sigma_t^2}{\sigma_t dt} -  \frac{d \log \alpha_t}{dt}\sigma_t \right) \epsilon_t
+& = \frac{d \log \alpha_t}{dt} x_t  +\left(  \frac{d  \sigma_t}{dt} -  \frac{d \log \alpha_t}{dt}\sigma_t \right) \epsilon_t\\
+& = \frac{d \log \alpha_t}{dt} x_t + \left( \frac{\sigma_t d \log \sigma_t/\alpha_t}{dt} \right) \epsilon_t\\
+& = \frac{d \log \alpha_t}{dt} x_t - \left( \frac{\sigma_t d e^{\lambda_t/2}}{dt} \right) \epsilon_t\\
 \end{aligned}
 $$
+
+here $\lambda_t = \frac{\alpha_t^2}{\sigma_t^2}$ usually means the signal-to-noise ratio, SNR.
 
 ??? proof "proof of equation (3)"
 
