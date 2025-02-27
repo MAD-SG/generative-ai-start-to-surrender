@@ -1018,7 +1018,7 @@ In stable diffusion 3,
 ![alt text](../../../images/image-91.png)
 
 But in practice, the negative prompt is empty string, which take the effect of the CFG, classifier free guidance diffusion. That is, the negative is the case the condition is empty.
-Have more details in [guidance diffusion](docs/book/chapter7_diffusion/sde_diffusion_guidance.md)
+Have more details in [guidance diffusion](../../chapter7_diffusion/sde_diffusion_guidance.md)
 
 Next, let's check the detailed sampling steps if we have the condition already.
 
@@ -1026,7 +1026,7 @@ Next, let's check the detailed sampling steps if we have the condition already.
 
 ##### CFG Denoiser
 
-Here is the code of the CFG Denoiser, Have more details in [guidance diffusion](docs/book/chapter7_diffusion/sde_diffusion_guidance.md)
+Here is the code of the CFG Denoiser, Have more details in [guidance diffusion](../../chapter7_diffusion/sde_diffusion_guidance.md)
 
     ```py3
     class CFGDenoiser(torch.nn.Module):

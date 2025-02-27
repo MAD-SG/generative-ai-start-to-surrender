@@ -52,6 +52,11 @@ In this article, we will study the differences in architecture, such as skip lay
 As for the elements that are similar to SD 3, including the VAE, prompt processing, and sampling scheme, the differences are not significant. Please refer to the previous article [stable diffusion 3 reading](./stable_diffusion_3_reading.md) for more information.
 
 ## Skip Layer Guidance
+Let's first look at the CFG in SD3
+
+![alt text](../../../images/image-101.png)
+
+Now let's look as the SLG in SD 3.5
 
 |![alt text](../../../images/image-95.png) | ![alt text](../../../images/image-96.png)|
 |---|---|

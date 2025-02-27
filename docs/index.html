@@ -16,14 +16,27 @@
             margin: 0;
             padding: 0;
             color: #1f2937;
-            background: #f8fafc;
+            background: url('/images/2cc305dc-5373-4168-b988-e9827eb944a9.png') no-repeat center center fixed;
+            background-size: cover;
+            position: relative;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
+        }
+        
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.85);
+            z-index: -1;
         }
 
         /* Hero styles */
         .hero {
-            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.9), rgba(124, 58, 237, 0.9));
             background-size: 200% 200%;
             animation: gradientShift 15s ease infinite;
             color: white;
@@ -33,6 +46,8 @@
             overflow: hidden;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             margin-bottom: clamp(2rem, 5vw, 4rem);
+            border-radius: 10px;
+            margin: 20px;
         }
 
         .hero h1 {
@@ -99,24 +114,21 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
             gap: clamp(1rem, 3vw, 2rem);
-            padding: clamp(1rem, 3vw, 2rem);
-            max-width: min(95%, 1200px);
+            width: 100%;
+            max-width: 1400px;
             margin: 0 auto;
+            padding: 0 clamp(1rem, 5vw, 2rem);
         }
 
-        /* Card styles */
         .card {
-            background: #ffffff;
-            border-radius: clamp(12px, 2vw, 16px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-            padding: clamp(1.5rem, 3vw, 2rem);
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+            transition: all 0.3s ease;
             height: 100%;
             display: flex;
             flex-direction: column;
-            transform: translateY(0);
         }
 
         .card:hover {
@@ -169,7 +181,6 @@
 
         /* Navigation section styles */
         .navigation-section {
-            background: #f8f9fa;
             padding: 3rem 2rem;
         }
 
@@ -313,12 +324,14 @@
         }
 
         .topic-card {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             padding: 1.5rem;
-            margin-bottom: 1.5rem;
             transition: all 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
         }
 
         .topic-card:hover {
@@ -360,7 +373,7 @@
 
         /* Updated Card Styles */
         .feature-card {
-            background: white;
+            background: rgba(255, 255, 255, 0.9);
             border-radius: 15px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             padding: 2rem;
@@ -448,7 +461,7 @@
         }
 
         .integrated-card {
-            background: white;
+            background: rgba(255, 255, 255, 0.9);
             border-radius: 12px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             padding: 1.5rem;
@@ -459,8 +472,6 @@
             min-height: 280px; /* ⬅️ 设定一个合理的最小高度 */
             position: relative;
             overflow: hidden;
-            margin: 0.5rem;
-            border: 1px solid rgba(0, 0, 0, 0.05);
         }
 
         .integrated-card:hover {
@@ -541,6 +552,27 @@
         .integrated-link-icon {
             margin-right: 0.5rem;
             font-size: 1.1rem;
+        }
+
+        /* Section styles */
+        .section {
+            padding: clamp(2rem, 5vw, 4rem);
+            background: rgba(255, 255, 255, 0.85);
+            margin: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .reading-list-section,
+        .integrated-content-section,
+        .navigation-section,
+        .topic-section,
+        .feature-section {
+            padding: clamp(2rem, 5vw, 4rem);
+            background: rgba(255, 255, 255, 0.85);
+            margin: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
         @media (max-width: 768px) {
