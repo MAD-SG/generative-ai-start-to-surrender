@@ -515,4 +515,106 @@ $$
 \Bigr]\;+\;O\bigl(h^{4}\bigr).}
 $$
 
+但是真实情况下，我们并不能直接求高阶导数，而是用数值方法来近似计算。 当然从上面的公式我们可以直接得到二阶截断误差的数值方法。
+### DPM Solver 1
+
+$$
+\begin{aligned}
+x_{t} &= \frac{\alpha_t}{\alpha_s}x_s - \sigma_t1 (e^{h_t}-1)\epsilon_\theta(x_s,t_s)\\
+    &= \frac{\alpha_t}{\alpha_s}x_s  - \alpha_t \left[ \frac{\sigma_s}{\alpha_s} - \frac{\sigma_t}{\alpha_t} \right] \epsilon_\theta(x_s,s)
+\end{aligned}
+$$
+
+where
+
+$$h_t=\lambda_t - \lambda_s =\log \frac{\alpha_t}{\sigma_t} - \log\frac{\alpha_s}{\sigma_s}$$
+
+This formula is identical to the DDIM solution.
+
+### DPM Solver 2
+理论上来说， $n=1$的情况下，DPM solver 和ODE里的中点法是一模一样的，只是要对解析的线性部分单独处理。
+
+我们先来看看中点法
+
+#### 中点法
+
+考虑常微分方程
+$$
+y'(t) = f(t, y(t)),\quad y(t_0)=y_0,
+$$
+其中点（midpoint）方法为
+
+!!! note "中点法"
+
+    $$
+    y_{n+1} = y_n + h\,f\Big(t_n+\frac{h}{2},\,y_n+\frac{h}{2}\,f(t_n,y_n)\Big).
+    $$
+
+下面给出推导该方法局部截断误差阶数的过程。
+
+##### 精确解的Taylor展开
+
+对精确解\( y(t) \)在\( t=t_n \)处做Taylor展开，有
+$$
+y(t_n+h) = y(t_n) + h\,y'(t_n) + \frac{h^2}{2}\,y''(t_n) + \frac{h^3}{6}\,y'''(t_n) + O(h^4).
+$$
+注意到由于\( y'(t_n) = f(t_n, y(t_n)) \)且
+$$
+y''(t_n) = \frac{d}{dt}y'(t_n)=\frac{\partial f}{\partial t}(t_n, y(t_n)) + \frac{\partial f}{\partial y}(t_n, y(t_n))\,y'(t_n),
+$$
+我们有
+$$
+y(t_n+h) = y(t_n) + h\,f(t_n,y(t_n)) + \frac{h^2}{2}\Big[f_t(t_n,y(t_n)) + f_y(t_n,y(t_n))\,f(t_n,y(t_n))\Big] + O(h^3).
+$$
+
+##### 数值格式的展开
+
+中点方法给出
+$$
+y_{n+1} = y_n + h\,f\left(t_n+\frac{h}{2},\,y_n+\frac{h}{2}\,f(t_n,y_n)\right).
+$$
+我们希望比较\( y_{n+1} \)与精确解\( y(t_n+h) \)的差异。首先对函数
+$$
+F(h)= f\left(t_n+\frac{h}{2},\,y_n+\frac{h}{2}\,f(t_n,y_n)\right)
+$$
+在\( h=0 \)处做Taylor展开。记 \( y_n = y(t_n) \) 且 \( f(t_n,y_n) = y'(t_n) \)，于是有
+
+$$
+\begin{aligned}
+F(h) &= f\Big(t_n+\frac{h}{2},\,y(t_n)+\frac{h}{2}\,y'(t_n)\Big)\\
+&= f(t_n,y(t_n)) + \frac{h}{2}\,f_t(t_n,y(t_n)) + \frac{h}{2}\,f_y(t_n,y(t_n))\,y'(t_n) + O(h^2)\\
+&= f(t_n,y(t_n)) + \frac{h}{2}\Big[f_t(t_n,y(t_n)) + f_y(t_n,y(t_n))\,f(t_n,y(t_n))\Big] + O(h^2).
+\end{aligned}
+$$
+
+代入中点方法表达式，有
+
+$$
+\begin{aligned}
+y_{n+1} &= y(t_n) + h\,F(h)\\
+&= y(t_n) + h\,f(t_n,y(t_n)) +\\
+&\qquad \frac{h^2}{2}\Big[f_t(t_n,y(t_n)) + f_y(t_n,y(t_n))\,f(t_n,y(t_n))\Big] + O(h^3).
+\end{aligned}
+$$
+
+##### 误差阶数分析
+
+将精确解的Taylor展开与中点方法的展开对比：
+
+- 精确解：
+  $$
+  y(t_n+h) = y(t_n) + h\,f(t_n,y(t_n)) + \frac{h^2}{2}\Big[f_t(t_n,y(t_n)) + f_y(t_n,y(t_n))\,f(t_n,y(t_n))\Big] + O(h^3).
+  $$
+- 数值解（中点方法）：
+  $$
+  y_{n+1} = y(t_n) + h\,f(t_n,y(t_n)) + \frac{h^2}{2}\Big[f_t(t_n,y(t_n)) + f_y(t_n,y(t_n))\,f(t_n,y(t_n))\Big] + O(h^3).
+  $$
+
+两者在前\( h^2 \)项完全一致，因此局部截断误差（local truncation error）为\( O(h^3) \)。由于全局误差通常比局部截断误差低一个阶数，所以全局误差为\( O(h^2) \)。
+
+#### Runge Kutta
+终点法也属于一种龙格库塔方法。
+
+这里面我们并不能直接利用Runge Kutta, 因为线性部分是能计算的，所以要对龙格库塔方法做一定的适用性改进。
+
 ## DPM Solver ++
