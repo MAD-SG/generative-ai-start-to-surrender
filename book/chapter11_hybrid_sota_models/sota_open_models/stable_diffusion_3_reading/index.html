@@ -12,7 +12,7 @@
         <link rel="prev" href="../stable_diffusion_xl/">
       
       
-        <link rel="next" href="../flux1/">
+        <link rel="next" href="../stable_diffusion_3_5_reading/">
       
       
       <link rel="icon" href="../../../../assets/images/favicon.png">
@@ -1309,6 +1309,8 @@
       
         
       
+        
+      
     
     
       
@@ -1753,6 +1755,104 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_4" id="__nav_7_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Conditional Diffusion
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_4">
+            <span class="md-nav__icon md-icon"></span>
+            Conditional Diffusion
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter7_diffusion/controlnet/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ControlNet
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../chapter7_diffusion/sde_diffusion_guidance/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SDE Diffusion Guidance
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2063,10 +2163,6 @@
       
         
       
-        
-      
-        
-      
     
     
       
@@ -2128,6 +2224,58 @@
                 
   
   
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9_3_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_9_3_2" id="__nav_9_3_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Stable Diffusion Series
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_9_3_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_9_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            Stable Diffusion Series
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
   
   
     <li class="md-nav__item">
@@ -2135,7 +2283,7 @@
         
   
   <span class="md-ellipsis">
-    Stable Diffusion Series
+    Overview
   </span>
   
 
@@ -2300,15 +2448,24 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#45-sd3-inference-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.5 SD3 Inference Methods
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#5-refereces" class="md-nav__link">
+  <a href="#5-references" class="md-nav__link">
     <span class="md-ellipsis">
-      5. Refereces
+      5. References
     </span>
   </a>
   
@@ -2317,6 +2474,35 @@
     </ul>
   
 </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stable_diffusion_3_5_reading/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Stable Diffusion 3.5
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
       
     </li>
   
@@ -3945,7 +4131,267 @@ The pre_attention did the linear transform and the layer norm of the Q,K,V in th
 </ol>
 <p>Let draw the overrall structure of the diffusion model</p>
 <p><a class="glightbox" href="../../../../images/network_sd3.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="alt text" src="../../../../images/network_sd3.png" /></a></p>
-<h2 id="5-refereces">5. Refereces<a class="headerlink" href="#5-refereces" title="Permanent link">&para;</a></h2>
+<h3 id="45-sd3-inference-methods">4.5 SD3 Inference Methods<a class="headerlink" href="#45-sd3-inference-methods" title="Permanent link">&para;</a></h3>
+<p>Let's consider the stable diffusion 3 inference details</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span></pre></div></td><td class="code"><div><pre><span></span><code>```py3
+    def get_empty_latent(self, width, height):
+        print(&quot;Prep an empty latent...&quot;)
+        return torch.ones(1, 16, height // 8, width // 8, device=&quot;cpu&quot;) * 0.0609
+    def gen_image(self, prompt=PROMPT, width=WIDTH, height=HEIGHT, steps=STEPS, cfg_scale=CFG_SCALE, seed=SEED, output=OUTPUT, init_image=INIT_IMAGE, denoise=DENOISE):
+        latent = self.get_empty_latent(width, height)
+        if init_image:
+            image_data = Image.open(init_image)
+            image_data = image_data.resize((width, height), Image.LANCZOS)
+            latent = self.vae_encode(image_data)
+            latent = SD3LatentFormat().process_in(latent)
+        conditioning = self.get_cond(prompt)
+        neg_cond = self.get_cond(&quot;&quot;)
+        sampled_latent = self.do_sampling(latent, seed, conditioning, neg_cond, steps, cfg_scale, denoise if init_image else 1.0)
+        image = self.vae_decode(sampled_latent)
+        print(f&quot;Will save to {output}&quot;)
+        image.save(output)
+        print(&quot;Done&quot;)
+```
+</code></pre></div></td></tr></table></div>
+<p>Instead of sampling from the Gaussian distribution, the SD3 samples with either</p>
+<ul>
+<li>a fixed initial value <code>0.0609</code>.</li>
+<li>given initial image</li>
+</ul>
+<p>The overall structure is still follow from LDM, that first doing the diffusion steps in latent space and then use VAE decode to recover the RGB image.</p>
+<p>For the sampling steps, it includes</p>
+<ol>
+<li>positive prompt and negative prompt</li>
+<li>CFG sampling with Euler steps</li>
+</ol>
+<h4 id="451-positive-prompt-and-negative-prompt">4.5.1 Positive prompt and negative prompt<a class="headerlink" href="#451-positive-prompt-and-negative-prompt" title="Permanent link">&para;</a></h4>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span></pre></div></td><td class="code"><div><pre><span></span><code>```py3
+    def do_sampling(self, latent, seed, conditioning, neg_cond, steps, cfg_scale, denoise=1.0) -&gt; torch.Tensor:
+        print(&quot;Sampling...&quot;)
+        latent = latent.half().cuda()
+        self.sd3.model = self.sd3.model.cuda()
+        noise = self.get_noise(seed, latent).cuda()
+        sigmas = self.get_sigmas(self.sd3.model.model_sampling, steps).cuda()
+        sigmas = sigmas[int(steps * (1 - denoise)):]
+        conditioning = self.fix_cond(conditioning)
+        neg_cond = self.fix_cond(neg_cond)
+        extra_args = { &quot;cond&quot;: conditioning, &quot;uncond&quot;: neg_cond, &quot;cond_scale&quot;: cfg_scale }
+        noise_scaled = self.sd3.model.model_sampling.noise_scaling(sigmas[0], noise, latent, self.max_denoise(sigmas))
+        latent = sample_euler(CFGDenoiser(self.sd3.model), noise_scaled, sigmas, extra_args=extra_args)
+        latent = SD3LatentFormat().process_out(latent)
+        self.sd3.model = self.sd3.model.cpu()
+        print(&quot;Sampling done&quot;)
+        return latent
+```
+</code></pre></div></td></tr></table></div>
+<p>As mentioned in the above, the prompt will be processed into a pooled global embedding and a non-pooled sequential detail embedding. Consider both positive prompt and negative prompt, we will obtain two set of conditions</p>
+<ul>
+<li>cond</li>
+<li>context</li>
+<li>y</li>
+<li>uncond</li>
+<li>context</li>
+<li>y</li>
+</ul>
+<p>In stable diffusion 3,
+<a class="glightbox" href="../../../../images/image-91.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="alt text" src="../../../../images/image-91.png" /></a></p>
+<p>But in practice, the negative prompt is empty string, which take the effect of the CFG, classifier free guidance diffusion. That is, the negative is the case the condition is empty.
+Have more details in <a href="../../../chapter7_diffusion/sde_diffusion_guidance/">guidance diffusion</a></p>
+<p>Next, let's check the detailed sampling steps if we have the condition already.</p>
+<h4 id="452-sampling">4.5.2 Sampling<a class="headerlink" href="#452-sampling" title="Permanent link">&para;</a></h4>
+<h5 id="4521-cfg-denoiser">4.5.2.1 CFG Denoiser<a class="headerlink" href="#4521-cfg-denoiser" title="Permanent link">&para;</a></h5>
+<p>Here is the code of the CFG Denoiser, Have more details in <a href="../../../chapter7_diffusion/sde_diffusion_guidance/">guidance diffusion</a></p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span></pre></div></td><td class="code"><div><pre><span></span><code>```py3
+class CFGDenoiser(torch.nn.Module):
+    &quot;&quot;&quot;Helper for applying CFG Scaling to diffusion outputs&quot;&quot;&quot;
+    def __init__(self, model):
+        super().__init__()
+        self.model = model
+
+    def forward(self, x, timestep, cond, uncond, cond_scale):
+        # Run cond and uncond in a batch together
+        batched = self.model.apply_model(torch.cat([x, x]), torch.cat([timestep, timestep]), c_crossattn=torch.cat([cond[&quot;c_crossattn&quot;], uncond[&quot;c_crossattn&quot;]]), y=torch.cat([cond[&quot;y&quot;], uncond[&quot;y&quot;]]))
+        # Then split and apply CFG Scaling
+        pos_out, neg_out = batched.chunk(2)
+        scaled = neg_out + (pos_out - neg_out) * cond_scale
+        return scaled
+```
+</code></pre></div></td></tr></table></div>
+<h5 id="4522-euler-smaple">4.5.2.2 Euler Smaple<a class="headerlink" href="#4522-euler-smaple" title="Permanent link">&para;</a></h5>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span></pre></div></td><td class="code"><div><pre><span></span><code>```py3
+def to_d(x, sigma, denoised):
+    &quot;&quot;&quot;Converts a denoiser output to a Karras ODE derivative.&quot;&quot;&quot;
+    return (x - denoised) / append_dims(sigma, x.ndim)
+
+@torch.no_grad()
+@torch.autocast(&quot;cuda&quot;, dtype=torch.float16)
+def sample_euler(model, x, sigmas, extra_args=None):
+    &quot;&quot;&quot;Implements Algorithm 2 (Euler steps) from Karras et al. (2022).&quot;&quot;&quot;
+    extra_args = {} if extra_args is None else extra_args
+    s_in = x.new_ones([x.shape[0]])
+    for i in range(len(sigmas) - 1):
+        sigma_hat = sigmas[i]
+        denoised = model(x, sigma_hat * s_in, **extra_args)
+        d = to_d(x, sigma_hat, denoised)
+        dt = sigmas[i + 1] - sigma_hat
+        # Euler method
+        x = x + d * dt
+    return x
+    ```
+</code></pre></div></td></tr></table></div>
+<p>The <strong>Euler method</strong> is a simple <strong>numerical integration technique</strong> used to solve ordinary differential equations (ODEs). The code you provided implements a <strong>modified Euler method</strong> for solving the <strong>Karras ODE</strong> in diffusion models. Below, I will compare this <strong>Euler-based sampler</strong> with the <strong>standard Euler method</strong>, highlighting the differences.</p>
+<p><strong>Standard Euler Method</strong></p>
+<p>The <strong>explicit (forward) Euler method</strong> is defined as:</p>
+<div class="arithmatex">\[
+x_{t-1} = x_t + f(x_t, t) \cdot dt
+\]</div>
+<p>where:</p>
+<ul>
+<li><span class="arithmatex">\( x_t \)</span> is the current state,</li>
+<li><span class="arithmatex">\( f(x_t, t) \)</span> is the derivative (computed from an ODE),</li>
+<li><span class="arithmatex">\( dt \)</span> is the step size.</li>
+</ul>
+<p>This method is used to <strong>approximate the solution of an ODE by taking small discrete steps</strong>.</p>
+<p><strong>Equation in Diffusion Models</strong>
+Diffusion models can be formulated as an <strong>ODE</strong>:</p>
+<div class="arithmatex">\[
+\frac{d x}{d t} = f(x, t) = \frac{x - \text{denoised}(x)}{\sigma}
+\]</div>
+<p>Using the Euler update rule:</p>
+<div class="arithmatex">\[
+x_{t-1} = x_t + \frac{x_t - \text{denoised}(x_t)}{\sigma} \cdot dt
+\]</div>
+<p>where:</p>
+<ul>
+<li><span class="arithmatex">\( \frac{x_t - \text{denoised}(x_t)}{\sigma} \)</span> acts as the ODE derivative.</li>
+<li><span class="arithmatex">\( dt \)</span> is the time step, determined by the noise schedule.</li>
+</ul>
+<p>This is an <strong>explicit Euler step</strong> applied to a diffusion model.</p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Standard Euler</th>
+<th>Diffusion Euler (Karras ODE)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ODE Formulation</strong></td>
+<td>General-purpose ODE</td>
+<td>Diffusion-specific ODE</td>
+</tr>
+<tr>
+<td><strong>Derivative Function <span class="arithmatex">\( f(x, t) \)</span></strong></td>
+<td>Predefined function</td>
+<td>Computed via denoiser</td>
+</tr>
+<tr>
+<td><strong>Step Size <span class="arithmatex">\( dt \)</span></strong></td>
+<td>Fixed</td>
+<td>Adaptive (determined by noise schedule)</td>
+</tr>
+<tr>
+<td><strong>Dynamical Behavior</strong></td>
+<td>General ODE integration</td>
+<td>Guides noise removal</td>
+</tr>
+<tr>
+<td><strong>Goal</strong></td>
+<td>Solve ODE</td>
+<td>Generate images from noise</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>
+<p><strong>Standard Euler computes derivatives directly from an ODE function <span class="arithmatex">\( f(x, t) \)</span></strong>.</p>
+<ul>
+<li>In contrast, <strong>Diffusion Euler estimates the derivative from the denoising model</strong>.</li>
+</ul>
+</li>
+<li>
+<p><strong>Standard Euler uses a fixed step size <span class="arithmatex">\( dt \)</span>, whereas Diffusion Euler uses an adaptive step size <span class="arithmatex">\( dt = \sigma_{t+1} - \sigma_t \)</span></strong>.</p>
+<ul>
+<li>This makes the diffusion process more flexible.</li>
+</ul>
+</li>
+<li>
+<p><strong>In diffusion models, the score function (or denoiser) acts as an implicit ODE solver</strong>.</p>
+<ul>
+<li>The model learns how to remove noise at different levels, effectively solving the reverse SDE (stochastic differential equation) using an ODE approximation.</li>
+</ul>
+</li>
+</ol>
+<h2 id="5-references">5. References<a class="headerlink" href="#5-references" title="Permanent link">&para;</a></h2>
 <ul>
 <li>stable diffusion 3 reading: <a href="https://zhuanlan.zhihu.com/p/684068402?utm_source=chatgpt.com">https://zhuanlan.zhihu.com/p/684068402?utm_source=chatgpt.com</a></li>
 <li><a href="https://github.com/Stability-AI/sd3-ref">sd 3 inference code</a></li>
@@ -4004,25 +4450,45 @@ The pre_attention did the linear transform and the layer norm of the Q,K,V in th
 
 <!-- Hypothesis 样式美化 -->
 <style>
-  /* 美化高亮效果 */
+  /* 修改高亮效果为下划线和聊天泡泡 */
   .hypothesis-highlight {
-    background-color: rgba(255, 236, 179, 0.5) !important;
-    transition: background-color 0.3s ease !important;
-    border-bottom: 2px solid #ffb74d !important;
-    box-shadow: 0 0 0 0.2em rgba(255, 193, 7, 0.1) !important;
+    background-color: transparent !important; /* 移除高亮背景 */
+    text-decoration: underline !important;
+    text-decoration-color: #4285f4 !important;
+    text-decoration-thickness: 2px !important;
+    text-decoration-style: wavy !important;
+    position: relative !important;
     cursor: pointer !important;
+    border-bottom: none !important; /* 移除之前的边框 */
+    box-shadow: none !important; /* 移除之前的阴影 */
   }
-  
+
+  .hypothesis-highlight::after {
+    content: "💬" !important;
+    position: absolute !important;
+    display: inline-block !important;
+    font-size: 14px !important;
+    top: -10px !important;
+    right: -5px !important;
+    opacity: 0.7 !important;
+    transition: opacity 0.3s ease !important;
+  }
+
   .hypothesis-highlight:hover {
-    background-color: rgba(255, 193, 7, 0.3) !important;
+    background-color: rgba(66, 133, 244, 0.08) !important; /* 鼠标悬停时的轻微背景 */
   }
-  
+
+  .hypothesis-highlight:hover::after {
+    opacity: 1 !important;
+    transform: scale(1.2) !important;
+  }
+
   /* 美化 Hypothesis 侧边栏 */
   hypothesis-sidebar {
     font-family: var(--md-text-font-family, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif) !important;
     box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1) !important;
   }
-  
+
   /* 美化卡片样式 */
   .hypothesis-annotation-card {
     border-radius: 8px !important;
@@ -4030,18 +4496,18 @@ The pre_attention did the linear transform and the layer norm of the Q,K,V in th
     transition: transform 0.2s ease, box-shadow 0.2s ease !important;
     overflow: hidden !important;
   }
-  
+
   .hypothesis-annotation-card:hover {
     transform: translateY(-2px) !important;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
   }
-  
+
   /* 美化 Hypothesis 按钮 */
   .hypothesis-button {
     border-radius: 4px !important;
     transition: background-color 0.2s ease !important;
   }
-  
+
   /* 美化标签样式 */
   .hypothesis-tag {
     border-radius: 12px !important;
@@ -4056,26 +4522,26 @@ The pre_attention did the linear transform and the layer norm of the Q,K,V in th
     background: linear-gradient(to right, #f5f5f5, #ffffff) !important;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
   }
-  
+
   /* 美化注释面板header */
   .hypothesis-annotation-header {
     padding: 10px !important;
     background-color: #f9f9f9 !important;
   }
-  
+
   /* 美化注释内容 */
   .hypothesis-annotation-body {
     font-size: 14px !important;
     line-height: 1.6 !important;
     color: #333 !important;
   }
-  
+
   /* 美化用户名 */
   .hypothesis-user {
     font-weight: 600 !important;
     color: #3f51b5 !important;
   }
-  
+
   /* 美化时间戳 */
   .hypothesis-timestamp {
     font-size: 12px !important;
@@ -4088,7 +4554,7 @@ The pre_attention did the linear transform and the layer norm of the Q,K,V in th
     border: 1px solid #e0e0e0 !important;
     transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
   }
-  
+
   .hypothesis-input:focus {
     border-color: #4dabf7 !important;
     box-shadow: 0 0 0 2px rgba(77, 171, 247, 0.2) !important;
@@ -4309,13 +4775,13 @@ The pre_attention did the linear transform and the layer norm of the Q,K,V in th
         
         
           
-          <a href="../flux1/" class="md-footer__link md-footer__link--next" aria-label="Next: Flux.1">
+          <a href="../stable_diffusion_3_5_reading/" class="md-footer__link md-footer__link--next" aria-label="Next: Stable Diffusion 3.5">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Flux.1
+                Stable Diffusion 3.5
               </div>
             </div>
             <div class="md-footer__button md-icon">

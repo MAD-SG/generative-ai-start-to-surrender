@@ -1313,6 +1313,8 @@
       
         
       
+        
+      
     
     
       
@@ -2185,6 +2187,107 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_4" id="__nav_7_4_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Conditional Diffusion
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_4">
+            <span class="md-nav__icon md-icon"></span>
+            Conditional Diffusion
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../controlnet/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ControlNet
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sde_diffusion_guidance/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SDE Diffusion Guidance
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2490,10 +2593,6 @@
       
         
       
-        
-      
-        
-      
     
     
       
@@ -2556,12 +2655,64 @@
   
   
   
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_9_3_2" id="__nav_9_3_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Stable Diffusion Series
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_9_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            Stable Diffusion Series
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
     <li class="md-nav__item">
       <a href="../../chapter11_hybrid_sota_models/sota_open_models/stable_diffusion_series/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Stable Diffusion Series
+    Overview
   </span>
   
 
@@ -2608,6 +2759,35 @@
   
 
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter11_hybrid_sota_models/sota_open_models/stable_diffusion_3_5_reading/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Stable Diffusion 3.5
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -4313,25 +4493,45 @@ X_t = X_0 + \int_0^t b(X_s, s)\,ds + \int_0^t \sigma(X_s, s)\,dB^H_s.
 
 <!-- Hypothesis 样式美化 -->
 <style>
-  /* 美化高亮效果 */
+  /* 修改高亮效果为下划线和聊天泡泡 */
   .hypothesis-highlight {
-    background-color: rgba(255, 236, 179, 0.5) !important;
-    transition: background-color 0.3s ease !important;
-    border-bottom: 2px solid #ffb74d !important;
-    box-shadow: 0 0 0 0.2em rgba(255, 193, 7, 0.1) !important;
+    background-color: transparent !important; /* 移除高亮背景 */
+    text-decoration: underline !important;
+    text-decoration-color: #4285f4 !important;
+    text-decoration-thickness: 2px !important;
+    text-decoration-style: wavy !important;
+    position: relative !important;
     cursor: pointer !important;
+    border-bottom: none !important; /* 移除之前的边框 */
+    box-shadow: none !important; /* 移除之前的阴影 */
   }
-  
+
+  .hypothesis-highlight::after {
+    content: "💬" !important;
+    position: absolute !important;
+    display: inline-block !important;
+    font-size: 14px !important;
+    top: -10px !important;
+    right: -5px !important;
+    opacity: 0.7 !important;
+    transition: opacity 0.3s ease !important;
+  }
+
   .hypothesis-highlight:hover {
-    background-color: rgba(255, 193, 7, 0.3) !important;
+    background-color: rgba(66, 133, 244, 0.08) !important; /* 鼠标悬停时的轻微背景 */
   }
-  
+
+  .hypothesis-highlight:hover::after {
+    opacity: 1 !important;
+    transform: scale(1.2) !important;
+  }
+
   /* 美化 Hypothesis 侧边栏 */
   hypothesis-sidebar {
     font-family: var(--md-text-font-family, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif) !important;
     box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1) !important;
   }
-  
+
   /* 美化卡片样式 */
   .hypothesis-annotation-card {
     border-radius: 8px !important;
@@ -4339,18 +4539,18 @@ X_t = X_0 + \int_0^t b(X_s, s)\,ds + \int_0^t \sigma(X_s, s)\,dB^H_s.
     transition: transform 0.2s ease, box-shadow 0.2s ease !important;
     overflow: hidden !important;
   }
-  
+
   .hypothesis-annotation-card:hover {
     transform: translateY(-2px) !important;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
   }
-  
+
   /* 美化 Hypothesis 按钮 */
   .hypothesis-button {
     border-radius: 4px !important;
     transition: background-color 0.2s ease !important;
   }
-  
+
   /* 美化标签样式 */
   .hypothesis-tag {
     border-radius: 12px !important;
@@ -4365,26 +4565,26 @@ X_t = X_0 + \int_0^t b(X_s, s)\,ds + \int_0^t \sigma(X_s, s)\,dB^H_s.
     background: linear-gradient(to right, #f5f5f5, #ffffff) !important;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
   }
-  
+
   /* 美化注释面板header */
   .hypothesis-annotation-header {
     padding: 10px !important;
     background-color: #f9f9f9 !important;
   }
-  
+
   /* 美化注释内容 */
   .hypothesis-annotation-body {
     font-size: 14px !important;
     line-height: 1.6 !important;
     color: #333 !important;
   }
-  
+
   /* 美化用户名 */
   .hypothesis-user {
     font-weight: 600 !important;
     color: #3f51b5 !important;
   }
-  
+
   /* 美化时间戳 */
   .hypothesis-timestamp {
     font-size: 12px !important;
@@ -4397,7 +4597,7 @@ X_t = X_0 + \int_0^t b(X_s, s)\,ds + \int_0^t \sigma(X_s, s)\,dB^H_s.
     border: 1px solid #e0e0e0 !important;
     transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
   }
-  
+
   .hypothesis-input:focus {
     border-color: #4dabf7 !important;
     box-shadow: 0 0 0 2px rgba(77, 171, 247, 0.2) !important;
