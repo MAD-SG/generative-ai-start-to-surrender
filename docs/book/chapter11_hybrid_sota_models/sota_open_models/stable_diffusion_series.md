@@ -7,7 +7,7 @@
 - Repo: [taming-transformers](https://github.com/CompVis/taming-transformers)
 - Organization: CompVis
 
-Please refer [VQ-GAN](../../chapter5_GAN/vq_gan.md) for more details.
+Please refer to [VQ-GAN](../../chapter5_GAN/vq_gan.md) for more details.
 
 ## Stable Diffusion v0
 
@@ -16,14 +16,14 @@ Please refer [VQ-GAN](../../chapter5_GAN/vq_gan.md) for more details.
 - Repo: [<https://github.com/Stability-AI/stablediffusion?tab=readme-ov-file>](https://github.com/CompVis/latent-diffusion)
 - Organization: CompVis
 
-Please refer [LDM](../../chapter7_diffusion/ldm.md) for more details
+Please refer to [LDM](../../chapter7_diffusion/ldm.md) for more details.
 
-## Stable DIffusion v1
+## Stable Diffusion v1
 
 - Year
 - Ideas
   - [High-Resolution Image Synthesis with Latent Diffusion Models](https://arxiv.org/abs/2112.10752)
-  - [classifier free guidance sampling](https://arxiv.org/pdf/2207.12598)
+  - [Classifier-Free Guidance Sampling](https://arxiv.org/pdf/2207.12598)
 - Repo: [Stable_Diffusion_v1_Model_Card.md](https://github.com/CompVis/stable-diffusion/blob/main/Stable_Diffusion_v1_Model_Card.md)
 - Organization: CompVis
 
@@ -59,7 +59,7 @@ Please refer [LDM](../../chapter7_diffusion/ldm.md) for more details
   - **Learning Rate:** Warmup to 0.0001 over 10,000 steps, then kept constant
 
 ### Difference between v0 and v1
-The code is basically the same with stable diffusion v0, which is latent diffusion.
+The code is basically the same as Stable Diffusion v0, which is latent diffusion.
 
 ### Dataset
 #### LAION-Aesthetics Dataset Summary
@@ -102,7 +102,7 @@ This dataset provided a smaller dataset with higher aesthetics scores, so that i
   - /<https://arxiv.org/pdf/2204.06125>
   - <https://arxiv.org/pdf/2202.00512>
 - repo: <https://github.com/Stability-AI/stablediffusion?tab=readme-ov-file>
-- oganization: Stability-AI
+- organization: Stability-AI
 
 ### Summary
 Generated Image
@@ -111,13 +111,13 @@ Generated Image
 Unchanged
 
 1. VAE structure
-2. Latent Difffuions Structure (text condition embedding changes)
-3. Basic DDPM sampling (it has extra pregressive sampling method)
+2. Latent Diffusions Structure (text condition embedding changes)
+3. Basic DDPM sampling (it has extra progressive sampling method)
 
-The base model is still the latent diffusion. The main differences is
+The base model is still the latent diffusion. The main differences are:
 
 1. Resolution. The original model is 512x512, we use 768x768 in the future.
-2. Use the idea of progessive distillation for fast sampling
+2. Use the idea of progressive distillation for fast sampling
 3. Use clip guided for text2image sampling
 
 ### Differences change details
@@ -174,11 +174,11 @@ class ImageEmbeddingConditionedLatentDiffusion(LatentDiffusion):
         return noutputs
 ```
 
-Compared with privious LDM, it added another variable `c_adm` for the clip image bedding of the images. Please see [unCLIP](./dalle_series.md) for the details on takeing CLIP image embedding as condition.
+Compared with previous LDM, it added another variable `c_adm` for the clip image embedding of the images. Please see [unCLIP](./dalle_series.md) for the details on taking CLIP image embedding as condition.
 
-Refer the code explanation of latent diffusion model [Latent Diffusion Model](../../chapter7_diffusion/ldm_handson.md), the `c_adm` is assigned to `y` and later will be added into the time embedding.
+Refer to the code explanation of latent diffusion model [Latent Diffusion Model](../../chapter7_diffusion/ldm_handson.md), the `c_adm` is assigned to `y` and later will be added into the time embedding.
 
-It also takes the embedding_drop out such that the model is trained both with image embedding or not.
+It also takes the embedding dropout such that the model is trained both with image embedding or not.
 
 #### v-prediction
 
@@ -225,7 +225,7 @@ $$
 
 Different
 ### Other Types of Conditions
-In the main latent diffusion condition process block, all the concat condition will follow the process
+In the main latent diffusion condition process block, all the concat conditions will follow the process
 
 ```py3 title="concat condition processing"
         assert exists(self.concat_keys)
@@ -249,7 +249,7 @@ In the main latent diffusion condition process block, all the concat condition w
 ```
 
 If the concat condition is not of the same shape, it will be interpolated into the same shape with the image shape.
-Recall the steps in the Latent Diffusion forward step, the concat condition will be concated together with the input $z$ as the start of the diffusion model.
+Recall the steps in the Latent Diffusion forward step, the concat condition will be concatenated together with the input $z$ as the start of the diffusion model.
 
 #### Low resolution condition
 === "LatentUpscaleDiffusion"
@@ -300,8 +300,7 @@ Recall the steps in the Latent Diffusion forward step, the concat condition will
             return z, all_conds
     ```
 
-The low resolutoin condition is considered as the concat condition and will later concat with the input $z$.
-Also, the condition combined with the noise to match the diffusion steps in case it provided too much clear information for the model.
+The low resolution condition is considered as the concat condition and will later be concatenated with the input $z$. Also, the condition is combined with noise to match the diffusion steps in case it provides too much clear information for the model.
 
 #### Depth Condition
 
@@ -332,7 +331,7 @@ With the help from the MiDaSInference, we can convert the image into depth, thus
         all_conds = {"c_concat": [c_cat], "c_crossattn": [c]}
 ```
 
-It processed the condition same as low-res condition
+It processes the condition the same way as the low-res condition
 #### Inpaint Condition
 
 ```py3 title="Inpaint Condition"
@@ -351,9 +350,9 @@ It processed the condition same as low-res condition
         c_cat = torch.cat(c_cat, dim=1)
 ```
 
-The concat keys is `["mask", "masked_image"]` which provided the masked image and the masks.
+The concat keys are `["mask", "masked_image"]` which provide the masked image and the masks.
 
-- The mask will be resized to the same of the input $z$
+- The mask will be resized to the same size as the input $z$
 - The masked_image will be encoded by the same encoder as the target image.
 
 ## Stable Diffusion SDXL
@@ -371,37 +370,37 @@ The concat keys is `["mask", "masked_image"]` which provided the masked image an
 
 ### Architecture
 ![alt text](../../../images/image-58.png)
-Participants were asked to choose their favorite image generation among four models, the results are show above.
+Participants were asked to choose their favorite image generation among four models, the results are shown above.
 
-#### Network stucture
+#### Network structure
 ![alt text](../../../images/image-59.png)
 
 - VAE:
-  - VAE is almost the same, but it implemented a meomory Efficient Scross Attention, which used the package `xformers`
+  - VAE is almost the same, but it implemented a memory-efficient cross-attention, which used the package `xformers`
 
-#### Condition no image size
-   Previous training discard images under 512 pixels which could discard large portion of data, lead to a loss in performance and generalization
+#### Condition on image size
+   Previous training discarded images under 512 pixels which could discard a large portion of data, leading to a loss in performance and generalization.
 
-   we provide the original (i.e., before any rescaling) height and width of the images as an additional conditioning to the model csize = (h-original,w-original). Each component is independently embedded using a Fourier feature encoding, and these encodings are concatenated into a single vector that we feed into the model by adding it to the timestep embedding
+   We provide the original (i.e., before any rescaling) height and width of the images as an additional conditioning to the model csize = (h-original, w-original). Each component is independently embedded using a Fourier feature encoding, and these encodings are concatenated into a single vector that we feed into the model by adding it to the timestep embedding.
 
 ![alt text](../../../images/image-60.png)
 
 #### Condition on cropping parameters
 
-Random cropping during training coulde leads to incomplete generation like the following. So we put it in the condition and set ($c_top,c_left$) be zeros to obtained the object centered samples. Further, we can tune the two parameters to simulate the amount of cropping during inference.
+Random cropping during training could lead to incomplete generation like the following. So we put it in the condition and set ($c_top,c_left$) to be zeros to obtain object-centered samples. Further, we can tune the two parameters to simulate the amount of cropping during inference.
 ![alt text](../../../images/image-61.png)
 ![alt text](../../../images/image-62.png)
 
-- Method
-    During dataloading, we uniformly sample crop coordinates ctop and cleft (integers specifying the amount of pixels cropped from the top-left corner along the height and width axes, respectively) and feed them into the model as conditioning parameters via Fourier feature embeddings, similar to the size conditioning described above
+- Method:
+    During data loading, we uniformly sample crop coordinates ctop and cleft (integers specifying the amount of pixels cropped from the top-left corner along the height and width axes, respectively) and feed them into the model as conditioning parameters via Fourier feature embeddings, similar to the size conditioning described above.
 
 #### Condition on aspect ratio
-    Most text2image models produces saure images.
-    - Trainig tricks
-      - Prepare different bukets of images, each bucket has the same shape, while the total number of pixels is approximaly $1024^2$.
-      - During training, single batch comes from same bucket, and change the bucket for different step in the training loop
-    - Condition tricks
-      - similar to the size condition and crop-parameter condition, the target shape $(h_{target},w_{target})$ is embedded into a Fourier space
+    Most text2image models produce square images.
+    - Training tricks:
+      - Prepare different buckets of images, each bucket has the same shape, while the total number of pixels is approximately $1024^2$.
+      - During training, a single batch comes from the same bucket, and we change the bucket for different steps in the training loop.
+    - Condition tricks:
+      - Similar to the size condition and crop-parameter condition, the target shape $(h_{target},w_{target})$ is embedded into a Fourier space.
 
 #### Improved autoencoder
 
@@ -440,12 +439,12 @@ See more details for stable-diffusion xl in [stable diffusion xl](./stable_diffu
     2. latent diffusion scheme
     3. prompt processing: all using the clip_l, clip_G, and T5
     4. $\sigma(t)$: use same scheduling
-    5. euler: same euler sampling method, but sd3.5 have another sampler  "dpmpp_2m"
+    5. euler: same euler sampling method, but sd3.5 has another sampler  "dpmpp_2m"
 - Changes
-    1. sd 3.5 added support for controlnet
-    2. sampling: sd3.5 版本支持多种采样器，如 "dpmpp_2m", "euler" 等，而不仅仅是 "euler". 默认是 "dpmpp_2m"
-    3. sampling: sd3.5 版本增加了对 SkipLayerCFGDenoiser 的支持.
-    4. config: sd3.5 版本默认步数从 50 改为 40，CFG_SCALE 从 5 改为 4.5
+    1. SD 3.5 added support for ControlNet
+    2. Sampling: SD 3.5 version supports multiple samplers, such as "dpmpp_2m", "euler", etc., not just "euler". The default is "dpmpp_2m".
+    3. Sampling: SD 3.5 version added support for SkipLayerCFGDenoiser.
+    4. Config: SD 3.5 version changed the default steps from 50 to 40, and CFG_SCALE from 5 to 4.5.
     5. MM-DiT -> MM-DiTX
 
-See more details of the implementatin in [stable diffusion 3.5](./stable_diffusion_3_5_reading.md)
+See more details of the implementation in [stable diffusion 3.5](./stable_diffusion_3_5_reading.md)
