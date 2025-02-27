@@ -250,9 +250,269 @@ $$d\lambda = \frac{d\lambda_t}{d t} dt$$
 !!! note "Exact Solution of Diffusion ODE"
 
     $$\tag{3}
-    x_t =\frac{\alpha_t}{\alpha_s} x_s -\frac{ \alpha_t }{2} \int_{\lambda_s}^{\lambda_t} e^{-\frac{\lambda }{2}} \hat{\epsilon_\theta}\bigl(x_\lambda,\lambda\bigr)\,d\lambda
+    x_t =\frac{\alpha_t}{\alpha_s} x_s -\frac{ \alpha_t }{2} \int_{\lambda_s}^{\lambda_t} e^{-\frac{\lambda }{2}} \hat{\epsilon_\theta}\bigl(x_\lambda,t_\lambda\bigr)\,d\lambda
     $$
 
 因此根据这个公式，我们可以得到线性部分的准确解，当然随机部分还是需要进行积分。但是它至少减少了一部分的误差项。同时我们也可以从另外一个角度理解，可以理解成 $\epsilon_\theta$ 的一个加权平均,而且是指数衰减的，$\lambda$ 越大，贡献越小。也就是$t$ 越大， $\lambda$ 越小，贡献越大.
+
+### High Order Approximation
+
+为了方便计算，接下来我们重新定义
+
+$$\lambda_t = \log \frac{\alpha_t}{\sigma_t}$$
+
+这样可以避免额外产生一个 $\frac{1}{2}$ 的系数影响。
+
+对于第二项，忍让需要进行数值计算进行求解。为了得到高阶近似，可以用泰勒展开
+
+它本质上是一个**“指数加权的泰勒展开”**，用来构造对
+
+$$
+\int_{\lambda_s}^{\lambda_t} e^{-\lambda}\,\hat{\epsilon}_\theta(\hat{x}_\lambda,\lambda)\,d\lambda
+$$
+的有限阶逼近，从而得到对\(x_t\)的相应展开。
+
+#### 对\(\hat{\epsilon}_\theta(\hat{x}_\lambda,\lambda)\)做关于\(\lambda\)的泰勒展开
+
+令\(\lambda_t>\lambda_s\)，并记\(h := \lambda_t - \lambda_s\)。将\(\hat{\epsilon}_\theta(\hat{x}_\lambda,\lambda)\)在\(\lambda=\lambda_s\)处展开到\(n\)阶，便有
+$$
+\hat{\epsilon}_\theta(\hat{x}_\lambda,\lambda)
+\;=\;
+\sum_{k=0}^n
+\frac{(\lambda - \lambda_s)^k}{k!}\,
+\hat{\epsilon}_\theta^{(k)}\bigl(\hat{x}_{\lambda_s}, \,\lambda_s\bigr)
+\;+\;
+O\bigl(h^{n+1}\bigr).
+$$
+这里\(\hat{\epsilon}_\theta^{(k)}\)表示对\(\lambda\)的第\(k\)阶导数；\(\hat{x}_{\lambda_s}\)指在\(\lambda_s\)处的相应状态(或近似)。
+
+#### 将其带入\(\int e^{-\lambda}\,\hat{\epsilon}_\theta\,d\lambda\)并依次积分
+
+把上述展开代入
+
+$$\int_{\lambda_s}^{\lambda_t}e^{-\lambda}\,\hat{\epsilon}_\theta(\hat{x}_\lambda,\lambda)\,d\lambda$$
+
+后，可将积分拆成一系列幂次项与\(e^{-\lambda}\)的乘积积分，再加上余项\(O(h^{n+2})\)。形式上类似
+
+$$
+\int_{\lambda_s}^{\lambda_t}
+  e^{-\lambda}
+  \sum_{k=0}^n
+  \frac{(\lambda - \lambda_s)^k}{k!}\,
+  \hat{\epsilon}_\theta^{(k)}(\cdot)
+\,d\lambda
+\;=\;
+\sum_{k=0}^n
+  \hat{\epsilon}_\theta^{(k)}(\cdot)
+  \int_{0}^{h}
+    e^{-\!(\lambda_s+\tau)}\,
+    \frac{\tau^k}{k!}
+  d\tau
+\;+\;O(h^{n+2}).
+$$
+
+再根据具体问题(如文中方程 3.4)中的\(\sigma_t,\alpha_t\)等系数关系，将这些积分因子做适当整理，就得到
+
+$$
+\int_{\lambda_s}^{\lambda_t}
+  e^{-\lambda}\,\hat{\epsilon}_\theta(\hat{x}_\lambda,\lambda)
+\,d\lambda
+\;=\;
+\frac{\sigma_t}{\alpha_t}
+\sum_{k=0}^n
+h^{\,k+1}\,
+\varphi_{k+1}(h)\,
+\hat{\epsilon}_\theta^{(k)}\bigl(\hat{x}_{\lambda_s}, \,\lambda_s\bigr)
+\;+\;
+O\bigl(h^{n+2}\bigr),
+$$
+
+#### 定义\(\varphi_k\)函数以简化“指数‐多项式”积分
+
+为了把
+
+$$\displaystyle \int_0^h e^{-\!(\lambda_s+\tau)}\,\tau^k\,d\tau
+$$
+
+一类积分写得更紧凑，文中引入了一簇辅助函数\(\varphi_k(z)\)。它们满足某些初值与递推性质(见(B.2))，从而可得到闭形式，如
+
+$$
+\varphi_1(h)
+= \frac{e^h - 1}{h},
+\quad
+\varphi_2(h)
+= \frac{\,e^h - h - 1\,}{h^2},
+\quad
+\varphi_3(h)
+= \frac{\,e^h - \tfrac{h^2}{2} - h - 1\,}{h^3},
+$$
+
+#### 得到\(x_t\)的展开
+
+\(x_t\)由一项“齐次解”(\(\tfrac{\alpha_t}{\alpha_s}\,x_s\))和一项“非齐次积分”(\(\sigma_t\)-\(\alpha_t\)等系数乘上上面那个积分)组成。把对\(\hat{\epsilon}_\theta\)的近似积分结果带回去，即得到 (B.4) 处：
+
+!!! note "High Order Expansion"
+
+    $$\tag{4}
+    x_t
+    \;=\;
+    \frac{\alpha_t}{\alpha_s}\,x_s
+    \;-\;
+    \sigma_t
+    \sum_{k=0}^n
+      h^{k+1}\,\varphi_{k+1}(h)\,
+      \hat{\epsilon}_\theta^{(k)}\bigl(\hat{x}_{\lambda_s},\,\lambda_s\bigr)
+    \;+\;
+    O\bigl(h^{n+2}\bigr).
+    $$
+
+由此便构成了对方程(3)解的一个**有限阶逼近**。
+
+下面给出文中式 (4)
+
+$$
+x_{t}
+\;=\;
+\frac{\alpha_{t}}{\alpha_{s}}\;x_{s}
+\;-\;
+\sigma_{t}
+\sum_{k=0}^{n}
+  h^{k+1}\,\varphi_{k+1}(h)\,
+  \hat{\epsilon}_{\theta}^{(k)}\bigl(\hat{x}_{\lambda_{s}},\,\lambda_{s}\bigr)
+\;+\;
+O\bigl(h^{n+2}\bigr),
+\quad
+\text{其中 }h=\lambda_{t}-\lambda_{s},
+$$
+
+在 \(n=0,1,2\) 三种截断下的**显式形式**。这里
+
+$$
+\varphi_{1}(h) \;=\; \frac{e^{h}-1}{h},
+\quad
+\varphi_{2}(h) \;=\; \frac{\,e^{h}-h-1\,}{h^{2}},
+\quad
+\varphi_{3}(h) \;=\; \frac{\,e^{h}-\tfrac{h^{2}}{2}-h-1\,}{h^{3}},
+$$
+
+以及\(\hat{\epsilon}_{\theta}^{(k)}\) 表示 \(\lambda\) 的 \(k\) 阶导数在 \(\lambda=\lambda_s\) 处的值。
+
+##### \(n=0\) 截断
+
+只保留 \(k=0\) 项，则
+$$
+x_{t}
+\;=\;
+\frac{\alpha_{t}}{\alpha_{s}}\;x_{s}
+\;-\;
+\sigma_{t}
+\Bigl[
+  h^{1}\,\varphi_{1}(h)\,\hat{\epsilon}_{\theta}^{(0)}
+\Bigr]
+\;+\;
+O\bigl(h^{2}\bigr).
+$$
+
+因为 \(\hat{\epsilon}_{\theta}^{(0)}=\hat{\epsilon}_{\theta}\bigl(\hat{x}_{\lambda_s},\lambda_s\bigr)\) 且
+\(\,h\,\varphi_{1}(h)=e^{h}-1,\)
+故
+
+$$
+\boxed{
+x_{t}
+\;=\;
+\frac{\alpha_{t}}{\alpha_{s}}\;x_{s}
+\;-\;
+\sigma_{t}\,\Bigl(e^{h}-1\Bigr)\,\hat{\epsilon}_{\theta}\bigl(\hat{x}_{\lambda_s},\,\lambda_{s}\bigr)
+\;+\;
+O\bigl(h^{2}\bigr).
+}
+$$
+
+##### \(n=1\) 截断
+
+此时求和到 \(k=1\)，即包含 \(k=0\) 和 \(k=1\) 两项：
+
+$$
+x_{t}=\frac{\alpha_{t}}{\alpha_{s}}\;x_{s}
+\;-\;
+\sigma_{t}
+\Bigl[
+  h\,\varphi_{1}(h)\,\hat{\epsilon}_{\theta}^{(0)}
+  \;+\;
+  h^{2}\,\varphi_{2}(h)\,\hat{\epsilon}_{\theta}^{(1)}
+\Bigr]
++\;
+O\bigl(h^{3}\bigr).
+$$
+
+再将
+
+$$
+h\,\varphi_{1}(h)
+= e^{h}-1,
+\quad
+h^{2}\,\varphi_{2}(h)
+= e^{h}-h-1
+$$
+
+代回，则
+
+$$
+\boxed{
+x_{t}
+=\;
+\frac{\alpha_{t}}{\alpha_{s}}\;x_{s}
+\;-\;
+\sigma_{t}
+\Bigl[
+  \bigl(e^{h}-1\bigr)\,
+  \hat{\epsilon}_{\theta}^{(0)}
+  \;+\;
+  \bigl(e^{h}-h-1\bigr)\,
+  \hat{\epsilon}_{\theta}^{(1)}
+\Bigr]
+\;+\;
+O\bigl(h^{3}\bigr),
+}
+$$
+
+其中
+
+$$\hat{\epsilon}_{\theta}^{(1)}=\dfrac{d}{d\lambda}\hat{\epsilon}_{\theta}\bigl(\hat{x}_{\lambda},\lambda\bigr)\big|_{\lambda=\lambda_s}$$
+
+###### \(n=2\) 截断
+
+保留到 \(k=2\)，即 \(k=0,1,2\):
+
+$$
+x_{t}=\frac{\alpha_{t}}{\alpha_{s}}\;x_{s}\;-\;\sigma_{t}
+\Bigl[
+  h\,\varphi_{1}(h)\,\hat{\epsilon}_{\theta}^{(0)}
+  \;+\;
+  h^{2}\,\varphi_{2}(h)\,\hat{\epsilon}_{\theta}^{(1)}
+  \;+\;
+  h^{3}\,\varphi_{3}(h)\,\hat{\epsilon}_{\theta}^{(2)}
+\Bigr]+\;O\bigl(h^{4}\bigr).
+$$
+
+再利用
+
+$$
+h^{3}\,\varphi_{3}(h)
+= e^{h}\;-\;\frac{h^{2}}{2}\;-\;h\;-\;1,
+$$
+
+可写成
+
+$$
+\boxed{x_{t}=\;\frac{\alpha_{t}}{\alpha_{s}}\;x_{s}\;-\;\sigma_{t}\Bigl[
+  \bigl(e^{h}-1\bigr)\,\hat{\epsilon}_{\theta}^{(0)}
+  \;+\;
+  \bigl(e^{h}-h-1\bigr)\,\hat{\epsilon}_{\theta}^{(1)}
+  \;+\;
+  \Bigl(e^{h}-\tfrac{h^{2}}{2}-h-1\Bigr)\,\hat{\epsilon}_{\theta}^{(2)}
+\Bigr]\;+\;O\bigl(h^{4}\bigr).}
+$$
 
 ## DPM Solver ++
