@@ -47,6 +47,8 @@ nav:
           - Scaling and Scheduling: book/chapter7_diffusion/sde_diffusion_unified_representation.md
       - Diffusion Network:
           - DiT: book/chapter7_diffusion/DiT.md
+      - Diffusion Solver:
+          - DPM Solver: book/chapter7_diffusion/diffusion_solver.md
       - Conditional Diffusion:
           - ControlNet: book/chapter7_diffusion/controlnet.md
           - SDE Diffusion Guidance: book/chapter7_diffusion/sde_diffusion_guidance.md

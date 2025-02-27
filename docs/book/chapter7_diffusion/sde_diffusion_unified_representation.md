@@ -40,7 +40,7 @@ $$\tag{5}
 \begin{aligned}
 \nabla_x \log q_t(x_t|x_0) & = \nabla_x \log \left[ C e^{ - \frac{(x_t - \alpha_t x_0)^2}{2 \sigma_t^2}} \right]\\
 & = \frac{1}{\sigma_t^2}(x_t - \alpha_t x_0)\\
-& = - \frac{\epsilon_t}{\sigma_t}
+& = - \frac{\epsilon_\theta}{\sigma_t}
 \end{aligned}
 $$
 
@@ -49,14 +49,15 @@ $$
 $$\tag{6}
 \begin{aligned}
 \frac{d x_t}{d t} &= f(t)x_t - \frac{1}{2} g(t)^2\nabla_x \log q_t(x_t)\\
+&= f(t)x_t + \frac{g(t)^2}{2\sigma_t}\epsilon_\theta  \\
 &= \frac{d \log \alpha_t}{dt} x_t -\frac{1}{2} \left( \frac{d  \sigma_t^2}{dt} - 2 \frac{d \log \alpha_t}{dt}\sigma_t^2 \right) \nabla_x \log q_t(x_t)\\
-& = \frac{d \log \alpha_t}{dt} x_t  +\left(  \frac{d  \sigma_t}{dt} -  \frac{d \log \alpha_t}{dt}\sigma_t \right) \epsilon_t\\
-& = \frac{d \log \alpha_t}{dt} x_t + \left( \frac{\sigma_t d \log \sigma_t/\alpha_t}{dt} \right) \epsilon_t\\
-& = \frac{d \log \alpha_t}{dt} x_t - \left( \frac{\sigma_t d e^{\lambda_t/2}}{dt} \right) \epsilon_t\\
+& = \frac{d \log \alpha_t}{dt} x_t  +\left(  \frac{d  \sigma_t}{dt} -  \frac{d \log \alpha_t}{dt}\sigma_t \right) \epsilon_\theta\\
+& = \frac{d \log \alpha_t}{dt} x_t + \left( \frac{\sigma_t d \log \sigma_t/\alpha_t}{dt} \right) \epsilon_\theta\\
+& = \frac{d \log \alpha_t}{dt} x_t - \left( \frac{\sigma_t d \lambda_t}{2dt} \right) \epsilon_\theta\\
 \end{aligned}
 $$
 
-here $\lambda_t = \frac{\alpha_t^2}{\sigma_t^2}$ usually means the signal-to-noise ratio, SNR.
+here $\lambda_t =\log \frac{\alpha_t^2}{\sigma_t^2}$ usually means the signal-to-noise ratio, SNR.
 
 ??? proof "proof of equation (3)"
 
