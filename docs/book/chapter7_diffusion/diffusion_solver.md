@@ -618,4 +618,60 @@ $$
 
 ### DPM Solver 3
 
+![alt text](../../images/image-102.png)
+
+假设当前的为$x(\lambda)$, $\lambda$为自变量，$h$ 为步长。$r_1$ 和 $r_2$类似于龙格库塔方法中的系数。在本文中取值
+为\( r_1 = \frac{1}{3},\,r_2 = \frac{1}{3} \).
+
+我们从$\lambda$ 的角度重写DPM Solver-3 的迭代公式, 让它看起来更加清晰。
+
+1. **第一阶段**
+
+$$
+\begin{aligned}
+\hat{x}_{\lambda + r_1h}&\;=\;\frac{\alpha_{s_{\lambda + r_1 h}}}{\alpha_\lambda}\;x(\lambda)\;-\;
+\sigma_{s_{\lambda + r_1 h}}\,\bigl(e^{\,r_1 h} - 1\bigr)\,\epsilon_\theta\bigl(x(\lambda),\,\lambda\bigr),\\
+\hat{D}_1&=\frac{1}{r_1 h}\Bigl[\epsilon_\theta(\hat{x}_{\lambda + r_1h},\lambda + r_1 h) - \epsilon_\theta(x(\lambda),\lambda)\Bigr].
+\end{aligned}
+$$
+
+1. **第二阶段**
+
+$$
+\begin{aligned}
+\hat{x}_{\lambda + r_2 h}& = \frac{\alpha_{\lambda + r_2 h}}{\alpha_\lambda}\;x(\lambda)-\sigma_{s_{\lambda + r_2 h}}  \bigl(e^{\,r_2 h} - 1\bigr)\epsilon_\theta\bigl(x(\lambda),\,\lambda\bigr) -
+\sigma_{s_{\lambda + r_2 h}}\,\bigl(e^{\,r_2 h} - r_2 h - 1\bigr)\hat{D}_1\\
+\hat{D}_2 &=\frac{1}{r_2\,h}\Bigl[\epsilon_\theta(\hat{x}_{\lambda + r_2 h},\lambda + r_2 h) - \epsilon_\theta(x(\lambda),\lambda)\Bigr].
+\end{aligned}
+$$
+
+1. **最终更新**
+
+$$
+x(\lambda + h)=\frac{\alpha_{\lambda + h}}{\alpha_{\lambda}}\;x(\lambda)- \sigma_{\lambda + h}\,\bigl(e^{\,h} - 1\bigr)\,\epsilon_\theta\bigl(x(\lambda),\lambda\bigr) - \sigma_{\lambda + h}\,\bigl(e^{\,h} -h- 1\bigr)\hat{D}_2.
+$$
+这里 我们可以把 $\hat{D}_1$ 和 $\hat{D}_2$ 看作是差分项，也就是
+
+$$ \hat{D}_1 \approx  \frac{d}{d \lambda } \left[\epsilon_\theta(x(\lambda),\lambda) \right]_{\lambda = \lambda + r_1 h}$$
+
+$$ \hat{D}_2 \approx  \frac{d}{d \lambda } \left[\epsilon_\theta(x(\lambda),\lambda) \right]_{\lambda = \lambda + r_2 h}$$
+
+我们重新回顾一下泰勒展开
+
+$$
+\boxed{x_{t}=\;\frac{\alpha_{t}}{\alpha_{s}}\;x_{s}\;-\;\sigma_{t}\Bigl[
+  \bigl(e^{h}-1\bigr)\,\hat{\epsilon}_{\theta}^{(0)}
+  \;+\;
+  \bigl(e^{h}-h-1\bigr)\,\hat{\epsilon}_{\theta}^{(1)}
+  \;+\;
+  \Bigl(e^{h}-\tfrac{h^{2}}{2}-h-1\Bigr)\,\hat{\epsilon}_{\theta}^{(2)}
+\Bigr]\;+\;O\bigl(h^{4}\bigr).}
+$$
+
+从这个公式可以直观看到 $\hat{x}_{\lambda + r_1h}$ 是一阶展开，$\hat{x}_{\lambda + r_2h}$, 和 $\hat{x}_{\lambda + h}$ 都是二阶展开。
+
+那么 $\hat{x}_{\lambda + r_1h}$ 的局部截断误差应该是 $O(h^2)$, 同理因为 $\hat{x}_{\lambda + r_2h}$的局部阶段误差是$O(h^3)$。虽然按找泰莱展开,
+$\hat{x}_{\lambda + h}$ 也是 $o(h^3)$。 但是它可以背证明是 $O(h^4)$。这个是不太直观理解的。
+
+要具体证明局部4阶误差，需要进行泰勒展开进一步证明.
 #### DPM Solver++
