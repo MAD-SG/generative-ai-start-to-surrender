@@ -674,4 +674,48 @@ $$
 $\hat{x}_{\lambda + h}$ 也是 $o(h^3)$。 但是它可以背证明是 $O(h^4)$。这个是不太直观理解的。
 
 要具体证明局部4阶误差，需要进行泰勒展开进一步证明.
-#### DPM Solver++
+## DPM Solver++
+![alt text](../../images/image-103.png)
+![alt text](../../images/image-104.png)
+
+- author:
+  - Cheng Lu†
+  - Yuhao Zhou†
+  - Fan Bao†
+  - Jianfei Chen†∗
+  - Chongxuan Li‡
+  - Jun Zhu
+- year: 2023 May
+- THU
+
+这篇文章主要解决的问题是高阶ODE求解器在**条件噪声预测**过程中的不稳定性。
+
+**第一个挑战** 是 **较大的引导尺度（guidance scale）会导致高阶求解器的不稳定性**。如图 1 所示，在引导尺度 **s = 8.0** 且使用 **15 次函数评估** 的情况下，现有的高阶扩散 ODE 求解器（Lu et al., 2022；Zhang & Chen, 2022；Liu et al., 2022b）生成的图像质量较差，甚至比一阶 DDIM 更差。此外，随着求解器阶数的提高，生成样本的质量会进一步下降。
+
+直观来看，较大的引导尺度可能会放大模型 **\(\tilde{\theta}\)** 在方程 (5) 中的输出和导数。而模型的导数会影响 ODE 求解器的收敛范围，放大的导数可能导致高阶求解器需要 **更小的步长** 才能收敛，因此高阶求解器的性能可能比一阶求解器更差。此外，高阶求解器依赖 **高阶导数**，而这些导数通常对放大效应更敏感，从而进一步缩小了收敛半径。
+
+**第二个挑战** 是 **“训练-测试不匹配”（train-test mismatch）问题**（Saharia et al., 2022b）。数据通常位于一个 **有限区间** 内（例如图像数据在 \([-1, 1]\) 范围内）。然而，当引导尺度较大时，条件噪声预测模型 **\(\tilde{\theta}(x_t, t, c)\)** 会被推离真实噪声，这会导致最终收敛的解 **\(x_0\)** 超出数据的原始范围。在这种情况下，生成的图像会出现 **饱和（saturation）** 和 **不自然（unnatural）** 的问题（Saharia et al., 2022b）。
+
+参考 [diffusion guidance](./sde_diffusion_guidance.md) 理解classifier free的逆向过程. 我们这里直接写出classifier free的逆向过程公式
+
+该公式定义了**无分类器引导（Classifier-Free Guidance）**中用于**扩散概率模型（DPMs）**的**引导噪声预测模型** \(\tilde{\epsilon}_\theta(x_t, t, c)\)：
+
+$$
+\tilde{\epsilon}_\theta(x_t, t, c) := s \cdot \epsilon_\theta(x_t, t, c) + (1 - s) \cdot \epsilon_\theta(x_t, t, \varnothing).
+$$
+
+- 公式解释
+
+  - \( x_t \)：时间 \( t \) 时刻的噪声潜变量。
+  - \( c \)：条件信息（例如，在文本生成图像任务中，\( c \) 可能是文本提示）。
+  - \( \varnothing \)：一个特殊占位符，表示**无条件模型**（即不使用条件信息）。
+  - \( \epsilon_\theta(x_t, t, c) \)：模型在**条件信息 \( c \)** 下预测的噪声。
+  - \( \epsilon_\theta(x_t, t, \varnothing) \)：**无条件模型**（不依赖 \( c \)）预测的噪声。
+  - \( s \)：**引导尺度（guidance scale）**，用于控制条件模型对最终输出的影响程度。
+
+- 直观理解
+
+  该公式对**条件噪声预测**和**无条件噪声预测**进行**线性插值**。
+
+  - 当 \( s = 1 \) 时，模型完全依赖条件信息进行预测。
+  - 当 \( s > 1 \) 时，条件信息的影响被**放大**，可以提高生成质量，但如果 \( s \) 过大，可能会导致图像出现伪影（artifact）或不自然的结果。
