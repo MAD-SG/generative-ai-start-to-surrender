@@ -62,24 +62,24 @@ as $t\rightarrow 1$ for any continuous function $f$ since $\delta$ has no densit
 
 ### Conditional Velocity Field
 
-Let $u_t(\cdot|x_1)$ generates $p_{t|1}(\cdot | x_1)$
+Let $v_t(\cdot|x_1)$ generates $p_{t|1}(\cdot | x_1)$
 
 Thus we have
 
-$$\tag{2}u_t(x) = \int u_t(x|x_1) p_{x_1|x} d x_1$$
+$$\tag{2}v_t(x) = \int v_t(x|x_1) p_{x_1|x} d x_1$$
 
 This can be viewed as a weighted average of the conditional velocities or it can be regared as the conditional expectation
 
-$$u_t(x) = \mathbf{E}[u_t(X_t|X_1)|X_t=x]$$
+$$v_t(x) = \mathbf{E}[v_t(X_t|X_1)|X_t=x]$$
 
 !!! thm "Expectation of conditional velocity"
       Given any Random Variable $Z$, $p_Z$ has bounded support,
 
       $$p_{t|Z}(x|z)\in C^1([0,1]\times R^d)$$
 
-      $$u_t(x|z) \in C^1([0,1]\times R^d,R^d), p_t(x)>0 \; \forall x \in R^d, t\in[0,1)$$
+      $$v_t(x|z) \in C^1([0,1]\times R^d,R^d), p_t(x)>0 \; \forall x \in R^d, t\in[0,1)$$
 
-      If $u_t(x|z)$ is conditional integrable and generates the conditional probability path $p_t(\cdot|z)$, then the marginal velocity field $u_t$ generates the marginal probability path $p_t$ for all $t\in [0,1)$
+      If $v_t(x|z)$ is conditional integrable and generates the conditional probability path $p_t(\cdot|z)$, then the marginal velocity field $v_t$ generates the marginal probability path $p_t$ for all $t\in [0,1)$
 
 ??? proof "Expectation of conditional velocity"
 
@@ -96,25 +96,25 @@ $$u_t(x) = \mathbf{E}[u_t(X_t|X_1)|X_t=x]$$
       \frac{d}{dt} p_t(x) = \int \frac{d}{dt} p_{t|Z}(x|z) p_Z(z) dz.
       $$
 
-      Since $ u_t(x|z) $ generates $ p_{t|Z}(x|z) $, we have:
+      Since $ v_t(x|z) $ generates $ p_{t|Z}(x|z) $, we have:
 
       $$
-      \frac{d}{dt} p_{t|Z}(x|z) = -\nabla_x \cdot [ u_t(x|z) p_{t|Z}(x|z) ].
+      \frac{d}{dt} p_{t|Z}(x|z) = -\nabla_x \cdot [ v_t(x|z) p_{t|Z}(x|z) ].
       $$
 
       Thus,
 
       $$
-      \frac{d}{dt} p_t(x) = -\int \nabla_x \cdot\left[ u_t(x|z) p_{t|Z}(x|z) \right] p_Z(z) dz.
+      \frac{d}{dt} p_t(x) = -\int \nabla_x \cdot\left[ v_t(x|z) p_{t|Z}(x|z) \right] p_Z(z) dz.
       $$
 
       Using the Leibniz rule to move differentiation outside the integral:
 
       $$
-      \frac{d}{dt} p_t(x) = -\nabla_x \cdot \int u_t(x|z) p_{t|Z}(x|z) p_Z(z) dz.
+      \frac{d}{dt} p_t(x) = -\nabla_x \cdot \int v_t(x|z) p_{t|Z}(x|z) p_Z(z) dz.
       $$
 
-      Step 2: Expressing $ u_t(x) $ Using **Bayes' Formula**
+      Step 2: Expressing $ v_t(x) $ Using **Bayes' Formula**
       From **Bayes' rule**:
 
       $$
@@ -124,19 +124,19 @@ $$u_t(x) = \mathbf{E}[u_t(X_t|X_1)|X_t=x]$$
       we substitute:
 
       $$
-      \frac{d}{dt} p_t(x) = -\nabla_x \cdot \int u_t(x|z) p_{Z|t}(z|x) p_t(x) dz.
+      \frac{d}{dt} p_t(x) = -\nabla_x \cdot \int v_t(x|z) p_{Z|t}(z|x) p_t(x) dz.
       $$
 
-      Since the definition of $ u_t(x) $ is:
+      Since the definition of $ v_t(x) $ is:
 
       $$
-      u_t(x) = \int u_t(x|z) p_{Z|t}(z|x) dz,
+      v_t(x) = \int v_t(x|z) p_{Z|t}(z|x) dz,
       $$
 
 !!! def "Contitional Flow Matching"
       Define the conditional flow matching loss as
       $$
-      L_{CF M}(\theta) = E_{t,z,x_t\sim p_{t|Z}(\cdot | Z)} || u_t(x_t|Z)-v_\theta(x_t,t)||^2
+      L_{CF M}(\theta) = E_{t,z,x_t\sim p_{t|Z}(\cdot | Z)} || v_t(x_t|Z)-v_\theta(x_t,t)||^2
       $$
 
 !!! thm "Equivalent of gradient of FM and CFM loss"
