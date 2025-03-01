@@ -719,3 +719,320 @@ $$
 
   - 当 \( s = 1 \) 时，模型完全依赖条件信息进行预测。
   - 当 \( s > 1 \) 时，条件信息的影响被**放大**，可以提高生成质量，但如果 \( s \) 过大，可能会导致图像出现伪影（artifact）或不自然的结果。
+
+
+为了增加ODE求解器对条件生成的稳定性，我们把预测噪声转为预测去噪后的图像，相对于噪声，去噪后的图像明显更加稳定。
+
+我们重写Probability FLOW ODE 方程
+
+$$ \frac{d x}{d t} = f(t) x_t + \frac{g^2(t)}{2\sigma_t}\epsilon_\theta (x_t,t), x_{T} \sim N(0, \sigma^2 I )$$
+
+首先我们有
+
+$$ x_t =\alpha_t x_0 + \sigma_t \epsilon$$
+
+将 $\epsilon_\theta$ 替换为 $x_0$, 并且我们用$x_\theta$ 表示预测后的去噪图像， 我们可以得到
+
+
+$$
+\frac{\mathrm{d}x_t}{\mathrm{d}t}
+\;=\;
+\Bigl(f(t)\;+\;\tfrac{g^2(t)}{2\,\sigma_t^2}\Bigr)\,x_t
+\;-\;\alpha_t\,\tfrac{g^2(t)}{2\,\sigma_t^2}\,x_{\theta}(x_t, t),
+\quad
+x_T \sim \mathcal{N}\bigl(0,\,\sigma^2 I\bigr).
+$$
+
+其中，系数：
+
+
+$$
+f(t) \;=\; \frac{\mathrm{d}\,\log \alpha_t}{\mathrm{d}t},
+\quad
+g^2(t) \;=\; \frac{\mathrm{d}\,\sigma_t^2}{\mathrm{d}t},
+\quad
+\sigma_t^2 \;\text{与}\;\alpha_t \;\text{的关系视具体调度而定。}
+$$
+
+
+
+类似于DPM solver, 我们对先行部分就行求解，得到
+
+!!! note "ODE solution w.r.t $x_\theta$"
+
+    $$
+    x_t
+    \;=\;
+    \frac{\sigma_t}{\sigma_s}\,x_s
+    \;+\;
+    \alpha_t
+    \int_{\lambda_s}^{\lambda_t}
+    e^{\lambda}\,x_\theta\bigl(x_\lambda, \lambda\bigr)\,\mathrm{d}\lambda.
+    $$
+
+我们可以对它求导就行验证
+
+$$
+\begin{aligned}
+\frac{\mathrm{d}x_t}{\mathrm{d}t}
+&= \frac{\mathrm{d}x_s}{\mathrm{d}s}\,x_s
+ \;+\; \frac{\mathrm{d}\lambda_s}{\mathrm{d}s}
+      \int_{\lambda_s}^{\lambda_t}
+         e^{\lambda}\,x_\theta\bigl(x,\lambda\bigr)\,\mathrm{d}\lambda
+ \;+\; \frac{\mathrm{d}\lambda_t}{\mathrm{d}t}\,\sigma_t\,e^{\lambda_t}\,x_\theta\bigl(x_t,\lambda_t\bigr)
+\\
+&= \Bigl(f(t) \;+\; \tfrac{g^2(t)}{2\,\sigma_t^2}\Bigr)\,x_t
+ \;-\; \alpha_t \,\tfrac{g^2(t)}{2\,\sigma_t^2}\,x_\theta\bigl(x_t,t\bigr).
+\end{aligned}
+$$
+
+
+类似于SDK Solver, 我们进行泰勒展开，然后一阶或者二阶近似来做数值逼近。
+
+!!! note "泰勒展开"
+
+    $$
+    \tilde{x}_{t} = \frac{\sigma_{t}}{\sigma_{s}} \tilde{x}_{s} + \sigma_{t} \sum_{n=0}^{k-1} x_{\theta}^{(n)} (\hat{x}_{s}, s) \int_{s}^{t} e^{\lambda} \frac{(\lambda - s)^n}{n!} d\lambda + O(h^{k+1}),
+    $$
+
+其中：
+
+- \(\tilde{x}_{t}\) 是在时间 \(t\) 的估计值。
+
+- \(\sigma_{t}\) 和 \(\sigma_{s}\) 是与时间相关的系数。
+
+- \(x_{\theta}^{(n)}\) 是模型在 \(\hat{x}_{s}\) 和 \(s\) 处的第 \(n\) 阶导数。
+
+- 积分项 \(\int_{s}^{t} e^{\lambda} \frac{(\lambda - s)^n}{n!} d\lambda\) 是用于近似高阶项的数值积分。
+
+- \(O(h^{k+1})\) 表示高阶误差项，其中 \(h = t - s\) 是时间步长。
+
+我们将对积分项求解，可以得到$k=1,2$时候的具体表达式
+
+
+###  当 \(k=1\) 时
+
+只保留 \(n=0\) 项，故有
+
+
+$$
+\sum_{n=0}^{0}
+x_\theta^{(0)}\bigl(x_s,\,\lambda_s\bigr)
+\int_{\lambda_s}^{\lambda_t}
+e^\lambda\,\mathrm{d}\lambda
+\;=\;
+x_\theta^{(0)}\bigl(x_s,\,\lambda_s\bigr)
+\bigl[\,
+e^\lambda
+\bigr]_{\lambda_s}^{\lambda_t}
+\;=\;
+x_\theta^{(0)}\bigl(x_s,\,\lambda_s\bigr)\,
+\bigl(e^{\lambda_t} - e^{\lambda_s}\bigr).
+$$
+
+因此，一阶截断下的数值解为
+
+!!! note "一阶展开"
+
+    $$
+    \begin{aligned}
+    \tilde{x}_t
+    &\;=\;
+    \frac{\sigma_t}{\sigma_s}\,x_s
+    \;+\;
+    \sigma_t\,
+    x_\theta\bigl(x_s,\,\lambda_s\bigr)\,
+    \bigl(e^{\lambda_t} - e^{\lambda_s}\bigr)
+    \;+\;
+    O\bigl(h^2\bigr).\\
+    & = \frac{\sigma_t}{\sigma_s}x_s - \alpha_t \bigl(e^{-h}-1 \bigr) x_\theta(x_s, \lambda_s) + O(h^2)
+    \end{aligned}
+    $$
+
+
+
+###  当 \(k=2\) 时
+
+保留 \(n=0\) 和 \(n=1\) 两项：
+
+$$
+\sum_{n=0}^{1}
+x_\theta^{(n)}\bigl(x_s,\;\lambda_s\bigr)
+\int_{\lambda_s}^{\lambda_t}
+e^\lambda\,
+\frac{\bigl(\lambda-\lambda_s\bigr)^n}{n!}
+\,\mathrm{d}\lambda
+\;=\;
+\underbrace{
+x_\theta^{(0)}(\cdot)\!\int e^\lambda \,\mathrm{d}\lambda
+}_{n=0}
+\;+\;
+\underbrace{
+x_\theta^{(1)}(\cdot)\!\int e^\lambda\,(\lambda-\lambda_s)\,\mathrm{d}\lambda
+}_{n=1}.
+$$
+
+####  \(n=0\) 项
+
+与上面 \(k=1\) 情形相同：
+
+$$
+x_\theta^{(0)}\bigl(x_s, \lambda_s\bigr)
+\int_{\lambda_s}^{\lambda_t}
+e^\lambda\,\mathrm{d}\lambda
+\;=\;
+x_\theta^{(0)}(\cdot)\,\bigl(e^{\lambda_t} - e^{\lambda_s}\bigr).
+$$
+
+####  \(n=1\) 项
+
+$$
+x_\theta^{(1)}\bigl(x_s, \lambda_s\bigr)
+\int_{\lambda_s}^{\lambda_t}
+e^\lambda\,(\lambda - \lambda_s)\,\mathrm{d}\lambda.
+$$
+
+计算该积分：
+
+$$
+\int e^\lambda\,(\lambda - a)\,\mathrm{d}\lambda
+\;=\;
+e^\lambda(\lambda - a) - \int e^\lambda\,\mathrm{d}\lambda
+\;=\;
+e^\lambda\bigl(\lambda - a - 1\bigr) + C.
+$$
+
+令 \(a = \lambda_s\)，则
+
+$$
+\int_{\lambda_s}^{\lambda_t}
+e^\lambda\,(\lambda - \lambda_s)\,\mathrm{d}\lambda
+\;=\;
+\Bigl[
+  e^\lambda\bigl(\lambda - \lambda_s - 1\bigr)
+\Bigr]_{\lambda_s}^{\lambda_t}
+\;=\;
+e^{\lambda_t}\bigl((\lambda_t - \lambda_s) - 1\bigr)
+\;-\;
+e^{\lambda_s}\bigl((\lambda_s - \lambda_s) - 1\bigr)
+\;=\;
+e^{\lambda_t}\bigl(h - 1\bigr)
+\;+\;
+e^{\lambda_s}.
+$$
+
+其中 \(h = \lambda_t - \lambda_s\)。
+于是该项为
+
+$$
+x_\theta^{(1)}\bigl(x_s, \lambda_s\bigr)
+\Bigl\{
+  e^{\lambda_t}(h - 1)
+  \;+\;
+  e^{\lambda_s}
+\Bigr\}.
+$$
+
+####  合并后得到二阶截断
+
+$$
+\tilde{x}_t
+\;=\;
+\frac{\sigma_t}{\sigma_s}\,x_s
+\;+\;
+\sigma_t
+\Bigl[
+  x_\theta^{(0)}\bigl(x_s,\;\lambda_s\bigr)\,\bigl(e^{\lambda_t} - e^{\lambda_s}\bigr)
+  \;+\;
+  x_\theta^{(1)}\bigl(x_s,\;\lambda_s\bigr)\,\Bigl(e^{\lambda_t}(h - 1) \;+\; e^{\lambda_s}\Bigr)
+\Bigr]
+\;+\;
+O\bigl(h^3\bigr).
+$$
+
+
+- **\(k=1\)**：只保留对 \(x_\theta^{(0)}\) 的积分项，近似精度为 \(O(h^2)\)。
+- **\(k=2\)**：额外引入 \(x_\theta^{(1)}\) 的贡献，近似精度提升至 \(O(h^3)\)。
+- 更高阶时，会继续出现 \(\bigl(\lambda-\lambda_s\bigr)^n\) 的积分及 \(x_\theta^{(n)}\) 项，从而得到更高精度的数值逼近。
+
+### 数值算法
+![alt text](../../images/image-105.png)
+
+对于 DPM-Solve++(2S), 每一步迭代需要一个中间步来做更高阶的近似。
+
+DPM-Solver++(2S) 的原理就是把一个时间步拆成两次更新，通过在中间时刻和终点时刻分别评估 $x_0$并做二阶组合，来近似求解逆向 ODE。
+
+
+
+给定已知的“状态” \(\tilde{x}_s\)（在时刻 \(s\))，我们要在一步内近似求解 \(\tilde{x}_t\)（在时刻 \(t\))。DPM-Solver++(2S) 将区间 \([s,t]\) 拆成两个子步：\([s,u]\) 和 \([u,t]\)。其更新公式可写成以下三步：
+
+1. **第一子步：从 \(s\) 到 \(u\)**
+   $$
+   \tilde{x}_u
+   \;=\;
+   \frac{\sigma_u}{\sigma_s}\,\tilde{x}_s
+   \;-\;
+   \alpha_u\,\bigl(\,e^{-\,r\,h} \;-\; 1\bigr)\,
+   x_0\!\bigl(\tilde{x}_s,\;s\bigr).
+   $$
+   - 直观上，这一步先对 \(\tilde{x}_s\) 做一个按系数 \(\sigma_u / \sigma_s\) 的缩放，然后根据数据预测 \(x_0(\tilde{x}_s,s)\) 做“去噪修正”。
+   - 指数项 \(e^{-\,r\,h}\) 体现了在对数信噪比坐标下的退火过程。
+
+2. **合并项 \(D\)**
+   在第二子步之前，我们先构造一个综合漂移项 \(D\)，结合了时刻 \(s\) 与中间时刻 \(u\) 上对数据预测的评估：
+   $$
+   D
+   \;=\;
+   \Bigl[
+     \tfrac{1}{2\,r}\,x_0\bigl(\tilde{x}_s,\,s\bigr)
+     \;+\;
+     \tfrac{1}{2\,(1-r)}\,x_0\bigl(\tilde{x}_u,\,u\bigr)
+   \Bigr]
+   \,\bigl(e^{-\,h} \;-\; 1\bigr).
+   $$
+   这一步类似二阶 Runge–Kutta 方法，会用“初值处”与“中间处”两次对 \(x_0\) 的采样，以提升整体精度。
+
+3. **第二子步：从 \(u\) 到 \(t\)**
+   将区间剩余部分的演化合并到一个公式里：
+   $$
+   \tilde{x}_t
+   \;=\;
+   e^{-\,h}\,\tilde{x}_s
+   \;+\;
+   D.
+   $$
+   最终得到在时刻 \(t\) 的状态 \(\tilde{x}_t\)。
+
+$$
+\boxed{\begin{aligned}
+&1)\quad
+\tilde{x}_u
+\;=\;
+\frac{\sigma_u}{\sigma_s}\,\tilde{x}_s
+\;-\;
+\alpha_u\,\bigl(e^{-\,r\,h} \;-\; 1\bigr)\,
+x_0\bigl(\tilde{x}_s,\;s\bigr),
+\\
+&2)\quad
+D
+\;=\;
+\Bigl[
+  \tfrac{1}{2\,r}\,x_0\bigl(\tilde{x}_s,\;s\bigr)
+  \;+\;
+  \tfrac{1}{2\,(1-r)}\,x_0\bigl(\tilde{x}_u,\;u\bigr)
+\Bigr]\,
+\bigl(e^{-\,h} - 1\bigr),
+\\
+&3)\quad
+\tilde{x}_t
+\;=\;
+e^{-\,h}\,\tilde{x}_s\;+\;D.\end{aligned}}
+$$
+
+其中 \(h = \lambda_t - \lambda_s\)，\(u = s + r\,(t - s)\)。只需一次“子步 + 修正”即可从 \(s\) 前进到 \(t\)。
+
+而DPM Solver++(2M)则是利用上一步的步骤来近似中间步,从而节省计算量，使得每次只需要进行一侧forward.
+
+$D$ 可以看作是一个插值，因为这个中间点在$t-$的前面，从而导致系数为负。
+
+![alt text](../../images/image-106.png)
