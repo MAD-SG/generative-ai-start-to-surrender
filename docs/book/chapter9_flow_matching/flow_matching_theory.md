@@ -205,3 +205,50 @@ Different conditioning choices Z exist but are essentially all equivalent.
 ![alt text](../../images/image-40.png)
 
 Main options include fixing target samples $Z = X_1$, source samples $Z = X_0$, or two-sided $Z = (X_0, X_1)$.
+
+## Summary
+
+Given the source distributin $p$ and target distribution $q$, we can build a probability path from $p$ to $q$ with the probability path and velocity field path
+
+!!! note "probability path"
+
+      $$
+      p_t(x) =
+      \begin{cases}
+      p(x), & when\; t=0\\
+      q(x), & when\; t=1
+      \end{cases}
+      $$
+
+      $$X_t\sim p_t$$
+
+      $$X_t = \psi_t(x_0), x_0\sim X_0$$
+
+      $$\frac{\mathrm{d} \psi_t(x_0)}{\mathrm{d} t} = \dot\psi_t(x_0) = v(\psi(x_0),t),\quad x_0\sim p, \quad \psi_0(x_0) = x_0$$
+
+      $$v(x,t) = \dot\psi_t(x_0,t) = \dot\psi_t(\psi^{-1}_t(x)) $$
+
+      $$p_t(x) = \bigl[{\psi_t}_{\#}p \bigr](x)$$
+
+$v(x,t)$ is the velocity field generates the probablity path. Note that this velocity field is not unique by the solution of the continuity equation. Under certain condition, the velocity field could be unique like the probability flow ODE or the optimal transit.
+
+But in practice, we dont know the exact formula of the probability path and the velocity field. So need to find method to calculate.
+
+We can can consider the condition flow. Take the notation  by under the condition $X_1$ = $x_1$.
+
+!!! note "Conditional Probability Path"
+
+      $$\psi_t(x|x_1) =
+      \begin{cases}
+      x, & t = 0,\\
+      x_1, & t=1.
+      \end{cases}
+      $$
+
+      $$v(x_t|x_1,t) = \dot\psi_t  (x_0|x_1) = \dot\psi_t ( \psi_t^{-1} (x|x_1)|x_1)$$
+
+      $$\mathcal{L}  _{C F M} = E_{t, x_0,x_1}||\dot\psi_t(x_0|x_1) - v_\theta(x,t)||^2)$$
+
+
+
+

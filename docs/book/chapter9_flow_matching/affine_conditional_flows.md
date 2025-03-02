@@ -293,3 +293,144 @@ $$
 & = - \frac{1}{\sigma_t} x_{0|1}(x)
 \end{aligned}
 $$
+
+## Design of $\alpha_t$ and $\sigma_t$
+
+
+下面给出一个简化的 Python 代码示例，演示如何在 **Flow Matching / 扩散模型** 中实现几种常见的 \(\alpha_t\) 与 \(\sigma_t\) 调度（schedules）。这些函数仅作示例，实际使用时可能需要根据论文公式或实验需要做更精细的实现和数值处理。
+
+---
+
+###  Rectified Flow (RF)
+
+Rectified Flow 中常用 **线性插值**：
+$$
+z_t = (1 - t)\,x_0 + t\,\epsilon.
+$$
+对应地，可定义
+$$
+\alpha(t) = t,
+\quad
+\sigma(t) = 1 - t.
+$$
+
+
+
+
+###  Cosine (Nichol & Dhariwal, 2021)
+
+**余弦调度** (cosine schedule) 常见形式：
+$$
+z_t=\cos\Bigl(\tfrac{\pi}{2}t\Bigr)\,x_0
+\;+\;\sin\Bigl(\tfrac{\pi}{2}t\Bigr)\,\epsilon.
+$$
+
+即
+
+$$
+\alpha(t) = \cos\Bigl(\tfrac{\pi}{2}\,t\Bigr),
+\quad
+\sigma(t) = \sin\Bigl(\tfrac{\pi}{2}\,t\Bigr).
+$$
+
+```python
+import math
+
+def alpha_sigma_cosine(t):
+    """
+    Cosine schedule:
+    alpha(t) = cos(pi/2 * t),  sigma(t) = sin(pi/2 * t)
+    t ∈ [0, 1]
+    """
+    alpha_t = math.cos(math.pi * 0.5 * t)
+    sigma_t = math.sin(math.pi * 0.5 * t)
+    return alpha_t, sigma_t
+```
+
+###  EDM (Karras et al., 2022)
+
+EDM 中通常写作：
+
+$$
+z_t = x_0 + b(t)\,\epsilon,
+$$
+
+其中 \(b(t) = \exp(F^{-1}(t \mid p_m,p_s^2))\) （\(F^{-1}\) 为正态分布分位数函数）。在“Flow Matching”视角，可理解为
+
+$$
+\alpha(t) = 1,
+\quad
+\sigma(t) = b(t).
+$$
+
+下面示例中，使用 Python 的 `math.erfinv` (误差函数反变换) 来近似正态分位数函数 \(\Phi^{-1}\)。若要与原论文参数完全一致，需要更精细的缩放和平移。
+
+```python
+import math
+
+def alpha_sigma_edm(t, pm=0.0, ps=1.0):
+    """
+    EDM-like schedule:
+    z_t = x_0 + b(t)*epsilon,
+    where b(t) = exp( NormalQuantile(t, mean=pm, std=ps) ).
+
+    NormalQuantile(t) ≈ sqrt(2)*erfinv(2*t - 1).
+
+    pm, ps: mean and std used in the quantile transform (paper notation).
+    """
+    # 近似 standard normal quantile
+    #  NormalQuantile(t) = pm + ps * sqrt(2)*erfinv(2*t - 1)
+    #  这里只做简单示例
+    quantile = pm + ps * math.sqrt(2) * math.erfinv(2*t - 1)
+    b_t = math.exp(quantile)
+    # alpha=1, sigma=b(t)
+    return 1.0, b_t
+```
+
+> 注意：实际 EDM 代码中，Karras 等人使用更细致的变换（包括 \(\sigma_{\mathrm{min}}, \sigma_{\mathrm{max}}\) 之类）。上面仅展示基本原理。
+
+
+
+###  (LDM)-Linear / DDPM (Ho et al., 2020)
+
+**DDPM** 及 **LDM** 在离散时间步 \(t=0,\dots,T-1\) 上使用线性调度 \(\beta_t\)，并定义
+$$
+\alpha_t = \sqrt{\prod_{s=0}^{t-1}(1-\beta_s)},
+\quad
+\sigma_t = \sqrt{1-\alpha_t^2}.
+$$
+下面以离散实现为例，示范如何构造数组 `alpha[t]` 与 `sigma[t]`；若要在连续时间 \([0,1]\) 模拟，需要再做插值。
+
+```python
+import numpy as np
+
+def build_alpha_sigma_linear_ddpm(T=100, beta_0=1e-4, beta_T=0.02):
+    """
+    Discrete schedule for DDPM:
+    beta_t linearly from beta_0 to beta_T over T steps.
+    alpha_t = sqrt(prod(1 - beta_s)),  sigma_t = sqrt(1 - alpha_t^2).
+
+    Returns alpha[t], sigma[t] for t=0..T.
+    """
+    # 1) linearly spaced betas
+    betas = np.linspace(beta_0, beta_T, T)
+    alpha = np.zeros(T+1, dtype=np.float32)
+    sigma = np.zeros(T+1, dtype=np.float32)
+
+    alpha[0] = 1.0
+    # 2) accumulate product for alpha
+    product = 1.0
+    for t in range(T):
+        product *= (1.0 - betas[t])
+        alpha[t+1] = np.sqrt(product)
+    # 3) sigma(t) = sqrt(1 - alpha^2)
+    sigma = np.sqrt(1 - alpha**2)
+    return alpha, sigma
+```
+
+- 其中 `alpha[t]` 逐步递减到 0，`sigma[t]` 逐步增大到 1。
+- LDM 对 \(\beta_t\) 做了不同的取值方案（如 \(\sqrt{\beta_t}\) 的线性插值），但原理类似。
+
+![alt text](../../images/image-111.png)
+
+Since EDM
