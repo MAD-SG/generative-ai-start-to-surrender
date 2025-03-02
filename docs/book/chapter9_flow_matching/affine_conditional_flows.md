@@ -8,7 +8,7 @@ Although, we have studied the general conditional flow matching, but in pratice,
 
 !!! def "Trajectory"
 
-    $$ \psi_t(x|x_1) =  \alpha_t x_1 + \sigma_t x$$
+    $$ x_{t|1} = \psi_t(x_0|x_1) =  \alpha_t x_1 + \sigma_t x_0$$
 
 The notation here is a little different from the diffusion process. In diffusion, $x_0$ means the clear image, $x_T$ or $x_1$ is the final noise distribution. But in the flow matching, in the forward process, we are pushiong the initial distribution $x_0$ (noise distribution) to the final data distribution $x_1$. Don't be confusing with diffusion notations. Please check the diffusion flow as described in [SDE diffusion unified representation](../chapter7_diffusion/sde_diffusion_unified_representation.md)
 
@@ -50,7 +50,10 @@ We still use the same name "scaling"  $\alpha_t$ and "scheduling"  $\sigma_t$. W
 !!! note "Velocity Field"
 
     $$
-    v(x,t) = E\left[ \frac{d \alpha_t}{dt} X_1 + \frac{d \sigma_t}{d t} X_0 \bigg| X_t = x\right]
+    \begin{aligned}
+    v(x,t) &= E\left[ \frac{d \alpha_t}{dt} X_1 + \frac{d \sigma_t}{d t} X_0 \bigg| X_t = x\right]\\
+    & = E_{\{x_0,x_1,t\}}\bigl[ \dot\alpha_t X_1+ \dot\sigma_t X_0| X_t = x\bigr]
+    \end{aligned}
     $$
 
 From the flow matching theory, we can prove that in the aboved defined trajectory push the probability $p(X_0)$ to $p(X_1)$.
@@ -247,6 +250,7 @@ $$
     $$
 
     2. **显式用 \(\mathbb{E}[X_0 \mid X_t=x]\) 消去 \(\mathbb{E}[X_1 \mid X_t=x]\)**
+
     $$
     v_t(x)
     \;=\;
@@ -256,7 +260,9 @@ $$
     \mathbb{E}[X_0 \mid X_t = x].
     $$
 
+
     3. **显式用 \(\mathbb{E}[X_1 \mid X_t=x]\) 消去 \(\mathbb{E}[X_0 \mid X_t=x]\)**
+
     $$
     v_t(x)
     \;=\;
@@ -266,7 +272,50 @@ $$
     \mathbb{E}[X_1 \mid X_t = x].
     $$
 
+!!! note "conditional velocity"
 
+    $$\begin{aligned}
+    v_t(x|x_1)& = \dot\alpha_t x_1 + \dot\sigma_t x_0 = \frac{\dot\sigma_t}{\sigma_t} x + (\dot\alpha_t - \frac{\dot\sigma_t}{\sigma_t}\alpha_t)x_1 = \frac{\dot\alpha_t}{\alpha_t}x  + (\dot\sigma_t - \frac{\dot\alpha_t}{\alpha_t}\sigma_t )x_0\\
+    & =(\log \alpha_t)' x - ((\log \alpha_t)' - (\log \sigma_t)' )\sigma_t x_0\\
+    & =(\log \alpha_t)' x - \lambda_t'\sigma_t x_0\\
+    &  =(\log \sigma_t)' x + ((\log \alpha_t)' - (\log \sigma_t)' )\alpha_t x_1\\
+    &  =(\log \sigma_t)' x + \lambda_t'\alpha_t x_1\\
+    \end{aligned}
+    $$
+
+    where $\lambda_t = \log\frac{\alpha_t}{\sigma_t}$ is the half of signal-to-noise ratio.
+
+Assume we have the learned velocity field, the forward process becomes the ODE, assume $x_0$ is the noise, $x_1$ is the target.
+
+!!! note "noise" prediction
+
+    $$
+    \mathcal{L} = E_{t,x_0,x_1}(\sigma_t\lambda_t')^2|| x_0^\theta-x_0||
+    $$
+
+    $$
+    x_0^\theta = - \frac{v_\theta(x,t) - (\log\alpha_t)' x}{\lambda_t' \sigma_t}
+    $$
+
+    $$
+    \frac{d x}{d t} = (\log \alpha_t)' x - \lambda_t'\sigma_t x_0^\theta
+    $$
+
+!!! note "target" prediction
+
+    $$
+    \mathcal{L} = E_{t,x_0,x_1}(\alpha_t\lambda_t')^2|| x_1^\theta-x_1||
+    $$
+
+    $$
+    x_1^\theta = \frac{v_\theta(x,t) - (\log\sigma_t)' x}{\lambda_t' \alpha_t}
+    $$
+
+    $$
+    \frac{d x}{d t} = (\log \sigma_t)' x + \lambda_t'\alpha_t x_1^\theta
+    $$
+
+The final ODE can borrow the idea from the ODE solver like the DPM Solver with the formula of semi-linear ODE.
 ## Gaussian Path
 
 We assume $X_0\sim N(0,1)$ is the Gaussian distribution, according to the Affine Conditin Flow, we can have a exact close-form of the conditional velocity field and its condition flow matching loss.
