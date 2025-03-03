@@ -9,10 +9,6 @@
       
       
       
-        <link rel="prev" href="../optimal_transport_flow/">
-      
-      
-        <link rel="next" href="../../chapter11_hybrid_sota_models/hybrid_methods/">
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
@@ -20,7 +16,7 @@
     
     
       
-        <title>Rectified Flow - Generative AI: From Start to Surrender</title>
+        <title>Comparison with Diffusion Flow ODE - Generative AI: From Start to Surrender</title>
       
     
     
@@ -94,6 +90,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#comparison-with-diffusion-flow-ode" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -124,7 +125,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Rectified Flow
+              Comparison with Diffusion Flow ODE
             
           </span>
         </div>
@@ -380,12 +381,10 @@
         
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
+      <li class="md-tabs__item">
         <a href="../introduction/" class="md-tabs__link">
           
   
@@ -1959,10 +1958,8 @@
       
   
   
-    
   
   
-  
     
     
       
@@ -1981,22 +1978,21 @@
     
     
       
-        
-        
-      
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
         
           
-          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -2007,7 +2003,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
             Flow Matching
@@ -2123,26 +2119,18 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="/book/chapter9_flow_matching/comparison_with_flow_ode.md" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Rectified Flow
+    Comparison with Diffusion Flow ODE
   </span>
   
 
       </a>
-      
     </li>
   
 
@@ -2536,9 +2524,36 @@
                   
 
 
-  <h1>Rectified Flow</h1>
-
-
+<h1 id="comparison-with-diffusion-flow-ode">Comparison with Diffusion Flow ODE<a class="headerlink" href="#comparison-with-diffusion-flow-ode" title="Permanent link">&para;</a></h1>
+<p>We can show that both flow matching and Diffusion Flow ODE can arrive in same formula.</p>
+<p>In order to be conistent, we assume the forward process is both from <span class="arithmatex">\(p_0\)</span> to <span class="arithmatex">\(p_1\)</span>, where in practive, the <span class="arithmatex">\(p_0\)</span> is the data distribution, <span class="arithmatex">\(p_1\)</span> is the noise distribution (simple distribution). In the flow matching, we don't need require that <span class="arithmatex">\(p_1\)</span> is the Gaussian distribution.</p>
+<p>Recall in <a href="../../chapter7_diffusion/sde_diffusion_unified_representation/">diffusion unified representation</a> and <a href="../affine_conditional_flows/">Affine Conditional Flow</a></p>
+<h2 id="numerical-experiments">Numerical Experiments<a class="headerlink" href="#numerical-experiments" title="Permanent link">&para;</a></h2>
+<p>To have a similar compare with what we done in the SDE diffusion model, we take the distribution <span class="arithmatex">\(p_0\)</span> be the gaussian distribution and <span class="arithmatex">\(p_1\)</span> be the funnel distribution in the two dimensional space.</p>
+<p>The Funnel distribution is defined as follows:</p>
+<ul>
+<li><span class="arithmatex">\( v \sim \mathcal{N}(0, 3^2) \)</span></li>
+<li><span class="arithmatex">\( x \mid v \sim \mathcal{N}\bigl(0, \exp(v)\bigr) \)</span></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>gaussian distribution <span class="arithmatex">\(\epsilon\)</span></th>
+<th>funnel distribution <span class="arithmatex">\(x_{data}\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a class="glightbox" href="../../../images/image-112.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="../../../images/image-112.png" /></a></td>
+<td><a class="glightbox" href="../../../images/image-79.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="../../../images/image-79.png" /></a></td>
+</tr>
+</tbody>
+</table>
+<p>Thus, the joint density is given by:</p>
+<div class="arithmatex">\[
+q(x,v) = p_1(x,v) = \frac{1}{3\sqrt{2\pi}} \exp\left(-\frac{v^2}{18}\right)
+\cdot \frac{1}{\sqrt{2\pi\,\exp(v)}} \exp\left(-\frac{x^2}{2\exp(v)}\right)
+\]</div>
 
 
 
@@ -2890,44 +2905,6 @@
       
         <footer class="md-footer">
   
-    
-      
-      <nav class="md-footer__inner md-grid" aria-label="Footer" >
-        
-          
-          <a href="../optimal_transport_flow/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Optimal Transport Flow">
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
-            </div>
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Previous
-              </span>
-              <div class="md-ellipsis">
-                Optimal Transport Flow
-              </div>
-            </div>
-          </a>
-        
-        
-          
-          <a href="../../chapter11_hybrid_sota_models/hybrid_methods/" class="md-footer__link md-footer__link--next" aria-label="Next: Hybrid Methods">
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              <div class="md-ellipsis">
-                Hybrid Methods
-              </div>
-            </div>
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
-            </div>
-          </a>
-        
-      </nav>
     
   
   <div class="md-footer-meta md-typeset">
