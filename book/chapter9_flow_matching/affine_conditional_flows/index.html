@@ -2154,36 +2154,9 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#21-rectified-flow-rf" class="md-nav__link">
+  <a href="#21-summary" class="md-nav__link">
     <span class="md-ellipsis">
-      2.1 Rectified Flow (RF)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#22-cosine-nichol-dhariwal-2021" class="md-nav__link">
-    <span class="md-ellipsis">
-      2.2 Cosine (Nichol &amp; Dhariwal, 2021)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#23-edm-karras-et-al-2022" class="md-nav__link">
-    <span class="md-ellipsis">
-      2.3 EDM (Karras et al., 2022)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#24-ldm-linear-ddpm-ho-et-al-2020" class="md-nav__link">
-    <span class="md-ellipsis">
-      2.4 (LDM)-Linear / DDPM (Ho et al., 2020)
+      2.1 Summary
     </span>
   </a>
   
@@ -2642,10 +2615,10 @@ In this article, we will introduce the family of affine conditional flows from g
 <p>Although, we have studied the general conditional flow matching, but in pratice, it is usually used choose an another type of flow matching</p>
 <div class="admonition def">
 <p class="admonition-title">Trajectory</p>
-<div class="arithmatex">\[ x_{t|1} = \psi_t(x_0|x_1) =  \alpha_t x_1 + \sigma_t x_0\]</div>
+<div class="arithmatex">\[\tag{1} x_{t|1} = \psi_t(x_0|x_1) =  \alpha_t x_1 + \sigma_t x_0\]</div>
 </div>
 <p>The notation here is a little different from the diffusion process. In diffusion, <span class="arithmatex">\(x_0\)</span> means the clear image, <span class="arithmatex">\(x_T\)</span> or <span class="arithmatex">\(x_1\)</span> is the final noise distribution. But in the flow matching, in the forward process, we are pushiong the initial distribution <span class="arithmatex">\(x_0\)</span> (noise distribution) to the final data distribution <span class="arithmatex">\(x_1\)</span>. Don't be confusing with diffusion notations. Please check the diffusion flow as described in <a href="../../chapter7_diffusion/sde_diffusion_unified_representation/">SDE diffusion unified representation</a></p>
-<p>We still use the same name "scaling"  <span class="arithmatex">\(\alpha_t\)</span> and "scheduling"  <span class="arithmatex">\(\sigma_t\)</span>. We still need to ensure the initial condition and monotanuous increasing peroperties.</p>
+<p>We still use the same name "scaling"  <span class="arithmatex">\(\alpha_t\)</span> and "scheduling"  <span class="arithmatex">\(\sigma_t\)</span>, where scheduling controls the variance. We still need to ensure the initial condition and monotanuous increasing peroperties.</p>
 <ol>
 <li><strong>确保插值路径的单调可逆性</strong>
    在最简单的线性插值思路里，我们可能写下</li>
@@ -2653,7 +2626,7 @@ In this article, we will introduce the family of affine conditional flows from g
 <p>$$
    \psi_t(x,y) \;=\; \alpha_t\,x \;+\; \sigma_t\,y,
    $$</p>
-<p>其中 <span class="arithmatex">\(\alpha_t\)</span> 从 0 单调增加到 1，<span class="arithmatex">\(\sigma_t\)</span> 从 1 单调减少到 0。这样一来，<span class="arithmatex">\(\psi_0(x,y)=y\)</span> 或 <span class="arithmatex">\(\psi_0(x,y)=x\)</span>（具体取决于边界条件），<span class="arithmatex">\(\psi_1(x,y)=x\)</span> 或 <span class="arithmatex">\(y\)</span>。若要保证这条“从 <span class="arithmatex">\(x\)</span> 到 <span class="arithmatex">\(y\)</span>”的路径在 <span class="arithmatex">\(t\in[0,1]\)</span> 上不出现奇怪的回头、停滞、或者自相交等现象，就希望它的速度</p>
+<p>其中 <span class="arithmatex">\(\alpha_t\)</span> 从 0 单调增加到 1，<span class="arithmatex">\(\sigma_t\)</span> 从 1 单调减少到 0。这样一来， <span class="arithmatex">\(\psi_0(x,y)=x\)</span>（具体取决于边界条件），<span class="arithmatex">\(\psi_1(x,y)=y\)</span>。若要保证这条“从 <span class="arithmatex">\(x\)</span> 到 <span class="arithmatex">\(y\)</span>”的路径在 <span class="arithmatex">\(t\in[0,1]\)</span> 上不出现奇怪的回头、停滞、或者自相交等现象，就希望它的速度</p>
 <p>$$
    \frac{\mathrm{d}}{\mathrm{d}t}\,\psi_t(x,y)
    \;=\;
@@ -2678,6 +2651,9 @@ In this article, we will introduce the family of affine conditional flows from g
    \alpha'_t&gt;0,\;\sigma'_t&lt;0\;\;\text{对 }t\in(0,1),
    $$</p>
 <p>这组条件直接蕴含了 <span class="arithmatex">\(\alpha_t - \sigma_t\)</span> 在区间 <span class="arithmatex">\((0,1)\)</span> 内是严格增加的，从而不为 0 并且不会出现符号翻转。这样就能确保从 <span class="arithmatex">\(t=0\)</span> 到 <span class="arithmatex">\(t=1\)</span> 的整个插值/流动在分布变换中是“干净”的。</p>
+<p>Note that in some paper, in order to be consistent to notation of the diffusion, one may reverse the source and target distribution, that is</p>
+<div class="arithmatex">\[x_t = \alpha_t x_0 +  \sigma_t x_1\]</div>
+<p>Now, the <span class="arithmatex">\(x_0\)</span> is the target distribution <span class="arithmatex">\(x_1\)</span> is a simple distribution similar as the noising diffusion process and the conditional distribution transit from <span class="arithmatex">\(p_0 =p_{data}\)</span> to <span class="arithmatex">\(p_t(x|x_0) = \mathcal{N}(x|\alpha_t x_0, \sigma_t^2 I)\)</span></p>
 <div class="admonition note">
 <p class="admonition-title">Velocity Field</p>
 <div class="arithmatex">\[
@@ -2688,20 +2664,20 @@ v(x,t) &amp;= E\left[ \frac{d \alpha_t}{dt} X_1 + \frac{d \sigma_t}{d t} X_0 \bi
 \]</div>
 </div>
 <p>From the flow matching theory, we can prove that in the aboved defined trajectory push the probability <span class="arithmatex">\(p(X_0)\)</span> to <span class="arithmatex">\(p(X_1)\)</span>.</p>
-<p>在很多流匹配（Flow Matching）<strong>或</strong> 随机桥（Schrödinger Bridge）等场景下，我们希望在中间时刻 <span class="arithmatex">\(t\)</span> 看到某些状态 <span class="arithmatex">\(X_t=x\)</span> 时，对“来自哪里（<span class="arithmatex">\(X_0\)</span>）”、“要去哪里（<span class="arithmatex">\(X_1\)</span>）”这些信息做加权平均，从而构造一个<strong> 速度场</strong> 或<strong>漂移项</strong>  <span class="arithmatex">\(v_t(x)\)</span>。因此就会出现：</p>
+<p>在很多流匹配（Flow Matching）<strong>或</strong> 随机桥（Schrödinger Bridge）等场景下，我们希望在中间时刻 <span class="arithmatex">\(t\)</span> 看到某些状态 <span class="arithmatex">\(X_t=x\)</span> 时，对“来自哪里（<span class="arithmatex">\(X_0\)</span>）”、“要去哪里（<span class="arithmatex">\(X_1\)</span>）”这些信息做加权平均，从而构造一个<strong>速度场</strong> 或<strong>漂移项</strong>  <span class="arithmatex">\(v_t(x)\)</span>。因此就会出现：</p>
 <div class="arithmatex">\[
-v_t(x)\;=\;\underbrace{\mathbb{E}\bigl[\alpha_t\,X_1 \;+\;\dot{\sigma}_t\,X_0 \;\bigm|\; X_t = x\bigr]}_{\text{对 }X_0,X_1\text{ 的条件期望}}\;=\;\int \!\!\int
-\bigl(\alpha_t\,x_1 + \dot{\sigma}_t\,x_0\bigr)\,
+v_t(x)\;=\;\underbrace{\mathbb{E}\bigl[\dot\alpha_t\,X_1 \;+\;\dot{\sigma}_t\,X_0 \;\bigm|\; X_t = x\bigr]}_{\text{对 }X_0,X_1\text{ 的条件期望}}\;=\;\int \!\!\int
+\bigl(\dot\alpha_t\,x_1 + \dot{\sigma}_t\,x_0\bigr)\,
 \mathrm{d}\mathbb{P}\bigl(X_0=x_0,X_1=x_1 \,\bigm|\; X_t=x\bigr).
 \]</div>
 <ul>
 <li>也就是说，给定此刻处于 <span class="arithmatex">\(x\)</span>，我们对所有可能的“初始点 <span class="arithmatex">\(X_0\)</span> 和目标点 <span class="arithmatex">\(X_1\)</span>”做期望，就得到一个确定性的数值（或向量）<span class="arithmatex">\(v_t(x)\)</span>。</li>
 </ul>
-<p>我们从以下线性插值出发：
-$$
+<p>我们从以下线性插值出发：</p>
+<div class="arithmatex">\[
 X_t \;=\; \alpha_t\,X_1 \;+\; \sigma_t\,X_0,
-$$
-并对时间 <span class="arithmatex">\(t\)</span> 做导数：</p>
+\]</div>
+<p>并对时间 <span class="arithmatex">\(t\)</span> 做导数：</p>
 <div class="arithmatex">\[
 \dot{X}_t
 \;=\;
@@ -2720,9 +2696,9 @@ v_t(X_t)
 \dot{\alpha}_t\,\mathbb{E}[X_1 \mid X_t]
 \;+\;
 \dot{\sigma}_t\,\mathbb{E}[X_0 \mid X_t].
-$$
-对“\(X_t\) 取值为 \(x\)”的情形，便写作
-$$
+\]</div>
+<p>对“<span class="arithmatex">\(X_t\)</span> 取值为 <span class="arithmatex">\(x\)</span>”的情形，便写作</p>
+<div class="arithmatex">\[
 v_t(x)
 \;=\;
 \dot{\alpha}_t\,\mathbb{E}[X_1 \mid X_t = x]
@@ -2740,14 +2716,14 @@ X_t \;=\; \alpha_t\,X_1 \;+\; \sigma_t\,X_0,
 \;+\;
 \sigma_t\,\mathbb{E}[X_0 \mid X_t = x].
 \]</div>
-<p>但左边就是 <span class="arithmatex">\(x\)</span>，因此
-$$
+<p>但左边就是 <span class="arithmatex">\(x\)</span>，因此</p>
+<div class="arithmatex">\[
 x
 \;=\;
 \alpha_t\,\mathbb{E}[X_1 \mid X_t = x]
 \;+\;
 \sigma_t\,\mathbb{E}[X_0 \mid X_t = x].
-$$</p>
+\]</div>
 <p>用 <span class="arithmatex">\(\mathbb{E}[X_0 \mid X_t = x]\)</span> 消去 <span class="arithmatex">\(\mathbb{E}[X_1 \mid X_t = x]\)</span></p>
 <div class="arithmatex">\[
 \mathbb{E}[X_1 \mid X_t = x]
@@ -2755,15 +2731,15 @@ $$</p>
 \frac{x - \sigma_t\,\mathbb{E}[X_0 \mid X_t = x]}{\alpha_t}.
 \]</div>
 <p>将它代入 (A) 式：</p>
-<p>$$
+<div class="arithmatex">\[
 v_t(x)
 \;=\;
-\dot{\alpha}<em _mathbb_E="\mathbb{E">t \cdot \underbrace{\frac{x - \sigma_t\,\mathbb{E}[X_0 \mid X_t = x]}{\alpha_t}}</em>
+\dot{\alpha}_t \cdot \underbrace{\frac{x - \sigma_t\,\mathbb{E}[X_0 \mid X_t = x]}{\alpha_t}}_{\mathbb{E}[X_1 \mid X_t=x]}
 \;+\;
 \dot{\sigma}_t\,\mathbb{E}[X_0 \mid X_t = x].
-$$
-把系数展开整理：
-$$
+\]</div>
+<p>把系数展开整理：</p>
+<div class="arithmatex">\[
 v_t(x)
 =\;
 \frac{\dot{\alpha}_t}{\alpha_t}\,x
@@ -2771,15 +2747,15 @@ v_t(x)
 \frac{\dot{\alpha}_t\,\sigma_t}{\alpha_t}\,\mathbb{E}[X_0 \mid X_t = x]
 \;+\;
 \dot{\sigma}_t\,\mathbb{E}[X_0 \mid X_t = x]
-$$
-$$
+\]</div>
+<div class="arithmatex">\[
 =\;
 \frac{\dot{\alpha}_t}{\alpha_t}\,x
 \;+\;
 \Bigl(\dot{\sigma}_t \;-\; \frac{\dot{\alpha}_t\,\sigma_t}{\alpha_t}\Bigr)\,
 \mathbb{E}[X_0 \mid X_t = x].
-$$
-这就得到一种}[X_1 \mid X_t=x]<strong>以 <span class="arithmatex">\(\mathbb{E}[X_0 \mid X_t = x]\)</span> 为主</strong>的等价形式：</p>
+\]</div>
+<p>这就得到一种<strong>以 <span class="arithmatex">\(\mathbb{E}[X_0 \mid X_t = x]\)</span> 为主</strong>的等价形式：</p>
 <div class="arithmatex">\[
 \boxed{
 v_t(x)
@@ -2806,7 +2782,7 @@ v_t(x)
 \dot{\sigma}_t \cdot \underbrace{\frac{x - \alpha_t\,\mathbb{E}[X_1 \mid X_t = x]}{\sigma_t}}_{\mathbb{E}[X_0 \mid X_t=x]}.
 \]</div>
 <p>同样展开整理：</p>
-<p>$$
+<div class="arithmatex">\[
 \begin{aligned}
 v_t(x)
 &amp;=\;
@@ -2814,15 +2790,15 @@ v_t(x)
 \;+\;
 \frac{\dot{\sigma}_t}{\sigma_t}\,x
 \;-\;
-\frac{\dot{\sigma}_t\,\alpha_t}{\sigma_t}\,\mathbb{E}[X_1 \mid X_t = x]\
+\frac{\dot{\sigma}_t\,\alpha_t}{\sigma_t}\,\mathbb{E}[X_1 \mid X_t = x]\\
 &amp;=\;
 \frac{\dot{\sigma}_t}{\sigma_t}\,x
 \;+\;
 \Bigl(\dot{\alpha}_t \;-\; \tfrac{\dot{\sigma}_t\,\alpha_t}{\sigma_t}\Bigr)\,
 \mathbb{E}[X_1 \mid X_t = x].
 \end{aligned}
-$$
-得到另一种<strong>以 <span class="arithmatex">\(\mathbb{E}[X_1 \mid X_t = x]\)</span> 为主</strong>的等价形式：</p>
+\]</div>
+<p>得到另一种<strong>以 <span class="arithmatex">\(\mathbb{E}[X_1 \mid X_t = x]\)</span> 为主</strong>的等价形式：</p>
 <div class="arithmatex">\[
 \boxed{
 v_t(x)
@@ -2837,19 +2813,17 @@ v_t(x)
 <div class="admonition note">
 <p class="admonition-title">等价形式</p>
 <ol>
-<li>
-<p><strong>最直接的条件期望形式</strong>
-$$
+<li><strong>最直接的条件期望形式</strong></li>
+</ol>
+<div class="arithmatex">\[
 v_t(x)
 \;=\;
 \dot{\alpha}_t\,\mathbb{E}[X_1 \mid X_t = x]
 \;+\;
 \dot{\sigma}_t\,\mathbb{E}[X_0 \mid X_t = x].
-$$</p>
-</li>
-<li>
-<p><strong>显式用 <span class="arithmatex">\(\mathbb{E}[X_0 \mid X_t=x]\)</span> 消去 <span class="arithmatex">\(\mathbb{E}[X_1 \mid X_t=x]\)</span></strong></p>
-</li>
+\]</div>
+<ol>
+<li><strong>显式用 <span class="arithmatex">\(\mathbb{E}[X_0 \mid X_t=x]\)</span> 消去 <span class="arithmatex">\(\mathbb{E}[X_1 \mid X_t=x]\)</span></strong></li>
 </ol>
 <div class="arithmatex">\[
 v_t(x)
@@ -2883,53 +2857,36 @@ v_t(x|x_1)&amp; = \dot\alpha_t x_1 + \dot\sigma_t x_0 = \frac{\dot\sigma_t}{\sig
 \]</div>
 <p>where <span class="arithmatex">\(\lambda_t = \log\frac{\alpha_t}{\sigma_t}\)</span> is the half of signal-to-noise ratio.</p>
 </div>
-<p>Assume we have the learned velocity field, the forward process becomes the ODE, assume <span class="arithmatex">\(x_0\)</span> is the noise, <span class="arithmatex">\(x_1\)</span> is the target.</p>
-<p>!!! note "noise" prediction</p>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
-<span class="normal"> 2</span>
-<span class="normal"> 3</span>
-<span class="normal"> 4</span>
-<span class="normal"> 5</span>
-<span class="normal"> 6</span>
-<span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span></pre></div></td><td class="code"><div><pre><span></span><code>$$
-\mathcal{L} = E_{t,x_0,x_1}(\sigma_t\lambda_t&#39;)^2|| x_0^\theta-x_0||
-$$
-
-$$
-x_0^\theta = - \frac{v_\theta(x,t) - (\log\alpha_t)&#39; x}{\lambda_t&#39; \sigma_t}
-$$
-
-$$
-\frac{d x}{d t} = (\log \alpha_t)&#39; x - \lambda_t&#39;\sigma_t x_0^\theta
-$$
-</code></pre></div></td></tr></table></div>
-<p>!!! note "target" prediction</p>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
-<span class="normal"> 2</span>
-<span class="normal"> 3</span>
-<span class="normal"> 4</span>
-<span class="normal"> 5</span>
-<span class="normal"> 6</span>
-<span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span></pre></div></td><td class="code"><div><pre><span></span><code>$$
-\mathcal{L} = E_{t,x_0,x_1}(\alpha_t\lambda_t&#39;)^2|| x_1^\theta-x_1||
-$$
-
-$$
-x_1^\theta = \frac{v_\theta(x,t) - (\log\sigma_t)&#39; x}{\lambda_t&#39; \alpha_t}
-$$
-
-$$
-\frac{d x}{d t} = (\log \sigma_t)&#39; x + \lambda_t&#39;\alpha_t x_1^\theta
-$$
-</code></pre></div></td></tr></table></div>
+<p>Assume we have the learned velocity field, the forward process becomes the ODE, assume <span class="arithmatex">\(x_0\)</span> is the noise, <span class="arithmatex">\(x_1\)</span> is the target. To be further clearly, we can notate <span class="arithmatex">\(x_0=\epsilon\)</span> which means a simple distribution and usually take the "noise" Gaussian distribution. And we use <span class="arithmatex">\(x_{data}\)</span> to indicate our target distribution, usually the complicate distribution with unknow expression of the density function and usually take sampling to  simulate the expectation.</p>
+<div class="admonition note">
+<p class="admonition-title">conditional flow from <span class="arithmatex">\(\epsilon\)</span> to <span class="arithmatex">\(x_{data}\)</span></p>
+<div class="arithmatex">\[ x_t = \alpha_t x_{data} + \sigma_t \epsilon\]</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title"><span class="arithmatex">\(\epsilon\)</span> -  prediction</p>
+<div class="arithmatex">\[
+\mathcal{L} = E_{t,\epsilon}\Bigl[(\sigma_t\lambda_t')^2|| \epsilon_\theta(x_t,t)-\epsilon||^2\Bigr]
+\]</div>
+<div class="arithmatex">\[
+\epsilon_\theta(x,t) = - \frac{v_\theta(x,t) - (\log\alpha_t)' x}{\lambda_t' \sigma_t}
+\]</div>
+<div class="arithmatex">\[
+\frac{d x}{d t} = (\log \alpha_t)' x - \lambda_t'\sigma_t \epsilon_\theta(x,t)
+\]</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title"><span class="arithmatex">\(x\)</span> - prediction</p>
+<p>The network predicted the target instead of the noise.</p>
+<div class="arithmatex">\[
+\mathcal{L} = E_{t,x_{data}}\Bigl[(\alpha_t\lambda_t')^2|| x_{data}^\theta(x_t,t)-x_{data}||^2\Bigr]
+\]</div>
+<div class="arithmatex">\[
+x_{data}^\theta(x,t) = \frac{v_\theta(x,t) - (\log\sigma_t)' x}{\lambda_t' \alpha_t}
+\]</div>
+<div class="arithmatex">\[
+\frac{d x}{d t} = (\log \sigma_t)' x + \lambda_t'\alpha_t x_{data}^\theta(x_t,t)
+\]</div>
+</div>
 <p>The final ODE can borrow the idea from the ODE solver like the DPM Solver with the formula of semi-linear ODE.</p>
 <h2 id="1-gaussian-path">1. Gaussian Path<a class="headerlink" href="#1-gaussian-path" title="Permanent link">&para;</a></h2>
 <p>We assume <span class="arithmatex">\(X_0\sim N(0,1)\)</span> is the Gaussian distribution, according to the Affine Conditin Flow, we can have a exact close-form of the conditional velocity field and its condition flow matching loss.</p>
@@ -2949,169 +2906,157 @@ $$
 &amp; = - \frac{1}{\sigma_t} x_{0|1}(x)
 \end{aligned}
 \]</div>
+<p>But not if we don't care about the probability, there is no requirement to assume <span class="arithmatex">\(p_0\)</span> be the gaussian distribution. Instead, we can train the velocity field with any distributions <span class="arithmatex">\(p_0\)</span> and <span class="arithmatex">\(p_1\)</span> by sampling.</p>
 <h2 id="2-design-of-alpha_t-and-sigma_t">2. Design of <span class="arithmatex">\(\alpha_t\)</span> and <span class="arithmatex">\(\sigma_t\)</span><a class="headerlink" href="#2-design-of-alpha_t-and-sigma_t" title="Permanent link">&para;</a></h2>
-<p>下面给出一个简化的 Python 代码示例，演示如何在 <strong>Flow Matching / 扩散模型</strong> 中实现几种常见的 <span class="arithmatex">\(\alpha_t\)</span> 与 <span class="arithmatex">\(\sigma_t\)</span> 调度（schedules）。这些函数仅作示例，实际使用时可能需要根据论文公式或实验需要做更精细的实现和数值处理。</p>
-<hr />
-<h3 id="21-rectified-flow-rf">2.1  Rectified Flow (RF)<a class="headerlink" href="#21-rectified-flow-rf" title="Permanent link">&para;</a></h3>
-<p>Rectified Flow 中常用 <strong>线性插值</strong>：
-$$
-z_t = (1 - t)\,x_0 + t\,\epsilon.
-$$
-对应地，可定义
-$$
-\alpha(t) = t,
-\quad
-\sigma(t) = 1 - t.
-$$</p>
-<h3 id="22-cosine-nichol-dhariwal-2021">2.2  Cosine (Nichol &amp; Dhariwal, 2021)<a class="headerlink" href="#22-cosine-nichol-dhariwal-2021" title="Permanent link">&para;</a></h3>
-<p><strong>余弦调度</strong> (cosine schedule) 常见形式：
-$$
-z_t=\cos\Bigl(\tfrac{\pi}{2}t\Bigr)\,x_0
-\;+\;\sin\Bigl(\tfrac{\pi}{2}t\Bigr)\,\epsilon.
-$$</p>
-<p>即</p>
-<div class="arithmatex">\[
-\alpha(t) = \cos\Bigl(\tfrac{\pi}{2}\,t\Bigr),
-\quad
-\sigma(t) = \sin\Bigl(\tfrac{\pi}{2}\,t\Bigr).
-\]</div>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1"> 1</a></span>
-<span class="normal"><a href="#__codelineno-0-2"> 2</a></span>
-<span class="normal"><a href="#__codelineno-0-3"> 3</a></span>
-<span class="normal"><a href="#__codelineno-0-4"> 4</a></span>
-<span class="normal"><a href="#__codelineno-0-5"> 5</a></span>
-<span class="normal"><a href="#__codelineno-0-6"> 6</a></span>
-<span class="normal"><a href="#__codelineno-0-7"> 7</a></span>
-<span class="normal"><a href="#__codelineno-0-8"> 8</a></span>
-<span class="normal"><a href="#__codelineno-0-9"> 9</a></span>
-<span class="normal"><a href="#__codelineno-0-10">10</a></span>
-<span class="normal"><a href="#__codelineno-0-11">11</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="kn">import</span> <span class="nn">math</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3"></a><span class="k">def</span> <span class="nf">alpha_sigma_cosine</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5"></a><span class="sd">    Cosine schedule:</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6"></a><span class="sd">    alpha(t) = cos(pi/2 * t),  sigma(t) = sin(pi/2 * t)</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7"></a><span class="sd">    t ∈ [0, 1]</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9"></a>    <span class="n">alpha_t</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10"></a>    <span class="n">sigma_t</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11"></a>    <span class="k">return</span> <span class="n">alpha_t</span><span class="p">,</span> <span class="n">sigma_t</span>
-</code></pre></div></td></tr></table></div>
-<h3 id="23-edm-karras-et-al-2022">2.3  EDM (Karras et al., 2022)<a class="headerlink" href="#23-edm-karras-et-al-2022" title="Permanent link">&para;</a></h3>
-<p>EDM 中通常写作：</p>
-<div class="arithmatex">\[
-z_t = x_0 + b(t)\,\epsilon,
-\]</div>
-<p>其中 <span class="arithmatex">\(b(t) = \exp(F^{-1}(t \mid p_m,p_s^2))\)</span> （<span class="arithmatex">\(F^{-1}\)</span> 为正态分布分位数函数）。在“Flow Matching”视角，可理解为</p>
-<div class="arithmatex">\[
-\alpha(t) = 1,
-\quad
-\sigma(t) = b(t).
-\]</div>
-<p>下面示例中，使用 Python 的 <code>math.erfinv</code> (误差函数反变换) 来近似正态分位数函数 <span class="arithmatex">\(\Phi^{-1}\)</span>。若要与原论文参数完全一致，需要更精细的缩放和平移。</p>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-1-1"> 1</a></span>
-<span class="normal"><a href="#__codelineno-1-2"> 2</a></span>
-<span class="normal"><a href="#__codelineno-1-3"> 3</a></span>
-<span class="normal"><a href="#__codelineno-1-4"> 4</a></span>
-<span class="normal"><a href="#__codelineno-1-5"> 5</a></span>
-<span class="normal"><a href="#__codelineno-1-6"> 6</a></span>
-<span class="normal"><a href="#__codelineno-1-7"> 7</a></span>
-<span class="normal"><a href="#__codelineno-1-8"> 8</a></span>
-<span class="normal"><a href="#__codelineno-1-9"> 9</a></span>
-<span class="normal"><a href="#__codelineno-1-10">10</a></span>
-<span class="normal"><a href="#__codelineno-1-11">11</a></span>
-<span class="normal"><a href="#__codelineno-1-12">12</a></span>
-<span class="normal"><a href="#__codelineno-1-13">13</a></span>
-<span class="normal"><a href="#__codelineno-1-14">14</a></span>
-<span class="normal"><a href="#__codelineno-1-15">15</a></span>
-<span class="normal"><a href="#__codelineno-1-16">16</a></span>
-<span class="normal"><a href="#__codelineno-1-17">17</a></span>
-<span class="normal"><a href="#__codelineno-1-18">18</a></span>
-<span class="normal"><a href="#__codelineno-1-19">19</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="kn">import</span> <span class="nn">math</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3"></a><span class="k">def</span> <span class="nf">alpha_sigma_edm</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">pm</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ps</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5"></a><span class="sd">    EDM-like schedule:</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6"></a><span class="sd">    z_t = x_0 + b(t)*epsilon,</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7"></a><span class="sd">    where b(t) = exp( NormalQuantile(t, mean=pm, std=ps) ).</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9"></a><span class="sd">    NormalQuantile(t) ≈ sqrt(2)*erfinv(2*t - 1).</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11"></a><span class="sd">    pm, ps: mean and std used in the quantile transform (paper notation).</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13"></a>    <span class="c1"># 近似 standard normal quantile</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14"></a>    <span class="c1">#  NormalQuantile(t) = pm + ps * sqrt(2)*erfinv(2*t - 1)</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15"></a>    <span class="c1">#  这里只做简单示例</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16"></a>    <span class="n">quantile</span> <span class="o">=</span> <span class="n">pm</span> <span class="o">+</span> <span class="n">ps</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">erfinv</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">t</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17"></a>    <span class="n">b_t</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">quantile</span><span class="p">)</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18"></a>    <span class="c1"># alpha=1, sigma=b(t)</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19"></a>    <span class="k">return</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">b_t</span>
-</code></pre></div></td></tr></table></div>
 <blockquote>
-<p>注意：实际 EDM 代码中，Karras 等人使用更细致的变换（包括 <span class="arithmatex">\(\sigma_{\mathrm{min}}, \sigma_{\mathrm{max}}\)</span> 之类）。上面仅展示基本原理。</p>
+<p>Experiments of flow matching</p>
 </blockquote>
-<h3 id="24-ldm-linear-ddpm-ho-et-al-2020">2.4  (LDM)-Linear / DDPM (Ho et al., 2020)<a class="headerlink" href="#24-ldm-linear-ddpm-ho-et-al-2020" title="Permanent link">&para;</a></h3>
-<p><strong>DDPM</strong> 及 <strong>LDM</strong> 在离散时间步 <span class="arithmatex">\(t=0,\dots,T-1\)</span> 上使用线性调度 <span class="arithmatex">\(\beta_t\)</span>，并定义
-$$
-\alpha_t = \sqrt{\prod_{s=0}^{t-1}(1-\beta_s)},
-\quad
-\sigma_t = \sqrt{1-\alpha_t^2}.
-$$
-下面以离散实现为例，示范如何构造数组 <code>alpha[t]</code> 与 <code>sigma[t]</code>；若要在连续时间 <span class="arithmatex">\([0,1]\)</span> 模拟，需要再做插值。</p>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-2-1"> 1</a></span>
-<span class="normal"><a href="#__codelineno-2-2"> 2</a></span>
-<span class="normal"><a href="#__codelineno-2-3"> 3</a></span>
-<span class="normal"><a href="#__codelineno-2-4"> 4</a></span>
-<span class="normal"><a href="#__codelineno-2-5"> 5</a></span>
-<span class="normal"><a href="#__codelineno-2-6"> 6</a></span>
-<span class="normal"><a href="#__codelineno-2-7"> 7</a></span>
-<span class="normal"><a href="#__codelineno-2-8"> 8</a></span>
-<span class="normal"><a href="#__codelineno-2-9"> 9</a></span>
-<span class="normal"><a href="#__codelineno-2-10">10</a></span>
-<span class="normal"><a href="#__codelineno-2-11">11</a></span>
-<span class="normal"><a href="#__codelineno-2-12">12</a></span>
-<span class="normal"><a href="#__codelineno-2-13">13</a></span>
-<span class="normal"><a href="#__codelineno-2-14">14</a></span>
-<span class="normal"><a href="#__codelineno-2-15">15</a></span>
-<span class="normal"><a href="#__codelineno-2-16">16</a></span>
-<span class="normal"><a href="#__codelineno-2-17">17</a></span>
-<span class="normal"><a href="#__codelineno-2-18">18</a></span>
-<span class="normal"><a href="#__codelineno-2-19">19</a></span>
-<span class="normal"><a href="#__codelineno-2-20">20</a></span>
-<span class="normal"><a href="#__codelineno-2-21">21</a></span>
-<span class="normal"><a href="#__codelineno-2-22">22</a></span>
-<span class="normal"><a href="#__codelineno-2-23">23</a></span>
-<span class="normal"><a href="#__codelineno-2-24">24</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3"></a><span class="k">def</span> <span class="nf">build_alpha_sigma_linear_ddpm</span><span class="p">(</span><span class="n">T</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">beta_0</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">beta_T</span><span class="o">=</span><span class="mf">0.02</span><span class="p">):</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5"></a><span class="sd">    Discrete schedule for DDPM:</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6"></a><span class="sd">    beta_t linearly from beta_0 to beta_T over T steps.</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7"></a><span class="sd">    alpha_t = sqrt(prod(1 - beta_s)),  sigma_t = sqrt(1 - alpha_t^2).</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9"></a><span class="sd">    Returns alpha[t], sigma[t] for t=0..T.</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11"></a>    <span class="c1"># 1) linearly spaced betas</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12"></a>    <span class="n">betas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">beta_0</span><span class="p">,</span> <span class="n">beta_T</span><span class="p">,</span> <span class="n">T</span><span class="p">)</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13"></a>    <span class="n">alpha</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">T</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14"></a>    <span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">T</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15"></a>
-<a id="__codelineno-2-16" name="__codelineno-2-16"></a>    <span class="n">alpha</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17"></a>    <span class="c1"># 2) accumulate product for alpha</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18"></a>    <span class="n">product</span> <span class="o">=</span> <span class="mf">1.0</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19"></a>    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">T</span><span class="p">):</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20"></a>        <span class="n">product</span> <span class="o">*=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">betas</span><span class="p">[</span><span class="n">t</span><span class="p">])</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21"></a>        <span class="n">alpha</span><span class="p">[</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">product</span><span class="p">)</span>
-<a id="__codelineno-2-22" name="__codelineno-2-22"></a>    <span class="c1"># 3) sigma(t) = sqrt(1 - alpha^2)</span>
-<a id="__codelineno-2-23" name="__codelineno-2-23"></a>    <span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-<a id="__codelineno-2-24" name="__codelineno-2-24"></a>    <span class="k">return</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">sigma</span>
-</code></pre></div></td></tr></table></div>
+<p>To further understand how the flow matching work, let's consider some concrete examples of flow matching methods.</p>
+<p>To have a similar compare with what we done in the SDE diffusion model, we take the distribution <span class="arithmatex">\(p_0\)</span> be the gaussian distribution and <span class="arithmatex">\(p_1\)</span> be the funnel distribution in the two dimensional space.</p>
+<p>The Funnel distribution is defined as follows:</p>
 <ul>
-<li>其中 <code>alpha[t]</code> 逐步递减到 0，<code>sigma[t]</code> 逐步增大到 1。</li>
-<li>LDM 对 <span class="arithmatex">\(\beta_t\)</span> 做了不同的取值方案（如 <span class="arithmatex">\(\sqrt{\beta_t}\)</span> 的线性插值），但原理类似。</li>
+<li><span class="arithmatex">\( v \sim \mathcal{N}(0, 3^2) \)</span></li>
+<li><span class="arithmatex">\( x \mid v \sim \mathcal{N}\bigl(0, \exp(v)\bigr) \)</span></li>
 </ul>
-<p><a class="glightbox" href="../../../images/image-111.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="alt text" src="../../../images/image-111.png" /></a></p>
-<p>Since EDM</p>
+<table>
+<thead>
+<tr>
+<th>gaussian distribution <span class="arithmatex">\(\epsilon\)</span></th>
+<th>funnel distribution <span class="arithmatex">\(x_{data}\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a class="glightbox" href="../../../images/image-112.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="../../../images/image-112.png" /></a></td>
+<td><a class="glightbox" href="../../../images/image-79.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="../../../images/image-79.png" /></a></td>
+</tr>
+</tbody>
+</table>
+<p>Thus, the joint density is given by:</p>
+<div class="arithmatex">\[
+q(x,v) = p_1(x,v) = \frac{1}{3\sqrt{2\pi}} \exp\left(-\frac{v^2}{18}\right)
+\cdot \frac{1}{\sqrt{2\pi\,\exp(v)}} \exp\left(-\frac{x^2}{2\exp(v)}\right)
+\]</div>
+<p>By constructing different <span class="arithmatex">\(\alpha_t\)</span> and <span class="arithmatex">\(\sigma_t\)</span>, <span class="arithmatex">\(t\in [0,1]\)</span>, in eq.(1),  we wil result in different flow matching methods.</p>
+<p>Now, we will compare several different design of them</p>
+<ul>
+<li>Rectified FLow (RF)</li>
+<li>Cosine</li>
+<li>EDM</li>
+<li>LDM (DDPM)</li>
+</ul>
+<h3 id="21-summary">2.1 Summary<a class="headerlink" href="#21-summary" title="Permanent link">&para;</a></h3>
+<p>Let <span class="arithmatex">\(\epsilon\)</span> be the initial distribution <span class="arithmatex">\(p_0\)</span>.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">method</th>
+<th style="text-align: center;">RF</th>
+<th style="text-align: center;">Consine</th>
+<th style="text-align: center;">EDM</th>
+<th style="text-align: center;">DDPM</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">conditional Flow</td>
+<td style="text-align: center;">$x_t = t x_{data} +  (1-t)\epsilon  $</td>
+<td style="text-align: center;"><span class="arithmatex">\(x_t = \sin(\frac{\pi}{2}t)x_{data} + \cos(\frac{\pi}{2}t)\epsilon\)</span></td>
+<td style="text-align: center;"><span class="arithmatex">\(x_t = x_{data} + \sigma_t \epsilon\)</span></td>
+<td style="text-align: center;"><span class="arithmatex">\(x_t = \alpha_t x_{data} + \sqrt{1-\alpha_t^2}\epsilon\)</span></td>
+</tr>
+<tr>
+<td style="text-align: center;"><span class="arithmatex">\(\alpha_t\)</span></td>
+<td style="text-align: center;"><span class="arithmatex">\(t\)</span></td>
+<td style="text-align: center;">$ \sin(\frac{\pi}{2}t)$</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;"><span class="arithmatex">\(\exp[-1/2\int_0^t \beta(s)\mathrm]\)</span></td>
+</tr>
+<tr>
+<td style="text-align: center;"><span class="arithmatex">\(\sigma_t\)</span></td>
+<td style="text-align: center;"><span class="arithmatex">\(1-t\)</span></td>
+<td style="text-align: center;">$ \cos(\frac{\pi}{2}t)$</td>
+<td style="text-align: center;"><span class="arithmatex">\(\sigma_t = e^{-F^{-1}(N(t\|P_m,P_s^2))}\)</span></td>
+<td style="text-align: center;"><span class="arithmatex">\(\sqrt{1-\alpha_t^2}\)</span></td>
+</tr>
+<tr>
+<td style="text-align: center;"><span class="arithmatex">\(\lambda_t=\log\frac{\alpha_t}{\sigma_t}\)</span></td>
+<td style="text-align: center;"><span class="arithmatex">\(\log\frac{t}{1-t}\)</span></td>
+<td style="text-align: center;"><span class="arithmatex">\(\log\tan (\frac{\pi}{2}t)\)</span></td>
+<td style="text-align: center;"><span class="arithmatex">\(F^{-1}=P_m + P_s \Phi^{-1}(t)\)</span></td>
+<td style="text-align: center;"><span class="arithmatex">\(\log\frac{\alpha_t}{\sqrt{1-\alpha_t^2}}\)</span></td>
+</tr>
+<tr>
+<td style="text-align: center;"><span class="arithmatex">\((\log\alpha_t)'\)</span></td>
+<td style="text-align: center;"><span class="arithmatex">\(\frac{1}{t}\)</span></td>
+<td style="text-align: center;">$ \frac{\pi}{2} \cot(\frac{\pi}{2}t)$</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;"><span class="arithmatex">\(-\frac{\beta(t)}{2}\)</span></td>
+</tr>
+<tr>
+<td style="text-align: center;"><span class="arithmatex">\((\log\sigma_t)'\)</span></td>
+<td style="text-align: center;"><span class="arithmatex">\(-\frac{1}{1-t}\)</span></td>
+<td style="text-align: center;"><span class="arithmatex">\(-\frac{\pi}{2} \tan(\frac{\pi}{2}t)\)</span></td>
+<td style="text-align: center;"><span class="arithmatex">\(-P_s\dot\Phi^{-1}(t)\)</span></td>
+<td style="text-align: center;"><span class="arithmatex">\(\frac{\alpha_t^2\beta_t}{2(1-\alpha^2_t}\)</span></td>
+</tr>
+<tr>
+<td style="text-align: center;"><span class="arithmatex">\(\lambda_t'\)</span></td>
+<td style="text-align: center;"><span class="arithmatex">\(\frac{1}{t(1-t)}\)</span></td>
+<td style="text-align: center;"><span class="arithmatex">\(\frac{\pi}{\sin(\pi t)}\)</span></td>
+<td style="text-align: center;"><span class="arithmatex">\(P_s\dot\Phi^{-1}(t)\)</span></td>
+<td style="text-align: center;"><span class="arithmatex">\(-\frac{\beta_t}{2(1-\alpha_t^2)}\)</span></td>
+</tr>
+<tr>
+<td style="text-align: center;"><span class="arithmatex">\(\epsilon\)</span> - predict ODE</td>
+<td style="text-align: center;"><span class="arithmatex">\(\frac{d x}{d t} =  \frac{1}{t} x - \frac{1}{t}\epsilon_\theta(x,t)\)</span></td>
+<td style="text-align: center;"><span class="arithmatex">\( \frac{dx}{dt} = \frac{\pi}{2} \cot\left(\frac{\pi}{2}t\right)x - \frac{\pi}{2 \sin\left(\frac{\pi}{2}t\right)}\epsilon_\theta(x,t) \)</span></td>
+<td style="text-align: center;"><span class="arithmatex">\(\frac{dx}{dt} = - P_s \dot\Phi^{-1}(t)e^{-F^{-1}(t)}\epsilon_\theta(x,t)\)</span></td>
+<td style="text-align: center;"><span class="arithmatex">\(\frac{dx}{dt} = - \frac{\beta_t}{2}x - \frac{\beta_t}{2\sigma_t}\epsilon_\theta(x,t)\)</span></td>
+</tr>
+<tr>
+<td style="text-align: center;"><span class="arithmatex">\(\epsilon\)</span> - predict loss</td>
+<td style="text-align: center;"><span class="arithmatex">\(E_{t,\epsilon}w_t\lambda_t'\|\|\epsilon_\theta(x_t,t) - \epsilon\|\|^2\)</span></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td style="text-align: center;"><span class="arithmatex">\(x\)</span>- predict ODE</td>
+<td style="text-align: center;"><span class="arithmatex">\(\frac{d x}{d t} = - \frac{1}{1-t} x + \frac{1}{1-t}x_{data}^\theta(x,t)\)</span></td>
+<td style="text-align: center;"><span class="arithmatex">\( \frac{dx}{dt} = -\frac{\pi}{2} \tan\left(\frac{\pi}{2}t\right)x + \frac{\pi}{2 \cos\left(\frac{\pi}{2}t\right)}x^\theta_{data}(x,t) \)</span></td>
+<td style="text-align: center;"><span class="arithmatex">\(\frac{dx}{dt} =- P_s\dot\Phi^{-1}(t)\left[x- x_{data}^{\theta}(x,t\right]\)</span></td>
+<td style="text-align: center;"><span class="arithmatex">\(\frac{dx}{dt} = - \frac{\beta_t}{2\sigma_t^2} x - \frac{\beta_t\alpha_t}{2\sigma_t^2} x_{data}^\theta(x,t)\)</span></td>
+</tr>
+<tr>
+<td style="text-align: center;"><span class="arithmatex">\(x\)</span> - predict loss</td>
+<td style="text-align: center;"><span class="arithmatex">\(E_{t,x_{data}}w_t\lambda_t'\|\|x_{data}^\theta(x_t,t) - x_{data}\|\|^2\)</span></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<p>Note that</p>
+<ul>
+<li>
+<p><span class="arithmatex">\(w_t\)</span> is the weighted function for <span class="arithmatex">\(t\)</span>, there could be different choices to focus on different time range in the training. Default config is</p>
+<div class="arithmatex">\[w_t = \lambda_t'\sigma_t^2\]</div>
+</li>
+<li>
+<p><span class="arithmatex">\(\epsilon_\theta(x,t)\)</span> mean the predicted noise given the current noisy input <span class="arithmatex">\(x\)</span> and time <span class="arithmatex">\(t\)</span></p>
+</li>
+<li><span class="arithmatex">\(x_{data}^\theta (x,t)\)</span> mean the predicted noiseless image given the current noisy input <span class="arithmatex">\(x\)</span> and time <span class="arithmatex">\(t\)</span></li>
+<li>
+<p><span class="arithmatex">\(F\)</span> is the quntile funciton of the normal distribution with mean <span class="arithmatex">\(P_m\)</span> and variance <span class="arithmatex">\(P_s^2\)</span>. Usullay</p>
+<div class="arithmatex">\[F(p) = p_m + p_s\Phi^{-1}(p)\]</div>
+</li>
+</ul>
+<p>where <span class="arithmatex">\(\Phi^{-1}(p)\)</span> is the quntile funciton of the standard Gaussian distribution if <span class="arithmatex">\(p_m\)</span> is the mean and <span class="arithmatex">\(p_s^2\)</span> is the variance.
+- the derivative of the quantile function is</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code>$$\dot\Phi^{-1} (p)= \frac{ d\Phi^{-1}(p)}{dt} =  \sqrt{2\pi} e^{(\Phi^{-1}(p))^2 / 2}, \; p\in[0,1] $$
+</code></pre></div></td></tr></table></div>
+<p><a class="glightbox" href="../../../images/image-114.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="alt text" src="../../../images/image-114.png" /></a></p>
 
 
 
