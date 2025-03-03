@@ -87,6 +87,7 @@ $$
 X_t \;=\; \alpha_t\,X_1 \;+\; \sigma_t\,X_0,
 $$
 
+
 并对时间 \(t\) 做导数：
 
 $$
@@ -114,6 +115,7 @@ v_t(X_t)
 \;+\;
 \dot{\sigma}_t\,\mathbb{E}[X_0 \mid X_t].
 $$
+
 
 对“\(X_t\) 取值为 \(x\)”的情形，便写作
 
@@ -173,6 +175,7 @@ v_t(x)
 \dot{\sigma}_t\,\mathbb{E}[X_0 \mid X_t = x].
 $$
 
+
 把系数展开整理：
 
 $$
@@ -185,6 +188,7 @@ v_t(x)
 \dot{\sigma}_t\,\mathbb{E}[X_0 \mid X_t = x]
 $$
 
+
 $$
 =\;
 \frac{\dot{\alpha}_t}{\alpha_t}\,x
@@ -192,6 +196,7 @@ $$
 \Bigl(\dot{\sigma}_t \;-\; \frac{\dot{\alpha}_t\,\sigma_t}{\alpha_t}\Bigr)\,
 \mathbb{E}[X_0 \mid X_t = x].
 $$
+
 
 这就得到一种**以 \(\mathbb{E}[X_0 \mid X_t = x]\) 为主**的等价形式：
 
@@ -248,6 +253,7 @@ v_t(x)
 \end{aligned}
 $$
 
+
 得到另一种**以 \(\mathbb{E}[X_1 \mid X_t = x]\) 为主**的等价形式：
 
 $$
@@ -277,6 +283,7 @@ $$
     $$
 
 
+
     2. **显式用 \(\mathbb{E}[X_0 \mid X_t=x]\) 消去 \(\mathbb{E}[X_1 \mid X_t=x]\)**
 
     $$
@@ -287,6 +294,7 @@ $$
     \Bigl(\dot{\sigma}_t - \tfrac{\dot{\alpha}_t\,\sigma_t}{\alpha_t}\Bigr)\,
     \mathbb{E}[X_0 \mid X_t = x].
     $$
+
 
 
 
@@ -314,6 +322,7 @@ $$
     $$
 
 
+
     where $\lambda_t = \log\frac{\alpha_t}{\sigma_t}$ is the half of signal-to-noise ratio.
 
 Assume we have the learned velocity field, the forward process becomes the ODE, assume $x_0$ is the noise, $x_1$ is the target. To be further clearly, we can notate $x_0=\epsilon$ which means a simple distribution and usually take the "noise" Gaussian distribution. And we use $x_{data}$ to indicate our target distribution, usually the complicate distribution with unknow expression of the density function and usually take sampling to  simulate the expectation.
@@ -330,9 +339,11 @@ Assume we have the learned velocity field, the forward process becomes the ODE, 
     $$
 
 
+
     $$
     \epsilon_\theta(x,t) = - \frac{v_\theta(x,t) - (\log\alpha_t)' x}{\lambda_t' \sigma_t}
     $$
+
 
 
     $$
@@ -349,9 +360,11 @@ Assume we have the learned velocity field, the forward process becomes the ODE, 
     $$
 
 
+
     $$
     x_{data}^\theta(x,t) = \frac{v_\theta(x,t) - (\log\sigma_t)' x}{\lambda_t' \alpha_t}
     $$
+
 
 
     $$
@@ -427,7 +440,7 @@ Now, we will compare several different design of them
 ### Summary
 Let $\epsilon$ be the initial distribution $p_0$.
 
-|method|RF|Consine|EDM|DDPM|
+|method|Rectified Flow|Consine|EDM|DDPM|
 |:---:|:---:|:---:|:---:|:---:|
 |conditional Flow|$x_t = t x_{data} +  (1-t)\epsilon  $| $x_t = \sin(\frac{\pi}{2}t)x_{data} + \cos(\frac{\pi}{2}t)\epsilon$|$x_t = x_{data} + \sigma_t \epsilon$| $x_t = \alpha_t x_{data} + \sqrt{1-\alpha_t^2}\epsilon$|
 |$\alpha_t$| $t$| $ \sin(\frac{\pi}{2}t)$|1| $\exp[-1/2\int_0^t \beta(s)\mathrm]$|
@@ -461,4 +474,8 @@ Note that
     $$\dot\Phi^{-1} (p)= \frac{ d\Phi^{-1}(p)}{dt} =  \sqrt{2\pi} e^{(\Phi^{-1}(p))^2 / 2}, \; p\in[0,1] $$
 
 
-![alt text](../../images/image-114.png)
+Here we visualize the curve of $\alpha(t)$ and $\sigma(t)$ respectively.
+
+![alt text](../../images/image-115.png)
+
+Next, we will do the experiment of the flow matching similar to the experiment in [sde diffusion](../chapter7_diffusion/probability_flow_ode.md)
