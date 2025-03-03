@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.50">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.49">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.a40c8224.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.6f8fc17f.min.css">
       
         
         <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
@@ -1311,6 +1311,8 @@
       
         
       
+        
+      
     
     
       
@@ -1532,6 +1534,8 @@
       
         
       
+        
+      
     
     
       
@@ -1672,6 +1676,27 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter7_diffusion/sde_diffusion_unified_representation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Scaling and Scheduling
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1766,8 +1791,6 @@
       
         
       
-        
-      
     
     
       
@@ -1789,7 +1812,7 @@
             
   
   <span class="md-ellipsis">
-    Conditional Diffusion
+    Diffusion Solver
   </span>
   
 
@@ -1798,6 +1821,83 @@
         
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_4">
+            <span class="md-nav__icon md-icon"></span>
+            Diffusion Solver
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter7_diffusion/diffusion_solver/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    DPM Solver
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_5" id="__nav_7_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Conditional Diffusion
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_5">
             <span class="md-nav__icon md-icon"></span>
             Conditional Diffusion
           </label>
@@ -2040,6 +2140,57 @@
       1. Gaussian Path
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-design-of-alpha_t-and-sigma_t" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Design of \(\alpha_t\) and \(\sigma_t\)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Design of \(\alpha_t\) and \(\sigma_t\)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-rectified-flow-rf" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.1 Rectified Flow (RF)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-cosine-nichol-dhariwal-2021" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.2 Cosine (Nichol &amp; Dhariwal, 2021)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-edm-karras-et-al-2022" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.3 EDM (Karras et al., 2022)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-ldm-linear-ddpm-ho-et-al-2020" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.4 (LDM)-Linear / DDPM (Ho et al., 2020)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2488,7 +2639,479 @@
 <p>Please refere the article in flow matching theory for the general formula of flow matching and its optimization target.
 In this article, we will introduce the family of affine conditional flows from general to specific.</p>
 </div>
+<p>Although, we have studied the general conditional flow matching, but in pratice, it is usually used choose an another type of flow matching</p>
+<div class="admonition def">
+<p class="admonition-title">Trajectory</p>
+<div class="arithmatex">\[ x_{t|1} = \psi_t(x_0|x_1) =  \alpha_t x_1 + \sigma_t x_0\]</div>
+</div>
+<p>The notation here is a little different from the diffusion process. In diffusion, <span class="arithmatex">\(x_0\)</span> means the clear image, <span class="arithmatex">\(x_T\)</span> or <span class="arithmatex">\(x_1\)</span> is the final noise distribution. But in the flow matching, in the forward process, we are pushiong the initial distribution <span class="arithmatex">\(x_0\)</span> (noise distribution) to the final data distribution <span class="arithmatex">\(x_1\)</span>. Don't be confusing with diffusion notations. Please check the diffusion flow as described in <a href="../../chapter7_diffusion/sde_diffusion_unified_representation/">SDE diffusion unified representation</a></p>
+<p>We still use the same name "scaling"  <span class="arithmatex">\(\alpha_t\)</span> and "scheduling"  <span class="arithmatex">\(\sigma_t\)</span>. We still need to ensure the initial condition and monotanuous increasing peroperties.</p>
+<ol>
+<li><strong>确保插值路径的单调可逆性</strong>
+   在最简单的线性插值思路里，我们可能写下</li>
+</ol>
+<p>$$
+   \psi_t(x,y) \;=\; \alpha_t\,x \;+\; \sigma_t\,y,
+   $$</p>
+<p>其中 <span class="arithmatex">\(\alpha_t\)</span> 从 0 单调增加到 1，<span class="arithmatex">\(\sigma_t\)</span> 从 1 单调减少到 0。这样一来，<span class="arithmatex">\(\psi_0(x,y)=y\)</span> 或 <span class="arithmatex">\(\psi_0(x,y)=x\)</span>（具体取决于边界条件），<span class="arithmatex">\(\psi_1(x,y)=x\)</span> 或 <span class="arithmatex">\(y\)</span>。若要保证这条“从 <span class="arithmatex">\(x\)</span> 到 <span class="arithmatex">\(y\)</span>”的路径在 <span class="arithmatex">\(t\in[0,1]\)</span> 上不出现奇怪的回头、停滞、或者自相交等现象，就希望它的速度</p>
+<p>$$
+   \frac{\mathrm{d}}{\mathrm{d}t}\,\psi_t(x,y)
+   \;=\;
+   \alpha'_t\,x \;+\; \sigma'_t\,y
+   $$</p>
+<p>不要在中间时刻变号或变得奇异。通常会要求 <span class="arithmatex">\(\alpha'_t&gt;0\)</span>、<span class="arithmatex">\(\sigma'_t&lt;0\)</span>，因此 <span class="arithmatex">\(\alpha'_t - \sigma'_t &gt; 0\)</span>，可以理解为<strong>插值系数一个严格上升、一个严格下降</strong>，从而整个流是严格单调的，保证可逆。</p>
+<ol>
+<li><strong>保证流场在“从 <span class="arithmatex">\(p\)</span> 到 <span class="arithmatex">\(q\)</span>”的方向上不会退化</strong>
+   在 Flow Matching 框架中，我们往往需要学一个速度场 <span class="arithmatex">\(v_\theta(x,t)\)</span>，使得从初始分布 <span class="arithmatex">\(p\)</span> 沿着这个流场积分到终止分布 <span class="arithmatex">\(q\)</span>。如果 <span class="arithmatex">\(\alpha_t - \sigma_t\)</span> 不满足某些正性（或单调性）条件，就有可能在中间某个时刻出现“停滞”或“逆向”流动，使得我们在做流形变换/ODE 积分时遇到奇异或不可逆的情况。</li>
+<li>例如，如果 <span class="arithmatex">\(\alpha_t\)</span> 和 <span class="arithmatex">\(\sigma_t\)</span> 都在某处“停”下来，或者二者的增减方向相反，就会让插值曲线在那段时间几乎不动，或者反复来回，这会给后续的流匹配带来困难。</li>
+<li>
+<p>保持 <span class="arithmatex">\(\alpha_t\)</span> 严格上升、<span class="arithmatex">\(\sigma_t\)</span> 严格下降，也就意味着在任意时刻 <span class="arithmatex">\(t\)</span> 都有一个确定且不为零的“前进方向”，从而流是<strong>无奇点、可逆的</strong>。</p>
+</li>
+<li>
+<p><strong>数学推导中常见的边界与光滑性约束</strong>
+   在很多文献或推导中，会给出类似</p>
+</li>
+</ol>
+<p>$$
+   \alpha_0 = 0,\quad \alpha_1 = 1,\quad
+   \sigma_0 = 1,\quad \sigma_1 = 0,\quad
+   \alpha'_t&gt;0,\;\sigma'_t&lt;0\;\;\text{对 }t\in(0,1),
+   $$</p>
+<p>这组条件直接蕴含了 <span class="arithmatex">\(\alpha_t - \sigma_t\)</span> 在区间 <span class="arithmatex">\((0,1)\)</span> 内是严格增加的，从而不为 0 并且不会出现符号翻转。这样就能确保从 <span class="arithmatex">\(t=0\)</span> 到 <span class="arithmatex">\(t=1\)</span> 的整个插值/流动在分布变换中是“干净”的。</p>
+<div class="admonition note">
+<p class="admonition-title">Velocity Field</p>
+<div class="arithmatex">\[
+\begin{aligned}
+v(x,t) &amp;= E\left[ \frac{d \alpha_t}{dt} X_1 + \frac{d \sigma_t}{d t} X_0 \bigg| X_t = x\right]\\
+&amp; = E_{\{x_0,x_1,t\}}\bigl[ \dot\alpha_t X_1+ \dot\sigma_t X_0| X_t = x\bigr]
+\end{aligned}
+\]</div>
+</div>
+<p>From the flow matching theory, we can prove that in the aboved defined trajectory push the probability <span class="arithmatex">\(p(X_0)\)</span> to <span class="arithmatex">\(p(X_1)\)</span>.</p>
+<p>在很多流匹配（Flow Matching）<strong>或</strong> 随机桥（Schrödinger Bridge）等场景下，我们希望在中间时刻 <span class="arithmatex">\(t\)</span> 看到某些状态 <span class="arithmatex">\(X_t=x\)</span> 时，对“来自哪里（<span class="arithmatex">\(X_0\)</span>）”、“要去哪里（<span class="arithmatex">\(X_1\)</span>）”这些信息做加权平均，从而构造一个<strong> 速度场</strong> 或<strong>漂移项</strong>  <span class="arithmatex">\(v_t(x)\)</span>。因此就会出现：</p>
+<div class="arithmatex">\[
+v_t(x)\;=\;\underbrace{\mathbb{E}\bigl[\alpha_t\,X_1 \;+\;\dot{\sigma}_t\,X_0 \;\bigm|\; X_t = x\bigr]}_{\text{对 }X_0,X_1\text{ 的条件期望}}\;=\;\int \!\!\int
+\bigl(\alpha_t\,x_1 + \dot{\sigma}_t\,x_0\bigr)\,
+\mathrm{d}\mathbb{P}\bigl(X_0=x_0,X_1=x_1 \,\bigm|\; X_t=x\bigr).
+\]</div>
+<ul>
+<li>也就是说，给定此刻处于 <span class="arithmatex">\(x\)</span>，我们对所有可能的“初始点 <span class="arithmatex">\(X_0\)</span> 和目标点 <span class="arithmatex">\(X_1\)</span>”做期望，就得到一个确定性的数值（或向量）<span class="arithmatex">\(v_t(x)\)</span>。</li>
+</ul>
+<p>我们从以下线性插值出发：
+$$
+X_t \;=\; \alpha_t\,X_1 \;+\; \sigma_t\,X_0,
+$$
+并对时间 <span class="arithmatex">\(t\)</span> 做导数：</p>
+<div class="arithmatex">\[
+\dot{X}_t
+\;=\;
+\dot{\alpha}_t\,X_1 \;+\; \dot{\sigma}_t\,X_0.
+\]</div>
+<p>在“流匹配”（Flow Matching）或“随机桥”（Schrödinger Bridge）场景中，我们希望得到一个只依赖于“当前时刻 <span class="arithmatex">\(t\)</span> 和当前状态 <span class="arithmatex">\(X_t\)</span>”的速度场。于是对右侧取“给定 <span class="arithmatex">\(X_t\)</span>”的<strong>条件期望</strong>，定义</p>
+<div class="arithmatex">\[
+v_t(X_t)
+\;=\;
+\mathbb{E}\bigl[\dot{\alpha}_t\,X_1 + \dot{\sigma}_t\,X_0 \,\bigm|\; X_t\bigr].
+\]</div>
+<p>由于 <span class="arithmatex">\(\dot{\alpha}_t\)</span> 和 <span class="arithmatex">\(\dot{\sigma}_t\)</span> 只是随时间的确定函数，可以提到期望外面，得到</p>
+<div class="arithmatex">\[
+v_t(X_t)
+\;=\;
+\dot{\alpha}_t\,\mathbb{E}[X_1 \mid X_t]
+\;+\;
+\dot{\sigma}_t\,\mathbb{E}[X_0 \mid X_t].
+$$
+对“\(X_t\) 取值为 \(x\)”的情形，便写作
+$$
+v_t(x)
+\;=\;
+\dot{\alpha}_t\,\mathbb{E}[X_1 \mid X_t = x]
+\;+\;
+\dot{\sigma}_t\,\mathbb{E}[X_0 \mid X_t = x].
+\]</div>
+<p>从</p>
+<div class="arithmatex">\[
+X_t \;=\; \alpha_t\,X_1 \;+\; \sigma_t\,X_0,
+\]</div>
+<p>对两边取条件期望（给定 <span class="arithmatex">\(X_t = x\)</span>），可得</p>
+<div class="arithmatex">\[
+\mathbb{E}[X_t \mid X_t = x] \;=\;
+\alpha_t\,\mathbb{E}[X_1 \mid X_t = x]
+\;+\;
+\sigma_t\,\mathbb{E}[X_0 \mid X_t = x].
+\]</div>
+<p>但左边就是 <span class="arithmatex">\(x\)</span>，因此
+$$
+x
+\;=\;
+\alpha_t\,\mathbb{E}[X_1 \mid X_t = x]
+\;+\;
+\sigma_t\,\mathbb{E}[X_0 \mid X_t = x].
+$$</p>
+<p>用 <span class="arithmatex">\(\mathbb{E}[X_0 \mid X_t = x]\)</span> 消去 <span class="arithmatex">\(\mathbb{E}[X_1 \mid X_t = x]\)</span></p>
+<div class="arithmatex">\[
+\mathbb{E}[X_1 \mid X_t = x]
+\;=\;
+\frac{x - \sigma_t\,\mathbb{E}[X_0 \mid X_t = x]}{\alpha_t}.
+\]</div>
+<p>将它代入 (A) 式：</p>
+<p>$$
+v_t(x)
+\;=\;
+\dot{\alpha}<em _mathbb_E="\mathbb{E">t \cdot \underbrace{\frac{x - \sigma_t\,\mathbb{E}[X_0 \mid X_t = x]}{\alpha_t}}</em>
+\;+\;
+\dot{\sigma}_t\,\mathbb{E}[X_0 \mid X_t = x].
+$$
+把系数展开整理：
+$$
+v_t(x)
+=\;
+\frac{\dot{\alpha}_t}{\alpha_t}\,x
+\;-\;
+\frac{\dot{\alpha}_t\,\sigma_t}{\alpha_t}\,\mathbb{E}[X_0 \mid X_t = x]
+\;+\;
+\dot{\sigma}_t\,\mathbb{E}[X_0 \mid X_t = x]
+$$
+$$
+=\;
+\frac{\dot{\alpha}_t}{\alpha_t}\,x
+\;+\;
+\Bigl(\dot{\sigma}_t \;-\; \frac{\dot{\alpha}_t\,\sigma_t}{\alpha_t}\Bigr)\,
+\mathbb{E}[X_0 \mid X_t = x].
+$$
+这就得到一种}[X_1 \mid X_t=x]<strong>以 <span class="arithmatex">\(\mathbb{E}[X_0 \mid X_t = x]\)</span> 为主</strong>的等价形式：</p>
+<div class="arithmatex">\[
+\boxed{
+v_t(x)
+\;=\;
+\frac{\dot{\alpha}_t}{\alpha_t}\,x
+\;+\;
+\Bigl(\dot{\sigma}_t - \tfrac{\dot{\alpha}_t\,\sigma_t}{\alpha_t}\Bigr)
+\,\mathbb{E}[X_0 \mid X_t = x].
+}
+\]</div>
+<p>用 <span class="arithmatex">\(\mathbb{E}[X_1 \mid X_t = x]\)</span> 消去 <span class="arithmatex">\(\mathbb{E}[X_0 \mid X_t = x]\)</span></p>
+<p>同理，也可从(1)中解得</p>
+<div class="arithmatex">\[
+\mathbb{E}[X_0 \mid X_t = x]
+\;=\;
+\frac{x - \alpha_t\,\mathbb{E}[X_1 \mid X_t = x]}{\sigma_t}.
+\]</div>
+<p>将它代入 (A) 式：</p>
+<div class="arithmatex">\[
+v_t(x)
+\;=\;
+\dot{\alpha}_t\,\mathbb{E}[X_1 \mid X_t = x]
+\;+\;
+\dot{\sigma}_t \cdot \underbrace{\frac{x - \alpha_t\,\mathbb{E}[X_1 \mid X_t = x]}{\sigma_t}}_{\mathbb{E}[X_0 \mid X_t=x]}.
+\]</div>
+<p>同样展开整理：</p>
+<p>$$
+\begin{aligned}
+v_t(x)
+&amp;=\;
+\dot{\alpha}_t\,\mathbb{E}[X_1 \mid X_t = x]
+\;+\;
+\frac{\dot{\sigma}_t}{\sigma_t}\,x
+\;-\;
+\frac{\dot{\sigma}_t\,\alpha_t}{\sigma_t}\,\mathbb{E}[X_1 \mid X_t = x]\
+&amp;=\;
+\frac{\dot{\sigma}_t}{\sigma_t}\,x
+\;+\;
+\Bigl(\dot{\alpha}_t \;-\; \tfrac{\dot{\sigma}_t\,\alpha_t}{\sigma_t}\Bigr)\,
+\mathbb{E}[X_1 \mid X_t = x].
+\end{aligned}
+$$
+得到另一种<strong>以 <span class="arithmatex">\(\mathbb{E}[X_1 \mid X_t = x]\)</span> 为主</strong>的等价形式：</p>
+<div class="arithmatex">\[
+\boxed{
+v_t(x)
+\;=\;
+\frac{\dot{\sigma}_t}{\sigma_t}\,x
+\;+\;
+\Bigl(\dot{\alpha}_t - \tfrac{\dot{\sigma}_t\,\alpha_t}{\sigma_t}\Bigr)
+\,\mathbb{E}[X_1 \mid X_t = x].
+}
+\]</div>
+<p>因此，<strong>同一个速度场</strong> <span class="arithmatex">\(v_t(x)\)</span> 可以有以下几种互相等价的写法：</p>
+<div class="admonition note">
+<p class="admonition-title">等价形式</p>
+<ol>
+<li>
+<p><strong>最直接的条件期望形式</strong>
+$$
+v_t(x)
+\;=\;
+\dot{\alpha}_t\,\mathbb{E}[X_1 \mid X_t = x]
+\;+\;
+\dot{\sigma}_t\,\mathbb{E}[X_0 \mid X_t = x].
+$$</p>
+</li>
+<li>
+<p><strong>显式用 <span class="arithmatex">\(\mathbb{E}[X_0 \mid X_t=x]\)</span> 消去 <span class="arithmatex">\(\mathbb{E}[X_1 \mid X_t=x]\)</span></strong></p>
+</li>
+</ol>
+<div class="arithmatex">\[
+v_t(x)
+\;=\;
+\frac{\dot{\alpha}_t}{\alpha_t}\,x
+\;+\;
+\Bigl(\dot{\sigma}_t - \tfrac{\dot{\alpha}_t\,\sigma_t}{\alpha_t}\Bigr)\,
+\mathbb{E}[X_0 \mid X_t = x].
+\]</div>
+<ol>
+<li><strong>显式用 <span class="arithmatex">\(\mathbb{E}[X_1 \mid X_t=x]\)</span> 消去 <span class="arithmatex">\(\mathbb{E}[X_0 \mid X_t=x]\)</span></strong></li>
+</ol>
+<div class="arithmatex">\[
+v_t(x)
+\;=\;
+\frac{\dot{\sigma}_t}{\sigma_t}\,x
+\;+\;
+\Bigl(\dot{\alpha}_t - \tfrac{\dot{\sigma}_t\,\alpha_t}{\sigma_t}\Bigr)\,
+\mathbb{E}[X_1 \mid X_t = x].
+\]</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">conditional velocity</p>
+<div class="arithmatex">\[\begin{aligned}
+v_t(x|x_1)&amp; = \dot\alpha_t x_1 + \dot\sigma_t x_0 = \frac{\dot\sigma_t}{\sigma_t} x + (\dot\alpha_t - \frac{\dot\sigma_t}{\sigma_t}\alpha_t)x_1 = \frac{\dot\alpha_t}{\alpha_t}x  + (\dot\sigma_t - \frac{\dot\alpha_t}{\alpha_t}\sigma_t )x_0\\
+&amp; =(\log \alpha_t)' x - ((\log \alpha_t)' - (\log \sigma_t)' )\sigma_t x_0\\
+&amp; =(\log \alpha_t)' x - \lambda_t'\sigma_t x_0\\
+&amp;  =(\log \sigma_t)' x + ((\log \alpha_t)' - (\log \sigma_t)' )\alpha_t x_1\\
+&amp;  =(\log \sigma_t)' x + \lambda_t'\alpha_t x_1\\
+\end{aligned}
+\]</div>
+<p>where <span class="arithmatex">\(\lambda_t = \log\frac{\alpha_t}{\sigma_t}\)</span> is the half of signal-to-noise ratio.</p>
+</div>
+<p>Assume we have the learned velocity field, the forward process becomes the ODE, assume <span class="arithmatex">\(x_0\)</span> is the noise, <span class="arithmatex">\(x_1\)</span> is the target.</p>
+<p>!!! note "noise" prediction</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span></pre></div></td><td class="code"><div><pre><span></span><code>$$
+\mathcal{L} = E_{t,x_0,x_1}(\sigma_t\lambda_t&#39;)^2|| x_0^\theta-x_0||
+$$
+
+$$
+x_0^\theta = - \frac{v_\theta(x,t) - (\log\alpha_t)&#39; x}{\lambda_t&#39; \sigma_t}
+$$
+
+$$
+\frac{d x}{d t} = (\log \alpha_t)&#39; x - \lambda_t&#39;\sigma_t x_0^\theta
+$$
+</code></pre></div></td></tr></table></div>
+<p>!!! note "target" prediction</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span></pre></div></td><td class="code"><div><pre><span></span><code>$$
+\mathcal{L} = E_{t,x_0,x_1}(\alpha_t\lambda_t&#39;)^2|| x_1^\theta-x_1||
+$$
+
+$$
+x_1^\theta = \frac{v_\theta(x,t) - (\log\sigma_t)&#39; x}{\lambda_t&#39; \alpha_t}
+$$
+
+$$
+\frac{d x}{d t} = (\log \sigma_t)&#39; x + \lambda_t&#39;\alpha_t x_1^\theta
+$$
+</code></pre></div></td></tr></table></div>
+<p>The final ODE can borrow the idea from the ODE solver like the DPM Solver with the formula of semi-linear ODE.</p>
 <h2 id="1-gaussian-path">1. Gaussian Path<a class="headerlink" href="#1-gaussian-path" title="Permanent link">&para;</a></h2>
+<p>We assume <span class="arithmatex">\(X_0\sim N(0,1)\)</span> is the Gaussian distribution, according to the Affine Conditin Flow, we can have a exact close-form of the conditional velocity field and its condition flow matching loss.</p>
+<p>We have the conditional prbability path will be</p>
+<div class="arithmatex">\[p_{t|1}(x|x_1) = \mathcal{N}(x|\alpha_t x_1, \sigma_t^2 I)\]</div>
+<p>One benifitial from the Gaussian distribution is the explicite expression of the score function</p>
+<div class="arithmatex">\[\nabla_x \log p_{t|1}(x|x_1) = - \frac{1}{\sigma_t^2}(x - \alpha_t x_1)\]</div>
+<p>And therefor, the marginal probability path <span class="arithmatex">\(p_t\)</span></p>
+<div class="arithmatex">\[
+\begin{aligned}
+\nabla_x \log p_t(x) &amp; =\int \frac{1}{p_t(x)}\nabla_x p_{t|1}(x|x_1)q(x_1) \mathrm{d} x_1  \\
+&amp; = \int \nabla_x \log p_{t|1}(x|x_1)  \frac{p_{t|1}(x|x_1)q(x_1)}{p_t(x)} \mathrm{d} x_1\\
+&amp; = E_{x_1\sim p_{1|t}(\cdot|x)} \Bigl[ \nabla_x \log p_{t|1}(x|x_1)\big| X_t = x \Bigr]\\
+&amp; = E_{x_1\sim p_{1|t}(\cdot|x)} \Bigl[ - \frac{1}{\sigma_t^2} ( x_t - \alpha_t X_1) \big| X_t = x \Bigr]\\
+&amp; =  E_{x_1\sim p_{1|t}(\cdot|x)} \Bigl[ - \frac{1}{\sigma_t} X_0 \big| X_t = x \Bigr]\\
+&amp; =  - \frac{1}{\sigma_t} E_{x_1\sim p_{1|t}(\cdot|x)} \Bigl[  X_0 \big| X_t = x \Bigr]\\
+&amp; = - \frac{1}{\sigma_t} x_{0|1}(x)
+\end{aligned}
+\]</div>
+<h2 id="2-design-of-alpha_t-and-sigma_t">2. Design of <span class="arithmatex">\(\alpha_t\)</span> and <span class="arithmatex">\(\sigma_t\)</span><a class="headerlink" href="#2-design-of-alpha_t-and-sigma_t" title="Permanent link">&para;</a></h2>
+<p>下面给出一个简化的 Python 代码示例，演示如何在 <strong>Flow Matching / 扩散模型</strong> 中实现几种常见的 <span class="arithmatex">\(\alpha_t\)</span> 与 <span class="arithmatex">\(\sigma_t\)</span> 调度（schedules）。这些函数仅作示例，实际使用时可能需要根据论文公式或实验需要做更精细的实现和数值处理。</p>
+<hr />
+<h3 id="21-rectified-flow-rf">2.1  Rectified Flow (RF)<a class="headerlink" href="#21-rectified-flow-rf" title="Permanent link">&para;</a></h3>
+<p>Rectified Flow 中常用 <strong>线性插值</strong>：
+$$
+z_t = (1 - t)\,x_0 + t\,\epsilon.
+$$
+对应地，可定义
+$$
+\alpha(t) = t,
+\quad
+\sigma(t) = 1 - t.
+$$</p>
+<h3 id="22-cosine-nichol-dhariwal-2021">2.2  Cosine (Nichol &amp; Dhariwal, 2021)<a class="headerlink" href="#22-cosine-nichol-dhariwal-2021" title="Permanent link">&para;</a></h3>
+<p><strong>余弦调度</strong> (cosine schedule) 常见形式：
+$$
+z_t=\cos\Bigl(\tfrac{\pi}{2}t\Bigr)\,x_0
+\;+\;\sin\Bigl(\tfrac{\pi}{2}t\Bigr)\,\epsilon.
+$$</p>
+<p>即</p>
+<div class="arithmatex">\[
+\alpha(t) = \cos\Bigl(\tfrac{\pi}{2}\,t\Bigr),
+\quad
+\sigma(t) = \sin\Bigl(\tfrac{\pi}{2}\,t\Bigr).
+\]</div>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-0-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-0-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-0-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-0-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-0-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-0-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-0-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-0-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-0-10">10</a></span>
+<span class="normal"><a href="#__codelineno-0-11">11</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="kn">import</span> <span class="nn">math</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3"></a><span class="k">def</span> <span class="nf">alpha_sigma_cosine</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5"></a><span class="sd">    Cosine schedule:</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6"></a><span class="sd">    alpha(t) = cos(pi/2 * t),  sigma(t) = sin(pi/2 * t)</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7"></a><span class="sd">    t ∈ [0, 1]</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9"></a>    <span class="n">alpha_t</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10"></a>    <span class="n">sigma_t</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11"></a>    <span class="k">return</span> <span class="n">alpha_t</span><span class="p">,</span> <span class="n">sigma_t</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="23-edm-karras-et-al-2022">2.3  EDM (Karras et al., 2022)<a class="headerlink" href="#23-edm-karras-et-al-2022" title="Permanent link">&para;</a></h3>
+<p>EDM 中通常写作：</p>
+<div class="arithmatex">\[
+z_t = x_0 + b(t)\,\epsilon,
+\]</div>
+<p>其中 <span class="arithmatex">\(b(t) = \exp(F^{-1}(t \mid p_m,p_s^2))\)</span> （<span class="arithmatex">\(F^{-1}\)</span> 为正态分布分位数函数）。在“Flow Matching”视角，可理解为</p>
+<div class="arithmatex">\[
+\alpha(t) = 1,
+\quad
+\sigma(t) = b(t).
+\]</div>
+<p>下面示例中，使用 Python 的 <code>math.erfinv</code> (误差函数反变换) 来近似正态分位数函数 <span class="arithmatex">\(\Phi^{-1}\)</span>。若要与原论文参数完全一致，需要更精细的缩放和平移。</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-1-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-1-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-1-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-1-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-1-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-1-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-1-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-1-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-1-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-1-10">10</a></span>
+<span class="normal"><a href="#__codelineno-1-11">11</a></span>
+<span class="normal"><a href="#__codelineno-1-12">12</a></span>
+<span class="normal"><a href="#__codelineno-1-13">13</a></span>
+<span class="normal"><a href="#__codelineno-1-14">14</a></span>
+<span class="normal"><a href="#__codelineno-1-15">15</a></span>
+<span class="normal"><a href="#__codelineno-1-16">16</a></span>
+<span class="normal"><a href="#__codelineno-1-17">17</a></span>
+<span class="normal"><a href="#__codelineno-1-18">18</a></span>
+<span class="normal"><a href="#__codelineno-1-19">19</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="kn">import</span> <span class="nn">math</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3"></a><span class="k">def</span> <span class="nf">alpha_sigma_edm</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">pm</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ps</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5"></a><span class="sd">    EDM-like schedule:</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6"></a><span class="sd">    z_t = x_0 + b(t)*epsilon,</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7"></a><span class="sd">    where b(t) = exp( NormalQuantile(t, mean=pm, std=ps) ).</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9"></a><span class="sd">    NormalQuantile(t) ≈ sqrt(2)*erfinv(2*t - 1).</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11"></a><span class="sd">    pm, ps: mean and std used in the quantile transform (paper notation).</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13"></a>    <span class="c1"># 近似 standard normal quantile</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14"></a>    <span class="c1">#  NormalQuantile(t) = pm + ps * sqrt(2)*erfinv(2*t - 1)</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15"></a>    <span class="c1">#  这里只做简单示例</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16"></a>    <span class="n">quantile</span> <span class="o">=</span> <span class="n">pm</span> <span class="o">+</span> <span class="n">ps</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">erfinv</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">t</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17"></a>    <span class="n">b_t</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">quantile</span><span class="p">)</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18"></a>    <span class="c1"># alpha=1, sigma=b(t)</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19"></a>    <span class="k">return</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">b_t</span>
+</code></pre></div></td></tr></table></div>
+<blockquote>
+<p>注意：实际 EDM 代码中，Karras 等人使用更细致的变换（包括 <span class="arithmatex">\(\sigma_{\mathrm{min}}, \sigma_{\mathrm{max}}\)</span> 之类）。上面仅展示基本原理。</p>
+</blockquote>
+<h3 id="24-ldm-linear-ddpm-ho-et-al-2020">2.4  (LDM)-Linear / DDPM (Ho et al., 2020)<a class="headerlink" href="#24-ldm-linear-ddpm-ho-et-al-2020" title="Permanent link">&para;</a></h3>
+<p><strong>DDPM</strong> 及 <strong>LDM</strong> 在离散时间步 <span class="arithmatex">\(t=0,\dots,T-1\)</span> 上使用线性调度 <span class="arithmatex">\(\beta_t\)</span>，并定义
+$$
+\alpha_t = \sqrt{\prod_{s=0}^{t-1}(1-\beta_s)},
+\quad
+\sigma_t = \sqrt{1-\alpha_t^2}.
+$$
+下面以离散实现为例，示范如何构造数组 <code>alpha[t]</code> 与 <code>sigma[t]</code>；若要在连续时间 <span class="arithmatex">\([0,1]\)</span> 模拟，需要再做插值。</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-2-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-2-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-2-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-2-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-2-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-2-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-2-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-2-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-2-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-2-10">10</a></span>
+<span class="normal"><a href="#__codelineno-2-11">11</a></span>
+<span class="normal"><a href="#__codelineno-2-12">12</a></span>
+<span class="normal"><a href="#__codelineno-2-13">13</a></span>
+<span class="normal"><a href="#__codelineno-2-14">14</a></span>
+<span class="normal"><a href="#__codelineno-2-15">15</a></span>
+<span class="normal"><a href="#__codelineno-2-16">16</a></span>
+<span class="normal"><a href="#__codelineno-2-17">17</a></span>
+<span class="normal"><a href="#__codelineno-2-18">18</a></span>
+<span class="normal"><a href="#__codelineno-2-19">19</a></span>
+<span class="normal"><a href="#__codelineno-2-20">20</a></span>
+<span class="normal"><a href="#__codelineno-2-21">21</a></span>
+<span class="normal"><a href="#__codelineno-2-22">22</a></span>
+<span class="normal"><a href="#__codelineno-2-23">23</a></span>
+<span class="normal"><a href="#__codelineno-2-24">24</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3"></a><span class="k">def</span> <span class="nf">build_alpha_sigma_linear_ddpm</span><span class="p">(</span><span class="n">T</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">beta_0</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">beta_T</span><span class="o">=</span><span class="mf">0.02</span><span class="p">):</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5"></a><span class="sd">    Discrete schedule for DDPM:</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6"></a><span class="sd">    beta_t linearly from beta_0 to beta_T over T steps.</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7"></a><span class="sd">    alpha_t = sqrt(prod(1 - beta_s)),  sigma_t = sqrt(1 - alpha_t^2).</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9"></a><span class="sd">    Returns alpha[t], sigma[t] for t=0..T.</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11"></a>    <span class="c1"># 1) linearly spaced betas</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12"></a>    <span class="n">betas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">beta_0</span><span class="p">,</span> <span class="n">beta_T</span><span class="p">,</span> <span class="n">T</span><span class="p">)</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13"></a>    <span class="n">alpha</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">T</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14"></a>    <span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">T</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16"></a>    <span class="n">alpha</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17"></a>    <span class="c1"># 2) accumulate product for alpha</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18"></a>    <span class="n">product</span> <span class="o">=</span> <span class="mf">1.0</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19"></a>    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">T</span><span class="p">):</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20"></a>        <span class="n">product</span> <span class="o">*=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">betas</span><span class="p">[</span><span class="n">t</span><span class="p">])</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21"></a>        <span class="n">alpha</span><span class="p">[</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">product</span><span class="p">)</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22"></a>    <span class="c1"># 3) sigma(t) = sqrt(1 - alpha^2)</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23"></a>    <span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24"></a>    <span class="k">return</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">sigma</span>
+</code></pre></div></td></tr></table></div>
+<ul>
+<li>其中 <code>alpha[t]</code> 逐步递减到 0，<code>sigma[t]</code> 逐步增大到 1。</li>
+<li>LDM 对 <span class="arithmatex">\(\beta_t\)</span> 做了不同的取值方案（如 <span class="arithmatex">\(\sqrt{\beta_t}\)</span> 的线性插值），但原理类似。</li>
+</ul>
+<p><a class="glightbox" href="../../../images/image-111.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="alt text" src="../../../images/image-111.png" /></a></p>
+<p>Since EDM</p>
 
 
 
@@ -2897,7 +3520,7 @@ In this article, we will introduce the family of affine conditional flows from g
       
     
     <a href="https://mad-sg.github.io/generative-ai-start-to-surrender/" target="_blank" rel="noopener" title="mad-sg.github.io" class="md-social__link">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
     </a>
   
     
@@ -2908,7 +3531,7 @@ In this article, we will introduce the family of affine conditional flows from g
       
     
     <a href="https://hub.docker.com/r/squidfunk/mkdocs-material/" target="_blank" rel="noopener" title="hub.docker.com" class="md-social__link">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M349.9 236.3h-66.1v-59.4h66.1zm0-204.3h-66.1v60.7h66.1zm78.2 144.8H362v59.4h66.1zm-156.3-72.1h-66.1v60.1h66.1zm78.1 0h-66.1v60.1h66.1zm276.8 100c-14.4-9.7-47.6-13.2-73.1-8.4-3.3-24-16.7-44.9-41.1-63.7l-14-9.3-9.3 14c-18.4 27.8-23.4 73.6-3.7 103.8-8.7 4.7-25.8 11.1-48.4 10.7H2.4c-8.7 50.8 5.8 116.8 44 162.1 37.1 43.9 92.7 66.2 165.4 66.2 157.4 0 273.9-72.5 328.4-204.2 21.4.4 67.6.1 91.3-45.2 1.5-2.5 6.6-13.2 8.5-17.1zm-511.1-27.9h-66v59.4h66.1v-59.4zm78.1 0h-66.1v59.4h66.1zm78.1 0h-66.1v59.4h66.1zm-78.1-72.1h-66.1v60.1h66.1z"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M349.9 236.3h-66.1v-59.4h66.1zm0-204.3h-66.1v60.7h66.1zm78.2 144.8H362v59.4h66.1zm-156.3-72.1h-66.1v60.1h66.1zm78.1 0h-66.1v60.1h66.1zm276.8 100c-14.4-9.7-47.6-13.2-73.1-8.4-3.3-24-16.7-44.9-41.1-63.7l-14-9.3-9.3 14c-18.4 27.8-23.4 73.6-3.7 103.8-8.7 4.7-25.8 11.1-48.4 10.7H2.4c-8.7 50.8 5.8 116.8 44 162.1 37.1 43.9 92.7 66.2 165.4 66.2 157.4 0 273.9-72.5 328.4-204.2 21.4.4 67.6.1 91.3-45.2 1.5-2.5 6.6-13.2 8.5-17.1zm-511.1-27.9h-66v59.4h66.1v-59.4zm78.1 0h-66.1v59.4h66.1zm78.1 0h-66.1v59.4h66.1zm-78.1-72.1h-66.1v60.1h66.1z"/></svg>
     </a>
   
     
@@ -2919,7 +3542,7 @@ In this article, we will introduce the family of affine conditional flows from g
       
     
     <a href="https://pypi.org/project/mkdocs-material/" target="_blank" rel="noopener" title="pypi.org" class="md-social__link">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.8 200.5c-7.7-30.9-22.3-54.2-53.4-54.2h-40.1v47.4c0 36.8-31.2 67.8-66.8 67.8H172.7c-29.2 0-53.4 25-53.4 54.3v101.8c0 29 25.2 46 53.4 54.3 33.8 9.9 66.3 11.7 106.8 0 26.9-7.8 53.4-23.5 53.4-54.3v-40.7H226.2v-13.6h160.2c31.1 0 42.6-21.7 53.4-54.2 11.2-33.5 10.7-65.7 0-108.6M286.2 404c11.1 0 20.1 9.1 20.1 20.3 0 11.3-9 20.4-20.1 20.4-11 0-20.1-9.2-20.1-20.4.1-11.3 9.1-20.3 20.1-20.3M167.8 248.1h106.8c29.7 0 53.4-24.5 53.4-54.3V91.9c0-29-24.4-50.7-53.4-55.6-35.8-5.9-74.7-5.6-106.8.1-45.2 8-53.4 24.7-53.4 55.6v40.7h106.9v13.6h-147c-31.1 0-58.3 18.7-66.8 54.2-9.8 40.7-10.2 66.1 0 108.6 7.6 31.6 25.7 54.2 56.8 54.2H101v-48.8c0-35.3 30.5-66.4 66.8-66.4m-6.7-142.6c-11.1 0-20.1-9.1-20.1-20.3.1-11.3 9-20.4 20.1-20.4 11 0 20.1 9.2 20.1 20.4s-9 20.3-20.1 20.3"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.8 200.5c-7.7-30.9-22.3-54.2-53.4-54.2h-40.1v47.4c0 36.8-31.2 67.8-66.8 67.8H172.7c-29.2 0-53.4 25-53.4 54.3v101.8c0 29 25.2 46 53.4 54.3 33.8 9.9 66.3 11.7 106.8 0 26.9-7.8 53.4-23.5 53.4-54.3v-40.7H226.2v-13.6h160.2c31.1 0 42.6-21.7 53.4-54.2 11.2-33.5 10.7-65.7 0-108.6M286.2 404c11.1 0 20.1 9.1 20.1 20.3 0 11.3-9 20.4-20.1 20.4-11 0-20.1-9.2-20.1-20.4.1-11.3 9.1-20.3 20.1-20.3M167.8 248.1h106.8c29.7 0 53.4-24.5 53.4-54.3V91.9c0-29-24.4-50.7-53.4-55.6-35.8-5.9-74.7-5.6-106.8.1-45.2 8-53.4 24.7-53.4 55.6v40.7h106.9v13.6h-147c-31.1 0-58.3 18.7-66.8 54.2-9.8 40.7-10.2 66.1 0 108.6 7.6 31.6 25.7 54.2 56.8 54.2H101v-48.8c0-35.3 30.5-66.4 66.8-66.4m-6.7-142.6c-11.1 0-20.1-9.1-20.1-20.3.1-11.3 9-20.4 20.1-20.4 11 0 20.1 9.2 20.1 20.4s-9 20.3-20.1 20.3"/></svg>
     </a>
   
     
@@ -2930,7 +3553,7 @@ In this article, we will introduce the family of affine conditional flows from g
       
     
     <a href="https://bsky.app/profile/squidfunk.bsky.social" target="_blank" rel="noopener" title="bsky.app" class="md-social__link">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M111.8 62.2C170.2 105.9 233 194.7 256 242.4c23-47.6 85.8-136.4 144.2-180.2 42.1-31.6 110.3-56 110.3 21.8 0 15.5-8.9 130.5-14.1 149.2-18.2 64.8-84.4 81.4-143.3 71.3C456 322 482.2 380 425.6 438c-107.4 110.2-154.3-27.6-166.3-62.9-1.7-4.9-2.6-7.8-3.3-7.8s-1.6 3-3.3 7.8c-12 35.3-59 173.1-166.3 62.9-56.5-58-30.4-116 72.5-133.5C100 314.6 33.8 298 15.7 233.1 10.4 214.4 1.5 99.4 1.5 83.9c0-77.8 68.2-53.4 110.3-21.8z"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M111.8 62.2C170.2 105.9 233 194.7 256 242.4c23-47.6 85.8-136.4 144.2-180.2 42.1-31.6 110.3-56 110.3 21.8 0 15.5-8.9 130.5-14.1 149.2-18.2 64.8-84.4 81.4-143.3 71.3C456 322 482.2 380 425.6 438c-107.4 110.2-154.3-27.6-166.3-62.9-1.7-4.9-2.6-7.8-3.3-7.8s-1.6 3-3.3 7.8c-12 35.3-59 173.1-166.3 62.9-56.5-58-30.4-116 72.5-133.5C100 314.6 33.8 298 15.7 233.1 10.4 214.4 1.5 99.4 1.5 83.9c0-77.8 68.2-53.4 110.3-21.8z"/></svg>
     </a>
   
     
@@ -2943,7 +3566,7 @@ In this article, we will introduce the family of affine conditional flows from g
       
     
     <a href="https://fosstodon.org/@squidfunk" target="_blank" rel="noopener me" title="fosstodon.org" class="md-social__link">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M433 179.11c0-97.2-63.71-125.7-63.71-125.7-62.52-28.7-228.56-28.4-290.48 0 0 0-63.72 28.5-63.72 125.7 0 115.7-6.6 259.4 105.63 289.1 40.51 10.7 75.32 13 103.33 11.4 50.81-2.8 79.32-18.1 79.32-18.1l-1.7-36.9s-36.31 11.4-77.12 10.1c-40.41-1.4-83-4.4-89.63-54a102.5 102.5 0 0 1-.9-13.9c85.63 20.9 158.65 9.1 178.75 6.7 56.12-6.7 105-41.3 111.23-72.9 9.8-49.8 9-121.5 9-121.5m-75.12 125.2h-46.63v-114.2c0-49.7-64-51.6-64 6.9v62.5h-46.33V197c0-58.5-64-56.6-64-6.9v114.2H90.19c0-122.1-5.2-147.9 18.41-175 25.9-28.9 79.82-30.8 103.83 6.1l11.6 19.5 11.6-19.5c24.11-37.1 78.12-34.8 103.83-6.1 23.71 27.3 18.4 53 18.4 175z"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M433 179.11c0-97.2-63.71-125.7-63.71-125.7-62.52-28.7-228.56-28.4-290.48 0 0 0-63.72 28.5-63.72 125.7 0 115.7-6.6 259.4 105.63 289.1 40.51 10.7 75.32 13 103.33 11.4 50.81-2.8 79.32-18.1 79.32-18.1l-1.7-36.9s-36.31 11.4-77.12 10.1c-40.41-1.4-83-4.4-89.63-54a102.5 102.5 0 0 1-.9-13.9c85.63 20.9 158.65 9.1 178.75 6.7 56.12-6.7 105-41.3 111.23-72.9 9.8-49.8 9-121.5 9-121.5m-75.12 125.2h-46.63v-114.2c0-49.7-64-51.6-64 6.9v62.5h-46.33V197c0-58.5-64-56.6-64-6.9v114.2H90.19c0-122.1-5.2-147.9 18.41-175 25.9-28.9 79.82-30.8 103.83 6.1l11.6 19.5 11.6-19.5c24.11-37.1 78.12-34.8 103.83-6.1 23.71 27.3 18.4 53 18.4 175z"/></svg>
     </a>
   
     
@@ -2954,7 +3577,7 @@ In this article, we will introduce the family of affine conditional flows from g
       
     
     <a href="https://x.com/squidfunk" target="_blank" rel="noopener" title="x.com" class="md-social__link">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8l164.9-188.5L26.8 48h145.6l100.5 132.9zm-24.8 373.8h39.1L151.1 88h-42z"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8l164.9-188.5L26.8 48h145.6l100.5 132.9zm-24.8 373.8h39.1L151.1 88h-42z"/></svg>
     </a>
   
 </div>
@@ -2969,10 +3592,10 @@ In this article, we will introduce the family of affine conditional flows from g
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "toc.integrate", "content.code.copy", "content.code.select", "content.code.annotate", "content.tabs.link", "content.footnote.tooltips", "content.tooltips", "navigation.tracking", "search.highlight", "search.share", "search.suggest", "toc.follow", "announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.expand", "search.share", "search.suggest"], "search": "../../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "toc.integrate", "content.code.copy", "content.code.select", "content.code.annotate", "content.tabs.link", "content.footnote.tooltips", "content.tooltips", "navigation.tracking", "search.highlight", "search.share", "search.suggest", "toc.follow", "announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.expand", "search.share", "search.suggest"], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.60a45f97.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.88dd0f4e.min.js"></script>
       
         <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/3.26.1/minified.min.js"></script>
       
