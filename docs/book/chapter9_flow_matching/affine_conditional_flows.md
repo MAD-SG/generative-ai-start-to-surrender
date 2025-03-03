@@ -8,11 +8,12 @@ Although, we have studied the general conditional flow matching, but in pratice,
 
 !!! def "Trajectory"
 
-    $$ x_{t|1} = \psi_t(x_0|x_1) =  \alpha_t x_1 + \sigma_t x_0$$
+    $$\tag{1} x_{t|1} = \psi_t(x_0|x_1) =  \alpha_t x_1 + \sigma_t x_0$$
+
 
 The notation here is a little different from the diffusion process. In diffusion, $x_0$ means the clear image, $x_T$ or $x_1$ is the final noise distribution. But in the flow matching, in the forward process, we are pushiong the initial distribution $x_0$ (noise distribution) to the final data distribution $x_1$. Don't be confusing with diffusion notations. Please check the diffusion flow as described in [SDE diffusion unified representation](../chapter7_diffusion/sde_diffusion_unified_representation.md)
 
-We still use the same name "scaling"  $\alpha_t$ and "scheduling"  $\sigma_t$. We still need to ensure the initial condition and monotanuous increasing peroperties.
+We still use the same name "scaling"  $\alpha_t$ and "scheduling"  $\sigma_t$, where scheduling controls the variance. We still need to ensure the initial condition and monotanuous increasing peroperties.
 
 1. **确保插值路径的单调可逆性**
    在最简单的线性插值思路里，我们可能写下
@@ -21,13 +22,15 @@ We still use the same name "scaling"  $\alpha_t$ and "scheduling"  $\sigma_t$. W
    \psi_t(x,y) \;=\; \alpha_t\,x \;+\; \sigma_t\,y,
    $$
 
-   其中 \(\alpha_t\) 从 0 单调增加到 1，\(\sigma_t\) 从 1 单调减少到 0。这样一来，\(\psi_0(x,y)=y\) 或 \(\psi_0(x,y)=x\)（具体取决于边界条件），\(\psi_1(x,y)=x\) 或 \(y\)。若要保证这条“从 \(x\) 到 \(y\)”的路径在 \(t\in[0,1]\) 上不出现奇怪的回头、停滞、或者自相交等现象，就希望它的速度
+
+   其中 \(\alpha_t\) 从 0 单调增加到 1，\(\sigma_t\) 从 1 单调减少到 0。这样一来， \(\psi_0(x,y)=x\)（具体取决于边界条件），\(\psi_1(x,y)=y\)。若要保证这条“从 \(x\) 到 \(y\)”的路径在 \(t\in[0,1]\) 上不出现奇怪的回头、停滞、或者自相交等现象，就希望它的速度
 
    $$
    \frac{\mathrm{d}}{\mathrm{d}t}\,\psi_t(x,y)
    \;=\;
    \alpha'_t\,x \;+\; \sigma'_t\,y
    $$
+
 
    不要在中间时刻变号或变得奇异。通常会要求 \(\alpha'_t>0\)、\(\sigma'_t<0\)，因此 \(\alpha'_t - \sigma'_t > 0\)，可以理解为**插值系数一个严格上升、一个严格下降**，从而整个流是严格单调的，保证可逆。
 
@@ -45,7 +48,15 @@ We still use the same name "scaling"  $\alpha_t$ and "scheduling"  $\sigma_t$. W
    \alpha'_t>0,\;\sigma'_t<0\;\;\text{对 }t\in(0,1),
    $$
 
+
    这组条件直接蕴含了 \(\alpha_t - \sigma_t\) 在区间 \((0,1)\) 内是严格增加的，从而不为 0 并且不会出现符号翻转。这样就能确保从 \(t=0\) 到 \(t=1\) 的整个插值/流动在分布变换中是“干净”的。
+
+Note that in some paper, in order to be consistent to notation of the diffusion, one may reverse the source and target distribution, that is
+
+$$x_t = \alpha_t x_0 +  \sigma_t x_1$$
+
+
+Now, the $x_0$ is the target distribution $x_1$ is a simple distribution similar as the noising diffusion process and the conditional distribution transit from $p_0 =p_{data}$ to $p_t(x|x_0) = \mathcal{N}(x|\alpha_t x_0, \sigma_t^2 I)$
 
 !!! note "Velocity Field"
 
@@ -56,26 +67,26 @@ We still use the same name "scaling"  $\alpha_t$ and "scheduling"  $\sigma_t$. W
     \end{aligned}
     $$
 
+
 From the flow matching theory, we can prove that in the aboved defined trajectory push the probability $p(X_0)$ to $p(X_1)$.
 
-
-在很多流匹配（Flow Matching）**或** 随机桥（Schrödinger Bridge）等场景下，我们希望在中间时刻 $t$ 看到某些状态 $X_t=x$ 时，对“来自哪里（$X_0$）”、“要去哪里（$X_1$）”这些信息做加权平均，从而构造一个** 速度场** 或**漂移项**  $v_t(x)$。因此就会出现：
+在很多流匹配（Flow Matching）**或** 随机桥（Schrödinger Bridge）等场景下，我们希望在中间时刻 $t$ 看到某些状态 $X_t=x$ 时，对“来自哪里（$X_0$）”、“要去哪里（$X_1$）”这些信息做加权平均，从而构造一个**速度场** 或**漂移项**  $v_t(x)$。因此就会出现：
 
 $$
-v_t(x)\;=\;\underbrace{\mathbb{E}\bigl[\alpha_t\,X_1 \;+\;\dot{\sigma}_t\,X_0 \;\bigm|\; X_t = x\bigr]}_{\text{对 }X_0,X_1\text{ 的条件期望}}\;=\;\int \!\!\int
-\bigl(\alpha_t\,x_1 + \dot{\sigma}_t\,x_0\bigr)\,
+v_t(x)\;=\;\underbrace{\mathbb{E}\bigl[\dot\alpha_t\,X_1 \;+\;\dot{\sigma}_t\,X_0 \;\bigm|\; X_t = x\bigr]}_{\text{对 }X_0,X_1\text{ 的条件期望}}\;=\;\int \!\!\int
+\bigl(\dot\alpha_t\,x_1 + \dot{\sigma}_t\,x_0\bigr)\,
 \mathrm{d}\mathbb{P}\bigl(X_0=x_0,X_1=x_1 \,\bigm|\; X_t=x\bigr).
 $$
 
+
 - 也就是说，给定此刻处于 $x$，我们对所有可能的“初始点 $X_0$ 和目标点 $X_1$”做期望，就得到一个确定性的数值（或向量）$v_t(x)$。
 
-
-
-
 我们从以下线性插值出发：
+
 $$
 X_t \;=\; \alpha_t\,X_1 \;+\; \sigma_t\,X_0,
 $$
+
 并对时间 \(t\) 做导数：
 
 $$
@@ -84,6 +95,7 @@ $$
 \dot{\alpha}_t\,X_1 \;+\; \dot{\sigma}_t\,X_0.
 $$
 
+
 在“流匹配”（Flow Matching）或“随机桥”（Schrödinger Bridge）场景中，我们希望得到一个只依赖于“当前时刻 \(t\) 和当前状态 \(X_t\)”的速度场。于是对右侧取“给定 \(X_t\)”的**条件期望**，定义
 
 $$
@@ -91,6 +103,7 @@ v_t(X_t)
 \;=\;
 \mathbb{E}\bigl[\dot{\alpha}_t\,X_1 + \dot{\sigma}_t\,X_0 \,\bigm|\; X_t\bigr].
 $$
+
 
 由于 \(\dot{\alpha}_t\) 和 \(\dot{\sigma}_t\) 只是随时间的确定函数，可以提到期望外面，得到
 
@@ -101,7 +114,9 @@ v_t(X_t)
 \;+\;
 \dot{\sigma}_t\,\mathbb{E}[X_0 \mid X_t].
 $$
+
 对“\(X_t\) 取值为 \(x\)”的情形，便写作
+
 $$
 v_t(x)
 \;=\;
@@ -111,12 +126,12 @@ v_t(x)
 $$
 
 
-
 从
 
 $$
 X_t \;=\; \alpha_t\,X_1 \;+\; \sigma_t\,X_0,
 $$
+
 
 对两边取条件期望（给定 \(X_t = x\)），可得
 
@@ -127,7 +142,9 @@ $$
 \sigma_t\,\mathbb{E}[X_0 \mid X_t = x].
 $$
 
+
 但左边就是 \(x\)，因此
+
 $$
 x
 \;=\;
@@ -136,6 +153,7 @@ x
 \sigma_t\,\mathbb{E}[X_0 \mid X_t = x].
 $$
 
+
 用 \(\mathbb{E}[X_0 \mid X_t = x]\) 消去 \(\mathbb{E}[X_1 \mid X_t = x]\)
 
 $$
@@ -143,6 +161,7 @@ $$
 \;=\;
 \frac{x - \sigma_t\,\mathbb{E}[X_0 \mid X_t = x]}{\alpha_t}.
 $$
+
 
 将它代入 (A) 式：
 
@@ -153,7 +172,9 @@ v_t(x)
 \;+\;
 \dot{\sigma}_t\,\mathbb{E}[X_0 \mid X_t = x].
 $$
+
 把系数展开整理：
+
 $$
 v_t(x)
 =\;
@@ -163,6 +184,7 @@ v_t(x)
 \;+\;
 \dot{\sigma}_t\,\mathbb{E}[X_0 \mid X_t = x]
 $$
+
 $$
 =\;
 \frac{\dot{\alpha}_t}{\alpha_t}\,x
@@ -170,6 +192,7 @@ $$
 \Bigl(\dot{\sigma}_t \;-\; \frac{\dot{\alpha}_t\,\sigma_t}{\alpha_t}\Bigr)\,
 \mathbb{E}[X_0 \mid X_t = x].
 $$
+
 这就得到一种**以 \(\mathbb{E}[X_0 \mid X_t = x]\) 为主**的等价形式：
 
 $$
@@ -194,6 +217,7 @@ $$
 \frac{x - \alpha_t\,\mathbb{E}[X_1 \mid X_t = x]}{\sigma_t}.
 $$
 
+
 将它代入 (A) 式：
 
 $$
@@ -203,6 +227,7 @@ v_t(x)
 \;+\;
 \dot{\sigma}_t \cdot \underbrace{\frac{x - \alpha_t\,\mathbb{E}[X_1 \mid X_t = x]}{\sigma_t}}_{\mathbb{E}[X_0 \mid X_t=x]}.
 $$
+
 
 同样展开整理：
 
@@ -222,6 +247,7 @@ v_t(x)
 \mathbb{E}[X_1 \mid X_t = x].
 \end{aligned}
 $$
+
 得到另一种**以 \(\mathbb{E}[X_1 \mid X_t = x]\) 为主**的等价形式：
 
 $$
@@ -241,6 +267,7 @@ $$
 !!! note "等价形式"
 
     1. **最直接的条件期望形式**
+
     $$
     v_t(x)
     \;=\;
@@ -248,6 +275,7 @@ $$
     \;+\;
     \dot{\sigma}_t\,\mathbb{E}[X_0 \mid X_t = x].
     $$
+
 
     2. **显式用 \(\mathbb{E}[X_0 \mid X_t=x]\) 消去 \(\mathbb{E}[X_1 \mid X_t=x]\)**
 
@@ -261,6 +289,7 @@ $$
     $$
 
 
+
     3. **显式用 \(\mathbb{E}[X_1 \mid X_t=x]\) 消去 \(\mathbb{E}[X_0 \mid X_t=x]\)**
 
     $$
@@ -271,6 +300,7 @@ $$
     \Bigl(\dot{\alpha}_t - \tfrac{\dot{\sigma}_t\,\alpha_t}{\sigma_t}\Bigr)\,
     \mathbb{E}[X_1 \mid X_t = x].
     $$
+
 
 !!! note "conditional velocity"
 
@@ -283,51 +313,66 @@ $$
     \end{aligned}
     $$
 
+
     where $\lambda_t = \log\frac{\alpha_t}{\sigma_t}$ is the half of signal-to-noise ratio.
 
-Assume we have the learned velocity field, the forward process becomes the ODE, assume $x_0$ is the noise, $x_1$ is the target.
+Assume we have the learned velocity field, the forward process becomes the ODE, assume $x_0$ is the noise, $x_1$ is the target. To be further clearly, we can notate $x_0=\epsilon$ which means a simple distribution and usually take the "noise" Gaussian distribution. And we use $x_{data}$ to indicate our target distribution, usually the complicate distribution with unknow expression of the density function and usually take sampling to  simulate the expectation.
 
-!!! note "noise" prediction
+!!! note "conditional flow from $\epsilon$ to $x_{data}$"
 
-    $$
-    \mathcal{L} = E_{t,x_0,x_1}(\sigma_t\lambda_t')^2|| x_0^\theta-x_0||
-    $$
+    $$ x_t = \alpha_t x_{data} + \sigma_t \epsilon$$
 
-    $$
-    x_0^\theta = - \frac{v_\theta(x,t) - (\log\alpha_t)' x}{\lambda_t' \sigma_t}
-    $$
+
+!!! note "$\epsilon$ -  prediction"
 
     $$
-    \frac{d x}{d t} = (\log \alpha_t)' x - \lambda_t'\sigma_t x_0^\theta
+    \mathcal{L} = E_{t,\epsilon}\Bigl[(\sigma_t\lambda_t')^2|| \epsilon_\theta(x_t,t)-\epsilon||^2\Bigr]
     $$
 
-!!! note "target" prediction
 
     $$
-    \mathcal{L} = E_{t,x_0,x_1}(\alpha_t\lambda_t')^2|| x_1^\theta-x_1||
+    \epsilon_\theta(x,t) = - \frac{v_\theta(x,t) - (\log\alpha_t)' x}{\lambda_t' \sigma_t}
     $$
 
-    $$
-    x_1^\theta = \frac{v_\theta(x,t) - (\log\sigma_t)' x}{\lambda_t' \alpha_t}
-    $$
 
     $$
-    \frac{d x}{d t} = (\log \sigma_t)' x + \lambda_t'\alpha_t x_1^\theta
+    \frac{d x}{d t} = (\log \alpha_t)' x - \lambda_t'\sigma_t \epsilon_\theta(x,t)
     $$
+
+
+!!! note "$x$ - prediction"
+
+    The network predicted the target instead of the noise.
+
+    $$
+    \mathcal{L} = E_{t,x_{data}}\Bigl[(\alpha_t\lambda_t')^2|| x_{data}^\theta(x_t,t)-x_{data}||^2\Bigr]
+    $$
+
+
+    $$
+    x_{data}^\theta(x,t) = \frac{v_\theta(x,t) - (\log\sigma_t)' x}{\lambda_t' \alpha_t}
+    $$
+
+
+    $$
+    \frac{d x}{d t} = (\log \sigma_t)' x + \lambda_t'\alpha_t x_{data}^\theta(x_t,t)
+    $$
+
 
 The final ODE can borrow the idea from the ODE solver like the DPM Solver with the formula of semi-linear ODE.
 ## Gaussian Path
 
 We assume $X_0\sim N(0,1)$ is the Gaussian distribution, according to the Affine Conditin Flow, we can have a exact close-form of the conditional velocity field and its condition flow matching loss.
 
-
 We have the conditional prbability path will be
 
 $$p_{t|1}(x|x_1) = \mathcal{N}(x|\alpha_t x_1, \sigma_t^2 I)$$
 
+
 One benifitial from the Gaussian distribution is the explicite expression of the score function
 
 $$\nabla_x \log p_{t|1}(x|x_1) = - \frac{1}{\sigma_t^2}(x - \alpha_t x_1)$$
+
 
 And therefor, the marginal probability path $p_t$
 
@@ -343,143 +388,77 @@ $$
 \end{aligned}
 $$
 
+
+But not if we don't care about the probability, there is no requirement to assume $p_0$ be the gaussian distribution. Instead, we can train the velocity field with any distributions $p_0$ and $p_1$ by sampling.
+
 ## Design of $\alpha_t$ and $\sigma_t$
+> Experiments of flow matching
 
+To further understand how the flow matching work, let's consider some concrete examples of flow matching methods.
 
-下面给出一个简化的 Python 代码示例，演示如何在 **Flow Matching / 扩散模型** 中实现几种常见的 \(\alpha_t\) 与 \(\sigma_t\) 调度（schedules）。这些函数仅作示例，实际使用时可能需要根据论文公式或实验需要做更精细的实现和数值处理。
+To have a similar compare with what we done in the SDE diffusion model, we take the distribution $p_0$ be the gaussian distribution and $p_1$ be the funnel distribution in the two dimensional space.
 
----
+The Funnel distribution is defined as follows:
 
-###  Rectified Flow (RF)
+- \( v \sim \mathcal{N}(0, 3^2) \)
+- \( x \mid v \sim \mathcal{N}\bigl(0, \exp(v)\bigr) \)
 
-Rectified Flow 中常用 **线性插值**：
-$$
-z_t = (1 - t)\,x_0 + t\,\epsilon.
-$$
-对应地，可定义
-$$
-\alpha(t) = t,
-\quad
-\sigma(t) = 1 - t.
-$$
+|gaussian distribution $\epsilon$|funnel distribution $x_{data}$|
+|---|---|
+|![](../../images/image-112.png)|![](../../images/image-79.png)|
 
-
-
-
-###  Cosine (Nichol & Dhariwal, 2021)
-
-**余弦调度** (cosine schedule) 常见形式：
-$$
-z_t=\cos\Bigl(\tfrac{\pi}{2}t\Bigr)\,x_0
-\;+\;\sin\Bigl(\tfrac{\pi}{2}t\Bigr)\,\epsilon.
-$$
-
-即
+Thus, the joint density is given by:
 
 $$
-\alpha(t) = \cos\Bigl(\tfrac{\pi}{2}\,t\Bigr),
-\quad
-\sigma(t) = \sin\Bigl(\tfrac{\pi}{2}\,t\Bigr).
+q(x,v) = p_1(x,v) = \frac{1}{3\sqrt{2\pi}} \exp\left(-\frac{v^2}{18}\right)
+\cdot \frac{1}{\sqrt{2\pi\,\exp(v)}} \exp\left(-\frac{x^2}{2\exp(v)}\right)
 $$
 
-```python
-import math
 
-def alpha_sigma_cosine(t):
-    """
-    Cosine schedule:
-    alpha(t) = cos(pi/2 * t),  sigma(t) = sin(pi/2 * t)
-    t ∈ [0, 1]
-    """
-    alpha_t = math.cos(math.pi * 0.5 * t)
-    sigma_t = math.sin(math.pi * 0.5 * t)
-    return alpha_t, sigma_t
-```
+By constructing different $\alpha_t$ and $\sigma_t$, $t\in [0,1]$, in eq.(1),  we wil result in different flow matching methods.
 
-###  EDM (Karras et al., 2022)
+Now, we will compare several different design of them
 
-EDM 中通常写作：
+- Rectified FLow (RF)
+- Cosine
+- EDM
+- LDM (DDPM)
 
-$$
-z_t = x_0 + b(t)\,\epsilon,
-$$
+### Summary
+Let $\epsilon$ be the initial distribution $p_0$.
 
-其中 \(b(t) = \exp(F^{-1}(t \mid p_m,p_s^2))\) （\(F^{-1}\) 为正态分布分位数函数）。在“Flow Matching”视角，可理解为
+|method|RF|Consine|EDM|DDPM|
+|:---:|:---:|:---:|:---:|:---:|
+|conditional Flow|$x_t = t x_{data} +  (1-t)\epsilon  $| $x_t = \sin(\frac{\pi}{2}t)x_{data} + \cos(\frac{\pi}{2}t)\epsilon$|$x_t = x_{data} + \sigma_t \epsilon$| $x_t = \alpha_t x_{data} + \sqrt{1-\alpha_t^2}\epsilon$|
+|$\alpha_t$| $t$| $ \sin(\frac{\pi}{2}t)$|1| $\exp[-1/2\int_0^t \beta(s)\mathrm]$|
+|$\sigma_t$| $1-t$| $ \cos(\frac{\pi}{2}t)$|$\sigma_t = e^{-F^{-1}(N(t\|P_m,P_s^2))}$|$\sqrt{1-\alpha_t^2}$|
+|$\lambda_t=\log\frac{\alpha_t}{\sigma_t}$|$\log\frac{t}{1-t}$|$\log\tan (\frac{\pi}{2}t)$ |$F^{-1}=P_m + P_s \Phi^{-1}(t)$|$\log\frac{\alpha_t}{\sqrt{1-\alpha_t^2}}$|
+|$(\log\alpha_t)'$|$\frac{1}{t}$ |$ \frac{\pi}{2} \cot(\frac{\pi}{2}t)$|0|$-\frac{\beta(t)}{2}$|
+|$(\log\sigma_t)'$|$-\frac{1}{1-t}$| $-\frac{\pi}{2} \tan(\frac{\pi}{2}t)$|$-P_s\dot\Phi^{-1}(t)$|$\frac{\alpha_t^2\beta_t}{2(1-\alpha^2_t}$|
+|$\lambda_t'$| $\frac{1}{t(1-t)}$|$\frac{\pi}{\sin(\pi t)}$|$P_s\dot\Phi^{-1}(t)$|$-\frac{\beta_t}{2(1-\alpha_t^2)}$|
+|$\epsilon$ - predict ODE|$\frac{d x}{d t} =  \frac{1}{t} x - \frac{1}{t}\epsilon_\theta(x,t)$|\( \frac{dx}{dt} = \frac{\pi}{2} \cot\left(\frac{\pi}{2}t\right)x - \frac{\pi}{2 \sin\left(\frac{\pi}{2}t\right)}\epsilon_\theta(x,t) \)| $\frac{dx}{dt} = - P_s \dot\Phi^{-1}(t)e^{-F^{-1}(t)}\epsilon_\theta(x,t)$| $\frac{dx}{dt} = - \frac{\beta_t}{2}x - \frac{\beta_t}{2\sigma_t}\epsilon_\theta(x,t)$|
+|$\epsilon$ - predict loss|$E_{t,\epsilon}w_t\lambda_t'\|\|\epsilon_\theta(x_t,t) - \epsilon\|\|^2$| |||
+|$x$- predict ODE| $\frac{d x}{d t} = - \frac{1}{1-t} x + \frac{1}{1-t}x_{data}^\theta(x,t)$| \( \frac{dx}{dt} = -\frac{\pi}{2} \tan\left(\frac{\pi}{2}t\right)x + \frac{\pi}{2 \cos\left(\frac{\pi}{2}t\right)}x^\theta_{data}(x,t) \) |$\frac{dx}{dt} =- P_s\dot\Phi^{-1}(t)\left[x- x_{data}^{\theta}(x,t\right]$| $\frac{dx}{dt} = - \frac{\beta_t}{2\sigma_t^2} x - \frac{\beta_t\alpha_t}{2\sigma_t^2} x_{data}^\theta(x,t)$|
+|$x$ - predict loss|$E_{t,x_{data}}w_t\lambda_t'\|\|x_{data}^\theta(x_t,t) - x_{data}\|\|^2$||||
 
-$$
-\alpha(t) = 1,
-\quad
-\sigma(t) = b(t).
-$$
+Note that
 
-下面示例中，使用 Python 的 `math.erfinv` (误差函数反变换) 来近似正态分位数函数 \(\Phi^{-1}\)。若要与原论文参数完全一致，需要更精细的缩放和平移。
+- $w_t$ is the weighted function for $t$, there could be different choices to focus on different time range in the training. Default config is
 
-```python
-import math
-
-def alpha_sigma_edm(t, pm=0.0, ps=1.0):
-    """
-    EDM-like schedule:
-    z_t = x_0 + b(t)*epsilon,
-    where b(t) = exp( NormalQuantile(t, mean=pm, std=ps) ).
-
-    NormalQuantile(t) ≈ sqrt(2)*erfinv(2*t - 1).
-
-    pm, ps: mean and std used in the quantile transform (paper notation).
-    """
-    # 近似 standard normal quantile
-    #  NormalQuantile(t) = pm + ps * sqrt(2)*erfinv(2*t - 1)
-    #  这里只做简单示例
-    quantile = pm + ps * math.sqrt(2) * math.erfinv(2*t - 1)
-    b_t = math.exp(quantile)
-    # alpha=1, sigma=b(t)
-    return 1.0, b_t
-```
-
-> 注意：实际 EDM 代码中，Karras 等人使用更细致的变换（包括 \(\sigma_{\mathrm{min}}, \sigma_{\mathrm{max}}\) 之类）。上面仅展示基本原理。
+    $$w_t = \lambda_t'\sigma_t^2$$
 
 
+- $\epsilon_\theta(x,t)$ mean the predicted noise given the current noisy input $x$ and time $t$
+- $x_{data}^\theta (x,t)$ mean the predicted noiseless image given the current noisy input $x$ and time $t$
+- $F$ is the quntile funciton of the normal distribution with mean $P_m$ and variance $P_s^2$. Usullay
 
-###  (LDM)-Linear / DDPM (Ho et al., 2020)
+    $$F(p) = p_m + p_s\Phi^{-1}(p)$$
 
-**DDPM** 及 **LDM** 在离散时间步 \(t=0,\dots,T-1\) 上使用线性调度 \(\beta_t\)，并定义
-$$
-\alpha_t = \sqrt{\prod_{s=0}^{t-1}(1-\beta_s)},
-\quad
-\sigma_t = \sqrt{1-\alpha_t^2}.
-$$
-下面以离散实现为例，示范如何构造数组 `alpha[t]` 与 `sigma[t]`；若要在连续时间 \([0,1]\) 模拟，需要再做插值。
 
-```python
-import numpy as np
+  where $\Phi^{-1}(p)$ is the quntile funciton of the standard Gaussian distribution if $p_m$ is the mean and $p_s^2$ is the variance.
+- the derivative of the quantile function is
 
-def build_alpha_sigma_linear_ddpm(T=100, beta_0=1e-4, beta_T=0.02):
-    """
-    Discrete schedule for DDPM:
-    beta_t linearly from beta_0 to beta_T over T steps.
-    alpha_t = sqrt(prod(1 - beta_s)),  sigma_t = sqrt(1 - alpha_t^2).
+    $$\dot\Phi^{-1} (p)= \frac{ d\Phi^{-1}(p)}{dt} =  \sqrt{2\pi} e^{(\Phi^{-1}(p))^2 / 2}, \; p\in[0,1] $$
 
-    Returns alpha[t], sigma[t] for t=0..T.
-    """
-    # 1) linearly spaced betas
-    betas = np.linspace(beta_0, beta_T, T)
-    alpha = np.zeros(T+1, dtype=np.float32)
-    sigma = np.zeros(T+1, dtype=np.float32)
 
-    alpha[0] = 1.0
-    # 2) accumulate product for alpha
-    product = 1.0
-    for t in range(T):
-        product *= (1.0 - betas[t])
-        alpha[t+1] = np.sqrt(product)
-    # 3) sigma(t) = sqrt(1 - alpha^2)
-    sigma = np.sqrt(1 - alpha**2)
-    return alpha, sigma
-```
-
-- 其中 `alpha[t]` 逐步递减到 0，`sigma[t]` 逐步增大到 1。
-- LDM 对 \(\beta_t\) 做了不同的取值方案（如 \(\sqrt{\beta_t}\) 的线性插值），但原理类似。
-
-![alt text](../../images/image-111.png)
-
-Since EDM
+![alt text](../../images/image-114.png)
