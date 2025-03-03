@@ -60,7 +60,7 @@ nav:
       - Flow Matching Theorem: book/chapter9_flow_matching/flow_matching_theory.md
       - Affine Conditional Flow: book/chapter9_flow_matching/affine_conditional_flows.md
       - Optimal Transport Flow: book/chapter9_flow_matching/optimal_transport_flow.md
-      - Rectified Flow: book/chapter9_flow_matching/rectified_flow.md
+      - Comparison with Diffusion Flow ODE: /book/chapter9_flow_matching/comparison_with_flow_ode.md
   - Hybrid SOTA Models:
       - Hybrid Methods: book/chapter11_hybrid_sota_models/hybrid_methods.md
       - Closed Models: book/chapter11_hybrid_sota_models/sota_closed_models.md

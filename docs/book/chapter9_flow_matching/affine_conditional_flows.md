@@ -284,6 +284,7 @@ $$
 
 
 
+
     2. **显式用 \(\mathbb{E}[X_0 \mid X_t=x]\) 消去 \(\mathbb{E}[X_1 \mid X_t=x]\)**
 
     $$
@@ -294,6 +295,7 @@ $$
     \Bigl(\dot{\sigma}_t - \tfrac{\dot{\alpha}_t\,\sigma_t}{\alpha_t}\Bigr)\,
     \mathbb{E}[X_0 \mid X_t = x].
     $$
+
 
 
 
@@ -323,6 +325,7 @@ $$
 
 
 
+
     where $\lambda_t = \log\frac{\alpha_t}{\sigma_t}$ is the half of signal-to-noise ratio.
 
 Assume we have the learned velocity field, the forward process becomes the ODE, assume $x_0$ is the noise, $x_1$ is the target. To be further clearly, we can notate $x_0=\epsilon$ which means a simple distribution and usually take the "noise" Gaussian distribution. And we use $x_{data}$ to indicate our target distribution, usually the complicate distribution with unknow expression of the density function and usually take sampling to  simulate the expectation.
@@ -340,9 +343,11 @@ Assume we have the learned velocity field, the forward process becomes the ODE, 
 
 
 
+
     $$
     \epsilon_\theta(x,t) = - \frac{v_\theta(x,t) - (\log\alpha_t)' x}{\lambda_t' \sigma_t}
     $$
+
 
 
 
@@ -361,9 +366,11 @@ Assume we have the learned velocity field, the forward process becomes the ODE, 
 
 
 
+
     $$
     x_{data}^\theta(x,t) = \frac{v_\theta(x,t) - (\log\sigma_t)' x}{\lambda_t' \alpha_t}
     $$
+
 
 
 
@@ -408,25 +415,6 @@ But not if we don't care about the probability, there is no requirement to assum
 > Experiments of flow matching
 
 To further understand how the flow matching work, let's consider some concrete examples of flow matching methods.
-
-To have a similar compare with what we done in the SDE diffusion model, we take the distribution $p_0$ be the gaussian distribution and $p_1$ be the funnel distribution in the two dimensional space.
-
-The Funnel distribution is defined as follows:
-
-- \( v \sim \mathcal{N}(0, 3^2) \)
-- \( x \mid v \sim \mathcal{N}\bigl(0, \exp(v)\bigr) \)
-
-|gaussian distribution $\epsilon$|funnel distribution $x_{data}$|
-|---|---|
-|![](../../images/image-112.png)|![](../../images/image-79.png)|
-
-Thus, the joint density is given by:
-
-$$
-q(x,v) = p_1(x,v) = \frac{1}{3\sqrt{2\pi}} \exp\left(-\frac{v^2}{18}\right)
-\cdot \frac{1}{\sqrt{2\pi\,\exp(v)}} \exp\left(-\frac{x^2}{2\exp(v)}\right)
-$$
-
 
 By constructing different $\alpha_t$ and $\sigma_t$, $t\in [0,1]$, in eq.(1),  we wil result in different flow matching methods.
 
@@ -477,5 +465,3 @@ Note that
 Here we visualize the curve of $\alpha(t)$ and $\sigma(t)$ respectively.
 
 ![alt text](../../images/image-115.png)
-
-Next, we will do the experiment of the flow matching similar to the experiment in [sde diffusion](../chapter7_diffusion/probability_flow_ode.md)
