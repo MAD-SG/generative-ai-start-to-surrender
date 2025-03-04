@@ -21,6 +21,7 @@ $$\tag{1}
 \end{aligned}
 $$
 
+
 Here $\lambda_t =\log \frac{\alpha_t^2}{\sigma_t^2}$ usually means the signal-to-noise ratio, SNR., is a monotanous decreasing function of t.
 
 Here is our base ODE, we will use it to build our DPM Solver
@@ -41,6 +42,7 @@ Here is our base ODE, we will use it to build our DPM Solver
     \,d\tau.}
     $$
 
+
 !!! proof "proof of equation (2)"
 
     下面演示如何从
@@ -52,6 +54,7 @@ Here is our base ODE, we will use it to build our DPM Solver
     \;+\;
     \frac{g^2(t)}{2\,\sigma_t}\,\epsilon_\theta\bigl(x(t),\,t\bigr),
     $$
+
     推导出所给的积分形式
 
     $$
@@ -64,16 +67,19 @@ Here is our base ODE, we will use it to build our DPM Solver
     \exp\!\Bigl[\!\int_{\tau}^{\,t}f(r)\,dr\Bigr]\,
     \frac{g^2(\tau)}{2\,\sigma_\tau}\,\epsilon_{\theta}\bigl(x_\tau,\tau\bigr)\,d\tau.
     $$
+
     为方便阅读，下文把 \(x(t)\) 在 \(t = s\) 时刻的值记为 \(x_s\)，在 \(t = t\) 时刻的值记为 \(x_t\)。
 
     #### 1. 写成一阶**线性**常微分方程
 
     原方程可视为
+
     $$
     x'(t) - f(t)\,x(t)
     \;=\;
     \frac{g^2(t)}{2\,\sigma_t}\,\epsilon_\theta\bigl(x(t),t\bigr).
     $$
+
     这是一个**非齐次一阶线性 ODE**，其中“非齐次项”为
     \(\tfrac{g^2(t)}{2\,\sigma_t}\,\epsilon_{\theta}\bigl(x(t),t\bigr)\)。
 
@@ -81,11 +87,13 @@ Here is our base ODE, we will use it to build our DPM Solver
     #### 2. 乘以积分因子并取全导数
 
     **积分因子**(Integrating Factor) 取
+
     $$
     \mu(t)
     \;=\;
     \exp\!\Bigl[\,-\!\int_{s}^{\,t}f(u)\,du\Bigr].
     $$
+
     将上式两边同乘 \(\mu(t)\):
 
     $$
@@ -99,9 +107,11 @@ Here is our base ODE, we will use it to build our DPM Solver
     \exp\!\Bigl(-\!\int_{s}^{\,t}f(u)\,du\Bigr)\,
     \frac{g^2(t)}{2\,\sigma_t}\,\epsilon_\theta(x(t),t).
     $$
+
     左端恰好是对
     \(\displaystyle x(t)\,\mu(t)\)
     做时间导数的结果：
+
     $$
     \frac{d}{dt}
     \Bigl[
@@ -109,6 +119,7 @@ Here is our base ODE, we will use it to build our DPM Solver
     \exp\!\Bigl(-\!\int_{s}^{\,t}f(u)\,du\Bigr)
     \Bigr].
     $$
+
     因此方程化为
 
     $$
@@ -119,6 +130,7 @@ Here is our base ODE, we will use it to build our DPM Solver
     \;=\;
     \mu(t)\,\frac{g^2(t)}{2\,\sigma_t}\,\epsilon_\theta\bigl(x(t),t\bigr).
     $$
+
 
 
 
@@ -135,7 +147,9 @@ Here is our base ODE, we will use it to build our DPM Solver
     \mu(\tau)\,\frac{g^2(\tau)}{2\,\sigma_\tau}\,\epsilon_\theta\bigl(x(\tau),\tau\bigr)
     \,d\tau.
     $$
+
     也就是
+
     $$
     x_t\,\mu(t)
     \;-\;
@@ -147,9 +161,11 @@ Here is our base ODE, we will use it to build our DPM Solver
     \epsilon_\theta\bigl(x_\tau,\tau\bigr)\,d\tau.
     $$
 
+
     ##### 3.1. 代入
 
     $$\mu(s)=\exp\!\Bigl(-\!\int_{s}^{\,s} f(u)\,du\Bigr)=1$$
+
 
     显然 \(\int_{s}^{\,s}(\cdots)\,du=0\)，故 \(\mu(s)=e^0=1\)。因此
 
@@ -163,11 +179,13 @@ Here is our base ODE, we will use it to build our DPM Solver
     \frac{g^2(\tau)}{2\,\sigma_\tau}\,
     \epsilon_\theta\bigl(x_\tau,\tau\bigr)\,d\tau.
     $$
+
     从而
 
     $$
     x_t\mu(t)=x_s+\int_{s}^{t}\mu(\tau)\frac{g^2(\tau)}{2\,\sigma_\tau}\epsilon_\theta\bigl(x_\tau,\tau\bigr)d\tau
     $$
+
 
     ##### 3.2. 还原 \(x_t\)
 
@@ -180,6 +198,7 @@ Here is our base ODE, we will use it to build our DPM Solver
     \frac{g^2(\tau)}{2\,\sigma_\tau}\,\epsilon_\theta(x_\tau,\tau)\,d\tau.
     $$
 
+
     但要注意，
 
     $$
@@ -188,6 +207,7 @@ Here is our base ODE, we will use it to build our DPM Solver
     \exp\!\Bigl(\!\int_{s}^{\,t}f(u)\,du\Bigr)
     \;\exp\!\Bigl(-\!\int_{s}^{\,\tau}f(u)\,du\Bigr),
     $$
+
 
     实际上我们更直接的做法是：分拆
 
@@ -199,6 +219,7 @@ Here is our base ODE, we will use it to build our DPM Solver
     \int_{\tau}^{\,t}f(u)\,du,
     $$
 
+
     因而
 
     $$
@@ -208,6 +229,7 @@ Here is our base ODE, we will use it to build our DPM Solver
     \exp\!\Bigl[\!\int_{\tau}^{\,t}f(u)\,du\Bigr].
     $$
 
+
     所以第二项在被乘以 \(\exp[\int_s^t f(u)\,du]\) 后，可以写成
 
     $$
@@ -216,6 +238,7 @@ Here is our base ODE, we will use it to build our DPM Solver
     \frac{g^2(\tau)}{2\,\sigma_\tau}\,\epsilon_\theta(x_\tau,\tau)
     \,d\tau.
     $$
+
 
     整理得到最后公式
 
@@ -231,19 +254,23 @@ Here is our base ODE, we will use it to build our DPM Solver
     \,d\tau.}
     $$
 
+
 同时，我们带入方程(1), 得到
 
 $$
 x_t = \frac{\alpha_t}{\alpha_s} x_s -\frac{ \alpha_t }{2} \int_s^t \frac{d \lambda_\tau}{d\tau} \frac{\sigma_\tau}{\alpha_\tau} \epsilon_\theta\bigl(x_\tau,\tau\bigr)\,d\tau
 $$
 
+
 因为$\lambda_t$ 是单调递减的，它具有逆函数，然后我们进行变量替换
 
 $$ t \rightarrow \lambda$$
 
+
 我们有
 
 $$d\lambda = \frac{d\lambda_t}{d t} dt$$
+
 
 因此
 
@@ -253,6 +280,7 @@ $$d\lambda = \frac{d\lambda_t}{d t} dt$$
     x_t =\frac{\alpha_t}{\alpha_s} x_s -\frac{ \alpha_t }{2} \int_{\lambda_s}^{\lambda_t} e^{-\frac{\lambda }{2}} \hat{\epsilon_\theta}\bigl(x_\lambda,t_\lambda\bigr)\,d\lambda
     $$
 
+
 因此根据这个公式，我们可以得到线性部分的准确解，当然随机部分还是需要进行积分。但是它至少减少了一部分的误差项。同时我们也可以从另外一个角度理解，可以理解成 $\epsilon_\theta$ 的一个加权平均,而且是指数衰减的，$\lambda$ 越大，贡献越小。也就是$t$ 越大， $\lambda$ 越小，贡献越大.
 
 ### High Order Approximation
@@ -260,6 +288,7 @@ $$d\lambda = \frac{d\lambda_t}{d t} dt$$
 为了方便计算，接下来我们重新定义
 
 $$\lambda_t = \log \frac{\alpha_t}{\sigma_t}$$
+
 
 这样可以避免额外产生一个 $\frac{1}{2}$ 的系数影响。
 
@@ -270,11 +299,13 @@ $$\lambda_t = \log \frac{\alpha_t}{\sigma_t}$$
 $$
 \int_{\lambda_s}^{\lambda_t} e^{-\lambda}\,\hat{\epsilon}_\theta(\hat{x}_\lambda,\lambda)\,d\lambda
 $$
+
 的有限阶逼近，从而得到对\(x_t\)的相应展开。
 
 #### 对\(\hat{\epsilon}_\theta(\hat{x}_\lambda,\lambda)\)做关于\(\lambda\)的泰勒展开
 
 令\(\lambda_t>\lambda_s\)，并记\(h := \lambda_t - \lambda_s\)。将\(\hat{\epsilon}_\theta(\hat{x}_\lambda,\lambda)\)在\(\lambda=\lambda_s\)处展开到\(n\)阶，便有
+
 $$
 \hat{\epsilon}_\theta(\hat{x}_\lambda,\lambda)
 \;=\;
@@ -284,6 +315,7 @@ $$
 \;+\;
 O\bigl(h^{n+1}\bigr).
 $$
+
 这里\(\hat{\epsilon}_\theta^{(k)}\)表示对\(\lambda\)的第\(k\)阶导数；\(\hat{x}_{\lambda_s}\)指在\(\lambda_s\)处的相应状态(或近似)。
 
 #### 将其带入\(\int e^{-\lambda}\,\hat{\epsilon}_\theta\,d\lambda\)并依次积分
@@ -291,6 +323,7 @@ $$
 把上述展开代入
 
 $$\int_{\lambda_s}^{\lambda_t}e^{-\lambda}\,\hat{\epsilon}_\theta(\hat{x}_\lambda,\lambda)\,d\lambda$$
+
 
 后，可将积分拆成一系列幂次项与\(e^{-\lambda}\)的乘积积分，再加上余项\(O(h^{n+2})\)。形式上类似
 
@@ -311,6 +344,7 @@ $$
 \;+\;O(h^{n+2}).
 $$
 
+
 再根据具体问题(如文中方程 3.4)中的\(\sigma_t,\alpha_t\)等系数关系，将这些积分因子做适当整理，就得到
 
 $$
@@ -327,12 +361,14 @@ h^{\,k+1}\,
 O\bigl(h^{n+2}\bigr),
 $$
 
+
 #### 定义\(\varphi_k\)函数以简化“指数‐多项式”积分
 
 为了把
 
 $$\displaystyle \int_0^h e^{-\!(\lambda_s+\tau)}\,\tau^k\,d\tau
 $$
+
 
 一类积分写得更紧凑，文中引入了一簇辅助函数\(\varphi_k(z)\)。它们满足某些初值与递推性质(见(B.2))，从而可得到闭形式，如
 
@@ -346,6 +382,7 @@ $$
 \varphi_3(h)
 = \frac{\,e^h - \tfrac{h^2}{2} - h - 1\,}{h^3},
 $$
+
 
 #### 得到\(x_t\)的展开
 
@@ -366,6 +403,7 @@ $$
     O\bigl(h^{n+2}\bigr).
     $$
 
+
 由此便构成了对方程(3)解的一个**有限阶逼近**。
 
 下面给出文中式 (4)
@@ -385,6 +423,7 @@ O\bigl(h^{n+2}\bigr),
 \text{其中 }h=\lambda_{t}-\lambda_{s},
 $$
 
+
 在 \(n=0,1,2\) 三种截断下的**显式形式**。这里
 
 $$
@@ -395,11 +434,13 @@ $$
 \varphi_{3}(h) \;=\; \frac{\,e^{h}-\tfrac{h^{2}}{2}-h-1\,}{h^{3}},
 $$
 
+
 以及\(\hat{\epsilon}_{\theta}^{(k)}\) 表示 \(\lambda\) 的 \(k\) 阶导数在 \(\lambda=\lambda_s\) 处的值。
 
 ##### \(n=0\) 截断
 
 只保留 \(k=0\) 项，则
+
 $$
 x_{t}
 \;=\;
@@ -412,6 +453,7 @@ x_{t}
 \;+\;
 O\bigl(h^{2}\bigr).
 $$
+
 
 因为 \(\hat{\epsilon}_{\theta}^{(0)}=\hat{\epsilon}_{\theta}\bigl(\hat{x}_{\lambda_s},\lambda_s\bigr)\) 且
 \(\,h\,\varphi_{1}(h)=e^{h}-1,\)
@@ -428,6 +470,7 @@ x_{t}
 O\bigl(h^{2}\bigr).
 }
 $$
+
 
 ##### \(n=1\) 截断
 
@@ -446,6 +489,7 @@ x_{t}=\frac{\alpha_{t}}{\alpha_{s}}\;x_{s}
 O\bigl(h^{3}\bigr).
 $$
 
+
 再将
 
 $$
@@ -455,6 +499,7 @@ h\,\varphi_{1}(h)
 h^{2}\,\varphi_{2}(h)
 = e^{h}-h-1
 $$
+
 
 代回，则
 
@@ -477,9 +522,11 @@ O\bigl(h^{3}\bigr),
 }
 $$
 
+
 其中
 
 $$\hat{\epsilon}_{\theta}^{(1)}=\dfrac{d}{d\lambda}\hat{\epsilon}_{\theta}\bigl(\hat{x}_{\lambda},\lambda\bigr)\big|_{\lambda=\lambda_s}$$
+
 
 ###### \(n=2\) 截断
 
@@ -496,12 +543,14 @@ x_{t}=\frac{\alpha_{t}}{\alpha_{s}}\;x_{s}\;-\;\sigma_{t}
 \Bigr]+\;O\bigl(h^{4}\bigr).
 $$
 
+
 再利用
 
 $$
 h^{3}\,\varphi_{3}(h)
 = e^{h}\;-\;\frac{h^{2}}{2}\;-\;h\;-\;1,
 $$
+
 
 可写成
 
@@ -515,6 +564,7 @@ $$
 \Bigr]\;+\;O\bigl(h^{4}\bigr).}
 $$
 
+
 但是真实情况下，我们并不能直接求高阶导数，而是用数值方法来近似计算。 当然从上面的公式我们可以直接得到二阶截断误差的数值方法。
 ### DPM Solver 1
 
@@ -525,9 +575,11 @@ x_{t} &= \frac{\alpha_t}{\alpha_s}x_s - \sigma_t1 (e^{h_t}-1)\epsilon_\theta(x_s
 \end{aligned}
 $$
 
+
 where
 
 $$h_t=\lambda_t - \lambda_s =\log \frac{\alpha_t}{\sigma_t} - \log\frac{\alpha_s}{\sigma_s}$$
+
 
 This formula is identical to the DDIM solution.
 
@@ -539,9 +591,11 @@ This formula is identical to the DDIM solution.
 #### 中点法
 
 考虑常微分方程
+
 $$
 y'(t) = f(t, y(t)),\quad y(t_0)=y_0,
 $$
+
 其中点（midpoint）方法为
 
 !!! note "中点法"
@@ -550,33 +604,44 @@ $$
     y_{n+1} = y_n + h\,f\Big(t_n+\frac{h}{2},\,y_n+\frac{h}{2}\,f(t_n,y_n)\Big).
     $$
 
+
 下面给出推导该方法局部截断误差阶数的过程。
 
 ##### 精确解的Taylor展开
 
 对精确解\( y(t) \)在\( t=t_n \)处做Taylor展开，有
+
 $$
 y(t_n+h) = y(t_n) + h\,y'(t_n) + \frac{h^2}{2}\,y''(t_n) + \frac{h^3}{6}\,y'''(t_n) + O(h^4).
 $$
+
 注意到由于\( y'(t_n) = f(t_n, y(t_n)) \)且
+
 $$
 y''(t_n) = \frac{d}{dt}y'(t_n)=\frac{\partial f}{\partial t}(t_n, y(t_n)) + \frac{\partial f}{\partial y}(t_n, y(t_n))\,y'(t_n),
 $$
+
 我们有
+
 $$
 y(t_n+h) = y(t_n) + h\,f(t_n,y(t_n)) + \frac{h^2}{2}\Big[f_t(t_n,y(t_n)) + f_y(t_n,y(t_n))\,f(t_n,y(t_n))\Big] + O(h^3).
 $$
 
+
 ##### 数值格式的展开
 
 中点方法给出
+
 $$
 y_{n+1} = y_n + h\,f\left(t_n+\frac{h}{2},\,y_n+\frac{h}{2}\,f(t_n,y_n)\right).
 $$
+
 我们希望比较\( y_{n+1} \)与精确解\( y(t_n+h) \)的差异。首先对函数
+
 $$
 F(h)= f\left(t_n+\frac{h}{2},\,y_n+\frac{h}{2}\,f(t_n,y_n)\right)
 $$
+
 在\( h=0 \)处做Taylor展开。记 \( y_n = y(t_n) \) 且 \( f(t_n,y_n) = y'(t_n) \)，于是有
 
 $$
@@ -586,6 +651,7 @@ F(h) &= f\Big(t_n+\frac{h}{2},\,y(t_n)+\frac{h}{2}\,y'(t_n)\Big)\\
 &= f(t_n,y(t_n)) + \frac{h}{2}\Big[f_t(t_n,y(t_n)) + f_y(t_n,y(t_n))\,f(t_n,y(t_n))\Big] + O(h^2).
 \end{aligned}
 $$
+
 
 代入中点方法表达式，有
 
@@ -597,18 +663,23 @@ y_{n+1} &= y(t_n) + h\,F(h)\\
 \end{aligned}
 $$
 
+
 ##### 误差阶数分析
 
 将精确解的Taylor展开与中点方法的展开对比：
 
 - 精确解：
+
   $$
   y(t_n+h) = y(t_n) + h\,f(t_n,y(t_n)) + \frac{h^2}{2}\Big[f_t(t_n,y(t_n)) + f_y(t_n,y(t_n))\,f(t_n,y(t_n))\Big] + O(h^3).
   $$
+
 - 数值解（中点方法）：
+
   $$
   y_{n+1} = y(t_n) + h\,f(t_n,y(t_n)) + \frac{h^2}{2}\Big[f_t(t_n,y(t_n)) + f_y(t_n,y(t_n))\,f(t_n,y(t_n))\Big] + O(h^3).
   $$
+
 
 两者在前\( h^2 \)项完全一致，因此局部截断误差（local truncation error）为\( O(h^3) \)。由于全局误差通常比局部截断误差低一个阶数，所以全局误差为\( O(h^2) \)。
 
@@ -635,6 +706,7 @@ $$
 \end{aligned}
 $$
 
+
 1. **第二阶段**
 
 $$
@@ -645,16 +717,20 @@ $$
 \end{aligned}
 $$
 
+
 1. **最终更新**
 
 $$
 x(\lambda + h)=\frac{\alpha_{\lambda + h}}{\alpha_{\lambda}}\;x(\lambda)- \sigma_{\lambda + h}\,\bigl(e^{\,h} - 1\bigr)\,\epsilon_\theta\bigl(x(\lambda),\lambda\bigr) - \sigma_{\lambda + h}\,\bigl(e^{\,h} -h- 1\bigr)\hat{D}_2.
 $$
+
 这里 我们可以把 $\hat{D}_1$ 和 $\hat{D}_2$ 看作是差分项，也就是
 
 $$ \hat{D}_1 \approx  \frac{d}{d \lambda } \left[\epsilon_\theta(x(\lambda),\lambda) \right]_{\lambda = \lambda + r_1 h}$$
 
+
 $$ \hat{D}_2 \approx  \frac{d}{d \lambda } \left[\epsilon_\theta(x(\lambda),\lambda) \right]_{\lambda = \lambda + r_2 h}$$
+
 
 我们重新回顾一下泰勒展开
 
@@ -667,6 +743,7 @@ $$
   \Bigl(e^{h}-\tfrac{h^{2}}{2}-h-1\Bigr)\,\hat{\epsilon}_{\theta}^{(2)}
 \Bigr]\;+\;O\bigl(h^{4}\bigr).}
 $$
+
 
 从这个公式可以直观看到 $\hat{x}_{\lambda + r_1h}$ 是一阶展开，$\hat{x}_{\lambda + r_2h}$, 和 $\hat{x}_{\lambda + h}$ 都是二阶展开。
 
@@ -704,6 +781,7 @@ $$
 \tilde{\epsilon}_\theta(x_t, t, c) := s \cdot \epsilon_\theta(x_t, t, c) + (1 - s) \cdot \epsilon_\theta(x_t, t, \varnothing).
 $$
 
+
 - 公式解释
 
   - \( x_t \)：时间 \( t \) 时刻的噪声潜变量。
@@ -720,19 +798,19 @@ $$
   - 当 \( s = 1 \) 时，模型完全依赖条件信息进行预测。
   - 当 \( s > 1 \) 时，条件信息的影响被**放大**，可以提高生成质量，但如果 \( s \) 过大，可能会导致图像出现伪影（artifact）或不自然的结果。
 
-
 为了增加ODE求解器对条件生成的稳定性，我们把预测噪声转为预测去噪后的图像，相对于噪声，去噪后的图像明显更加稳定。
 
 我们重写Probability FLOW ODE 方程
 
-$$ \frac{d x}{d t} = f(t) x_t + \frac{g^2(t)}{2\sigma_t}\epsilon_\theta (x_t,t), x_{T} \sim N(0, \sigma^2 I )$$
+$$ \frac{d x}{d t} = f(t) x + \frac{g^2(t)}{2\sigma_t}\epsilon_\theta (x,t), x_{T} \sim N(0, \sigma^2 I )$$
+
 
 首先我们有
 
 $$ x_t =\alpha_t x_0 + \sigma_t \epsilon$$
 
-将 $\epsilon_\theta$ 替换为 $x_0$, 并且我们用$x_\theta$ 表示预测后的去噪图像， 我们可以得到
 
+将 $\epsilon_\theta$ 替换为 $x_0$, 并且我们用$x_\theta$ 表示预测后的去噪图像， 我们可以得到
 
 $$
 \frac{\mathrm{d}x_t}{\mathrm{d}t}
@@ -743,8 +821,8 @@ $$
 x_T \sim \mathcal{N}\bigl(0,\,\sigma^2 I\bigr).
 $$
 
-其中，系数：
 
+其中，系数：
 
 $$
 f(t) \;=\; \frac{\mathrm{d}\,\log \alpha_t}{\mathrm{d}t},
@@ -753,7 +831,6 @@ g^2(t) \;=\; \frac{\mathrm{d}\,\sigma_t^2}{\mathrm{d}t},
 \quad
 \sigma_t^2 \;\text{与}\;\alpha_t \;\text{的关系视具体调度而定。}
 $$
-
 
 
 类似于DPM solver, 我们对先行部分就行求解，得到
@@ -769,6 +846,7 @@ $$
     \int_{\lambda_s}^{\lambda_t}
     e^{\lambda}\,x_\theta\bigl(x_\lambda, \lambda\bigr)\,\mathrm{d}\lambda.
     $$
+
 
 我们可以对它求导就行验证
 
@@ -795,6 +873,7 @@ $$
     \tilde{x}_{t} = \frac{\sigma_{t}}{\sigma_{s}} \tilde{x}_{s} + \sigma_{t} \sum_{n=0}^{k-1} x_{\theta}^{(n)} (\hat{x}_{s}, s) \int_{s}^{t} e^{\lambda} \frac{(\lambda - s)^n}{n!} d\lambda + O(h^{k+1}),
     $$
 
+
 其中：
 
 - \(\tilde{x}_{t}\) 是在时间 \(t\) 的估计值。
@@ -809,11 +888,9 @@ $$
 
 我们将对积分项求解，可以得到$k=1,2$时候的具体表达式
 
-
-###  当 \(k=1\) 时
+### 当 \(k=1\) 时
 
 只保留 \(n=0\) 项，故有
-
 
 $$
 \sum_{n=0}^{0}
@@ -829,6 +906,7 @@ e^\lambda
 x_\theta^{(0)}\bigl(x_s,\,\lambda_s\bigr)\,
 \bigl(e^{\lambda_t} - e^{\lambda_s}\bigr).
 $$
+
 
 因此，一阶截断下的数值解为
 
@@ -850,8 +928,7 @@ $$
     $$
 
 
-
-###  当 \(k=2\) 时
+### 当 \(k=2\) 时
 
 保留 \(n=0\) 和 \(n=1\) 两项：
 
@@ -872,7 +949,8 @@ x_\theta^{(1)}(\cdot)\!\int e^\lambda\,(\lambda-\lambda_s)\,\mathrm{d}\lambda
 }_{n=1}.
 $$
 
-####  \(n=0\) 项
+
+#### \(n=0\) 项
 
 与上面 \(k=1\) 情形相同：
 
@@ -884,13 +962,15 @@ e^\lambda\,\mathrm{d}\lambda
 x_\theta^{(0)}(\cdot)\,\bigl(e^{\lambda_t} - e^{\lambda_s}\bigr).
 $$
 
-####  \(n=1\) 项
+
+#### \(n=1\) 项
 
 $$
 x_\theta^{(1)}\bigl(x_s, \lambda_s\bigr)
 \int_{\lambda_s}^{\lambda_t}
 e^\lambda\,(\lambda - \lambda_s)\,\mathrm{d}\lambda.
 $$
+
 
 计算该积分：
 
@@ -901,6 +981,7 @@ e^\lambda(\lambda - a) - \int e^\lambda\,\mathrm{d}\lambda
 \;=\;
 e^\lambda\bigl(\lambda - a - 1\bigr) + C.
 $$
+
 
 令 \(a = \lambda_s\)，则
 
@@ -921,6 +1002,7 @@ e^{\lambda_t}\bigl(h - 1\bigr)
 e^{\lambda_s}.
 $$
 
+
 其中 \(h = \lambda_t - \lambda_s\)。
 于是该项为
 
@@ -933,7 +1015,8 @@ x_\theta^{(1)}\bigl(x_s, \lambda_s\bigr)
 \Bigr\}.
 $$
 
-####  合并后得到二阶截断
+
+#### 合并后得到二阶截断
 
 $$
 \tilde{x}_t
@@ -962,11 +1045,10 @@ $$
 
 DPM-Solver++(2S) 的原理就是把一个时间步拆成两次更新，通过在中间时刻和终点时刻分别评估 $x_0$并做二阶组合，来近似求解逆向 ODE。
 
-
-
 给定已知的“状态” \(\tilde{x}_s\)（在时刻 \(s\))，我们要在一步内近似求解 \(\tilde{x}_t\)（在时刻 \(t\))。DPM-Solver++(2S) 将区间 \([s,t]\) 拆成两个子步：\([s,u]\) 和 \([u,t]\)。其更新公式可写成以下三步：
 
 1. **第一子步：从 \(s\) 到 \(u\)**
+
    $$
    \tilde{x}_u
    \;=\;
@@ -975,11 +1057,13 @@ DPM-Solver++(2S) 的原理就是把一个时间步拆成两次更新，通过在
    \alpha_u\,\bigl(\,e^{-\,r\,h} \;-\; 1\bigr)\,
    x_0\!\bigl(\tilde{x}_s,\;s\bigr).
    $$
+
    - 直观上，这一步先对 \(\tilde{x}_s\) 做一个按系数 \(\sigma_u / \sigma_s\) 的缩放，然后根据数据预测 \(x_0(\tilde{x}_s,s)\) 做“去噪修正”。
    - 指数项 \(e^{-\,r\,h}\) 体现了在对数信噪比坐标下的退火过程。
 
 2. **合并项 \(D\)**
    在第二子步之前，我们先构造一个综合漂移项 \(D\)，结合了时刻 \(s\) 与中间时刻 \(u\) 上对数据预测的评估：
+
    $$
    D
    \;=\;
@@ -990,10 +1074,12 @@ DPM-Solver++(2S) 的原理就是把一个时间步拆成两次更新，通过在
    \Bigr]
    \,\bigl(e^{-\,h} \;-\; 1\bigr).
    $$
+
    这一步类似二阶 Runge–Kutta 方法，会用“初值处”与“中间处”两次对 \(x_0\) 的采样，以提升整体精度。
 
 3. **第二子步：从 \(u\) 到 \(t\)**
    将区间剩余部分的演化合并到一个公式里：
+
    $$
    \tilde{x}_t
    \;=\;
@@ -1001,6 +1087,7 @@ DPM-Solver++(2S) 的原理就是把一个时间步拆成两次更新，通过在
    \;+\;
    D.
    $$
+
    最终得到在时刻 \(t\) 的状态 \(\tilde{x}_t\)。
 
 $$
@@ -1028,6 +1115,7 @@ D
 \;=\;
 e^{-\,h}\,\tilde{x}_s\;+\;D.\end{aligned}}
 $$
+
 
 其中 \(h = \lambda_t - \lambda_s\)，\(u = s + r\,(t - s)\)。只需一次“子步 + 修正”即可从 \(s\) 前进到 \(t\)。
 
