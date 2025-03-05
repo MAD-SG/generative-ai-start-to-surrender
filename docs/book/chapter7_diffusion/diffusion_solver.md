@@ -55,6 +55,7 @@ Here is our base ODE, we will use it to build our DPM Solver
     \frac{g^2(t)}{2\,\sigma_t}\,\epsilon_\theta\bigl(x(t),\,t\bigr),
     $$
 
+
     推导出所给的积分形式
 
     $$
@@ -68,6 +69,7 @@ Here is our base ODE, we will use it to build our DPM Solver
     \frac{g^2(\tau)}{2\,\sigma_\tau}\,\epsilon_{\theta}\bigl(x_\tau,\tau\bigr)\,d\tau.
     $$
 
+
     为方便阅读，下文把 \(x(t)\) 在 \(t = s\) 时刻的值记为 \(x_s\)，在 \(t = t\) 时刻的值记为 \(x_t\)。
 
     #### 1. 写成一阶**线性**常微分方程
@@ -79,6 +81,7 @@ Here is our base ODE, we will use it to build our DPM Solver
     \;=\;
     \frac{g^2(t)}{2\,\sigma_t}\,\epsilon_\theta\bigl(x(t),t\bigr).
     $$
+
 
     这是一个**非齐次一阶线性 ODE**，其中“非齐次项”为
     \(\tfrac{g^2(t)}{2\,\sigma_t}\,\epsilon_{\theta}\bigl(x(t),t\bigr)\)。
@@ -94,6 +97,7 @@ Here is our base ODE, we will use it to build our DPM Solver
     \exp\!\Bigl[\,-\!\int_{s}^{\,t}f(u)\,du\Bigr].
     $$
 
+
     将上式两边同乘 \(\mu(t)\):
 
     $$
@@ -108,6 +112,7 @@ Here is our base ODE, we will use it to build our DPM Solver
     \frac{g^2(t)}{2\,\sigma_t}\,\epsilon_\theta(x(t),t).
     $$
 
+
     左端恰好是对
     \(\displaystyle x(t)\,\mu(t)\)
     做时间导数的结果：
@@ -120,6 +125,7 @@ Here is our base ODE, we will use it to build our DPM Solver
     \Bigr].
     $$
 
+
     因此方程化为
 
     $$
@@ -130,6 +136,7 @@ Here is our base ODE, we will use it to build our DPM Solver
     \;=\;
     \mu(t)\,\frac{g^2(t)}{2\,\sigma_t}\,\epsilon_\theta\bigl(x(t),t\bigr).
     $$
+
 
 
 
@@ -148,6 +155,7 @@ Here is our base ODE, we will use it to build our DPM Solver
     \,d\tau.
     $$
 
+
     也就是
 
     $$
@@ -162,9 +170,11 @@ Here is our base ODE, we will use it to build our DPM Solver
     $$
 
 
+
     ##### 3.1. 代入
 
     $$\mu(s)=\exp\!\Bigl(-\!\int_{s}^{\,s} f(u)\,du\Bigr)=1$$
+
 
 
     显然 \(\int_{s}^{\,s}(\cdots)\,du=0\)，故 \(\mu(s)=e^0=1\)。因此
@@ -180,11 +190,13 @@ Here is our base ODE, we will use it to build our DPM Solver
     \epsilon_\theta\bigl(x_\tau,\tau\bigr)\,d\tau.
     $$
 
+
     从而
 
     $$
     x_t\mu(t)=x_s+\int_{s}^{t}\mu(\tau)\frac{g^2(\tau)}{2\,\sigma_\tau}\epsilon_\theta\bigl(x_\tau,\tau\bigr)d\tau
     $$
+
 
 
     ##### 3.2. 还原 \(x_t\)
@@ -199,6 +211,7 @@ Here is our base ODE, we will use it to build our DPM Solver
     $$
 
 
+
     但要注意，
 
     $$
@@ -207,6 +220,7 @@ Here is our base ODE, we will use it to build our DPM Solver
     \exp\!\Bigl(\!\int_{s}^{\,t}f(u)\,du\Bigr)
     \;\exp\!\Bigl(-\!\int_{s}^{\,\tau}f(u)\,du\Bigr),
     $$
+
 
 
     实际上我们更直接的做法是：分拆
@@ -220,6 +234,7 @@ Here is our base ODE, we will use it to build our DPM Solver
     $$
 
 
+
     因而
 
     $$
@@ -230,6 +245,7 @@ Here is our base ODE, we will use it to build our DPM Solver
     $$
 
 
+
     所以第二项在被乘以 \(\exp[\int_s^t f(u)\,du]\) 后，可以写成
 
     $$
@@ -238,6 +254,7 @@ Here is our base ODE, we will use it to build our DPM Solver
     \frac{g^2(\tau)}{2\,\sigma_\tau}\,\epsilon_\theta(x_\tau,\tau)
     \,d\tau.
     $$
+
 
 
     整理得到最后公式
@@ -300,6 +317,7 @@ $$
 \int_{\lambda_s}^{\lambda_t} e^{-\lambda}\,\hat{\epsilon}_\theta(\hat{x}_\lambda,\lambda)\,d\lambda
 $$
 
+
 的有限阶逼近，从而得到对\(x_t\)的相应展开。
 
 #### 对\(\hat{\epsilon}_\theta(\hat{x}_\lambda,\lambda)\)做关于\(\lambda\)的泰勒展开
@@ -315,6 +333,7 @@ $$
 \;+\;
 O\bigl(h^{n+1}\bigr).
 $$
+
 
 这里\(\hat{\epsilon}_\theta^{(k)}\)表示对\(\lambda\)的第\(k\)阶导数；\(\hat{x}_{\lambda_s}\)指在\(\lambda_s\)处的相应状态(或近似)。
 
@@ -596,6 +615,7 @@ $$
 y'(t) = f(t, y(t)),\quad y(t_0)=y_0,
 $$
 
+
 其中点（midpoint）方法为
 
 !!! note "中点法"
@@ -615,11 +635,13 @@ $$
 y(t_n+h) = y(t_n) + h\,y'(t_n) + \frac{h^2}{2}\,y''(t_n) + \frac{h^3}{6}\,y'''(t_n) + O(h^4).
 $$
 
+
 注意到由于\( y'(t_n) = f(t_n, y(t_n)) \)且
 
 $$
 y''(t_n) = \frac{d}{dt}y'(t_n)=\frac{\partial f}{\partial t}(t_n, y(t_n)) + \frac{\partial f}{\partial y}(t_n, y(t_n))\,y'(t_n),
 $$
+
 
 我们有
 
@@ -636,11 +658,13 @@ $$
 y_{n+1} = y_n + h\,f\left(t_n+\frac{h}{2},\,y_n+\frac{h}{2}\,f(t_n,y_n)\right).
 $$
 
+
 我们希望比较\( y_{n+1} \)与精确解\( y(t_n+h) \)的差异。首先对函数
 
 $$
 F(h)= f\left(t_n+\frac{h}{2},\,y_n+\frac{h}{2}\,f(t_n,y_n)\right)
 $$
+
 
 在\( h=0 \)处做Taylor展开。记 \( y_n = y(t_n) \) 且 \( f(t_n,y_n) = y'(t_n) \)，于是有
 
@@ -673,6 +697,7 @@ $$
   $$
   y(t_n+h) = y(t_n) + h\,f(t_n,y(t_n)) + \frac{h^2}{2}\Big[f_t(t_n,y(t_n)) + f_y(t_n,y(t_n))\,f(t_n,y(t_n))\Big] + O(h^3).
   $$
+
 
 - 数值解（中点方法）：
 
@@ -723,6 +748,7 @@ $$
 $$
 x(\lambda + h)=\frac{\alpha_{\lambda + h}}{\alpha_{\lambda}}\;x(\lambda)- \sigma_{\lambda + h}\,\bigl(e^{\,h} - 1\bigr)\,\epsilon_\theta\bigl(x(\lambda),\lambda\bigr) - \sigma_{\lambda + h}\,\bigl(e^{\,h} -h- 1\bigr)\hat{D}_2.
 $$
+
 
 这里 我们可以把 $\hat{D}_1$ 和 $\hat{D}_2$ 看作是差分项，也就是
 
@@ -1058,6 +1084,7 @@ DPM-Solver++(2S) 的原理就是把一个时间步拆成两次更新，通过在
    x_0\!\bigl(\tilde{x}_s,\;s\bigr).
    $$
 
+
    - 直观上，这一步先对 \(\tilde{x}_s\) 做一个按系数 \(\sigma_u / \sigma_s\) 的缩放，然后根据数据预测 \(x_0(\tilde{x}_s,s)\) 做“去噪修正”。
    - 指数项 \(e^{-\,r\,h}\) 体现了在对数信噪比坐标下的退火过程。
 
@@ -1075,6 +1102,7 @@ DPM-Solver++(2S) 的原理就是把一个时间步拆成两次更新，通过在
    \,\bigl(e^{-\,h} \;-\; 1\bigr).
    $$
 
+
    这一步类似二阶 Runge–Kutta 方法，会用“初值处”与“中间处”两次对 \(x_0\) 的采样，以提升整体精度。
 
 3. **第二子步：从 \(u\) 到 \(t\)**
@@ -1087,6 +1115,7 @@ DPM-Solver++(2S) 的原理就是把一个时间步拆成两次更新，通过在
    \;+\;
    D.
    $$
+
 
    最终得到在时刻 \(t\) 的状态 \(\tilde{x}_t\)。
 
@@ -1124,3 +1153,210 @@ $$
 $D$ 可以看作是一个插值，因为这个中间点在$t-$的前面，从而导致系数为负。
 
 ![alt text](../../images/image-106.png)
+
+## AMED Solver
+![](https://github.com/zju-pi/diff-sampler/raw/main/sfd-main/assets/distilled_traj.png)
+
+- paper: <https://openaccess.thecvf.com/content/CVPR2024/papers/Zhou_Fast_ODE-based_Sampling_for_Diffusion_Models_in_Around_5_Steps_CVPR_2024_paper.pdf>
+- institute: 浙江大学区块链与数据安全国家重点实验室
+- year: CVPR 2024
+- code: <https://github.com/zjupi/diff-sampler>.
+
+### Observation
+
+- based on the geometric observation that each sampling trajectory almost lies in a two-dimensional subspace
+- 目前的加速采样的方式分成两张
+  1. 告诉数值ODE求解器，又进一步分成两种: single step and multiple step。 单步求解器只用当前步的信息，多步求解器使用历史信息。
+  2. 蒸馏方法。蒸馏也需要大量数据
+
+### 核心设计详解：AMED-Solver与AMED-Plugin
+
+#### 几何洞察：采样轨迹的低维性
+**关键观察**：扩散模型的采样轨迹在高维空间中近似位于二维子空间。
+
+- **实验验证**：对多个数据集（如CIFAR-10、ImageNet）的采样轨迹进行PCA分析，发现前两个主成分可解释大部分方差（投影误差<8%）。
+- **理论意义**：轨迹的低维性意味着复杂的高维动态可简化为二维平面内的方向调整，为设计高效求解器提供基础。
+
+**对设计的影响**：
+
+- 梯度方向可在低维空间内高效逼近，减少计算复杂度。
+- 均值定理（Mean Value Theorem）的向量扩展成为可能，允许通过单一中间时间步的梯度近似积分路径。
+
+#### AMED-Solver的设计原理
+一般的， 扩散模型的SDE 为
+
+$$dx  = f(x,t) dt + g(t) d w_t$$
+
+
+它对应的 probability flow ODE 为
+
+$$ dx = [f(x,t) - \frac{1}{2}g^2(t) \nabla_x \log p_t(x)]dt $$
+
+
+现在考虑EDM 方法，也就是 $f(x,t) = 0$ $g(t) = \sqrt{2t}$, $\sigma(t) = t$, 在高斯noise condition 的条件下， 我们可以得到
+
+$$s_\theta = \nabla_x \log p_t(x|x_0)=- \frac{\epsilon_\theta(x,t)}{t}$$
+
+我们得到最终的PF-ODE
+
+$$ dx = \epsilon_\theta(x,t) dt $$
+
+
+逆采样的时候，选在 $x_{t_N}\sim N(0,T^2 I)$.
+
+**目标**：通过预测中间时间步\(s_n\)和缩放因子\(c_n\)，直接学习最优梯度方向，最小化离散化误差。
+
+**数学推导**：
+
+- **ODE积分形式**：从时间步\(t_{n+1}\)到\(t_n\)的解为：
+
+  $$
+  x_{t_n} = x_{t_{n+1}} + \int_{t_{n+1}}^{t_n} \epsilon_\theta(x_t, t) dt
+  $$
+
+- **均值方向近似**：假设存在中间时间步\(s_n \in (t_n, t_{n+1})\)和缩放因子\(c_n\)，使得：
+  ![](https://calcworkshop.com/wp-content/uploads/mean-value-integrals-visual.png)
+
+  $$
+  \epsilon_\theta(x_{s_n}, s_n) \approx \frac{c_n}{t_n - t_{n+1}} \int_{t_{n+1}}^{t_n} \epsilon_\theta(x_t, t) dt
+  $$
+
+  从而近似解为：
+
+  $$
+  \tag{b}
+  x_{t_n} \approx x_{t_{n+1}} + c_n (t_n - t_{n+1}) \epsilon_\theta(x_{s_n}, s_n)
+  $$
+
+
+!!! note "理论基础"
+    不能证明函数的值域在二维空间里 中值定理还能成立，如果不能成立，那么这个算法的理论基础是不成立的。
+
+**AMED predictor的设计**：
+
+Given samples $y_{t_n}, y_{t_{n+1}}$ on the teacher trajectory and $x_{t_{n+1}}$ on the student trajectory, we try to minimize the distance of $x_{t_n}$  and  $y_{t_{n}}$ with $x_{t_n}$ is given in the above eq (b).
+
+![alt text](../../images/image-141.png)
+
+- **输入**：当前时间步\(t_{n+1}\)、目标时间步\(t_n\)，以及U-Net的瓶颈特征（Bottleneck Feature）\(h_{t_{n+1}}\)。
+- **输出**：中间时间步\(s_n\)（通过\(s_n = t_n^{r_n} t_{n+1}^{1 - r_n}\),实际输出的是$r_n$参数化）和缩放因子\(c_n\)。
+- **网络结构**：轻量级MLP（仅9K参数），包含两个全连接层和Sigmoid激活函数。
+- **训练目标**：最小化学生轨迹与教师轨迹的L2距离，教师轨迹由高步数求解器生成（如DPM-Solver-2或iPNDM）。
+
+---
+
+#### AMED-Plugin的扩展机制
+**核心思想**：将AMED的中间时间步预测与缩放因子学习作为插件，适配任意ODE求解器。
+
+**实现步骤**：
+
+1. **基础求解器选择**：如DPM-Solver++、iPNDM等。
+2. **插入AMED预测**：在每个时间步\(t_{n+1} \to t_n\)中：
+   - 使用AMED predictor预测\(s_n\)和\(c_n\)。
+   - 按原求解器规则从\(t_{n+1}\)步进到\(s_n\)，再步进到\(t_n\)，并用\(c_n\)缩放梯度方向。
+3. **总NFE计算**：每步额外增加一次U-Net评估，总NFE为\(2(N-1)\)。
+
+**优势**：
+
+- 提升现有求解器在低步数下的性能（如iPNDM + AMED-Plugin在5步内FID降低30-50%）。
+- 无需修改原求解器结构，即插即用。
+
+---
+
+#### 优化技巧与实现细节
+**Analytical First Step (AFS)**：
+
+- **动机**：初始噪声\(x_{T}\)的梯度方向\(\epsilon_\theta(x_T, T)\)与\(x_T\)近似共线。
+- **实现**：直接使用\(x_T\)作为第一步方向，省去一次NFE。
+- **效果**：在极低NFE（如3-5步）时显著提升效率，对质量影响可忽略。
+
+**时间调度（Time Schedule）适配**：
+
+- 默认使用多项式调度（\(t_n^{1/\rho}\)插值，\(\rho=7\)），但对数SNR调度在部分求解器中表现更优。
+- AMED-Plugin通过调整中间时间步\(s_n\)，部分缓解时间调度的敏感性。
+
+**训练策略**：
+
+- **教师轨迹生成**：使用高步数（如80步）求解器生成参考轨迹。
+- **渐进式训练**：从\(t_N\)到\(t_1\)逐步训练，每个时间步独立优化AMED predictor。
+
+---
+
+#### 实验验证与性能优势
+**数据集与指标**：
+
+- **数据集**：CIFAR-10（32×32）、ImageNet 64×64、LSUN Bedroom（256×256）。
+- **指标**：Fréchet Inception Distance (FID)，NFE=3/5/7/9。
+
+**关键结果**：
+
+- **AMED-Solver**：在5步内达到SOTA（CIFAR-10 FID=6.61，ImageNet FID=10.74）。
+- **AMED-Plugin**：提升iPNDM在ImageNet 64×64上的FID从18.99→13.83（NFE=5）。
+- **Stable Diffusion**：应用AMED-Plugin后，NFE=8时FID从21.33→18.92。
+
+**对比分析**：
+
+- **单步 vs 多步**：AMED-Solver在极低NFE下优于多步方法（如DPM-Solver++），因多步法依赖历史梯度，低步数时误差累积严重。
+- **轻量训练**：AMED predictor训练仅需单GPU数小时，远低于蒸馏方法（需数天）。
+
+---
+
+#### 局限性与未来方向
+**局限性**：
+
+- **时间调度敏感性**：性能仍受时间调度影响，需进一步结合轨迹几何分析优化调度策略。
+- **高分辨率挑战**：在512×512图像中，AFS可能引入轻微质量损失，需调整预测器结构。
+
+**未来方向**：
+
+- **动态时间调度**：结合轨迹曲率自适应调整时间步。
+- **跨模型泛化**：探索AMED在视频生成、3D合成等任务的扩展。
+
+## DPM-Solver-v3: Improved Diffusion ODE Solver with Empirical Model Statistics
+
+- author: Kaiwen Zheng, Cheng Lu, Jianfei Chen, Jun Zhu
+- NeurIPS: 2023 Oct
+- institute: THU
+- code: <https://github.com/thu-ml/DPM-Solver-v3>
+
+这篇论文提出了DPM-Solver-v3，一种改进的扩散ODE求解器，通过引入经验模型统计量（EMS）优化参数化，显著提升了扩散模型的采样效率。以下是对论文核心内容的解读：
+
+### **1. 研究背景与问题**
+
+- **扩散模型挑战**：扩散模型生成高质量样本需数百次模型评估，导致采样效率低下。
+- **现有方法局限**：现有加速方法（如DPM-Solver++）依赖固定的参数化（如噪声/数据预测），可能非最优，且在高引导尺度或少量步骤下表现不佳。
+
+### **2. 核心贡献**
+
+- **经验模型统计量（EMS）**：引入三个系数（lλ, sλ, bλ），通过最小化一阶离散误差的期望，动态调整ODE参数化，使非线性的敏感性降低。
+- **改进的ODE形式化**：重新推导ODE解，结合EMS优化线性项、缩放项和偏置项，减少近似误差。
+- **高阶求解器设计**：提出多步预测-校正框架，支持任意阶数，并引入伪阶方法和半校正器技术，提升少步骤和大引导尺度下的稳定性。
+
+### **3. 关键方法**
+
+- **EMS估计**：通过蒙特卡洛估计预训练模型的雅可比向量积，计算最优系数，适应不同噪声和数据分布。
+- **局部与全局求解**：
+  - **局部近似**：利用泰勒展开和有限差分估计高阶导数，保证局部截断误差的阶数。
+  - **全局收敛**：结合多步缓存和预测-校正步骤，确保全局误差随步骤数收敛。
+- **实用技术**：
+  - **伪阶求解器**：在少步骤时仅用部分历史值估计导数，平衡精度与稳定性。
+  - **半校正器**：在大引导尺度下，仅在时间前半段应用校正器，避免失真。
+
+### **4. 实验结果**
+
+- **无条件生成**：在CIFAR10和LSUN-Bedroom上，DPM-Solver-v3在5-10步时FID显著优于DPM-Solver++和UniPC（如CIFAR10上5步FID从23.71降至12.21）。
+- **条件生成**：在ImageNet-256和Stable Diffusion上，MSE和视觉质量均提升，尤其在7.5引导尺度下，5步MSE降低至0.55。
+- **效率提升**：相比之前方法，加速15-30%，且预计算EMS后无额外开销。
+
+### **5. 理论分析**
+
+- **局部无偏性**：证明在EMS优化下，局部误差期望为零。
+- **全局收敛性**：多步预测-校正框架保证全局误差随步骤数呈多项式收敛。
+
+### **6. 局限与展望**
+
+- **实时性不足**：仍需10-20步生成，落后于蒸馏方法。
+- **扩展方向**：探索时间步长调度设计，结合训练方法进一步加速。
+
+### **总结**
+DPM-Solver-v3通过理论驱动的参数化优化和高效求解器设计，在少步骤下显著提升扩散模型采样质量，为实际应用提供了更高效的推理方案。其核心思想是通过数据驱动的统计量动态调整ODE形式，平衡近似误差与计算效率，为后续研究提供了新方向。
