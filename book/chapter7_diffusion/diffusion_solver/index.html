@@ -1988,6 +1988,117 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#3-amed-solver" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. AMED Solver
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. AMED Solver">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-observation" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.1 Observation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-amed-solveramed-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2 核心设计详解：AMED-Solver与AMED-Plugin
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-dpm-solver-v3-improved-diffusion-ode-solver-with-empirical-model-statistics" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. DPM-Solver-v3: Improved Diffusion ODE Solver with Empirical Model Statistics
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. DPM-Solver-v3: Improved Diffusion ODE Solver with Empirical Model Statistics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.1 1. 研究背景与问题
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.2 2. 核心贡献
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.3 3. 关键方法
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.4 4. 实验结果
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.5 5. 理论分析
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#46-6" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.6 6. 局限与展望
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#47" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.7 总结
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2725,64 +2836,64 @@
 <div class="admonition proof">
 <p class="admonition-title">proof of equation (2)</p>
 <p>下面演示如何从</p>
-<p>$$
+<div class="arithmatex">\[
 \frac{dx}{dt}
 \;=\;
 f(t)\,x(t)
 \;+\;
 \frac{g^2(t)}{2\,\sigma_t}\,\epsilon_\theta\bigl(x(t),\,t\bigr),
-$$
-推导出所给的积分形式</p>
-<p>$$
+\]</div>
+<p>推导出所给的积分形式</p>
+<div class="arithmatex">\[
 x_t
 \;=\;
-\exp!\Bigl[!\int_{s}^{\,t}f(\tau)\,d\tau\Bigr]\,
+\exp\!\Bigl[\!\int_{s}^{\,t}f(\tau)\,d\tau\Bigr]\,
 x_s
 \;+\;
 \int_{s}^{t}
-\exp!\Bigl[!\int_{\tau}^{\,t}f(r)\,dr\Bigr]\,
+\exp\!\Bigl[\!\int_{\tau}^{\,t}f(r)\,dr\Bigr]\,
 \frac{g^2(\tau)}{2\,\sigma_\tau}\,\epsilon_{\theta}\bigl(x_\tau,\tau\bigr)\,d\tau.
-$$
-为方便阅读，下文把 <span class="arithmatex">\(x(t)\)</span> 在 <span class="arithmatex">\(t = s\)</span> 时刻的值记为 <span class="arithmatex">\(x_s\)</span>，在 <span class="arithmatex">\(t = t\)</span> 时刻的值记为 <span class="arithmatex">\(x_t\)</span>。</p>
+\]</div>
+<p>为方便阅读，下文把 <span class="arithmatex">\(x(t)\)</span> 在 <span class="arithmatex">\(t = s\)</span> 时刻的值记为 <span class="arithmatex">\(x_s\)</span>，在 <span class="arithmatex">\(t = t\)</span> 时刻的值记为 <span class="arithmatex">\(x_t\)</span>。</p>
 <h4 id="1">1. 写成一阶<strong>线性</strong>常微分方程<a class="headerlink" href="#1" title="Permanent link">&para;</a></h4>
-<p>原方程可视为
-$$
+<p>原方程可视为</p>
+<div class="arithmatex">\[
 x'(t) - f(t)\,x(t)
 \;=\;
 \frac{g^2(t)}{2\,\sigma_t}\,\epsilon_\theta\bigl(x(t),t\bigr).
-$$
-这是一个<strong>非齐次一阶线性 ODE</strong>，其中“非齐次项”为
+\]</div>
+<p>这是一个<strong>非齐次一阶线性 ODE</strong>，其中“非齐次项”为
 <span class="arithmatex">\(\tfrac{g^2(t)}{2\,\sigma_t}\,\epsilon_{\theta}\bigl(x(t),t\bigr)\)</span>。</p>
 <h4 id="2">2. 乘以积分因子并取全导数<a class="headerlink" href="#2" title="Permanent link">&para;</a></h4>
-<p><strong>积分因子</strong>(Integrating Factor) 取
-$$
+<p><strong>积分因子</strong>(Integrating Factor) 取</p>
+<div class="arithmatex">\[
 \mu(t)
 \;=\;
-\exp!\Bigl[\,-!\int_{s}^{\,t}f(u)\,du\Bigr].
-$$
-将上式两边同乘 <span class="arithmatex">\(\mu(t)\)</span>:</p>
-<p>$$
-\exp!\Bigl(-!\int_{s}^{\,t}f(u)\,du\Bigr)
+\exp\!\Bigl[\,-\!\int_{s}^{\,t}f(u)\,du\Bigr].
+\]</div>
+<p>将上式两边同乘 <span class="arithmatex">\(\mu(t)\)</span>:</p>
+<div class="arithmatex">\[
+\exp\!\Bigl(-\!\int_{s}^{\,t}f(u)\,du\Bigr)
 \,x'(t)
 \;-\;
 f(t)\,
-\exp!\Bigl(-!\int_{s}^{\,t}f(u)\,du\Bigr)\,
+\exp\!\Bigl(-\!\int_{s}^{\,t}f(u)\,du\Bigr)\,
 x(t)
 \;=\;
-\exp!\Bigl(-!\int_{s}^{\,t}f(u)\,du\Bigr)\,
+\exp\!\Bigl(-\!\int_{s}^{\,t}f(u)\,du\Bigr)\,
 \frac{g^2(t)}{2\,\sigma_t}\,\epsilon_\theta(x(t),t).
-$$
-左端恰好是对
+\]</div>
+<p>左端恰好是对
 <span class="arithmatex">\(\displaystyle x(t)\,\mu(t)\)</span>
-做时间导数的结果：
-$$
+做时间导数的结果：</p>
+<div class="arithmatex">\[
 \frac{d}{dt}
 \Bigl[
 x(t)\,
-\exp!\Bigl(-!\int_{s}^{\,t}f(u)\,du\Bigr)
+\exp\!\Bigl(-\!\int_{s}^{\,t}f(u)\,du\Bigr)
 \Bigr].
-$$
-因此方程化为</p>
+\]</div>
+<p>因此方程化为</p>
 <div class="arithmatex">\[
 \frac{d}{dt}
 \Bigl[
@@ -2801,9 +2912,9 @@ x(\tau)\,\mu(\tau)
 \int_{s}^{t}
 \mu(\tau)\,\frac{g^2(\tau)}{2\,\sigma_\tau}\,\epsilon_\theta\bigl(x(\tau),\tau\bigr)
 \,d\tau.
-$$
-也就是
-$$
+\]</div>
+<p>也就是</p>
+<div class="arithmatex">\[
 x_t\,\mu(t)
 \;-\;
 x_s\,\mu(s)
@@ -2816,7 +2927,7 @@ x_s\,\mu(s)
 <h5 id="31">3.1. 代入<a class="headerlink" href="#31" title="Permanent link">&para;</a></h5>
 <div class="arithmatex">\[\mu(s)=\exp\!\Bigl(-\!\int_{s}^{\,s} f(u)\,du\Bigr)=1\]</div>
 <p>显然 <span class="arithmatex">\(\int_{s}^{\,s}(\cdots)\,du=0\)</span>，故 <span class="arithmatex">\(\mu(s)=e^0=1\)</span>。因此</p>
-<p>$$
+<div class="arithmatex">\[
 x_t\,\mu(t)
 \;-\;
 x_s
@@ -2825,8 +2936,8 @@ x_s
 \mu(\tau)\,
 \frac{g^2(\tau)}{2\,\sigma_\tau}\,
 \epsilon_\theta\bigl(x_\tau,\tau\bigr)\,d\tau.
-$$
-从而</p>
+\]</div>
+<p>从而</p>
 <div class="arithmatex">\[
 x_t\mu(t)=x_s+\int_{s}^{t}\mu(\tau)\frac{g^2(\tau)}{2\,\sigma_\tau}\epsilon_\theta\bigl(x_\tau,\tau\bigr)d\tau
 \]</div>
@@ -2901,22 +3012,22 @@ x_t =\frac{\alpha_t}{\alpha_s} x_s -\frac{ \alpha_t }{2} \int_{\lambda_s}^{\lamb
 <p>这样可以避免额外产生一个 <span class="arithmatex">\(\frac{1}{2}\)</span> 的系数影响。</p>
 <p>对于第二项，忍让需要进行数值计算进行求解。为了得到高阶近似，可以用泰勒展开</p>
 <p>它本质上是一个<strong>“指数加权的泰勒展开”</strong>，用来构造对</p>
-<p>$$
-\int_{\lambda_s}^{\lambda_t} e^{-\lambda}\,\hat{\epsilon}<em>\theta(\hat{x}</em>\lambda,\lambda)\,d\lambda
-$$
-的有限阶逼近，从而得到对<span class="arithmatex">\(x_t\)</span>的相应展开。</p>
+<div class="arithmatex">\[
+\int_{\lambda_s}^{\lambda_t} e^{-\lambda}\,\hat{\epsilon}_\theta(\hat{x}_\lambda,\lambda)\,d\lambda
+\]</div>
+<p>的有限阶逼近，从而得到对<span class="arithmatex">\(x_t\)</span>的相应展开。</p>
 <h4 id="111-hatepsilon_thetahatx_lambdalambdalambda">1.1.1 对<span class="arithmatex">\(\hat{\epsilon}_\theta(\hat{x}_\lambda,\lambda)\)</span>做关于<span class="arithmatex">\(\lambda\)</span>的泰勒展开<a class="headerlink" href="#111-hatepsilon_thetahatx_lambdalambdalambda" title="Permanent link">&para;</a></h4>
-<p>令<span class="arithmatex">\(\lambda_t&gt;\lambda_s\)</span>，并记<span class="arithmatex">\(h := \lambda_t - \lambda_s\)</span>。将<span class="arithmatex">\(\hat{\epsilon}_\theta(\hat{x}_\lambda,\lambda)\)</span>在<span class="arithmatex">\(\lambda=\lambda_s\)</span>处展开到<span class="arithmatex">\(n\)</span>阶，便有
-$$
-\hat{\epsilon}<em>\theta(\hat{x}</em>\lambda,\lambda)
+<p>令<span class="arithmatex">\(\lambda_t&gt;\lambda_s\)</span>，并记<span class="arithmatex">\(h := \lambda_t - \lambda_s\)</span>。将<span class="arithmatex">\(\hat{\epsilon}_\theta(\hat{x}_\lambda,\lambda)\)</span>在<span class="arithmatex">\(\lambda=\lambda_s\)</span>处展开到<span class="arithmatex">\(n\)</span>阶，便有</p>
+<div class="arithmatex">\[
+\hat{\epsilon}_\theta(\hat{x}_\lambda,\lambda)
 \;=\;
 \sum_{k=0}^n
 \frac{(\lambda - \lambda_s)^k}{k!}\,
-\hat{\epsilon}<em _lambda_s="\lambda_s">\theta^{(k)}\bigl(\hat{x}</em>, \,\lambda_s\bigr)
+\hat{\epsilon}_\theta^{(k)}\bigl(\hat{x}_{\lambda_s}, \,\lambda_s\bigr)
 \;+\;
 O\bigl(h^{n+1}\bigr).
-$$
-这里<span class="arithmatex">\(\hat{\epsilon}_\theta^{(k)}\)</span>表示对<span class="arithmatex">\(\lambda\)</span>的第<span class="arithmatex">\(k\)</span>阶导数；<span class="arithmatex">\(\hat{x}_{\lambda_s}\)</span>指在<span class="arithmatex">\(\lambda_s\)</span>处的相应状态(或近似)。</p>
+\]</div>
+<p>这里<span class="arithmatex">\(\hat{\epsilon}_\theta^{(k)}\)</span>表示对<span class="arithmatex">\(\lambda\)</span>的第<span class="arithmatex">\(k\)</span>阶导数；<span class="arithmatex">\(\hat{x}_{\lambda_s}\)</span>指在<span class="arithmatex">\(\lambda_s\)</span>处的相应状态(或近似)。</p>
 <h4 id="112-int-e-lambdahatepsilon_thetadlambda">1.1.2 将其带入<span class="arithmatex">\(\int e^{-\lambda}\,\hat{\epsilon}_\theta\,d\lambda\)</span>并依次积分<a class="headerlink" href="#112-int-e-lambdahatepsilon_thetadlambda" title="Permanent link">&para;</a></h4>
 <p>把上述展开代入</p>
 <div class="arithmatex">\[\int_{\lambda_s}^{\lambda_t}e^{-\lambda}\,\hat{\epsilon}_\theta(\hat{x}_\lambda,\lambda)\,d\lambda\]</div>
@@ -3009,19 +3120,19 @@ O\bigl(h^{n+2}\bigr),
 \]</div>
 <p>以及<span class="arithmatex">\(\hat{\epsilon}_{\theta}^{(k)}\)</span> 表示 <span class="arithmatex">\(\lambda\)</span> 的 <span class="arithmatex">\(k\)</span> 阶导数在 <span class="arithmatex">\(\lambda=\lambda_s\)</span> 处的值。</p>
 <h5 id="1141-n0">1.1.4.1 <span class="arithmatex">\(n=0\)</span> 截断<a class="headerlink" href="#1141-n0" title="Permanent link">&para;</a></h5>
-<p>只保留 <span class="arithmatex">\(k=0\)</span> 项，则
-$$
+<p>只保留 <span class="arithmatex">\(k=0\)</span> 项，则</p>
+<div class="arithmatex">\[
 x_{t}
 \;=\;
 \frac{\alpha_{t}}{\alpha_{s}}\;x_{s}
 \;-\;
 \sigma_{t}
 \Bigl[
-  h<sup _0_="(0)">{1}\,\varphi_{1}(h)\,\hat{\epsilon}_{\theta}</sup>
+  h^{1}\,\varphi_{1}(h)\,\hat{\epsilon}_{\theta}^{(0)}
 \Bigr]
 \;+\;
 O\bigl(h^{2}\bigr).
-$$</p>
+\]</div>
 <p>因为 <span class="arithmatex">\(\hat{\epsilon}_{\theta}^{(0)}=\hat{\epsilon}_{\theta}\bigl(\hat{x}_{\lambda_s},\lambda_s\bigr)\)</span> 且
 <span class="arithmatex">\(\,h\,\varphi_{1}(h)=e^{h}-1,\)</span>
 故</p>
@@ -3121,11 +3232,11 @@ x_{t} &amp;= \frac{\alpha_t}{\alpha_s}x_s - \sigma_t1 (e^{h_t}-1)\epsilon_\theta
 <p>理论上来说， <span class="arithmatex">\(n=1\)</span>的情况下，DPM solver 和ODE里的中点法是一模一样的，只是要对解析的线性部分单独处理。</p>
 <p>我们先来看看中点法</p>
 <h4 id="131">1.3.1 中点法<a class="headerlink" href="#131" title="Permanent link">&para;</a></h4>
-<p>考虑常微分方程
-$$
+<p>考虑常微分方程</p>
+<div class="arithmatex">\[
 y'(t) = f(t, y(t)),\quad y(t_0)=y_0,
-$$
-其中点（midpoint）方法为</p>
+\]</div>
+<p>其中点（midpoint）方法为</p>
 <div class="admonition note">
 <p class="admonition-title">中点法</p>
 <div class="arithmatex">\[
@@ -3134,28 +3245,28 @@ y_{n+1} = y_n + h\,f\Big(t_n+\frac{h}{2},\,y_n+\frac{h}{2}\,f(t_n,y_n)\Big).
 </div>
 <p>下面给出推导该方法局部截断误差阶数的过程。</p>
 <h5 id="1311-taylor">1.3.1.1 精确解的Taylor展开<a class="headerlink" href="#1311-taylor" title="Permanent link">&para;</a></h5>
-<p>对精确解<span class="arithmatex">\( y(t) \)</span>在<span class="arithmatex">\( t=t_n \)</span>处做Taylor展开，有
-$$
+<p>对精确解<span class="arithmatex">\( y(t) \)</span>在<span class="arithmatex">\( t=t_n \)</span>处做Taylor展开，有</p>
+<div class="arithmatex">\[
 y(t_n+h) = y(t_n) + h\,y'(t_n) + \frac{h^2}{2}\,y''(t_n) + \frac{h^3}{6}\,y'''(t_n) + O(h^4).
-$$
-注意到由于<span class="arithmatex">\( y'(t_n) = f(t_n, y(t_n)) \)</span>且
-$$
+\]</div>
+<p>注意到由于<span class="arithmatex">\( y'(t_n) = f(t_n, y(t_n)) \)</span>且</p>
+<div class="arithmatex">\[
 y''(t_n) = \frac{d}{dt}y'(t_n)=\frac{\partial f}{\partial t}(t_n, y(t_n)) + \frac{\partial f}{\partial y}(t_n, y(t_n))\,y'(t_n),
-$$
-我们有
-$$
+\]</div>
+<p>我们有</p>
+<div class="arithmatex">\[
 y(t_n+h) = y(t_n) + h\,f(t_n,y(t_n)) + \frac{h^2}{2}\Big[f_t(t_n,y(t_n)) + f_y(t_n,y(t_n))\,f(t_n,y(t_n))\Big] + O(h^3).
-$$</p>
+\]</div>
 <h5 id="1312">1.3.1.2 数值格式的展开<a class="headerlink" href="#1312" title="Permanent link">&para;</a></h5>
-<p>中点方法给出
-$$
+<p>中点方法给出</p>
+<div class="arithmatex">\[
 y_{n+1} = y_n + h\,f\left(t_n+\frac{h}{2},\,y_n+\frac{h}{2}\,f(t_n,y_n)\right).
-$$
-我们希望比较<span class="arithmatex">\( y_{n+1} \)</span>与精确解<span class="arithmatex">\( y(t_n+h) \)</span>的差异。首先对函数
-$$
+\]</div>
+<p>我们希望比较<span class="arithmatex">\( y_{n+1} \)</span>与精确解<span class="arithmatex">\( y(t_n+h) \)</span>的差异。首先对函数</p>
+<div class="arithmatex">\[
 F(h)= f\left(t_n+\frac{h}{2},\,y_n+\frac{h}{2}\,f(t_n,y_n)\right)
-$$
-在<span class="arithmatex">\( h=0 \)</span>处做Taylor展开。记 <span class="arithmatex">\( y_n = y(t_n) \)</span> 且 <span class="arithmatex">\( f(t_n,y_n) = y'(t_n) \)</span>，于是有</p>
+\]</div>
+<p>在<span class="arithmatex">\( h=0 \)</span>处做Taylor展开。记 <span class="arithmatex">\( y_n = y(t_n) \)</span> 且 <span class="arithmatex">\( f(t_n,y_n) = y'(t_n) \)</span>，于是有</p>
 <div class="arithmatex">\[
 \begin{aligned}
 F(h) &amp;= f\Big(t_n+\frac{h}{2},\,y(t_n)+\frac{h}{2}\,y'(t_n)\Big)\\
@@ -3174,15 +3285,17 @@ y_{n+1} &amp;= y(t_n) + h\,F(h)\\
 <h5 id="1313">1.3.1.3 误差阶数分析<a class="headerlink" href="#1313" title="Permanent link">&para;</a></h5>
 <p>将精确解的Taylor展开与中点方法的展开对比：</p>
 <ul>
-<li>精确解：
-  $$
-  y(t_n+h) = y(t_n) + h\,f(t_n,y(t_n)) + \frac{h^2}{2}\Big[f_t(t_n,y(t_n)) + f_y(t_n,y(t_n))\,f(t_n,y(t_n))\Big] + O(h^3).
-  $$</li>
-<li>数值解（中点方法）：
-  $$
-  y_{n+1} = y(t_n) + h\,f(t_n,y(t_n)) + \frac{h^2}{2}\Big[f_t(t_n,y(t_n)) + f_y(t_n,y(t_n))\,f(t_n,y(t_n))\Big] + O(h^3).
-  $$</li>
+<li>精确解：</li>
 </ul>
+<p>$$
+  y(t_n+h) = y(t_n) + h\,f(t_n,y(t_n)) + \frac{h^2}{2}\Big[f_t(t_n,y(t_n)) + f_y(t_n,y(t_n))\,f(t_n,y(t_n))\Big] + O(h^3).
+  $$</p>
+<ul>
+<li>数值解（中点方法）：</li>
+</ul>
+<p>$$
+  y_{n+1} = y(t_n) + h\,f(t_n,y(t_n)) + \frac{h^2}{2}\Big[f_t(t_n,y(t_n)) + f_y(t_n,y(t_n))\,f(t_n,y(t_n))\Big] + O(h^3).
+  $$</p>
 <p>两者在前<span class="arithmatex">\( h^2 \)</span>项完全一致，因此局部截断误差（local truncation error）为<span class="arithmatex">\( O(h^3) \)</span>。由于全局误差通常比局部截断误差低一个阶数，所以全局误差为<span class="arithmatex">\( O(h^2) \)</span>。</p>
 <p>终点法也属于一种龙格库塔方法。</p>
 <p>这里面我们并不能直接利用Runge Kutta, 因为线性部分是能计算的，所以要对龙格库塔方法做一定的适用性改进。</p>
@@ -3214,10 +3327,10 @@ y_{n+1} &amp;= y(t_n) + h\,F(h)\\
 <ol>
 <li><strong>最终更新</strong></li>
 </ol>
-<p>$$
+<div class="arithmatex">\[
 x(\lambda + h)=\frac{\alpha_{\lambda + h}}{\alpha_{\lambda}}\;x(\lambda)- \sigma_{\lambda + h}\,\bigl(e^{\,h} - 1\bigr)\,\epsilon_\theta\bigl(x(\lambda),\lambda\bigr) - \sigma_{\lambda + h}\,\bigl(e^{\,h} -h- 1\bigr)\hat{D}_2.
-$$
-这里 我们可以把 <span class="arithmatex">\(\hat{D}_1\)</span> 和 <span class="arithmatex">\(\hat{D}_2\)</span> 看作是差分项，也就是</p>
+\]</div>
+<p>这里 我们可以把 <span class="arithmatex">\(\hat{D}_1\)</span> 和 <span class="arithmatex">\(\hat{D}_2\)</span> 看作是差分项，也就是</p>
 <div class="arithmatex">\[ \hat{D}_1 \approx  \frac{d}{d \lambda } \left[\epsilon_\theta(x(\lambda),\lambda) \right]_{\lambda = \lambda + r_1 h}\]</div>
 <div class="arithmatex">\[ \hat{D}_2 \approx  \frac{d}{d \lambda } \left[\epsilon_\theta(x(\lambda),\lambda) \right]_{\lambda = \lambda + r_2 h}\]</div>
 <p>我们重新回顾一下泰勒展开</p>
@@ -3282,7 +3395,7 @@ $$
 </ul>
 <p>为了增加ODE求解器对条件生成的稳定性，我们把预测噪声转为预测去噪后的图像，相对于噪声，去噪后的图像明显更加稳定。</p>
 <p>我们重写Probability FLOW ODE 方程</p>
-<div class="arithmatex">\[ \frac{d x}{d t} = f(t) x_t + \frac{g^2(t)}{2\sigma_t}\epsilon_\theta (x_t,t), x_{T} \sim N(0, \sigma^2 I )\]</div>
+<div class="arithmatex">\[ \frac{d x}{d t} = f(t) x + \frac{g^2(t)}{2\sigma_t}\epsilon_\theta (x,t), x_{T} \sim N(0, \sigma^2 I )\]</div>
 <p>首先我们有</p>
 <div class="arithmatex">\[ x_t =\alpha_t x_0 + \sigma_t \epsilon\]</div>
 <p>将 <span class="arithmatex">\(\epsilon_\theta\)</span> 替换为 <span class="arithmatex">\(x_0\)</span>, 并且我们用<span class="arithmatex">\(x_\theta\)</span> 表示预测后的去噪图像， 我们可以得到</p>
@@ -3355,7 +3468,7 @@ e^{\lambda}\,x_\theta\bigl(x_\lambda, \lambda\bigr)\,\mathrm{d}\lambda.
 </li>
 </ul>
 <p>我们将对积分项求解，可以得到<span class="arithmatex">\(k=1,2\)</span>时候的具体表达式</p>
-<h3 id="21-k1">2.1  当 <span class="arithmatex">\(k=1\)</span> 时<a class="headerlink" href="#21-k1" title="Permanent link">&para;</a></h3>
+<h3 id="21-k1">2.1 当 <span class="arithmatex">\(k=1\)</span> 时<a class="headerlink" href="#21-k1" title="Permanent link">&para;</a></h3>
 <p>只保留 <span class="arithmatex">\(n=0\)</span> 项，故有</p>
 <div class="arithmatex">\[
 \sum_{n=0}^{0}
@@ -3389,7 +3502,7 @@ O\bigl(h^2\bigr).\\
 \end{aligned}
 \]</div>
 </div>
-<h3 id="22-k2">2.2  当 <span class="arithmatex">\(k=2\)</span> 时<a class="headerlink" href="#22-k2" title="Permanent link">&para;</a></h3>
+<h3 id="22-k2">2.2 当 <span class="arithmatex">\(k=2\)</span> 时<a class="headerlink" href="#22-k2" title="Permanent link">&para;</a></h3>
 <p>保留 <span class="arithmatex">\(n=0\)</span> 和 <span class="arithmatex">\(n=1\)</span> 两项：</p>
 <div class="arithmatex">\[
 \sum_{n=0}^{1}
@@ -3407,7 +3520,7 @@ x_\theta^{(0)}(\cdot)\!\int e^\lambda \,\mathrm{d}\lambda
 x_\theta^{(1)}(\cdot)\!\int e^\lambda\,(\lambda-\lambda_s)\,\mathrm{d}\lambda
 }_{n=1}.
 \]</div>
-<h4 id="221-n0">2.2.1  <span class="arithmatex">\(n=0\)</span> 项<a class="headerlink" href="#221-n0" title="Permanent link">&para;</a></h4>
+<h4 id="221-n0">2.2.1 <span class="arithmatex">\(n=0\)</span> 项<a class="headerlink" href="#221-n0" title="Permanent link">&para;</a></h4>
 <p>与上面 <span class="arithmatex">\(k=1\)</span> 情形相同：</p>
 <div class="arithmatex">\[
 x_\theta^{(0)}\bigl(x_s, \lambda_s\bigr)
@@ -3416,7 +3529,7 @@ e^\lambda\,\mathrm{d}\lambda
 \;=\;
 x_\theta^{(0)}(\cdot)\,\bigl(e^{\lambda_t} - e^{\lambda_s}\bigr).
 \]</div>
-<h4 id="222-n1">2.2.2  <span class="arithmatex">\(n=1\)</span> 项<a class="headerlink" href="#222-n1" title="Permanent link">&para;</a></h4>
+<h4 id="222-n1">2.2.2 <span class="arithmatex">\(n=1\)</span> 项<a class="headerlink" href="#222-n1" title="Permanent link">&para;</a></h4>
 <div class="arithmatex">\[
 x_\theta^{(1)}\bigl(x_s, \lambda_s\bigr)
 \int_{\lambda_s}^{\lambda_t}
@@ -3457,7 +3570,7 @@ x_\theta^{(1)}\bigl(x_s, \lambda_s\bigr)
   e^{\lambda_s}
 \Bigr\}.
 \]</div>
-<h4 id="223">2.2.3  合并后得到二阶截断<a class="headerlink" href="#223" title="Permanent link">&para;</a></h4>
+<h4 id="223">2.2.3 合并后得到二阶截断<a class="headerlink" href="#223" title="Permanent link">&para;</a></h4>
 <div class="arithmatex">\[
 \tilde{x}_t
 \;=\;
@@ -3483,23 +3596,27 @@ O\bigl(h^3\bigr).
 <p>DPM-Solver++(2S) 的原理就是把一个时间步拆成两次更新，通过在中间时刻和终点时刻分别评估 <span class="arithmatex">\(x_0\)</span>并做二阶组合，来近似求解逆向 ODE。</p>
 <p>给定已知的“状态” <span class="arithmatex">\(\tilde{x}_s\)</span>（在时刻 <span class="arithmatex">\(s\)</span>)，我们要在一步内近似求解 <span class="arithmatex">\(\tilde{x}_t\)</span>（在时刻 <span class="arithmatex">\(t\)</span>)。DPM-Solver++(2S) 将区间 <span class="arithmatex">\([s,t]\)</span> 拆成两个子步：<span class="arithmatex">\([s,u]\)</span> 和 <span class="arithmatex">\([u,t]\)</span>。其更新公式可写成以下三步：</p>
 <ol>
-<li><strong>第一子步：从 <span class="arithmatex">\(s\)</span> 到 <span class="arithmatex">\(u\)</span></strong>
-   $$
+<li><strong>第一子步：从 <span class="arithmatex">\(s\)</span> 到 <span class="arithmatex">\(u\)</span></strong></li>
+</ol>
+<p>$$
    \tilde{x}_u
    \;=\;
    \frac{\sigma_u}{\sigma_s}\,\tilde{x}_s
    \;-\;
    \alpha_u\,\bigl(\,e^{-\,r\,h} \;-\; 1\bigr)\,
    x_0!\bigl(\tilde{x}_s,\;s\bigr).
-   $$</li>
+   $$</p>
+<ul>
 <li>直观上，这一步先对 <span class="arithmatex">\(\tilde{x}_s\)</span> 做一个按系数 <span class="arithmatex">\(\sigma_u / \sigma_s\)</span> 的缩放，然后根据数据预测 <span class="arithmatex">\(x_0(\tilde{x}_s,s)\)</span> 做“去噪修正”。</li>
 <li>
 <p>指数项 <span class="arithmatex">\(e^{-\,r\,h}\)</span> 体现了在对数信噪比坐标下的退火过程。</p>
 </li>
 <li>
 <p><strong>合并项 <span class="arithmatex">\(D\)</span></strong>
-   在第二子步之前，我们先构造一个综合漂移项 <span class="arithmatex">\(D\)</span>，结合了时刻 <span class="arithmatex">\(s\)</span> 与中间时刻 <span class="arithmatex">\(u\)</span> 上对数据预测的评估：
-   $$
+   在第二子步之前，我们先构造一个综合漂移项 <span class="arithmatex">\(D\)</span>，结合了时刻 <span class="arithmatex">\(s\)</span> 与中间时刻 <span class="arithmatex">\(u\)</span> 上对数据预测的评估：</p>
+</li>
+</ul>
+<p>$$
    D
    \;=\;
    \Bigl[
@@ -3508,22 +3625,20 @@ O\bigl(h^3\bigr).
      \tfrac{1}{2\,(1-r)}\,x_0\bigl(\tilde{x}_u,\,u\bigr)
    \Bigr]
    \,\bigl(e^{-\,h} \;-\; 1\bigr).
-   $$
-   这一步类似二阶 Runge–Kutta 方法，会用“初值处”与“中间处”两次对 <span class="arithmatex">\(x_0\)</span> 的采样，以提升整体精度。</p>
-</li>
-<li>
-<p><strong>第二子步：从 <span class="arithmatex">\(u\)</span> 到 <span class="arithmatex">\(t\)</span></strong>
-   将区间剩余部分的演化合并到一个公式里：
-   $$
+   $$</p>
+<p>这一步类似二阶 Runge–Kutta 方法，会用“初值处”与“中间处”两次对 <span class="arithmatex">\(x_0\)</span> 的采样，以提升整体精度。</p>
+<ol>
+<li><strong>第二子步：从 <span class="arithmatex">\(u\)</span> 到 <span class="arithmatex">\(t\)</span></strong>
+   将区间剩余部分的演化合并到一个公式里：</li>
+</ol>
+<p>$$
    \tilde{x}_t
    \;=\;
    e^{-\,h}\,\tilde{x}_s
    \;+\;
    D.
-   $$
-   最终得到在时刻 <span class="arithmatex">\(t\)</span> 的状态 <span class="arithmatex">\(\tilde{x}_t\)</span>。</p>
-</li>
-</ol>
+   $$</p>
+<p>最终得到在时刻 <span class="arithmatex">\(t\)</span> 的状态 <span class="arithmatex">\(\tilde{x}_t\)</span>。</p>
 <div class="arithmatex">\[
 \boxed{\begin{aligned}
 &amp;1)\quad
@@ -3553,6 +3668,187 @@ e^{-\,h}\,\tilde{x}_s\;+\;D.\end{aligned}}
 <p>而DPM Solver++(2M)则是利用上一步的步骤来近似中间步,从而节省计算量，使得每次只需要进行一侧forward.</p>
 <p><span class="arithmatex">\(D\)</span> 可以看作是一个插值，因为这个中间点在<span class="arithmatex">\(t-\)</span>的前面，从而导致系数为负。</p>
 <p><a class="glightbox" href="../../../images/image-106.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="alt text" src="../../../images/image-106.png" /></a></p>
+<h2 id="3-amed-solver">3. AMED Solver<a class="headerlink" href="#3-amed-solver" title="Permanent link">&para;</a></h2>
+<p><a class="glightbox" href="https://github.com/zju-pi/diff-sampler/raw/main/sfd-main/assets/distilled_traj.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://github.com/zju-pi/diff-sampler/raw/main/sfd-main/assets/distilled_traj.png" /></a></p>
+<ul>
+<li>paper: <a href="https://openaccess.thecvf.com/content/CVPR2024/papers/Zhou_Fast_ODE-based_Sampling_for_Diffusion_Models_in_Around_5_Steps_CVPR_2024_paper.pdf">https://openaccess.thecvf.com/content/CVPR2024/papers/Zhou_Fast_ODE-based_Sampling_for_Diffusion_Models_in_Around_5_Steps_CVPR_2024_paper.pdf</a></li>
+<li>institute: 浙江大学区块链与数据安全国家重点实验室</li>
+<li>year: CVPR 2024</li>
+<li>code: <a href="https://github.com/zjupi/diff-sampler">https://github.com/zjupi/diff-sampler</a>.</li>
+</ul>
+<h3 id="31-observation">3.1 Observation<a class="headerlink" href="#31-observation" title="Permanent link">&para;</a></h3>
+<ul>
+<li>based on the geometric observation that each sampling trajectory almost lies in a two-dimensional subspace</li>
+<li>目前的加速采样的方式分成两张</li>
+<li>告诉数值ODE求解器，又进一步分成两种: single step and multiple step。 单步求解器只用当前步的信息，多步求解器使用历史信息。</li>
+<li>蒸馏方法。蒸馏也需要大量数据</li>
+</ul>
+<h3 id="32-amed-solveramed-plugin">3.2 核心设计详解：AMED-Solver与AMED-Plugin<a class="headerlink" href="#32-amed-solveramed-plugin" title="Permanent link">&para;</a></h3>
+<h4 id="321">3.2.1 几何洞察：采样轨迹的低维性<a class="headerlink" href="#321" title="Permanent link">&para;</a></h4>
+<p><strong>关键观察</strong>：扩散模型的采样轨迹在高维空间中近似位于二维子空间。</p>
+<ul>
+<li><strong>实验验证</strong>：对多个数据集（如CIFAR-10、ImageNet）的采样轨迹进行PCA分析，发现前两个主成分可解释大部分方差（投影误差&lt;8%）。</li>
+<li><strong>理论意义</strong>：轨迹的低维性意味着复杂的高维动态可简化为二维平面内的方向调整，为设计高效求解器提供基础。</li>
+</ul>
+<p><strong>对设计的影响</strong>：</p>
+<ul>
+<li>梯度方向可在低维空间内高效逼近，减少计算复杂度。</li>
+<li>均值定理（Mean Value Theorem）的向量扩展成为可能，允许通过单一中间时间步的梯度近似积分路径。</li>
+</ul>
+<h4 id="322-amed-solver">3.2.2 AMED-Solver的设计原理<a class="headerlink" href="#322-amed-solver" title="Permanent link">&para;</a></h4>
+<p>一般的， 扩散模型的SDE 为</p>
+<div class="arithmatex">\[dx  = f(x,t) dt + g(t) d w_t\]</div>
+<p>它对应的 probability flow ODE 为</p>
+<div class="arithmatex">\[ dx = [f(x,t) - \frac{1}{2}g^2(t) \nabla_x \log p_t(x)]dt \]</div>
+<p>现在考虑EDM 方法，也就是 <span class="arithmatex">\(f(x,t) = 0\)</span> <span class="arithmatex">\(g(t) = \sqrt{2t}\)</span>, <span class="arithmatex">\(\sigma(t) = t\)</span>, 在高斯noise condition 的条件下， 我们可以得到</p>
+<div class="arithmatex">\[s_\theta = \nabla_x \log p_t(x|x_0)=- \frac{\epsilon_\theta(x,t)}{t}\]</div>
+<p>我们得到最终的PF-ODE</p>
+<div class="arithmatex">\[ dx = \epsilon_\theta(x,t) dt \]</div>
+<p>逆采样的时候，选在 <span class="arithmatex">\(x_{t_N}\sim N(0,T^2 I)\)</span>.</p>
+<p><strong>目标</strong>：通过预测中间时间步<span class="arithmatex">\(s_n\)</span>和缩放因子<span class="arithmatex">\(c_n\)</span>，直接学习最优梯度方向，最小化离散化误差。</p>
+<p><strong>数学推导</strong>：</p>
+<ul>
+<li><strong>ODE积分形式</strong>：从时间步<span class="arithmatex">\(t_{n+1}\)</span>到<span class="arithmatex">\(t_n\)</span>的解为：</li>
+</ul>
+<p>$$
+  x_{t_n} = x_{t_{n+1}} + \int_{t_{n+1}}^{t_n} \epsilon_\theta(x_t, t) dt
+  $$</p>
+<ul>
+<li><strong>均值方向近似</strong>：假设存在中间时间步<span class="arithmatex">\(s_n \in (t_n, t_{n+1})\)</span>和缩放因子<span class="arithmatex">\(c_n\)</span>，使得：
+  <a class="glightbox" href="https://calcworkshop.com/wp-content/uploads/mean-value-integrals-visual.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://calcworkshop.com/wp-content/uploads/mean-value-integrals-visual.png" /></a></li>
+</ul>
+<p>$$
+  \epsilon_\theta(x_{s_n}, s_n) \approx \frac{c_n}{t_n - t_{n+1}} \int_{t_{n+1}}^{t_n} \epsilon_\theta(x_t, t) dt
+  $$</p>
+<p>从而近似解为：</p>
+<p>$$
+  \tag{b}
+  x_{t_n} \approx x_{t_{n+1}} + c_n (t_n - t_{n+1}) \epsilon_\theta(x_{s_n}, s_n)
+  $$</p>
+<div class="admonition note">
+<p class="admonition-title">理论基础</p>
+<p>不能证明函数的值域在二维空间里 中值定理还能成立，如果不能成立，那么这个算法的理论基础是不成立的。</p>
+</div>
+<p><strong>AMED predictor的设计</strong>：</p>
+<p>Given samples <span class="arithmatex">\(y_{t_n}, y_{t_{n+1}}\)</span> on the teacher trajectory and <span class="arithmatex">\(x_{t_{n+1}}\)</span> on the student trajectory, we try to minimize the distance of <span class="arithmatex">\(x_{t_n}\)</span>  and  <span class="arithmatex">\(y_{t_{n}}\)</span> with <span class="arithmatex">\(x_{t_n}\)</span> is given in the above eq (b).</p>
+<p><a class="glightbox" href="../../../images/image-141.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="alt text" src="../../../images/image-141.png" /></a></p>
+<ul>
+<li><strong>输入</strong>：当前时间步<span class="arithmatex">\(t_{n+1}\)</span>、目标时间步<span class="arithmatex">\(t_n\)</span>，以及U-Net的瓶颈特征（Bottleneck Feature）<span class="arithmatex">\(h_{t_{n+1}}\)</span>。</li>
+<li><strong>输出</strong>：中间时间步<span class="arithmatex">\(s_n\)</span>（通过<span class="arithmatex">\(s_n = t_n^{r_n} t_{n+1}^{1 - r_n}\)</span>,实际输出的是<span class="arithmatex">\(r_n\)</span>参数化）和缩放因子<span class="arithmatex">\(c_n\)</span>。</li>
+<li><strong>网络结构</strong>：轻量级MLP（仅9K参数），包含两个全连接层和Sigmoid激活函数。</li>
+<li><strong>训练目标</strong>：最小化学生轨迹与教师轨迹的L2距离，教师轨迹由高步数求解器生成（如DPM-Solver-2或iPNDM）。</li>
+</ul>
+<hr />
+<h4 id="323-amed-plugin">3.2.3 AMED-Plugin的扩展机制<a class="headerlink" href="#323-amed-plugin" title="Permanent link">&para;</a></h4>
+<p><strong>核心思想</strong>：将AMED的中间时间步预测与缩放因子学习作为插件，适配任意ODE求解器。</p>
+<p><strong>实现步骤</strong>：</p>
+<ol>
+<li><strong>基础求解器选择</strong>：如DPM-Solver++、iPNDM等。</li>
+<li><strong>插入AMED预测</strong>：在每个时间步<span class="arithmatex">\(t_{n+1} \to t_n\)</span>中：</li>
+<li>使用AMED predictor预测<span class="arithmatex">\(s_n\)</span>和<span class="arithmatex">\(c_n\)</span>。</li>
+<li>按原求解器规则从<span class="arithmatex">\(t_{n+1}\)</span>步进到<span class="arithmatex">\(s_n\)</span>，再步进到<span class="arithmatex">\(t_n\)</span>，并用<span class="arithmatex">\(c_n\)</span>缩放梯度方向。</li>
+<li><strong>总NFE计算</strong>：每步额外增加一次U-Net评估，总NFE为<span class="arithmatex">\(2(N-1)\)</span>。</li>
+</ol>
+<p><strong>优势</strong>：</p>
+<ul>
+<li>提升现有求解器在低步数下的性能（如iPNDM + AMED-Plugin在5步内FID降低30-50%）。</li>
+<li>无需修改原求解器结构，即插即用。</li>
+</ul>
+<hr />
+<h4 id="324">3.2.4 优化技巧与实现细节<a class="headerlink" href="#324" title="Permanent link">&para;</a></h4>
+<p><strong>Analytical First Step (AFS)</strong>：</p>
+<ul>
+<li><strong>动机</strong>：初始噪声<span class="arithmatex">\(x_{T}\)</span>的梯度方向<span class="arithmatex">\(\epsilon_\theta(x_T, T)\)</span>与<span class="arithmatex">\(x_T\)</span>近似共线。</li>
+<li><strong>实现</strong>：直接使用<span class="arithmatex">\(x_T\)</span>作为第一步方向，省去一次NFE。</li>
+<li><strong>效果</strong>：在极低NFE（如3-5步）时显著提升效率，对质量影响可忽略。</li>
+</ul>
+<p><strong>时间调度（Time Schedule）适配</strong>：</p>
+<ul>
+<li>默认使用多项式调度（<span class="arithmatex">\(t_n^{1/\rho}\)</span>插值，<span class="arithmatex">\(\rho=7\)</span>），但对数SNR调度在部分求解器中表现更优。</li>
+<li>AMED-Plugin通过调整中间时间步<span class="arithmatex">\(s_n\)</span>，部分缓解时间调度的敏感性。</li>
+</ul>
+<p><strong>训练策略</strong>：</p>
+<ul>
+<li><strong>教师轨迹生成</strong>：使用高步数（如80步）求解器生成参考轨迹。</li>
+<li><strong>渐进式训练</strong>：从<span class="arithmatex">\(t_N\)</span>到<span class="arithmatex">\(t_1\)</span>逐步训练，每个时间步独立优化AMED predictor。</li>
+</ul>
+<hr />
+<h4 id="325">3.2.5 实验验证与性能优势<a class="headerlink" href="#325" title="Permanent link">&para;</a></h4>
+<p><strong>数据集与指标</strong>：</p>
+<ul>
+<li><strong>数据集</strong>：CIFAR-10（32×32）、ImageNet 64×64、LSUN Bedroom（256×256）。</li>
+<li><strong>指标</strong>：Fréchet Inception Distance (FID)，NFE=3/5/7/9。</li>
+</ul>
+<p><strong>关键结果</strong>：</p>
+<ul>
+<li><strong>AMED-Solver</strong>：在5步内达到SOTA（CIFAR-10 FID=6.61，ImageNet FID=10.74）。</li>
+<li><strong>AMED-Plugin</strong>：提升iPNDM在ImageNet 64×64上的FID从18.99→13.83（NFE=5）。</li>
+<li><strong>Stable Diffusion</strong>：应用AMED-Plugin后，NFE=8时FID从21.33→18.92。</li>
+</ul>
+<p><strong>对比分析</strong>：</p>
+<ul>
+<li><strong>单步 vs 多步</strong>：AMED-Solver在极低NFE下优于多步方法（如DPM-Solver++），因多步法依赖历史梯度，低步数时误差累积严重。</li>
+<li><strong>轻量训练</strong>：AMED predictor训练仅需单GPU数小时，远低于蒸馏方法（需数天）。</li>
+</ul>
+<hr />
+<h4 id="326">3.2.6 局限性与未来方向<a class="headerlink" href="#326" title="Permanent link">&para;</a></h4>
+<p><strong>局限性</strong>：</p>
+<ul>
+<li><strong>时间调度敏感性</strong>：性能仍受时间调度影响，需进一步结合轨迹几何分析优化调度策略。</li>
+<li><strong>高分辨率挑战</strong>：在512×512图像中，AFS可能引入轻微质量损失，需调整预测器结构。</li>
+</ul>
+<p><strong>未来方向</strong>：</p>
+<ul>
+<li><strong>动态时间调度</strong>：结合轨迹曲率自适应调整时间步。</li>
+<li><strong>跨模型泛化</strong>：探索AMED在视频生成、3D合成等任务的扩展。</li>
+</ul>
+<h2 id="4-dpm-solver-v3-improved-diffusion-ode-solver-with-empirical-model-statistics">4. DPM-Solver-v3: Improved Diffusion ODE Solver with Empirical Model Statistics<a class="headerlink" href="#4-dpm-solver-v3-improved-diffusion-ode-solver-with-empirical-model-statistics" title="Permanent link">&para;</a></h2>
+<ul>
+<li>author: Kaiwen Zheng, Cheng Lu, Jianfei Chen, Jun Zhu</li>
+<li>NeurIPS: 2023 Oct</li>
+<li>institute: THU</li>
+<li>code: <a href="https://github.com/thu-ml/DPM-Solver-v3">https://github.com/thu-ml/DPM-Solver-v3</a></li>
+</ul>
+<p>这篇论文提出了DPM-Solver-v3，一种改进的扩散ODE求解器，通过引入经验模型统计量（EMS）优化参数化，显著提升了扩散模型的采样效率。以下是对论文核心内容的解读：</p>
+<h3 id="41-1">4.1 <strong>1. 研究背景与问题</strong><a class="headerlink" href="#41-1" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>扩散模型挑战</strong>：扩散模型生成高质量样本需数百次模型评估，导致采样效率低下。</li>
+<li><strong>现有方法局限</strong>：现有加速方法（如DPM-Solver++）依赖固定的参数化（如噪声/数据预测），可能非最优，且在高引导尺度或少量步骤下表现不佳。</li>
+</ul>
+<h3 id="42-2">4.2 <strong>2. 核心贡献</strong><a class="headerlink" href="#42-2" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>经验模型统计量（EMS）</strong>：引入三个系数（lλ, sλ, bλ），通过最小化一阶离散误差的期望，动态调整ODE参数化，使非线性的敏感性降低。</li>
+<li><strong>改进的ODE形式化</strong>：重新推导ODE解，结合EMS优化线性项、缩放项和偏置项，减少近似误差。</li>
+<li><strong>高阶求解器设计</strong>：提出多步预测-校正框架，支持任意阶数，并引入伪阶方法和半校正器技术，提升少步骤和大引导尺度下的稳定性。</li>
+</ul>
+<h3 id="43-3">4.3 <strong>3. 关键方法</strong><a class="headerlink" href="#43-3" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>EMS估计</strong>：通过蒙特卡洛估计预训练模型的雅可比向量积，计算最优系数，适应不同噪声和数据分布。</li>
+<li><strong>局部与全局求解</strong>：</li>
+<li><strong>局部近似</strong>：利用泰勒展开和有限差分估计高阶导数，保证局部截断误差的阶数。</li>
+<li><strong>全局收敛</strong>：结合多步缓存和预测-校正步骤，确保全局误差随步骤数收敛。</li>
+<li><strong>实用技术</strong>：</li>
+<li><strong>伪阶求解器</strong>：在少步骤时仅用部分历史值估计导数，平衡精度与稳定性。</li>
+<li><strong>半校正器</strong>：在大引导尺度下，仅在时间前半段应用校正器，避免失真。</li>
+</ul>
+<h3 id="44-4">4.4 <strong>4. 实验结果</strong><a class="headerlink" href="#44-4" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>无条件生成</strong>：在CIFAR10和LSUN-Bedroom上，DPM-Solver-v3在5-10步时FID显著优于DPM-Solver++和UniPC（如CIFAR10上5步FID从23.71降至12.21）。</li>
+<li><strong>条件生成</strong>：在ImageNet-256和Stable Diffusion上，MSE和视觉质量均提升，尤其在7.5引导尺度下，5步MSE降低至0.55。</li>
+<li><strong>效率提升</strong>：相比之前方法，加速15-30%，且预计算EMS后无额外开销。</li>
+</ul>
+<h3 id="45-5">4.5 <strong>5. 理论分析</strong><a class="headerlink" href="#45-5" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>局部无偏性</strong>：证明在EMS优化下，局部误差期望为零。</li>
+<li><strong>全局收敛性</strong>：多步预测-校正框架保证全局误差随步骤数呈多项式收敛。</li>
+</ul>
+<h3 id="46-6">4.6 <strong>6. 局限与展望</strong><a class="headerlink" href="#46-6" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>实时性不足</strong>：仍需10-20步生成，落后于蒸馏方法。</li>
+<li><strong>扩展方向</strong>：探索时间步长调度设计，结合训练方法进一步加速。</li>
+</ul>
+<h3 id="47">4.7 <strong>总结</strong><a class="headerlink" href="#47" title="Permanent link">&para;</a></h3>
+<p>DPM-Solver-v3通过理论驱动的参数化优化和高效求解器设计，在少步骤下显著提升扩散模型采样质量，为实际应用提供了更高效的推理方案。其核心思想是通过数据驱动的统计量动态调整ODE形式，平衡近似误差与计算效率，为后续研究提供了新方向。</p>
 
 
 
