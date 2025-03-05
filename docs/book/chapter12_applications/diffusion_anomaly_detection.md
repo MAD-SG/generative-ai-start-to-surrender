@@ -255,6 +255,155 @@ Anomally Score Calculation with the reconstriction error.
 - **创新数据**：整合PCB-Bank数据集，涵盖多种电路板缺陷类型，填补工业检测领域数据空白。
 - **消融实验**：验证ADP、SAFF和ATP组件的必要性，例如ADP使P-AUROC提升0.5%，SAFF进一步优化细节保留。
 
+### training details
+#### 数据准备与合成异常生成
+
+- **正常数据训练**：使用无异常的正常样本（如工业质检中的无缺陷产品图像）作为训练集，学习数据分布。
+- **合成异常注入（ATP机制）**：
+  为增强模型对异常区域的修复能力，在训练阶段主动生成**合成异常样本**：
+  - 对正常图像随机添加噪声、遮挡或纹理扭曲，模拟真实异常（如划痕、缺失等）。
+  - 通过这种方式迫使模型学习“异常→正常”的映射关系，提升对复杂缺陷的泛化能力。
+
+#### 正向扩散过程（Forward Process）
+
+- **逐步噪声添加**：
+  对输入图像 \( x_0 \) 逐步添加高斯噪声，经过 \( T \) 步后得到纯噪声 \( x_T \sim \mathcal{N}(0, I) \)。
+  - 每步噪声强度由预定义的调度策略（如线性或余弦调度）控制。
+  - 传统扩散模型固定使用 \( T \) 步，但**GLAD通过自适应去噪步骤（ADP）动态调整**：
+    - 训练时引入一个轻量级网络，根据当前样本的噪声残差预测最优去噪步数 \( t_{\text{adapt}} \leq T \)，而非固定步数。
+
+#### 反向去噪过程（Reverse Process）与自适应训练
+
+- **去噪网络架构**：
+  使用U-Net等结构预测当前步的噪声 \( \epsilon_\theta(x_t, t) \)，目标是最小化预测噪声与真实噪声的差异。
+  - **损失函数**：
+
+    $$
+    \mathcal{L}_{\text{base}} = \mathbb{E}_{x_0, t, \epsilon} \left[ \| \epsilon - \epsilon_\theta(x_t, t) \|^2 \right]
+    $$
+
+
+  - **自适应去噪步骤（ADP）训练**：
+    在损失函数中增加对步长预测的约束，例如通过交叉熵或均方误差优化步长预测网络，使其输出与样本复杂度匹配的 \( t_{\text{adapt}} \)。
+
+---
+
+#### 局部自适应特征融合（SAFF）训练
+
+- **异常掩码引导的特征融合**：
+  - 在训练阶段，利用合成异常样本的已知缺陷位置生成二值掩码 \( M \)（1表示异常区域，0表示正常区域）。
+  - **特征混合策略**：
+    将U-Net解码器的输出特征与原始图像特征按掩码加权融合：
+    \[
+    x_{\text{recon}} = M \cdot x_{\text{gen}} + (1 - M) \cdot x_0
+    \]
+    其中 \( x_{\text{gen}} \) 为生成的特征，\( x_0 \) 为原始正常区域特征。
+  - **目标**：强制模型仅在异常区域进行修复，保留正常区域的细节。
+
+---
+
+#### 端到端优化
+
+- **联合训练**：
+  将基础扩散损失 \( \mathcal{L}_{\text{base}} \)、自适应步长预测损失 \( \mathcal{L}_{\text{ADP}} \)、特征融合一致性损失 \( \mathcal{L}_{\text{SAFF}} \) 结合：
+
+  $$
+  \mathcal{L}_{\text{total}} = \mathcal{L}_{\text{base}} + \lambda_1 \mathcal{L}_{\text{ADP}} + \lambda_2 \mathcal{L}_{\text{SAFF}}
+  $$
+
+
+  - \( \lambda_1, \lambda_2 \) 为超参数，平衡不同任务的权重。
+  - 通过反向传播同时优化噪声预测、步长自适应和特征融合模块。
+
+---
+
+#### 推理阶段的自适应调整
+
+- **动态步长选择**：
+  对测试样本，利用训练好的步长预测网络直接输出 \( t_{\text{adapt}} \)，避免固定步数导致的过修复或欠修复。
+- **掩码生成与融合**：
+  通过计算重建图像与原始输入的差异生成异常掩码 \( M \)，并应用SAFF进行局部修复。
+
+在论文《GLAD: Towards Better Reconstruction with Global and Local Adaptive Diffusion Models for Unsupervised Anomaly Detection》中，**SAFF** 和 **ATP** 是两个核心组件，分别针对模型的**局部自适应重建能力**和**异常感知训练机制**进行优化。以下是它们的详细解释：
+
+#### SAFF（Spatial-Adaptive Feature Fusion，空间自适应特征融合）
+##### 目标
+解决传统扩散模型在异常检测中**全局统一重建导致正常区域细节丢失**的问题，实现**局部区域的精细化修复**。
+
+###### 机制
+
+- **异常掩码生成**：
+  在推理阶段，通过比较原始图像 \( x^a \) 和初步重建图像 \( \hat{x}^a \)，生成一个二值掩码 \( M \)，标记异常区域（\( M=1 \)）和正常区域（\( M=0 \)）。
+  - 掩码生成公式：
+
+    $$
+    M^{(i,j)} = \begin{cases}
+    1 & \text{if } \| x^a_{(i,j)} - \hat{x}^a_{(i,j)} \| > \tau \\
+    0 & \text{otherwise}
+    \end{cases}
+    $$
+
+
+    其中 \( \tau \) 为阈值，\( (i,j) \) 为像素坐标。
+
+- **特征融合**：
+  将原始图像的特征（保留正常区域）与重建图像的特征（修复异常区域）按掩码加权融合：
+  \[
+  x_{\text{final}} = M \cdot \hat{x}^a + (1 - M) \cdot x^a
+  \]
+  - **优势**：仅对异常区域进行修改，保留正常区域的原始细节，避免过度重建。
+
+###### 示例
+在工业质检中，若某电路板图像存在焊点缺失（异常区域）和完好的线路（正常区域），SAFF会仅修复焊点，而保持线路纹理不变。
+
+##### ATP（Anomaly-oriented Training Paradigm，异常导向训练范式）
+###### 目标
+打破传统扩散模型仅预测标准高斯分布噪声的限制，使其能够处理**异常区域的非高斯噪声**，提升异常修复能力。
+
+###### 机制
+
+- **合成异常生成**：
+  在训练阶段，对正常样本 \( x \) 主动注入人工异常（如遮挡、噪声、纹理扭曲），生成带合成异常的样本 \( x^a \)。
+  - 例如：在正常图像中随机添加矩形遮挡或高斯噪声块。
+
+- **广义扩散损失函数**：
+  传统扩散模型的损失函数为预测噪声与真实噪声的均方误差（MSE）：
+
+  $$
+  \mathcal{L}_{\text{base}} = \mathbb{E}_{x,t,\epsilon} \left[ \| \epsilon - \epsilon_\theta(x_t, t) \|^2 \right]
+  $$
+
+
+  ATP将其扩展为：
+
+  $$
+  \mathcal{L}_{\text{ATP}} = \mathbb{E}_{x,x^a,t,\epsilon} \left[ \| \epsilon - \epsilon_\theta(x^a_t, t) + \frac{\sqrt{\alpha_t}}{\sqrt{1-\alpha_t}} (x^a - x) \|^2 \right]
+  $$
+
+
+  - **关键项**：\( \frac{\sqrt{\alpha_t}}{\sqrt{1-\alpha_t}} (x^a - x) \) 强制模型学习异常区域与正常区域的差异，预测非高斯噪声。
+
+##### **SAFF与ATP的协同作用**
+
+1. **训练阶段（ATP主导）**：
+   - 通过合成异常数据，模型学会区分异常与正常区域的噪声分布。
+   - 提升模型对异常区域的针对性修复能力。
+
+2. **推理阶段（SAFF主导）**：
+   - 利用训练得到的异常感知能力，生成初步重建结果。
+   - 通过掩码融合保留正常区域，避免全局重建引入的误差。
+
+##### **性能提升对比（以MVTec-AD数据集为例）**
+
+| 方法               | P-AUROC (%) | PRO (%) | 参数量 (M) |
+|--------------------|-------------|---------|------------|
+| Baseline (无SAFF/ATP) | 97.1        | 89.3    | 120        |
+| + ATP              | 97.8 (+0.7) | 91.5    | 120        |
+| + SAFF             | 98.2 (+1.1) | 93.1    | 121        |
+| GLAD (ATP+SAFF)    | **98.6**    | **95.3**| 121        |
+
+---
+
 ## Unsupervised Anomaly Detection in Medical Images Using Masked Diffusion Model
 ![alt text](../../images/image-138.png)
 
@@ -341,11 +490,13 @@ SDG的关键是对噪声预测函数进行双重调整：
 
   $$\epsilon_\Theta(x_t, y) = \epsilon_\Theta(x_t, t) - \sqrt{1-\alpha_t} w \nabla_{x_t} \log p(y|x_t)$$
 
+
   通过梯度$\nabla_{x_t} \log p(y|x_t)$引导生成结果偏向类别y，权重$w$控制类别影响强度。
 
 • **方程（5）**：SDG的图像指导改进
 
   $$\epsilon_\Theta(x_t, t, r) = \epsilon_\Theta(x_t, t) - \sqrt{1-\alpha_t} w \nabla_{x_t} \text{sim}(x_t, r_t)$$
+
 
   引入参考图像$r_t$（通过扰动r得到），用相似性度量$\text{sim}(\cdot, \cdot)$（如结构相似性SSIM或特征相似性）计算$x_t$与$r_t$的关联性，梯度$\nabla_{x_t} \text{sim}(x_t, r_t)$引导生成结果与参考图像对齐。
 
@@ -429,6 +580,7 @@ SDG的关键是对噪声预测函数进行双重调整：
     $$
     S = \beta (M \odot N) + (1-\beta)(M \odot A) + \bar{M} \odot N
     $$
+
 
     - \(M\)：异常区域掩码（由Perlin噪声生成）。
     - \(N\)：原始正常图像。
