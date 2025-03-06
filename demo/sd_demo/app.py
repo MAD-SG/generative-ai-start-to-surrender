@@ -214,7 +214,13 @@ class ModelAdapter:
         elif self.model_id == 'sd-v3.0':
             from diffusers import StableDiffusion3Pipeline
             return StableDiffusion3Pipeline.from_pretrained("stabilityai/stable-diffusion-3-medium-diffusers", **other_config)
-
+        elif self.model_id == 'CogView4':
+            from diffusers import CogView4Pipeline
+            pipe = CogView4Pipeline.from_pretrained(repo_id, **other_config)
+            pipe.enable_model_cpu_offload()
+            pipe.vae.enable_slicing()
+            pipe.vae.enable_tiling()
+            return pipe
         else:
             return AutoPipelineForText2Image.from_pretrained(repo_id, **other_config)
 
