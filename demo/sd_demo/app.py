@@ -158,9 +158,9 @@ class ModelAdapter:
                 torch_dtype=other_config['torch_dtype'],
             )
             return pipeline
-        elif self.model_id == 'sd-v3.5':
+        elif self.model_id in ['sd-v3.5', 'sd-v3.5-large', 'sd-v3.5-large-turbo']:
 
-            from transformers import T5EncoderModel, CLIPTextModel, CLIPTokenizer
+            # from transformers import T5EncoderModel, CLIPTextModel, CLIPTokenizer
             from diffusers import StableDiffusion3Pipeline
             # 预加载文本编码器
             # text_encoder_1 = CLIPTextModel.from_pretrained("openai/clip-vit-large-patch14")
@@ -217,9 +217,9 @@ class ModelAdapter:
         elif self.model_id == 'CogView4':
             from diffusers import CogView4Pipeline
             pipe = CogView4Pipeline.from_pretrained(repo_id, **other_config)
-            pipe.enable_model_cpu_offload()
-            pipe.vae.enable_slicing()
-            pipe.vae.enable_tiling()
+            # pipe.enable_model_cpu_offload()
+            # pipe.vae.enable_slicing()
+            # pipe.vae.enable_tiling()
             return pipe
         else:
             return AutoPipelineForText2Image.from_pretrained(repo_id, **other_config)
@@ -292,7 +292,7 @@ class ModelAdapter:
                     'generator': torch.Generator("cpu").manual_seed(0)
                 })
 
-            if self.model_id in ['flux1-schnell'] or negative_prompt is None or negative_prompt == '': # no negative prompt
+            if self.model_id in ['flux1-schnell',"CogView4"] or negative_prompt is None or negative_prompt == '': # no negative prompt
                 result = self.pipeline(
                     prompt=prompt,
                     height=height,
@@ -485,30 +485,6 @@ async def generate_image(
     if not params:
         raise HTTPException(status_code=400, detail=f"No parameters defined for model: {model_name}")
 
-    # Validate parameters
-    if not (params['height']['min'] <= height <= params['height']['max']):
-        raise HTTPException(
-            status_code=400,
-            detail=f"Height must be between {params['height']['min']} and {params['height']['max']} for {model_name}"
-        )
-
-    if not (params['width']['min'] <= width <= params['width']['max']):
-        raise HTTPException(
-            status_code=400,
-            detail=f"Width must be between {params['width']['min']} and {params['width']['max']} for {model_name}"
-        )
-
-    if not (params['guidance_scale']['min'] <= guidance_scale <= params['guidance_scale']['max']):
-        raise HTTPException(
-            status_code=400,
-            detail=f"Guidance scale must be between {params['guidance_scale']['min']} and {params['guidance_scale']['max']} for {model_name}"
-        )
-
-    if not (params['num_inference_steps']['min'] <= num_inference_steps <= params['num_inference_steps']['max']):
-        raise HTTPException(
-            status_code=400,
-            detail=f"Number of inference steps must be between {params['num_inference_steps']['min']} and {params['num_inference_steps']['max']} for {model_name}"
-        )
 
     # Create a unique task ID
     task_id = f"{int(datetime.now().timestamp())}"
@@ -829,7 +805,6 @@ if __name__ == "__main__":
             "app:app",
             host="0.0.0.0",
             port=args.port,
-            reload=True,
-            reload_dirs=[str(BASE_DIR)],
+            reload=False,
             workers=1
         )

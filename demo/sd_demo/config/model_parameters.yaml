@@ -326,6 +326,74 @@ models:
       use_safetensors: true
     groups:
       - "Stable Diffusion Versions"
+  sd-v3.5-large:
+    display_name: "Stable Diffusion v3.5 large"
+    description: "Latest version with best performance"
+    parameters:
+      guidance_scale:
+        min: 1
+        max: 25
+        default: 3.5
+        step: 0.5
+      num_inference_steps:
+        min: 20
+        max: 200
+        default: 28
+        step: 1
+      height:
+        min: 512
+        max: 1536
+        default: 1024
+        step: 128
+      width:
+        min: 512
+        max: 1536
+        default: 1024
+        step: 128
+      negative_prompt:
+        type: string
+        default: ""
+        description: "Optional negative prompt to guide the image generation away from certain characteristics"
+    config:
+      repo_id: "stabilityai/stable-diffusion-3.5-large"
+      torch_dtype: float16
+      use_safetensors: true
+    groups:
+      - "Stable Diffusion Versions"
+  sd-v3.5-large-turbo:
+    display_name: "Stable Diffusion v3.5 large turbo"
+    description: "Distilled model with few steps"
+    parameters:
+      guidance_scale:
+        min: 0
+        max: 0
+        default: 0
+        step: 0.5
+      num_inference_steps:
+        min: 1
+        max: 2
+        default: 4
+        step: 1
+      height:
+        min: 512
+        max: 1536
+        default: 1024
+        step: 128
+      width:
+        min: 512
+        max: 1536
+        default: 1024
+        step: 128
+      negative_prompt:
+        type: string
+        default: ""
+        description: "Optional negative prompt to guide the image generation away from certain characteristics"
+    config:
+      repo_id: "stabilityai/stable-diffusion-3.5-large-turbo"
+      torch_dtype: float16
+      use_safetensors: true
+    groups:
+      - "Stable Diffusion Versions"
 
   flux1-schnell:
     display_name: "FLUX.1 Schnell"
@@ -356,9 +424,38 @@ models:
       torch_dtype: float16
     groups:
       - "Latest Models"
+  flux.1-dev:
+    display_name: "FLUX.1 Dev"
+    description: "Fast experimental model"
+    parameters:
+      guidance_scale:
+        min: 1
+        max: 10
+        default: 3.5
+        step: 0.1
+      num_inference_steps:
+        min: 20
+        max: 200
+        default: 50
+        step: 1
+      height:
+        min: 512
+        max: 2048
+        default: 1024
+        step: 128
+      width:
+        min: 512
+        max: 2048
+        default: 1024
+        step: 128
+    config:
+      repo_id: "black-forest-labs/FLUX.1-dev"
+      torch_dtype: bfloat16
+    groups:
+      - "Latest Models"
   CogView4:
     display_name: "CogView4"
-    description: "Fast experimental model"
+    description: "CogView4 from zhipu"
     parameters:
       guidance_scale:
         min: 1
@@ -382,6 +479,6 @@ models:
         step: 128
     config:
       repo_id: "THUDM/CogView4-6B"
-      torch_dtype: float16
+      torch_dtype: bfloat16
     groups:
       - "Latest Models"
