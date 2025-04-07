@@ -76,6 +76,7 @@ nav:
   - Application:
       - Anomaly Detection:
           - Diffuson Anomaly Detection: book/chapter12_applications/diffusion_anomaly_detection.md
+          - Deepfake Detection: book/chapter12_applications/deepfake_detection.md
 theme:
   name: material
   custom_dir: docs/overrides
