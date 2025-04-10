@@ -75,7 +75,7 @@ nav:
       - Future Trends: book/chapter11_hybrid_sota_models/trends_future.md
   - Application:
       - Anomaly Detection:
-          - Diffuson Anomaly Detection: book/chapter12_applications/diffusion_anomaly_detection.md
+          - Diffusion Anomaly Detection: book/chapter12_applications/diffusion_anomaly_detection.md
           - Deepfake Detection: book/chapter12_applications/deepfake_detection.md
 theme:
   name: material

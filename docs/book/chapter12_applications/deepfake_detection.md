@@ -53,9 +53,15 @@
 | CNN-F            | 99.41        | 83.80     | 90.94  | 99.90                | 97.10            | 98.48        |
 | MesoNet          | 99.99        | 98.00     | 98.98  | 96.70                | 99.50            | 98.08        |
 
-#### Proposed method
+#### current limitations
 
-## Mastering Deepfake Detection: A Cutting-edge Approach to Distinguish GAN and Diffusion-model Images
+1. lack control of the content and quality of training data: real and fake images should be consistent in content and quality
+2. Lack adversary attack
+3.
+
+## Deepfake Image Detection
+
+### Mastering Deepfake Detection: A Cutting-edge Approach to Distinguish GAN and Diffusion-model Images
 ![alt text](../../images/image-143.png)
 
 - <https://dl.acm.org/doi/pdf/10.1145/3652027>
@@ -82,7 +88,7 @@
 ![alt text](../../images/image-144.png)
 - in the spetral space, “real” class has the  isotropic behavior
 
-## Leveraging Frequency Analysis for Deep Fake Image Recognition
+### Leveraging Frequency Analysis for Deep Fake Image Recognition
 ![alt text](../../images/image-146.png)
 
 - <https://proceedings.mlr.press/v119/frank20a/frank20a.pdf>>
@@ -95,8 +101,57 @@
 - Upsampling will leads to spectral differences
     ![alt text](../../images/image-147.png)
 - both upsampling and downsampling operations have recently been linked to compromising shift invariance in neural networks, i.e., they cause classifier predictions to vary dramatically due to a simple one-pixel shift in the input image (Azulay & Weiss, 2018). Recently, Zhang (2019)
--
 
+## partial Deepfake Image Detection
+### SIDA: Social Media Image Deepfake Detection, Localization and Explanation with Large Multimodal Model
+
+- Zhenglin Huang1
+- <https://arxiv.org/pdf/2412.04292>
+- University of Liverpool, UK
+
+### contribution
+
+1. Social media Image Detection data Set (SID-Set)
+![alt text](../../images/image-148.png)
+2. SIDA
+![alt text](../../images/image-149.png)
+
+### Training Objectives Summary
+
+The SIDA model training involves three main loss components:
+
+1. **Detection loss** (\(\mathcal{L}_{det}\)) – using CrossEntropy loss for detecting elements.
+2. **Segmentation mask loss** (\(\mathcal{L}_{mask}\)) – a weighted combination of Binary Cross Entropy (BCE) loss and DICE loss:
+
+   $$
+   \mathcal{L}_{mask} = \lambda_{bce} \mathcal{L}_{BCE}(\hat{M}, M) + \lambda_{dice} \mathcal{L}_{DICE}(\hat{M}, M)
+   $$
+
+3. **Text generation loss** (\(\mathcal{L}_{txt}\)) – used in the fine-tuning phase with ground truth descriptions from 3,000 images:
+
+   $$
+   \mathcal{L}_{txt} = \mathcal{L}_{CE}(\hat{y}_{des}, y_{des})
+   $$
+
+
+The overall training loss during initial training:
+
+$$
+\mathcal{L} = \lambda_{det} \mathcal{L}_{det} + \lambda_{mask} \mathcal{L}_{mask}
+$$
+
+
+In the fine-tuning stage, the full loss function includes text generation:
+
+$$
+\mathcal{L}_{total} = \lambda_{det} \mathcal{L}_{det} + \lambda_{mask} \mathcal{L}_{mask} + \lambda_{txt} \mathcal{L}_{txt}
+$$
+
+
+Here, \(\lambda_{det}\), \(\lambda_{mask}\), and \(\lambda_{txt}\) are weighting factors used to balance the contributions of each loss term.
+
+### Results
+![alt text](../../images/image-150.png)
 ## Q&A
 
 1. Does stable/flux VAE decoder has its own features to distinguish from real images?
