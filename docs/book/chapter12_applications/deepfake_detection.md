@@ -57,7 +57,20 @@
 
 1. lack control of the content and quality of training data: real and fake images should be consistent in content and quality
 2. Lack adversary attack
-3.
+3. Prior work only focused only on limited content types, e.g., faces, animals, bedrooms, and buildings
+
+#### findings
+FM: full fintune model
+user-cutomized models: use full fituning or the Lora finetuning to train new models
+
+1. All models have performance degradation on user-cutomized models
+2. Soly relay on foundation model's feature is not enough to have generalization on deepfake detection
+3. Frequency domain show the best generalization performance
+4. CNN-based model has the worst generalization performance
+5. Content-agnostic features can help boost generalization performance for deepfake detection.
+6. Combining domain-specific features (i.e., features known to identify imperfections in fake images) with features from a foundation model
+    improves generalization. Cimbine the DCT features with the foundation model feature achieves the best performance
+7. adversary attack: attacker has a realistic photo, and manipulate the photo by the text prompt like 'a smilling face'
 
 ## Deepfake Image Detection
 
@@ -126,6 +139,7 @@ The SIDA model training involves three main loss components:
    $$
    \mathcal{L}_{mask} = \lambda_{bce} \mathcal{L}_{BCE}(\hat{M}, M) + \lambda_{dice} \mathcal{L}_{DICE}(\hat{M}, M)
    $$
+
 
 3. **Text generation loss** (\(\mathcal{L}_{txt}\)) – used in the fine-tuning phase with ground truth descriptions from 3,000 images:
 
