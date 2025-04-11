@@ -2752,27 +2752,45 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#21-mastering-deepfake-detection-a-cutting-edge-approach-to-distinguish-gan-and-diffusion-model-images" class="md-nav__link">
+  <a href="#21-fsbi" class="md-nav__link">
     <span class="md-ellipsis">
-      2.1 Mastering Deepfake Detection: A Cutting-edge Approach to Distinguish GAN and Diffusion-model Images
+      2.1 FSBI
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#22-leveraging-frequency-analysis-for-deep-fake-image-recognition" class="md-nav__link">
+  <a href="#22-de-fake" class="md-nav__link">
     <span class="md-ellipsis">
-      2.2 Leveraging Frequency Analysis for Deep Fake Image Recognition
+      2.2 DE-FAKE
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#23-contribution" class="md-nav__link">
+  <a href="#23-mastering-deepfake-detection-a-cutting-edge-approach-to-distinguish-gan-and-diffusion-model-images" class="md-nav__link">
     <span class="md-ellipsis">
-      2.3 contribution
+      2.3 Mastering Deepfake Detection: A Cutting-edge Approach to Distinguish GAN and Diffusion-model Images
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-leveraging-frequency-analysis-for-deep-fake-image-recognition" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.4 Leveraging Frequency Analysis for Deep Fake Image Recognition
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-contribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.5 contribution
     </span>
   </a>
   
@@ -2786,11 +2804,11 @@
         <li class="md-nav__item">
   <a href="#3-partial-deepfake-image-detection" class="md-nav__link">
     <span class="md-ellipsis">
-      3. partial Deepfake Image Detection
+      3. Partial Deepfake Image Detection
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="3. partial Deepfake Image Detection">
+    <nav class="md-nav" aria-label="3. Partial Deepfake Image Detection">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -3028,11 +3046,206 @@
 <h4 id="114-current-limitations">1.1.4 current limitations<a class="headerlink" href="#114-current-limitations" title="Permanent link">&para;</a></h4>
 <ol>
 <li>lack control of the content and quality of training data: real and fake images should be consistent in content and quality</li>
-<li>Lack adversary attack
-3.</li>
+<li>Lack adversary attack</li>
+<li>Prior work only focused only on limited content types, e.g., faces, animals, bedrooms, and buildings</li>
+</ol>
+<h4 id="115-findings">1.1.5 findings<a class="headerlink" href="#115-findings" title="Permanent link">&para;</a></h4>
+<p><abbr title="Flow Matching which is the method to regress the velocity field in the probability path">FM</abbr>: full fintune model
+user-cutomized models: use full fituning or the Lora finetuning to train new models</p>
+<ol>
+<li>All models have performance degradation on user-cutomized models</li>
+<li>Soly relay on foundation model's feature is not enough to have generalization on deepfake detection</li>
+<li>Frequency domain show the best generalization performance</li>
+<li>CNN-based model has the worst generalization performance</li>
+<li>Content-agnostic features can help boost generalization performance for deepfake detection.</li>
+<li>Combining domain-specific features (i.e., features known to identify imperfections in fake images) with features from a foundation model
+    improves generalization. Cimbine the DCT features with the foundation model feature achieves the best performance</li>
+<li>
+<p>adversary attack: attacker has a realistic photo, and manipulate the photo by the text prompt like 'a smilling face'.</p>
+<ul>
+<li>How to do adversary attack:<ol>
+<li>First, train three surrogate deepfake classifiers using dataset with fake images from current generator and real images from public datasets</li>
+<li>Second, adversary train the generator again the surroage deepfake classifiers for each deceptive image which can be detected by current deepfake detection model (the testing model, not the surrogate model) with looss:<ul>
+<li>classification loss</li>
+<li>perception loss from vgg pretrained network in imagenet
+For each image, it takes 39 seconds to generate an adversarial image using dgx A100</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+<p><a class="glightbox" href="../../../images/image-151.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="alt text" src="../../../images/image-151.png" /></a>
+For each surrogate model, the adversary attack will leads to the performance drop (<span class="arithmatex">\(\Delta R\)</span>)
+8. Defense based on the frequency features is the weakest against adversary attack
+9. Defense using foundation model is the strongest against adversary attack
+10. Defense with stronger foundation model is more robust against adversary attack
+11. Adversary training can improve the robustness of adversary attack</p>
+<p><a class="glightbox" href="../../../images/image-152.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="alt text" src="../../../images/image-152.png" /></a></p>
+</li>
 </ol>
 <h2 id="2-deepfake-image-detection">2. Deepfake Image Detection<a class="headerlink" href="#2-deepfake-image-detection" title="Permanent link">&para;</a></h2>
-<h3 id="21-mastering-deepfake-detection-a-cutting-edge-approach-to-distinguish-gan-and-diffusion-model-images">2.1 Mastering Deepfake Detection: A Cutting-edge Approach to Distinguish GAN and Diffusion-model Images<a class="headerlink" href="#21-mastering-deepfake-detection-a-cutting-edge-approach-to-distinguish-gan-and-diffusion-model-images" title="Permanent link">&para;</a></h3>
+<h3 id="21-fsbi">2.1 FSBI<a class="headerlink" href="#21-fsbi" title="Permanent link">&para;</a></h3>
+<p><a class="glightbox" href="../../../images/image-153.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="alt text" src="../../../images/image-153.png" /></a></p>
+<ul>
+<li>year: 2024 Jun</li>
+<li>author: Ahmed Abul Hasnanaath</li>
+<li>instituiton: Information and Computer Science Department, King Fahd University of Petroleum and Minerals</li>
+<li>code: at <a href="https://github.com/gufranSabri/FSBI">https://github.com/gufranSabri/FSBI</a></li>
+<li>main contribution<ol>
+<li>data synthetic methods: SBI methods generate more various fake images for training</li>
+<li>use discrete wavelet transform to extract features from images</li>
+</ol>
+</li>
+</ul>
+<h4 id="211-sbi-self-blended-image">2.1.1 SBI (self blended image)<a class="headerlink" href="#211-sbi-self-blended-image" title="Permanent link">&para;</a></h4>
+<p>Give an iamge, it first do augmentations including</p>
+<ul>
+<li>RGB and HSV jitters</li>
+<li>contrast and brightness jitters</li>
+<li>downsampling</li>
+<li>translation
+For single image, it do two different random augmentations and produces <span class="arithmatex">\(I_t\)</span> and <span class="arithmatex">\(I_s\)</span>.</li>
+</ul>
+<p>Secondly, it detect the landmark on <span class="arithmatex">\(I_s\)</span> using some landmark detection model and produce the face mask with the convex hull of the detected landmarks. After applying the gaussian and dilation on the face mask, it will produce <span class="arithmatex">\(M\)</span>.
+Lastly, it combine the <span class="arithmatex">\(I_s\)</span> and <span class="arithmatex">\(I_t\)</span> with the mask according to the formula</p>
+<div class="arithmatex">\[I_{SBI} = I_s \cdot M + I_t \cdot (1 - M)\]</div>
+<p>Here <span class="arithmatex">\(M\)</span> is the gray tensor in range [0, 1]. The edge of the mask could be smoothed by gaussian and dilation to produce continuous self blending image.</p>
+<h4 id="212-frequency-feature-generator">2.1.2 Frequency Feature Generator<a class="headerlink" href="#212-frequency-feature-generator" title="Permanent link">&para;</a></h4>
+<p>It first split the image into R,G,B channel seperately
+Secondly, it calculate the wavelet coefficients of each channel
+Last, it resize the coefficients to the same size and stack them together</p>
+<h3 id="22-de-fake">2.2 DE-FAKE<a class="headerlink" href="#22-de-fake" title="Permanent link">&para;</a></h3>
+<ul>
+<li>zeyang sha</li>
+<li>salesforce research</li>
+<li>2023 Jan</li>
+<li>main contribution<ol>
+<li>proposed three questions<ol>
+<li>whether the fake image be distinguished</li>
+<li>can we attribute the fake images to their sources (which model generated the image)</li>
+<li>what kind of prompt is more likely to generate authentic images</li>
+</ol>
+</li>
+</ol>
+</li>
+</ul>
+<h4 id="221-detection-method">2.2.1 Detection method<a class="headerlink" href="#221-detection-method" title="Permanent link">&para;</a></h4>
+<p>Train a binary classifier on the images generated by one text2image model and then evaludate on the images generated by other models. Two types of detector</p>
+<ol>
+<li>Image only detector: accepts only image as input</li>
+<li>Hybrid detector: accepts both image and its prompt as input</li>
+</ol>
+<h5 id="2211-image-only-detector">2.2.1.1 Image only detector<a class="headerlink" href="#2211-image-only-detector" title="Permanent link">&para;</a></h5>
+<ol>
+<li>dataset<ul>
+<li>random sample 20k images from MSCOCO, treat as real images</li>
+<li>use stable diffusion model to generate another 20k images, treat as fake images with the prompt</li>
+</ul>
+</li>
+<li>network<ul>
+<li>resnet18</li>
+<li>binary output</li>
+</ul>
+</li>
+</ol>
+<h5 id="2212-hybrid-detector">2.2.1.2 Hybrid detector<a class="headerlink" href="#2212-hybrid-detector" title="Permanent link">&para;</a></h5>
+<ol>
+<li>dataset
+    Same construction as image only detector</li>
+<li>network<ul>
+<li>pretrained clip model to extract both image and text embedding and concat them together, followed by 2-layer MLP</li>
+</ul>
+</li>
+<li>captions<ul>
+<li>Use the captions of the image if it is provided by the dataset</li>
+<li>Otherwise, use BLIP model to generate captions for queried images</li>
+</ul>
+</li>
+</ol>
+<p>Questions:</p>
+<ul>
+<li>Cause image only detector use resnet18, why not use more powerful model? or use same model as hybrid detector to compare their performance fairly</li>
+</ul>
+<p>Results
+<a class="glightbox" href="../../../images/image-154.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="alt text" src="../../../images/image-154.png" /></a>
+Hybird detector can obtain much better performance than image only detector</p>
+<h4 id="222-fake-image-attribute-generator-source-identification">2.2.2 Fake Image Attribute (Generator source identification)<a class="headerlink" href="#222-fake-image-attribute-generator-source-identification" title="Permanent link">&para;</a></h4>
+<p>The goal is to predict which generator is used to generate the image
+To train such model, we first generate the iamges from different text2image models (3 models, SD, LD, and GLIDE)
+Network construction is similar to the previous section but now their are four classes</p>
+<ul>
+<li>0: real</li>
+<li>1: SD</li>
+<li>2: LD</li>
+<li>3: GLIDE</li>
+</ul>
+<p>Results</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>MSCOCO</th>
+<th>Flickr30k</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Image-Only</td>
+<td>0.864</td>
+<td>0.863</td>
+</tr>
+<tr>
+<td>Hybrid (natural prompts)</td>
+<td>0.936</td>
+<td>0.933</td>
+</tr>
+<tr>
+<td>Hybrid (generated prompts)</td>
+<td>0.903</td>
+<td>0.892</td>
+</tr>
+</tbody>
+</table>
+<h4 id="223-prompt-analysis">2.2.3 Prompt analysis<a class="headerlink" href="#223-prompt-analysis" title="Permanent link">&para;</a></h4>
+<p>Analysis which kind of prompt would has more likely to pass the deepfake detection</p>
+<h5 id="2231-semantic-analysis">2.2.3.1 Semantic Analysis<a class="headerlink" href="#2231-semantic-analysis" title="Permanent link">&para;</a></h5>
+<ul>
+<li><strong>Topic-based Grouping</strong>:</li>
+<li>Used MSCOCO's 80 predefined topics to group prompts</li>
+<li>Measured proportion of fake images misclassified as real by topic</li>
+<li>
+<p>Results: "skis," "snowboard," and animal-related topics produced most realistic fakes</p>
+</li>
+<li>
+<p><strong>Embedding Cluster Analysis</strong>:</p>
+</li>
+<li>Used BERT-based sentence transformer for prompt embeddings</li>
+<li>Applied DBSCAN clustering for semantic grouping</li>
+<li>Finding: "person"-related prompts generated most realistic fakes</li>
+<li>
+<p>"Skis" and "snowboard" topics effective because they often included people</p>
+</li>
+<li>
+<p><strong>Typical Prompts Analysis</strong>:</p>
+</li>
+<li>Extracted top 5 most realistic and most fake-looking prompts</li>
+<li>Finding: Detailed object descriptions (4/5 top realistic prompts) outperformed environment descriptions (4/5 top fake-looking prompts)</li>
+</ul>
+<h5 id="2232-structural-analysis">2.2.3.2 Structural Analysis<a class="headerlink" href="#2232-structural-analysis" title="Permanent link">&para;</a></h5>
+<ul>
+<li><strong>Prompt Length</strong>:</li>
+<li>Tested 5,000 random MSCOCO prompts with Stable Diffusion</li>
+<li>Finding: 25-75 word prompts generated most realistic images</li>
+<li>
+<p>Very short or long prompts performed worse</p>
+</li>
+<li>
+<p><strong>Noun Proportion</strong>:</p>
+</li>
+<li>Used NLTK to analyze noun ratio in prompts</li>
+<li>Finding: No significant correlation between noun proportion and image realism</li>
+</ul>
+<h3 id="23-mastering-deepfake-detection-a-cutting-edge-approach-to-distinguish-gan-and-diffusion-model-images">2.3 Mastering Deepfake Detection: A Cutting-edge Approach to Distinguish GAN and Diffusion-model Images<a class="headerlink" href="#23-mastering-deepfake-detection-a-cutting-edge-approach-to-distinguish-gan-and-diffusion-model-images" title="Permanent link">&para;</a></h3>
 <p><a class="glightbox" href="../../../images/image-143.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="alt text" src="../../../images/image-143.png" /></a></p>
 <ul>
 <li><a href="https://dl.acm.org/doi/pdf/10.1145/3652027">https://dl.acm.org/doi/pdf/10.1145/3652027</a></li>
@@ -3059,7 +3272,7 @@
 <a class="glightbox" href="../../../images/image-144.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="alt text" src="../../../images/image-144.png" /></a></li>
 <li>in the spetral space, “real” class has the  isotropic behavior</li>
 </ul>
-<h3 id="22-leveraging-frequency-analysis-for-deep-fake-image-recognition">2.2 Leveraging Frequency Analysis for Deep Fake Image Recognition<a class="headerlink" href="#22-leveraging-frequency-analysis-for-deep-fake-image-recognition" title="Permanent link">&para;</a></h3>
+<h3 id="24-leveraging-frequency-analysis-for-deep-fake-image-recognition">2.4 Leveraging Frequency Analysis for Deep Fake Image Recognition<a class="headerlink" href="#24-leveraging-frequency-analysis-for-deep-fake-image-recognition" title="Permanent link">&para;</a></h3>
 <p><a class="glightbox" href="../../../images/image-146.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="alt text" src="../../../images/image-146.png" /></a></p>
 <ul>
 <li><a href="https://proceedings.mlr.press/v119/frank20a/frank20a.pdf">https://proceedings.mlr.press/v119/frank20a/frank20a.pdf</a>&gt;</li>
@@ -3067,13 +3280,13 @@
 <li>Horst G¨ortz Institute for ITSecurity, Bochum, Germany</li>
 <li>2020</li>
 </ul>
-<h3 id="23-contribution">2.3 contribution<a class="headerlink" href="#23-contribution" title="Permanent link">&para;</a></h3>
+<h3 id="25-contribution">2.5 contribution<a class="headerlink" href="#25-contribution" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Upsampling will leads to spectral differences
     <a class="glightbox" href="../../../images/image-147.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="alt text" src="../../../images/image-147.png" /></a></li>
 <li>both upsampling and downsampling operations have recently been linked to compromising shift invariance in neural networks, i.e., they cause classifier predictions to vary dramatically due to a simple one-pixel shift in the input image (Azulay &amp; Weiss, 2018). Recently, Zhang (2019)</li>
 </ul>
-<h2 id="3-partial-deepfake-image-detection">3. partial Deepfake Image Detection<a class="headerlink" href="#3-partial-deepfake-image-detection" title="Permanent link">&para;</a></h2>
+<h2 id="3-partial-deepfake-image-detection">3. Partial Deepfake Image Detection<a class="headerlink" href="#3-partial-deepfake-image-detection" title="Permanent link">&para;</a></h2>
 <h3 id="31-sida-social-media-image-deepfake-detection-localization-and-explanation-with-large-multimodal-model">3.1 SIDA: Social Media Image Deepfake Detection, Localization and Explanation with Large Multimodal Model<a class="headerlink" href="#31-sida-social-media-image-deepfake-detection-localization-and-explanation-with-large-multimodal-model" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Zhenglin Huang1</li>
