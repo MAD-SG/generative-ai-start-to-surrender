@@ -248,8 +248,6 @@ Analysis which kind of prompt would has more likely to pass the deepfake detecti
 - Horst G¨ortz Institute for ITSecurity, Bochum, Germany
 - 2020
 
-### contribution
-
 - Upsampling will leads to spectral differences
     ![alt text](../../images/image-147.png)
 - both upsampling and downsampling operations have recently been linked to compromising shift invariance in neural networks, i.e., they cause classifier predictions to vary dramatically due to a simple one-pixel shift in the input image (Azulay & Weiss, 2018). Recently, Zhang (2019)
@@ -261,14 +259,14 @@ Analysis which kind of prompt would has more likely to pass the deepfake detecti
 - <https://arxiv.org/pdf/2412.04292>
 - University of Liverpool, UK
 
-### contribution
+#### contribution
 
 1. Social media Image Detection data Set (SID-Set)
 ![alt text](../../images/image-148.png)
 2. SIDA
 ![alt text](../../images/image-149.png)
 
-### Training Objectives Summary
+#### Training Objectives Summary
 
 The SIDA model training involves three main loss components:
 
@@ -303,8 +301,25 @@ $$
 
 Here, \(\lambda_{det}\), \(\lambda_{mask}\), and \(\lambda_{txt}\) are weighting factors used to balance the contributions of each loss term.
 
-### Results
+#### Results
 ![alt text](../../images/image-150.png)
+
+### Detect Any Deepfakes: Segment Anything Meets Face Forgery Detection and Localization
+![alt text](../../images/image-156.png)
+
+- institution: xiamen university
+- Yingxin Lai
+- 2023 June
+- proposed DADF (Detect Any Deepfakes)
+- code: <https://github.com/laiyingxin2/DADF>
+
+#### contribution
+    - finetune on segment anything for face forgery detection and localization
+    - reconstruction guided attention module is proposed
+
+#### Question
+How much does the performance of the model improve after finetuning compared with train from scratch?
+
 ## Q&A
 
 1. Does stable/flux VAE decoder has its own features to distinguish from real images?
