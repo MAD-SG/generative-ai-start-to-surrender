@@ -314,12 +314,57 @@ Here, \(\lambda_{det}\), \(\lambda_{mask}\), and \(\lambda_{txt}\) are weighting
 - code: <https://github.com/laiyingxin2/DADF>
 
 #### contribution
-    - finetune on segment anything for face forgery detection and localization
-    - reconstruction guided attention module is proposed
+- finetune on segment anything for face forgery detection and localization
+- reconstruction guided attention module is proposed
+    1. Add gaussian noise to the original images
+    2. Use differences of features from original images and the noised image to hiligh the differences as the attention.
+        If it is high, means the part different from the forgery
+    3. In this way, suppose the final feature only care about the real feature
+    4. use L1 norm to calculate the difference between features from real images and the gaussian images (simulation of forgey)
+    ![alt text](../../images/image-157.png)
+    Results
+    ![alt text](../../images/image-158.png)
+
+### diffusion inpainting localization
+- url: [text](https://openaccess.thecvf.com/content/WACV2024/papers/Tantaru_Weakly-Supervised_Deepfake_Localization_in_Diffusion-Generated_Images_WACV_2024_paper.pdf)
+- code: [text](https://github.com/bit-ml/dolos)
+- 2024
+- institution: Bitdefender
+- author: Dragos-Constaintin Tantaru
+- contribution
+
+以下是这段文字的结构化总结：
+
+
+| 项目                         | 内容                                                                                     |
+|----------------------------|------------------------------------------------------------------------------------------|
+| **研究背景**                 | Denoising Diffusion Models（扩散模型）生成能力强，引发图像真实性担忧。现有检测方法多基于GAN，仅输出“真/假”标签。 |
+| **核心问题**                 | 现有检测模型缺乏对**伪造区域的定位能力**，仅做二分类，信息不足。                                     |
+| **研究目标**                 | 将任务转化为**弱监督定位问题**，输出图像中被篡改的区域图（localization map）。                       |
+| **方法分类**                 | 三类方法：基于解释（explanations）、局部得分（local scores）、注意力机制（attention）。            |
+| **统一比较方法**             | 所有方法使用相同的**Xception网络**架构，确保公平对比。                                          |
+| **实验设计**                 | 构建多个控制变量的数据集，**单一改变生成器、监督方式或数据源**，以分析其对性能的影响。               |
+| **主要发现**                 | 局部得分法性能最佳，对弱监督敏感性低，但对生成器/数据集变化更敏感。                                |
+| **研究贡献**                 | 提供对弱监督伪造区域检测设计空间的系统分析，验证了该方法的可行性。                                 |
+
+Different Sturcture of the detection and localization of deepfakes
+![alt text](../../images/image-159.png)
 
 #### Question
 How much does the performance of the model improve after finetuning compared with train from scratch?
 
+
+Works that tackle localization rely on local noise fingerprint
+patterns [21, 33, 40, 64], attention mechanisms [12, 13, 42]
+or self-consistency checks [2, 27]. Very recent, concurrent
+works proposed a forensic framework for general manipula-
+tion localization [21] and a hierarchical fine-grained formu-
+lation for image forgery detection [22].
+
 ## Q&A
 
 1. Does stable/flux VAE decoder has its own features to distinguish from real images?
+
+
+
+
