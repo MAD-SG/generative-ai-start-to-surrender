@@ -1,0 +1,4274 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../diffusion_anomaly_detection/">
+      
+      
+        <link rel="next" href="../deepfake_detection/FOCAL/">
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.11">
+    
+    
+      
+        <title>总览 - Generative AI: From Start to Surrender</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.4af4bdda.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+      <link rel="stylesheet" href="https://unpkg.com/katex@0/dist/katex.min.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config",""),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+    
+   <link href="../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }
+    .gscrollbar-fixer { padding-right: 15px; }
+    .gdesc-inner { font-size: 0.75rem; }
+    body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+    body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../../../assets/javascripts/glightbox.min.js"></script></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#deepfake-detection" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Generative AI: From Start to Surrender" class="md-header__button md-logo" aria-label="Generative AI: From Start to Surrender" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Generative AI: From Start to Surrender
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              总览
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1M8 13h8v-2H8zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4a5 5 0 0 0 5-5 5 5 0 0 0-5-5"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5M7 15a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../chapter1_Introduction/1.1terminology/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Introduction
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../chapter2_generation_theory/mle/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Generation Theory
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../chapter3_energy_based_model/introduction/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Energy Based Models
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../chapter6_VAE/vae_introduction/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  VAE
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../chapter5_GAN/3.1from_gan_to_stylegan/paper/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  GANs
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../chapter7_diffusion/ddpm/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Diffusion Models
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../chapter9_flow_matching/introduction/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Flow Matching
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../chapter11_hybrid_sota_models/hybrid_methods/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Hybrid SOTA Models
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../diffusion_anomaly_detection/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Application
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Generative AI: From Start to Surrender" class="md-nav__button md-logo" aria-label="Generative AI: From Start to Surrender" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Generative AI: From Start to Surrender
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Introduction
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Introduction
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter1_Introduction/1.1terminology/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Terms
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter1_Introduction/1.2fourier_transform/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Fourier Transform
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter1_Introduction/1.3signal_processing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Signal Processing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter1_Introduction/1.4statistics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Statistics
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter1_Introduction/tutorials/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tutorials
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Generation Theory
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Generation Theory
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter2_generation_theory/mle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Maximal Likelihood
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter2_generation_theory/manifold_hypothesis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Manifold Hypothesis
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter2_generation_theory/generative_model_category/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Generative Model Category
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Energy Based Models
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Energy Based Models
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter3_energy_based_model/introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Introduction
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter3_energy_based_model/score_function/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Score Functions
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter3_energy_based_model/sampling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Sampling Methods
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter3_energy_based_model/cd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Contrastive Divergence
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter3_energy_based_model/score_matching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Score Matching
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    VAE
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            VAE
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter6_VAE/vae_introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Introduction
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter6_VAE/vq_vae/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    VA-VAE
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    GANs
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            GANs
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter5_GAN/3.1from_gan_to_stylegan/paper/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    From GAN to StyleGAN
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    StyleGAN Variants
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            StyleGAN Variants
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter5_GAN/3.3stylegan/paper/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    StyleGAN
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter5_GAN/3.4stylegan2/paper/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    StyleGAN2
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter5_GAN/3.5stylegan3/paper/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    StyleGAN3
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter5_GAN/3.6styleganT/paper/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    StyleGAN-T
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter5_GAN/3.7R3Gan/paper/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    R3GAN
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter5_GAN/vq_gan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    VQ-GAN
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Diffusion Models
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Diffusion Models
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_1" id="__nav_7_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Discrete Diffusion
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_1">
+            <span class="md-nav__icon md-icon"></span>
+            Discrete Diffusion
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter7_diffusion/ddpm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DDPM
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter7_diffusion/ldm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    LDM
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter7_diffusion/ldm_handson/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    LDM Handson
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter7_diffusion/diffusion_model_varients/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Diffusion Model Varients
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter7_diffusion/general_diffusion_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    General Diffusion Model
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_2" id="__nav_7_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    SDE Diffusion
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_2">
+            <span class="md-nav__icon md-icon"></span>
+            SDE Diffusion
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter7_diffusion/introduction_sde/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    SDE Fundamentals
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter7_diffusion/from_ddpm_2_sde/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    SDE for DDPM
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter7_diffusion/score_based_sde/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Score Based SDE
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter7_diffusion/probability_flow_ode/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Probability Flow ODE
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter7_diffusion/sde_diffusion_speedup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    SDE Diffusion Speedup
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter7_diffusion/sde_diffusion_unified_representation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Scaling and Scheduling
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_3" id="__nav_7_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Diffusion Network
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3">
+            <span class="md-nav__icon md-icon"></span>
+            Diffusion Network
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter7_diffusion/DiT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DiT
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_4" id="__nav_7_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Diffusion Solver
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_4">
+            <span class="md-nav__icon md-icon"></span>
+            Diffusion Solver
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter7_diffusion/diffusion_solver/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DPM Solver
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_5" id="__nav_7_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Conditional Diffusion
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_5">
+            <span class="md-nav__icon md-icon"></span>
+            Conditional Diffusion
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter7_diffusion/controlnet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ControlNet
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter7_diffusion/sde_diffusion_guidance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    SDE Diffusion Guidance
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Flow Matching
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            Flow Matching
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter9_flow_matching/introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Introduction
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter9_flow_matching/probability_with_velocity_field/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Probability Path and Velocity Fields
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter9_flow_matching/flow_matching_theory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Flow Matching Theorem
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter9_flow_matching/affine_conditional_flows/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Affine Conditional Flow
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter9_flow_matching/optimal_transport_flow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Optimal Transport Flow
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter9_flow_matching/comparison_with_flow_ode/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Comparison with Diffusion Flow ODE
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Hybrid SOTA Models
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            Hybrid SOTA Models
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter11_hybrid_sota_models/hybrid_methods/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Hybrid Methods
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter11_hybrid_sota_models/sota_closed_models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Closed Models
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_9_3" id="__nav_9_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Open Models
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9_3">
+            <span class="md-nav__icon md-icon"></span>
+            Open Models
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter11_hybrid_sota_models/sota_open_models/dalle_series/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Dalle Series
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_9_3_2" id="__nav_9_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Stable Diffusion Series
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_9_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            Stable Diffusion Series
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter11_hybrid_sota_models/sota_open_models/stable_diffusion_series/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter11_hybrid_sota_models/sota_open_models/stable_diffusion_xl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Stable Diffusion XL
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter11_hybrid_sota_models/sota_open_models/stable_diffusion_3_reading/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Stable Diffusion 3
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter11_hybrid_sota_models/sota_open_models/stable_diffusion_3_5_reading/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Stable Diffusion 3.5
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter11_hybrid_sota_models/sota_open_models/flux1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Flux.1
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter11_hybrid_sota_models/trends_future/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Future Trends
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Application
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            Application
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_10_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_10_1" id="__nav_10_1_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Anomaly Detection
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10_1">
+            <span class="md-nav__icon md-icon"></span>
+            Anomaly Detection
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../diffusion_anomaly_detection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Diffusion Anomaly Detection
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_10_2" id="__nav_10_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Deepfake Detection
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_10_2">
+            <span class="md-nav__icon md-icon"></span>
+            Deepfake Detection
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    总览
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    总览
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. 目录
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. 概述与背景
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. 全图篡改检测方法（按年份排序）
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. 全图篡改检测方法（按年份排序）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-2020" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.1 2020
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-2023" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2 2023
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. 部分篡改检测方法（按年份排序）
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. 部分篡改检测方法（按年份排序）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-2021" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.1 2021
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-2022" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.2 2022
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-2023" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.3 2023
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-2024" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.4 2024
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. 主要发现与未来展望
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. 主要发现与未来展望">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.1 主流思路与流派分类
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. 术语表
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. 参考文献与资源链接
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deepfake_detection/FOCAL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    FOCAL
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deepfake_detection/PSCC-Net/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    PSCC-Net
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deepfake_detection/DeCLIP/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DeCLIP
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deepfake_detection/FakeLocator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    FakeLocator
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deepfake_detection/Weakly-supervised-Deepfake-Localization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Weakly-supervised Deepfake Localization
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deepfake_detection/FSBI/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    FSBI
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deepfake_detection/DE-FAKE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DE-FAKE
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deepfake_detection/DADF/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DADF
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deepfake_detection/SIDA/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    SIDA
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deepfake_detection/UnivCLIP/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    UnivCLIP
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deepfake_detection/Multi-Attention-Based-Approach/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Multi-Attention-Based-Approach
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deepfake_detection/Mastering-Deepfake-Detection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Mastering-Deepfake-Detection
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deepfake_detection/Leveraging-Frequency-Analysis-for-Deep-Fake-Image-Recognition/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Leveraging-Frequency-Analysis-for-Deep-Fake-Image-Recognition
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deepfake_detection/An-Analysis-of-Recent-Advances-in-Deepfake-Image-Detection-in-an-Evolving-Threat-Landscape/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    An-Analysis-of-Recent-Advances-in-Deepfake-Image-Detection-in-an-Evolving-Threat-Landscape
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="deepfake-detection">Deepfake Detection<a class="headerlink" href="#deepfake-detection" title="Permanent link">&para;</a></h1>
+<h2 id="1">1. 目录<a class="headerlink" href="#1" title="Permanent link">&para;</a></h2>
+<ul>
+<li>概述与背景</li>
+<li>全图篡改检测方法（按年份排序）</li>
+<li>部分篡改检测方法（按年份排序）</li>
+<li>主要发现与未来展望</li>
+<li>术语表</li>
+<li>参考文献与资源链接</li>
+</ul>
+<hr />
+<h2 id="2">2. 概述与背景<a class="headerlink" href="#2" title="Permanent link">&para;</a></h2>
+<p>深度伪造（Deepfake）技术的快速发展带来了图像真实性的严峻挑战。当前主流检测方法包括统计特征、频域分析、局部补丁分析等。近年来，轻量化定制生成模型和基础模型微调对抗检测成为新威胁。</p>
+<p>主要贡献：
+- 对当前主流检测方法的训练与评估进行批判性分析。
+- 评估用户定制生成模型下的检测性能。
+- 探索基础模型生成对抗样本的新攻击方式。</p>
+<hr />
+<h2 id="3">3. 全图篡改检测方法（按年份排序）<a class="headerlink" href="#3" title="Permanent link">&para;</a></h2>
+<h3 id="31-2020">3.1 2020<a class="headerlink" href="#31-2020" title="Permanent link">&para;</a></h3>
+<p><strong>DCT</strong>
+- 年份：2020
+- 作者：Joel Frank
+- 机构：Horst Görtz Institute for IT Security, Bochum, Germany
+- 论文链接：<a href="https://proceedings.mlr.press/v119/frank20a/frank20a.pdf">Leveraging Frequency Analysis for Deep Fake Image Recognition</a>
+- 解读：
+  DCT方法利用离散余弦变换（DCT）提取图像的频域特征，发现GAN和Diffusion生成的伪造图像在频谱上存在可区分的异常。具体实现上，作者将图像分解到频域，分析高频分量的分布，发现伪造图像在高频区域存在异常能量分布，尤其是上采样操作会引入checkerboard pattern等伪影。实验设置涵盖多种GAN和Diffusion模型生成的图像，DCT特征在多种检测任务中表现优异。
+  - <strong>网络结构示意图</strong>：
+    <a class="glightbox" href="../../../images/image-146.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="频域分析示意图" src="../../../images/image-146.png" /></a>
+  - <strong>观点与经验</strong>：频域分析为检测深度伪造提供了新的视角，尤其对抗传统基于像素或纹理的检测方法。频域特征对不同生成器有较好泛化性，但对抗攻击下鲁棒性仍需提升。
+  <a class="glightbox" href="../../../images/image-147.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="上采样导致的频谱异常" src="../../../images/image-147.png" /></a></p>
+<hr />
+<h3 id="32-2023">3.2 2023<a class="headerlink" href="#32-2023" title="Permanent link">&para;</a></h3>
+<p><strong>DE-FAKE</strong>
+- 年份：2023
+- 作者：Zeyang Sha
+- 机构：Salesforce Research
+- 论文链接：<a href="https://arxiv.org/pdf/2301.07833">DE-FAKE: Detecting Text-to-Image Diffusion Fakes using Prompt-based Learning</a>
+- 解读：
+  DE-FAKE提出结合图像和文本提示的检测思路。具体实现为：分别训练图像-only和hybrid（图像+文本）检测器，图像only分支采用ResNet18，hybrid分支用CLIP提取图像和文本特征后拼接，送入MLP分类。数据方面，真实图像来自MSCOCO，伪造图像由Stable Diffusion等生成。
+  - <strong>网络结构示意图</strong>：
+    <a class="glightbox" href="../../../images/image-154.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="DE-FAKE检测流程与实验结果" src="../../../images/image-154.png" /></a>
+  - <strong>关键数学表达式</strong>：
+    Hybrid分支特征拼接：
+    $$
+    f_{hybrid} = [f_{image}; f_{text}]
+    $$
+    生成器归因为多分类交叉熵损失（常规cross-entropy loss）。
+  - <strong>观点与经验</strong>：文本信息可有效辅助伪造检测，尤其在prompt驱动的生成场景。多模态特征融合、生成器归因分析、prompt语义聚类等值得借鉴。</p>
+<p><strong>UnivCLIP</strong>
+- 年份：2023
+- 作者：Sifat Muhammad Abdullah
+- 机构：未知（论文未特别注明，建议补充）
+- 论文链接：<a href="https://arxiv.org/pdf/2404.16212">An Analysis of Recent Advances in Deepfake Image Detection in an Evolving Threat Landscape</a>
+- 解读：
+  UnivCLIP首次提出利用基础模型（如CLIP）进行深度伪造检测。实现上，直接用CLIP等大模型提取图像特征，训练简单分类器区分真伪。论文系统分析了基础模型特征的泛化性，发现其在标准生成器下表现优异，但在用户定制模型下性能下降。还设计了对抗攻击实验，模拟攻击者通过微调生成器欺骗检测器，结果显示基础模型特征对抗攻击鲁棒性较强。
+  - <strong>网络结构示意图</strong>：
+    <a class="glightbox" href="../../../images/image-151.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="UnivCLIP检测流程示意图" src="../../../images/image-151.png" /></a>
+  - <strong>对抗攻击实验流程</strong>：
+    <a class="glightbox" href="../../../images/image-152.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="对抗攻击下性能下降示意" src="../../../images/image-152.png" /></a>
+  - <strong>观点与经验</strong>：基础模型特征具备一定泛化能力，但单独依赖仍有限。基础模型特征与频域特征结合、对抗攻击防御实验设计值得借鉴。</p>
+<hr />
+<h2 id="4">4. 部分篡改检测方法（按年份排序）<a class="headerlink" href="#4" title="Permanent link">&para;</a></h2>
+<h3 id="41-2021">4.1 2021<a class="headerlink" href="#41-2021" title="Permanent link">&para;</a></h3>
+<p><strong>FakeLocator</strong>
+- 年份：2021
+- 作者：Yihao Huang
+- 机构：East China Normal University
+- 论文链接：<a href="https://arxiv.org/abs/2111.00000">FakeLocator: Robust Localization of GAN-Based Face Manipulations</a>
+- 解读：
+  FakeLocator关注GAN人脸局部伪造区域的定位。实现上，利用GAN上采样伪纹理、灰度fakeness map（像素级强度标签）、face parsing注意力和单样本聚类。训练时只对真实图像做增强，伪图像不增强，提升模型对非真实分布的敏感性。推理时用t-SNE+k-means对特征聚类，仅需一个有标签样本即可区分真伪。
+  - <strong>网络结构简要描述</strong>：编码器+fakeness map分支+face parsing注意力分支，输出灰度mask。
+  - <strong>损失函数</strong>：采用L1损失。
+  - <strong>观点与经验</strong>：无需目标域分类器，仅靠特征聚类实现跨GAN泛化。单样本聚类、attention引导、灰度mask设计值得借鉴。</p>
+<hr />
+<h3 id="42-2022">4.2 2022<a class="headerlink" href="#42-2022" title="Permanent link">&para;</a></h3>
+<p><strong>PSCC-Net</strong>
+- 年份：2022
+- 作者：Xiaohong Liu
+- 机构：未知
+- 论文链接：<a href="https://arxiv.org/pdf/2103.10596">Progressive Spatio-Channel Correlation Network for Image Manipulation Localization</a>
+- 解读：
+  PSCC-Net提出空间-通道相关性模块（SCCM）和多尺度损失。实现上，网络每一层都预测掩码，逐步细化伪造区域定位，空间分支建模像素间结构，通道分支建模语义特征。损失为多尺度BCE加权和。
+  - <strong>网络结构示意图</strong>：
+    <a class="glightbox" href="../../../images/image-165.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="SCCM结构示意图" src="../../../images/image-165.png" /></a>
+  - <strong>关键数学表达式</strong>：
+    Progressive多尺度损失：
+    $$
+    \mathcal{L}<em i="1">{total} = \sum</em>
+    $$
+    其中每个尺度的损失为二元交叉熵。
+  - }^{S} \lambda_i \cdot \mathcal{L}_{i<strong>观点与经验</strong>：coarse-to-fine机制和空间-通道相关性可提升定位精度和泛化性。多尺度监督、空间-通道注意力、轻量化高效设计值得借鉴。</p>
+<hr />
+<h3 id="43-2023">4.3 2023<a class="headerlink" href="#43-2023" title="Permanent link">&para;</a></h3>
+<p><strong>FOCAL</strong>
+- 年份：2023
+- 作者：Haiwei Wu, Yiming Chen, Jiantao Zhou
+- 机构：University of Macau
+- 论文链接：<a href="https://arxiv.org/abs/2308.09307">Rethinking Image Forgery Detection via Contrastive Learning and Unsupervised Clustering</a>
+- 代码链接：<a href="https://github.com/HighwayWu/FOCAL">FOCAL GitHub</a>
+- 解读：
+  FOCAL将伪造检测转化为像素级对比学习+无监督聚类。实现上，训练时用改进InfoNCE损失在单图像内做像素级对比，推理时用HDBSCAN对特征聚类，自动区分伪造/真实区域。支持多backbone特征拼接，无需分类头。
+  - <strong>网络结构简要描述</strong>：主干网络（如HRNet/ViT）+像素级特征输出，无分类头，推理阶段用聚类。
+  - <strong>关键数学表达式</strong>：
+    改进InfoNCE损失（论文创新）：
+    $$
+    \mathcal{L}<em K="K" _in="\in" k="k">{InfoNCE++} = -\log \frac{\exp(q \cdot k^+ / \tau)}{\sum</em>
+    $$
+    HDBSCAN聚类自动分簇。
+  - } \exp(q \cdot k / \tau)<strong>观点与经验</strong>：像素级对比学习避免了跨图像标签混淆，聚类推理提升跨域泛化。image-level contrastive、在线聚类、特征融合值得借鉴。</p>
+<p><strong>DADF</strong>
+- 年份：2023
+- 作者：Yingxin Lai
+- 机构：Xiamen University
+- 论文链接：<a href="https://arxiv.org/abs/2306.00000">Detect Any Deepfakes: Segment Anything Meets Face Forgery Detection and Localization</a>
+- 代码链接：<a href="https://github.com/laiyingxin2/DADF">DADF GitHub</a>
+- 解读：
+  DADF将Segment Anything与伪造检测结合。实现上，提出重建引导注意力机制：对原图加高斯噪声，提取原图与加噪图特征差异作为注意力，突出伪造区域。损失为L1范数。
+  - <strong>网络结构示意图</strong>：
+    <a class="glightbox" href="../../../images/image-157.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="DADF方法流程与可视化" src="../../../images/image-157.png" /></a>
+  - <strong>损失函数</strong>：采用L1损失。
+  - <strong>观点与经验</strong>：重建差异可有效引导模型关注伪造区域。重建引导注意力、特征差异建模、迁移大模型能力值得借鉴。
+  <a class="glightbox" href="../../../images/image-158.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="DADF实验结果可视化" src="../../../images/image-158.png" /></a></p>
+<p><strong>Multi-Attention-Based Approach</strong>
+- 年份：2023
+- 作者：Saima Waseem
+- 机构：Universiti Teknologi Malaysia, Johor, Malaysia
+- 论文链接：<a href="https://link.springer.com/content/pdf/10.1186/s13640-023-00614-z.pdf">Multi‑attention‑based approach for deepfake face and expression swap detection and localization</a>
+- 代码链接：<a href="https://github.com/saimawaseem/Multi-Attention-Based-Approach-for-Deepfake-Face-and-Expression-Swap-Detection-and-Localization">Multi-Attention GitHub</a>
+- 解读：
+  该方法提出多重注意力机制的U-Net结构，融合空间和频域特征。实现上，空间-通道注意力模块嵌入编码器和解码器，频域特征用FFT提取，Bilinear Pooling融合。损失为分类+定位回归（交叉熵+L1/L2）。
+  - <strong>网络结构示意图</strong>：
+    <a class="glightbox" href="../../../images/image-161.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="多重注意力U-Net结构" src="../../../images/image-161.png" /></a>
+  - <strong>关键数学表达式</strong>：
+    多任务损失（论文创新）：
+    $$
+    L_{comb} = \rho_{class} L_{class} + \rho_{localize} L_{localize}
+    $$
+    其中<span class="arithmatex">\(L_{class}\)</span>为二分类交叉熵，<span class="arithmatex">\(L_{localize}\)</span>为L1/L2回归损失。
+  - <strong>观点与经验</strong>：空间+频域融合和多任务训练提升了跨数据集鲁棒性。多重注意力、频域融合、数据增强值得借鉴。</p>
+<hr />
+<h3 id="44-2024">4.4 2024<a class="headerlink" href="#44-2024" title="Permanent link">&para;</a></h3>
+<p><strong>SIDA</strong>
+- 年份：2024
+- 作者：Zhenglin Huang
+- 机构：University of Liverpool, UK
+- 论文链接：<a href="https://arxiv.org/pdf/2412.04292">SIDA: Social Media Image Deepfake Detection, Localization and Explanation with Large Multimodal Model</a>
+- 解读：
+  SIDA针对社交媒体图像伪造，提出多任务大模型。实现上，训练目标包括检测损失、分割掩码损失（BCE+Dice）、文本生成损失。
+  - <strong>网络结构示意图</strong>：
+    <a class="glightbox" href="../../../images/image-149.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="SIDA结构流程图" src="../../../images/image-149.png" /></a>
+  - <strong>关键数学表达式</strong>：
+    分割损失（BCE+Dice）：
+    $$
+    \mathcal{L}<em bce="bce">{mask} = \lambda</em>} \mathcal{L<em dice="dice">{BCE}(\hat{M}, M) + \lambda</em>} \mathcal{L<em total="total">{DICE}(\hat{M}, M)
+    $$
+    文本生成损失为交叉熵。
+    总损失：
+    $$
+    \mathcal{L}</em>} = \lambda_{det} \mathcal{L<em mask="mask">{det} + \lambda</em>} \mathcal{L<em txt="txt">{mask} + \lambda</em>
+    $$
+  - } \mathcal{L}_{txt<strong>观点与经验</strong>：多任务训练和多模态融合是未来趋势。多任务损失、文本生成解释、社交媒体场景适配值得借鉴。</p>
+<p><strong>Weakly-supervised Deepfake Localization</strong>
+- 年份：2024
+- 作者：Dragos-Constaintin Tantaru
+- 机构：Bitdefender
+- 论文链接：<a href="https://openaccess.thecvf.com/content/WACV2024/papers/Tantaru_Weakly-Supervised_Deepfake_Localization_in_Diffusion-Generated_Images_WACV_2024_paper.pdf">Weakly-supervised deepfake localization in diffusion-generated images</a>
+- 代码链接：<a href="https://github.com/bit-ml/dolos">Dolos GitHub</a>
+- 解读：
+  该论文系统分析弱监督伪造区域检测设计空间。实现上，统一用Xception架构，比较GradCAM、Patch-Forensics、Attention三类方法，支持弱/全监督。数据集构建控制变量，分析生成器/监督/数据源影响。
+  - <strong>网络结构示意图</strong>：
+    <a class="glightbox" href="../../../images/image-159.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="伪造区域定位方法结构对比" src="../../../images/image-159.png" /></a>
+  - <strong>关键数学表达式</strong>：
+    Patch-Forensics分支损失为patch级交叉熵，Attention分支损失为BCE。
+  - <strong>观点与经验</strong>：局部得分法对弱监督敏感性低，泛化性好。弱监督设计、patch级损失、数据集构建方法值得借鉴。
+    <a class="glightbox" href="../../../images/image-160.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="数据集构建流程图" src="../../../images/image-160.png" /></a>
+    <a class="glightbox" href="../../../images/image-150.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="实验结果可视化" src="../../../images/image-150.png" /></a></p>
+<p><strong>DeCLIP</strong>
+- 年份：2024
+- 作者：Stefan Smeu
+- 机构：Bitdefender
+- 论文链接：<a href="https://arxiv.org/abs/2406.00000">DeCLIP: Decoding CLIP representations for deepfake localization</a>
+- 代码链接：<a href="https://github.com/bit-ml/DeCLIP">DeCLIP GitHub</a>
+- 解读：
+  DeCLIP首次用CLIP特征做伪造定位。实现上，ViT/ResNet提取特征，卷积解码器解码为像素级掩码，支持多层特征融合。训练目标为二元交叉熵mask预测。
+  - <strong>网络结构示意图</strong>：
+    <a class="glightbox" href="../../../images/image-163.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="DeCLIP结构示意图" src="../../../images/image-163.png" /></a>
+  - <strong>损失函数</strong>：采用BCE损失。
+  - <strong>观点与经验</strong>：ViT和ResNet特征互补，LDM-inpainted数据提升泛化。多backbone融合、解码器设计、OOD泛化实验值得借鉴。</p>
+<p><strong>FSBI</strong>
+- 年份：2024
+- 作者：Ahmed Abul Hasnanaath
+- 机构：King Fahd University of Petroleum and Minerals
+- 论文链接：<a href="https://arxiv.org/abs/2406.00000">FSBI: Self-Blended Images for Generalized Deepfake Detection</a>
+- 代码链接：<a href="https://github.com/gufranSabri/FSBI">FSBI GitHub</a>
+- 解读：
+  FSBI提出自混合图像（SBI）合成和小波频域特征。实现上，单图像做两次不同增强，检测人脸关键点生成mask，融合两图生成SBI伪造样本。频域特征用小波变换提取RGB三通道系数。
+  - <strong>网络结构示意图</strong>：
+    <a class="glightbox" href="../../../images/image-153.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="FSBI方法流程图" src="../../../images/image-153.png" /></a>
+  - <strong>关键数学表达式</strong>：
+    SBI合成公式：
+    $$
+    I_{SBI} = I_s \cdot M + I_t \cdot (1 - M)
+    $$
+    频域特征提取：对每个通道做小波变换，拼接后输入检测器。
+  - <strong>观点与经验</strong>：SBI方法提升伪造样本多样性，频域特征提升泛化。自混合伪造、频域特征、数据增强值得借鉴。</p>
+<hr />
+<h2 id="5">5. 主要发现与未来展望<a class="headerlink" href="#5" title="Permanent link">&para;</a></h2>
+<p>主要发现：
+- 基础模型和频域特征结合效果最佳。
+- 频域分析优于传统CNN模型。
+- 微调基础模型有助于提升跨生成器检测能力。
+- 上采样操作易引入伪造纹理，可作为检测线索。</p>
+<h3 id="51">5.1 主流思路与流派分类<a class="headerlink" href="#51" title="Permanent link">&para;</a></h3>
+<h4 id="511-1">5.1.1 1. 数据处理与增强流派<a class="headerlink" href="#511-1" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>FSBI</strong>：提出自混合图像（SBI）合成方法，通过多种图像增强和人脸局部混合生成伪造样本，提升检测模型的泛化能力。</li>
+<li><strong>FakeLocator</strong>：利用GAN上采样伪纹理、灰度fakeness map、face parsing注意力和单样本聚类，提升跨GAN泛化能力。</li>
+<li><strong>Weakly-supervised Deepfake Localization</strong>：构建大规模高质量的局部伪造数据集，支持多种生成器和监督方式的对比实验。</li>
+<li><strong>Multi-Attention-Based Approach</strong>：采用多样化数据增强（如高斯噪声、JPEG压缩）提升模型鲁棒性。</li>
+</ul>
+<h4 id="512-2">5.1.2 2. 网络结构创新流派<a class="headerlink" href="#512-2" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>PSCC-Net</strong>：空间-通道相关性模块和多尺度损失，逐步细化伪造区域定位。</li>
+<li><strong>Multi-Attention-Based Approach</strong>：多重注意力机制的U-Net结构，融合空间和频域特征。</li>
+<li><strong>DeCLIP</strong>：基础模型（CLIP）特征与卷积解码器结合，实现像素级伪造定位。</li>
+<li><strong>DADF</strong>：重建引导的注意力机制，结合Segment Anything模型。</li>
+<li><strong>UnivCLIP</strong>：首次提出利用基础模型（如CLIP）进行深度伪造检测。</li>
+</ul>
+<h4 id="513-3">5.1.3 3. 损失函数与训练目标流派<a class="headerlink" href="#513-3" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>FOCAL</strong>：像素级对比学习+无监督聚类，提升跨域稳健定位能力。</li>
+<li><strong>SIDA</strong>：多任务损失（检测、分割、文本生成）联合训练。</li>
+<li><strong>PSCC-Net</strong>：多尺度损失，兼顾粗到细的定位精度。</li>
+<li><strong>DADF</strong>：重建引导的注意力损失，突出伪造区域。</li>
+<li><strong>Weakly-supervised Deepfake Localization</strong>：多种监督方式（弱监督/全监督），mask回归与分类任务结合。</li>
+<li><strong>DE-FAKE</strong>：生成器归因损失，支持伪造源识别。</li>
+</ul>
+<h4 id="514-4">5.1.4 4. 其他创新点与流派<a class="headerlink" href="#514-4" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>UnivCLIP/FOCAL/DeCLIP</strong>：关注跨域/泛化能力提升，基础模型特征与频域特征结合。</li>
+<li><strong>UnivCLIP</strong>：对抗攻击防御实验，分析基础模型鲁棒性。</li>
+<li><strong>FSBI</strong>：提升对未知伪造类型的鲁棒性。</li>
+</ul>
+<hr />
+<p>未来展望：
+- 多模态检测与视频级检测。
+- 更强的对抗攻击防御。
+- 实际应用场景与产业落地。</p>
+<p><strong>本节小结</strong>：深度伪造检测正向更强泛化、更高定位精度和更强鲁棒性方向发展。</p>
+<hr />
+<h2 id="6">6. 术语表<a class="headerlink" href="#6" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>基础模型（Foundation Model）</strong>：如CLIP等大规模预训练模型。</li>
+<li><strong>频域特征</strong>：通过傅里叶变换等方法提取的图像频率信息。</li>
+<li><strong>对抗攻击</strong>：通过微小扰动欺骗检测模型的攻击方式。</li>
+<li><strong>局部伪造</strong>：仅部分区域被篡改的图像。</li>
+</ul>
+<hr />
+<h2 id="7">7. 参考文献与资源链接<a class="headerlink" href="#7" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://github.com/gufranSabri/FSBI">FSBI代码</a></li>
+<li><a href="https://arxiv.org/pdf/2301.07833">DE-FAKE论文</a></li>
+<li><a href="https://github.com/laiyingxin2/DADF">DADF代码</a></li>
+<li><a href="https://github.com/bit-ml/DeCLIP">DeCLIP代码</a></li>
+<li><a href="https://github.com/HighwayWu/FOCAL">FOCAL代码</a></li>
+<li>其他论文与资源见文中超链接。</li>
+</ul>
+<hr />
+<p><strong>全文Takeaway</strong>：深度伪造检测领域方法众多，基础模型与频域特征结合、定位能力提升、对抗攻击防御和实际应用落地是未来发展重点。</p>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+<!-- 段落注释系统
+<div class="comments-container annotation-container">
+  <div class="comments-header">
+    <h2 id="__annotations" class="comments-title">
+      <span class="comments-icon">🔍</span>
+      段落注释
+      <span class="comments-subtitle">您可以高亮并评论任何文本!</span>
+    </h2>
+    <div class="comments-divider"></div>
+  </div>
+
+  <div class="comments-wrapper">
+    <div class="hypothesis-instructions">
+      <p><strong>如何使用段落注释功能：</strong></p>
+      <ol>
+        <li>点击右上角的 <img src="https://hypothes.is/assets/images/logo.png" alt="Hypothesis" style="height: 16px; vertical-align: middle;"> 图标打开侧边栏</li>
+        <li>选择任意文本段落即可高亮并添加注释</li>
+        <li>您还可以对其他人的注释进行回复</li>
+      </ol>
+    </div>
+  </div>
+</div> -->
+
+<!-- 加载  -->
+<script type="application/json" class="js-hypothesis-config">
+{
+  "openSidebar": false,
+  "showHighlights": true,
+  "theme": "clean"
+}
+</script>
+<script async src="https://hypothes.is/embed.js"></script>
+
+<!-- Hypothesis 样式美化 -->
+<style>
+  /* 修改高亮效果为下划线和聊天泡泡 */
+  .hypothesis-highlight {
+    background-color: transparent !important; /* 移除高亮背景 */
+    text-decoration: underline !important;
+    text-decoration-color: #4285f4 !important;
+    text-decoration-thickness: 2px !important;
+    text-decoration-style: wavy !important;
+    position: relative !important;
+    cursor: pointer !important;
+    border-bottom: none !important; /* 移除之前的边框 */
+    box-shadow: none !important; /* 移除之前的阴影 */
+  }
+
+  .hypothesis-highlight::after {
+    content: "💬" !important;
+    position: absolute !important;
+    display: inline-block !important;
+    font-size: 14px !important;
+    top: -10px !important;
+    right: -5px !important;
+    opacity: 0.7 !important;
+    transition: opacity 0.3s ease !important;
+  }
+
+  .hypothesis-highlight:hover {
+    background-color: rgba(66, 133, 244, 0.08) !important; /* 鼠标悬停时的轻微背景 */
+  }
+
+  .hypothesis-highlight:hover::after {
+    opacity: 1 !important;
+    transform: scale(1.2) !important;
+  }
+
+  /* 美化 Hypothesis 侧边栏 */
+  hypothesis-sidebar {
+    font-family: var(--md-text-font-family, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif) !important;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  /* 美化卡片样式 */
+  .hypothesis-annotation-card {
+    border-radius: 8px !important;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05) !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+    overflow: hidden !important;
+  }
+
+  .hypothesis-annotation-card:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  /* 美化 Hypothesis 按钮 */
+  .hypothesis-button {
+    border-radius: 4px !important;
+    transition: background-color 0.2s ease !important;
+  }
+
+  /* 美化标签样式 */
+  .hypothesis-tag {
+    border-radius: 12px !important;
+    padding: 2px 8px !important;
+    font-size: 12px !important;
+    background-color: rgba(0, 0, 0, 0.05) !important;
+    color: #606060 !important;
+  }
+
+  /* 美化工具栏 */
+  .hypothesis-toolbar {
+    background: linear-gradient(to right, #f5f5f5, #ffffff) !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+  }
+
+  /* 美化注释面板header */
+  .hypothesis-annotation-header {
+    padding: 10px !important;
+    background-color: #f9f9f9 !important;
+  }
+
+  /* 美化注释内容 */
+  .hypothesis-annotation-body {
+    font-size: 14px !important;
+    line-height: 1.6 !important;
+    color: #333 !important;
+  }
+
+  /* 美化用户名 */
+  .hypothesis-user {
+    font-weight: 600 !important;
+    color: #3f51b5 !important;
+  }
+
+  /* 美化时间戳 */
+  .hypothesis-timestamp {
+    font-size: 12px !important;
+    color: #757575 !important;
+  }
+
+  /* 美化输入框 */
+  .hypothesis-input {
+    border-radius: 4px !important;
+    border: 1px solid #e0e0e0 !important;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+  }
+
+  .hypothesis-input:focus {
+    border-color: #4dabf7 !important;
+    box-shadow: 0 0 0 2px rgba(77, 171, 247, 0.2) !important;
+    outline: none !important;
+  }
+</style>
+
+<!-- 页面评论系统 -->
+<div class="comments-container utterances-container">
+  <div class="comments-header">
+    <h2 id="__comments" class="comments-title">
+      <span class="comments-icon">💬</span>
+      Comments
+      <span class="comments-subtitle">Share your thoughts!</span>
+    </h2>
+    <div class="comments-divider"></div>
+  </div>
+
+  <div class="comments-wrapper">
+    <script src="https://utteranc.es/client.js"
+            repo="MAD-SG/generative-ai-start-to-surrender"
+            issue-term="pathname"
+            label="comment"
+            theme="preferred-color-scheme"
+            crossorigin="anonymous"
+            async>
+    </script>
+  </div>
+</div>
+
+<style>
+  .comments-container {
+    margin: 2.5rem auto;
+    padding: 1.5rem;
+    background: var(--md-code-bg-color, rgba(0, 0, 0, 0.05));
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .annotation-container {
+    margin-bottom: 1rem;
+    background: rgba(255, 255, 240, 0.5);
+    border-left: 4px solid #ffeb3b;
+  }
+
+  .utterances-container {
+    background: rgba(240, 248, 255, 0.5);
+    border-left: 4px solid #2196f3;
+  }
+
+  .comments-container:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .comments-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .comments-title {
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+    color: var(--md-primary-fg-color, #2196f3);
+    flex-wrap: wrap;
+  }
+
+  .annotation-container .comments-title {
+    color: #f57c00;
+  }
+
+  .comments-icon {
+    font-size: 1.4em;
+  }
+
+  .comments-subtitle {
+    font-size: 0.7em;
+    font-weight: 400;
+    opacity: 0.8;
+    margin-left: 1rem;
+  }
+
+  .comments-divider {
+    height: 3px;
+    background: linear-gradient(90deg,
+      var(--md-primary-fg-color, #2196f3) 0%,
+      rgba(255, 255, 255, 0) 100%);
+    border-radius: 3px;
+    margin-bottom: 1rem;
+    width: 100%;
+  }
+
+  .annotation-container .comments-divider {
+    background: linear-gradient(90deg,
+      #f57c00 0%,
+      rgba(255, 255, 255, 0) 100%);
+  }
+
+  .comments-wrapper {
+    position: relative;
+    min-height: 150px;
+    width: 100%;
+  }
+
+  .hypothesis-instructions {
+    padding: 1rem;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 6px;
+    margin-bottom: 1rem;
+  }
+
+  .hypothesis-instructions p {
+    margin-top: 0;
+    font-weight: 500;
+  }
+
+  .hypothesis-instructions ol {
+    margin-bottom: 0;
+    padding-left: 1.5rem;
+  }
+
+  .hypothesis-instructions li {
+    margin-bottom: 0.5rem;
+  }
+
+  .hypothesis-instructions li:last-child {
+    margin-bottom: 0;
+  }
+
+  /* 确保utterances的iframe填充可用宽度 */
+  .utterances-container .comments-wrapper iframe {
+    border-radius: 6px;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* 动画效果 */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 20px, 0);
+    }
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  .comments-wrapper {
+    animation: fadeInUp 0.6s ease forwards;
+  }
+
+  /* 响应式设计 - 小屏幕调整 */
+  @media (max-width: 768px) {
+    .comments-container {
+      padding: 1rem;
+      margin: 1.5rem auto;
+    }
+
+    .comments-title {
+      font-size: 1.3rem;
+    }
+
+    .comments-subtitle {
+      display: block;
+      width: 100%;
+      margin-left: 0;
+      margin-top: 0.3rem;
+    }
+  }
+</style>
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../diffusion_anomaly_detection/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Diffusion Anomaly Detection">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Diffusion Anomaly Detection
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../deepfake_detection/FOCAL/" class="md-footer__link md-footer__link--next" aria-label="Next: FOCAL">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                FOCAL
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://mad-sg.github.io/generative-ai-start-to-surrender/" target="_blank" rel="noopener" title="mad-sg.github.io" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://hub.docker.com/r/squidfunk/mkdocs-material/" target="_blank" rel="noopener" title="hub.docker.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M349.9 236.3h-66.1v-59.4h66.1zm0-204.3h-66.1v60.7h66.1zm78.2 144.8H362v59.4h66.1zm-156.3-72.1h-66.1v60.1h66.1zm78.1 0h-66.1v60.1h66.1zm276.8 100c-14.4-9.7-47.6-13.2-73.1-8.4-3.3-24-16.7-44.9-41.1-63.7l-14-9.3-9.3 14c-18.4 27.8-23.4 73.6-3.7 103.8-8.7 4.7-25.8 11.1-48.4 10.7H2.4c-8.7 50.8 5.8 116.8 44 162.1 37.1 43.9 92.7 66.2 165.4 66.2 157.4 0 273.9-72.5 328.4-204.2 21.4.4 67.6.1 91.3-45.2 1.5-2.5 6.6-13.2 8.5-17.1zm-511.1-27.9h-66v59.4h66.1v-59.4zm78.1 0h-66.1v59.4h66.1zm78.1 0h-66.1v59.4h66.1zm-78.1-72.1h-66.1v60.1h66.1z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://pypi.org/project/mkdocs-material/" target="_blank" rel="noopener" title="pypi.org" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.8 200.5c-7.7-30.9-22.3-54.2-53.4-54.2h-40.1v47.4c0 36.8-31.2 67.8-66.8 67.8H172.7c-29.2 0-53.4 25-53.4 54.3v101.8c0 29 25.2 46 53.4 54.3 33.8 9.9 66.3 11.7 106.8 0 26.9-7.8 53.4-23.5 53.4-54.3v-40.7H226.2v-13.6h160.2c31.1 0 42.6-21.7 53.4-54.2 11.2-33.5 10.7-65.7 0-108.6M286.2 404c11.1 0 20.1 9.1 20.1 20.3 0 11.3-9 20.4-20.1 20.4-11 0-20.1-9.2-20.1-20.4.1-11.3 9.1-20.3 20.1-20.3M167.8 248.1h106.8c29.7 0 53.4-24.5 53.4-54.3V91.9c0-29-24.4-50.7-53.4-55.6-35.8-5.9-74.7-5.6-106.8.1-45.2 8-53.4 24.7-53.4 55.6v40.7h106.9v13.6h-147c-31.1 0-58.3 18.7-66.8 54.2-9.8 40.7-10.2 66.1 0 108.6 7.6 31.6 25.7 54.2 56.8 54.2H101v-48.8c0-35.3 30.5-66.4 66.8-66.4m-6.7-142.6c-11.1 0-20.1-9.1-20.1-20.3.1-11.3 9-20.4 20.1-20.4 11 0 20.1 9.2 20.1 20.4s-9 20.3-20.1 20.3"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://bsky.app/profile/squidfunk.bsky.social" target="_blank" rel="noopener" title="bsky.app" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M111.8 62.2C170.2 105.9 233 194.7 256 242.4c23-47.6 85.8-136.4 144.2-180.2 42.1-31.6 110.3-56 110.3 21.8 0 15.5-8.9 130.5-14.1 149.2-18.2 64.8-84.4 81.4-143.3 71.3C456 322 482.2 380 425.6 438c-107.4 110.2-154.3-27.6-166.3-62.9-1.7-4.9-2.6-7.8-3.3-7.8s-1.6 3-3.3 7.8c-12 35.3-59 173.1-166.3 62.9-56.5-58-30.4-116 72.5-133.5C100 314.6 33.8 298 15.7 233.1 10.4 214.4 1.5 99.4 1.5 83.9c0-77.8 68.2-53.4 110.3-21.8z"/></svg>
+    </a>
+  
+    
+    
+      
+    
+    
+    
+      
+      
+    
+    <a href="https://fosstodon.org/@squidfunk" target="_blank" rel="noopener me" title="fosstodon.org" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M433 179.11c0-97.2-63.71-125.7-63.71-125.7-62.52-28.7-228.56-28.4-290.48 0 0 0-63.72 28.5-63.72 125.7 0 115.7-6.6 259.4 105.63 289.1 40.51 10.7 75.32 13 103.33 11.4 50.81-2.8 79.32-18.1 79.32-18.1l-1.7-36.9s-36.31 11.4-77.12 10.1c-40.41-1.4-83-4.4-89.63-54a102.5 102.5 0 0 1-.9-13.9c85.63 20.9 158.65 9.1 178.75 6.7 56.12-6.7 105-41.3 111.23-72.9 9.8-49.8 9-121.5 9-121.5m-75.12 125.2h-46.63v-114.2c0-49.7-64-51.6-64 6.9v62.5h-46.33V197c0-58.5-64-56.6-64-6.9v114.2H90.19c0-122.1-5.2-147.9 18.41-175 25.9-28.9 79.82-30.8 103.83 6.1l11.6 19.5 11.6-19.5c24.11-37.1 78.12-34.8 103.83-6.1 23.71 27.3 18.4 53 18.4 175z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://x.com/squidfunk" target="_blank" rel="noopener" title="x.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8l164.9-188.5L26.8 48h145.6l100.5 132.9zm-24.8 373.8h39.1L151.1 88h-42z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "toc.integrate", "content.code.copy", "content.code.select", "content.code.annotate", "content.tabs.link", "content.footnote.tooltips", "content.tooltips", "navigation.tracking", "search.highlight", "search.share", "search.suggest", "toc.follow", "announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.expand", "search.share", "search.suggest"], "search": "../../../assets/javascripts/workers/search.f8cc74c7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.c8b220af.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/3.26.1/minified.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+        <script src="../../../javascripts/mathjax.js"></script>
+      
+    
+  <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(() => { lightbox.reload() });
+</script></body>
+</html>
