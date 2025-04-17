@@ -75,7 +75,19 @@ nav:
       - Future Trends: book/chapter11_hybrid_sota_models/trends_future.md
   - Application:
       - Anomaly Detection:
-          - Diffuson Anomaly Detection: book/chapter12_applications/diffusion_anomaly_detection.md
+          - Diffusion Anomaly Detection: book/chapter12_applications/diffusion_anomaly_detection.md
+      - Deepfake Detection:
+          - 总览: book/chapter12_applications/deepfake_detection_structured.md
+          - FOCAL: book/chapter12_applications/deepfake_detection/FOCAL.md
+          - PSCC-Net: book/chapter12_applications/deepfake_detection/PSCC-Net.md
+          - DeCLIP: book/chapter12_applications/deepfake_detection/DeCLIP.md
+          - FakeLocator: book/chapter12_applications/deepfake_detection/FakeLocator.md
+          - Weakly-supervised Deepfake Localization: book/chapter12_applications/deepfake_detection/Weakly-supervised Deepfake Localization.md
+          - FSBI: book/chapter12_applications/deepfake_detection/FSBI.md
+          - DE-FAKE: book/chapter12_applications/deepfake_detection/DE-FAKE.md
+          - DADF: book/chapter12_applications/deepfake_detection/DADF.md
+          - SIDA: book/chapter12_applications/deepfake_detection/SIDA.md
+
 theme:
   name: material
   custom_dir: docs/overrides
@@ -145,7 +157,7 @@ extra:
   analytics:
     provider: google
     property: !ENV GOOGLE_ANALYTICS_KEY
-  generator: false  #删除页脚显示“使用 MkDocs 材料制造”
+  generator: false  #删除页脚显示"使用 MkDocs 材料制造"
   social:
     - icon: fontawesome/brands/github
       link: https://mad-sg.github.io/generative-ai-start-to-surrender/
