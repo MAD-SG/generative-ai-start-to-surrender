@@ -158,7 +158,7 @@ def get_schedule(
    \text{timesteps} = \left\{ \frac{e^\mu}{e^\mu + \left(\frac{1}{t} - 1\right)^\sigma} \mid t \in \text{timesteps} \right\}
    $$
 调整后时间步长的效果
-![alt text](../../../images/image-142.png)
+![alt text](../../../images/image-142_copy.png)
 ### 图片和prompt预处理
 
     ```py3
