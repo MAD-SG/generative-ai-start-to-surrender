@@ -1,114 +1,104 @@
 # Generative AI: From Start to Surrender
 
-A comprehensive guide to understanding and implementing generative AI technologies, from fundamental concepts to state-of-the-art models.
+## Explore the Documentation Online :book:
 
-## 📚 Documentation
-
-Access our comprehensive documentation online:
+Discover the full documentation for "Generative AI: From Start to Surrender" online. Dive into detailed guides and resources to enhance your understanding of generative AI technologies.
 
 [![Read Online](https://img.shields.io/badge/Read-Online-blue?style=for-the-badge)](https://mad-sg.github.io/generative-ai-start-to-surrender/)
 
-## 📖 Content Overview
+## Contributor :busts_in_silhouette:
 
-- **Introduction**
-  - Terminology
-  - Fourier Transform
-  - Signal Processing
-  - Statistics
-  - Tutorials
+We are grateful for the contributions from our community. Here are some of our key contributors:
 
-- **Generation Theory**
-  - Maximal Likelihood
-  - Manifold Hypothesis
-  - Generative Model Categories
+- [![GitHub](https://img.shields.io/badge/GitHub-Qian%20Lilong-lightgrey?logo=github&style=social)](https://github.com/tsiendragon)
 
-- **Energy Based Models**
-  - Score Functions
-  - Sampling Methods
-  - Contrastive Divergence
-  - Score Matching
+Your contributions help make this project better. Thank you for your support!
 
-- **VAE & GANs**
-  - VAE Introduction
-  - VQ-VAE
-  - From GAN to StyleGAN
-  - StyleGAN Series (StyleGAN, StyleGAN2, StyleGAN3)
+## Contribution
 
-- **Diffusion Models**
-  - Discrete Diffusion (DDPM, LDM)
-  - SDE Diffusion
-  - Advanced Topics
+### vscode 设置保存图片位置. vscode 可以支持直接复制图片，会把粘贴板上的图片复制到markdown 文件中，并且保存文件到指定目录中
 
-- **State-of-the-Art Models**
-  - DALL·E Series
-  - Stable Diffusion Series
-    - Stable Diffusion XL
-    - Stable Diffusion 3
-    - Stable Diffusion 3.5
-  - Flux.1
+在settings.json中添加
 
-- **Applications**
-  - Anomaly Detection
-  - Deepfake Detection
-
-## 🛠️ Development Setup
-
-### VSCode Configuration
-
-1. **Image Path Settings**
 ```json
 {
     "markdown.copyFiles.destination": {
         "**/*": "${documentWorkspaceFolder}/docs/images/"
-    }
+    },
+    ...
 }
 ```
 
-2. **Markdownlint Settings**
+### 使用Markdownlint
+
+Markdownlint 是一个对 Markdown 进行规范检查的扩展，除了给出 lint 提示外，也支持自动修复部分问题（比如空行、列表缩进等）。
+打开 VS Code 设置后，可根据需要启用自动修复选项：
+
 ```json
 {
+   ...
    "editor.codeActionsOnSave": {
       "source.fixAll.markdownlint": true
    },
    "markdownlint.config": {
         "default": true,
         "MD033": false,
-        "MD049": false,
-        "MD022": false
+        "MD049":false,
+        "MD022":false,
     }
 }
 ```
 
-### Cross-referencing
+其中markdownlint.config 可以控制对特定的error选择进行忽略。选择"MD049" 对数学公式的自动修复进行忽略。
+### 交叉引用
 
-To reference specific sections:
+如果想引用其他的markdown 文件中的某个章节或者内容，可以添加一个anchor
 
 ```markdown
-<a id="section-id"></a>
-#### Section Title
-
-[Reference Link](<path/to/file.md#section-id>)
+<a id="elbo"></a>
+#### 9.3.1-ELBO
 ```
 
-## 🤝 Contributors
+引用时
 
-We appreciate all contributions to this project:
+```markdown
+[引用](<relative_path/to/file.md#elbo)
+```
 
-- [![GitHub](https://img.shields.io/badge/GitHub-Qian%20Lilong-lightgrey?logo=github&style=social)](https://github.com/tsiendragon)
+## BUGS
 
-## 📄 License
+### MARKDOWN
 
-This repository contains both book content and source code, each licensed separately:
+   1. bmatrix cannot be rendered
+   2. Use extension "MathJax 3 Plugin for Github" to render equation![alt text](docs/images/image-12.png)
+   3. cannot render \mathbf
 
-1. **Book Content**: Licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
-2. **Code**: Licensed under [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+   4. $$ $$ 需要换行。在 Markdown 中，单个换行符（按下 Enter）通常不会被视为换行，而是被解析为一个空格，除非渲染器明确支持换行。
 
-## 🐛 Known Issues
 
-### Markdown Rendering
-- bmatrix cannot be rendered
-- Use "MathJax 3 Plugin for Github" for equation rendering
-- Cannot render \mathbf
+   行间公式保持下面的格式
 
-- Math blocks (`$$ $$`) require line breaks before and after
+   ```markdown
+   text...
 
+   $$...$$
+
+
+
+
+
+   ```
+
+## License
+
+This repository contains both the book content and source code. Each is licensed separately:
+
+1. **Book Content**:
+
+   - "Generative AI: From Start to Surrender – A Practical Guide to Mastering and Struggling with AI Models"  2025.
+   - Licensed under the [Creative Commons Attribution 4.0 International License (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/).
+2. **Code**:
+
+   - Licensed under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0).
+
+Please ensure you follow the respective license terms when using this material.
