@@ -1,241 +1,243 @@
-# Qwen‑Image Technical Report
-- date: 发布于 2025 年 8 月 4 日
-- author: Qwen Team
-- report: https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen-Image/Qwen_Image.pdf
+# The Qwen-Image Journey: From Text-to-Image to Precise Editing
 
-## 核心内容总结
-- 研究目标	开发 Qwen‑Image，提升复杂文本（尤其中文）在图像中的自然渲染与精确编辑能力  ￼
-- 数据与管道	构建大规模数据流水线：海量收集 → 过滤 → 注释 → 合成 → 平衡，确保文本图像训练样本质量与多样性  ￼
-- 训练策略	采用课程式训练：从无文字生成入手，逐步过渡到简短文字，再到段落描述，显著增强原生文本渲染表现  ￼
-- 多任务混合训练	同时训练三种任务：T2I（文本到图像）、TI2I（文本图像到图像）、I2I（图像重构）。通过对齐 Qwen2.5‑VL 与 MMDiT 的潜在空间，实现编辑一致性  ￼
-- 双编码机制	原始图像分别输入 Qwen2.5‑VL（语义）和 VAE 编码器（重构），结合语义与视觉信息，实现准确编辑且保持视觉 fidelity  ￼
-- 性能评估	在多个 benchmark 上表现领先：既在英文等 alphabetic 语言有优良文字渲染，也在中文等 logographic 语言上取得显著进展  ￼
-- 创新亮点	- 针对中文复杂字体及结构的 native rendering 优化- 教育式训练（渐进式）提升能力- 多任务融合加强图像编辑质量和一致性
-- 局限与未来方向	报告未详细披露模型规模、推理效率、生成速度、算力需求等；未来可关注扩展性、实时性、多语言支持、风格迁移等能力。
+- **发布时间**: 2025 年 8 月 4 日
+- **作者团队**: Qwen Team  
+- **技术报告**: [Qwen-Image Technical Report](https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen-Image/Qwen_Image.pdf)
+- **arXiv 论文**: [2508.02324] Qwen-Image Technical Report
+- **项目主页**: [Qwen-Image-Edit: Image Editing with Higher Quality and Efficiency](https://qwenlm.github.io/blog/qwen-image-edit/)
+- **GitHub**: [QwenLM/Qwen-Image](https://github.com/QwenLM/Qwen-Image)
 
+## 故事的开始：为什么需要 Qwen-Image？
 
-•	优点：
-    •	明确解决复杂语言文字渲染难题，尤其针对中文，这一课题在多数图像生成模型中尚不成熟。
-    •	综合文本生成与图像编辑设计，融合词语视觉与语义表示，提升生成质量与一致性。
-•	不足/待完善：
-    •	技术报告未披露模型推理效率、参数量、实际应用场景对比等细节。
-    •	对比研究较少涉及其他主流模型（如 Imagen 4、Midjourney、DALL·E），缺乏综合对照性能数据  ￼ ￼ ￼。
+想象一下，你有一张漂亮的照片，但想要在上面添加一些中文文字，或者想要精确地编辑图片中的某个元素。传统的图像生成模型面临两大挑战：**复杂文本渲染**（特别是中文等非字母语言）和**视觉一致性**保持。这就是 Qwen-Image 诞生的背景——它不只是一个图像生成模型，更是一个精确的图像编辑工具。
 
-![alt text](../../../images/image-172.png)
+## 核心创新亮点
 
-## Introduction
-### 名词解释
-1. T2I：text to image generation
-2. TI2I: text and image to image generation or image editing
-Current sota image model has two main problems
-- text rendering for multiple or non-alphabetic languages
-- visual consistency
+### 🧠 双编码器的智慧设计
+Qwen-Image-Edit 采用了独特的"双编码机制"：
+- **Qwen2.5-VL**: 理解图像的语义内容和用户的编辑意图
+- **VAE编码器**: 保留图像的视觉细节和纹理信息
+- 两种信息在 MMDiT（多模态扩散Transformer）中完美融合
 
-### 改进方式
-1. 使用两个不同的feature embedding
+这就像给模型配备了一双眼睛——一只看懂"内容"，一只记住"外观"。
 
-    - Qwen-VL 生成的 embedding 含有更多的语义信息，高层次的场景理解信息
-    - VAE encoder 出来的 embedding 包含更多低层次的视觉细节
-    - 这两个 feature 同时传到 MMDiT 模块中
-2. 训练上
-    - 设计了一个 Producer-Consumer framework，其中使用到了TensorPipe 用来做分布式数据加载和处理。 其中Producer 扶着处理 VAE encoding 和数据 I/O, consumer 负责分布式训练（使用了 Megatron framework）
+### 🎯 渐进式训练策略
+团队采用了聪明的"课程式学习"方法：
+1. **第一阶段**：从无文字的简单图像生成开始
+2. **第二阶段**：逐步引入简短文字渲染
+3. **第三阶段**：最终挑战复杂段落描述
 
-### 优势
-1. text rendering 能力
-2. consistency: 保持语义信息和视觉真实性
-3. Strong Cross benchmark performance: 在过个测试数据上效果领先
+这种循序渐进的方式，让模型像人类学习一样，从简单到复杂，稳步提升能力。
 
-## 模型
-![alt text](../../../images/image-173.png)
+### 🔄 多任务协同训练
+模型同时学习三种核心任务：
+- **T2I** (Text-to-Image): 从文本生成图像
+- **TI2I** (Text+Image-to-Image): 基于文本指令编辑图像
+- **I2I** (Image-to-Image): 图像重构保持一致性
 
-模型包含三个模块
-1. MLLM 作为条件生成中的条件，输出prompt的 embedding 或者图片加上 prompt 的 embedding
-2. VAE： 将图片压缩到特征空间，具有更紧凑的图片表示，并且减少计算量
-3. MMDiT (Multimodal Diffusin Transformer): 扩散模型的主要部分
+通过对齐 Qwen2.5-VL 与 MMDiT 的潜在空间，实现了编辑的精确性和一致性。
 
-### QWen2.5 VL
-使用 QWen2.5 VL 作为特征提取模块 有三点原因
-1. Qwen2.5 VL 的语言特征空间和视觉特征空间是已经对齐了的，因此可能比 LLM 更好适应图片生成。比如 T5，它是一个单纯的语言模型，和图片空间的特征可能不对齐，因此使用的时候需要模型在这个特征上进一步对齐，这个对齐可以是单独训练对齐，比如 clip 的方式，也可能是隐式得对齐，让模型在学习生成图片的时候自动对齐。但是使用一个已经对齐了的模型，可能会减少这方面的难度，从而达到更好的效果
-2. Qwen2.5 VL 本身的LLM 能力也不差相对于单纯的语言模型
-3. QWen2.5 VL 作为多模态大语言模型，支持多模态的输入，这样就比较好的支持图片编辑这种任务。在实际的做法中，对于 T2I 和 TI2I，设计了不同的 prompt
+## 架构深度解析：三个核心模块
 
+### 1. 多模态文本编码器 (Qwen2.5-VL-7B)
+
+想象 Qwen2.5-VL 是一个经验丰富的翻译官，它能够：
+- 🔍 **理解图像内容**：分析原图中的物体、场景、文字等信息
+- 📝 **解析编辑指令**：理解用户想要进行的修改操作
+- 🌐 **多语言支持**：特别擅长处理中文等复杂语言
+
+**工作流程**：
 ```
-<|im_start|>system
-Describe the image by detailing the color, quantity, text, shape, size, texture, spatial relationships of
-the objects and background: <|im_end|>
-<|im_start|>user
-<|user_text|><|im_end|>
-<|im_start|>assistant
+用户输入: "在图片右下角添加一只灰色小猫"
+↓
+Qwen2.5-VL 处理: 提取图像语义 + 理解编辑意图
+↓
+输出: 融合的语义embedding (shape: [batch, seq_len, 3584])
 ```
 
-### VAE
-使用了 Wan-2.1-VAE 的结构，这个是 Wan Team https://arxiv.org/pdf/2503.20314 ，面向视频生成任务的 3D 因果变分自编码器（VAE）结构，用于在 Wan-2.1 等视频生成模型中进行高效的视频压缩与解码。
-在这个项目里，Encoder 被分 freeze 了，只有 decoder 在进行 finetune。为了提高对文字和小物体的重建能力，特别在富文本字数据上进行了训练，包括拉丁文字和象形文字。在训练的时候发现 Adversarial loss 没什么用了，可能是因为重建的效果很好，判别器失去了作用。为什么会失去作用？如果生成模型已经生成的很真实了，那判别器就没有办法去判断生成的和真实的差异了。这样的话 loss 就会维持在一个水平不动。 根据这个，finetune 过程只有重建和 perceptual loss 。
-Perceptual loss 是什么呢？Perceptual loss（感知损失）是一种用于图像生成或图像重建任务的损失函数，不是直接对像素差异做比较（如 L1/L2），而是比较图像在高层特征空间中的差异，以更好地模拟人类视觉感知。 如果对于文字生成而言，也可以换成 OCR 的感知 loss。不过具体的 Wan-2.1-VAE 中用的感知 loss 是怎么样的还不清楚
+### 2. 图像自动编码器 (VAE)
 
-### MMDiT
-Novel positional encoding method: Multimodal Scalable RoPE
-![alt text](../../../images/image-174.png)
+VAE 就像一个精密的图像"压缩器"：
+- 📥 **编码**: 将 512×512 图像压缩为 64×64 的潜在表示
+- 🎨 **保真**: 保留重要的视觉细节，特别是文字和小物体
+- 📤 **解码**: 将编辑后的潜在表示还原为高质量图像
 
-有效解决了图文融合中 token 混淆和位置选择困难的问题，兼顾了图像分辨率可扩展性与文本语义一致性
+**特殊设计**：
+- 基于 Wan-2.1-VAE 架构，专门针对文本渲染优化
+- 16通道潜在空间（vs 传统4通道），信息容量大幅提升
+- 2×2 patch打包策略，适配Transformer处理
 
-## 数据
-billions of image-text pairs to support the training of our
-image generation model。在手机数据时 更加注重数据质量和分布的均衡
-数据分为 四个主要类别 Nature, Design, People and Synthetic Data
+### 3. 多模态扩散Transformer (MMDiT)
 
- Qwen-Image 数据集分类分布表
+MMDiT 是整个系统的"艺术大师"：
+- 🏗️ **双流架构**: 图像流和文本流并行处理，通过注意力机制交互
+- 🔄 **60层深度**: 每层包含自注意力和交叉注意力模块
+- 📍 **创新位置编码**: Multimodal Scalable RoPE，解决图文融合中的位置困扰
 
-| 大类分类          | 占比       | 子类及说明                                                                                                                                 |
-| ------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| **Nature**    | \~55%    | Objects (21.67%), Cityscape (8.67%), Food (6.59%), Plants (5.14%), Indoor (4.59%), Landscape 等其他；包含模糊分类内容，如不能归入 People 或 Design 的也算在内 |
-| **Design**    | \~27.41% | Posters (5.81%), UI (5.03%), Slides (4.18%), Arts (9.63%)；包含结构化视觉内容：海报、界面、PPT、艺术绘画等，包含复杂文本和布局                                         |
-| **People**    | \~13.21% | Portrait (3.68%), Sports (2.77%), Activities 等；聚焦于以人为中心的图像，如肖像、活动、运动等                                                                 |
-| **Synthetic** | \~5%     | 用于增强文本渲染的合成数据，不包括 AI 生成图像，而是人工控制文本渲染生成，用于文字区域增强                                                                                       |
-| **总计**        | 100%     | 数据集涵盖四大类，用于确保模型具备广泛的通用能力及文本理解能力                                                                                                       |
+**魔法时刻**：
+```
+输入: 嘈杂的图像潜在 + 原图潜在 + 文本条件
+↓
+60层Transformer处理: 逐步去噪，精确编辑
+↓
+输出: 清晰的编辑结果潜在表示
+```
 
-### 数据过滤
-![alt text](../../../images/image-175.png)
+## 数据构建：百亿级训练样本的秘密
 
-七阶段数据清洗流程总结表
+### 📊 数据分布策略
+团队精心设计了数据配比：
 
-| 阶段          | 名称                                             | 核心操作与目标                                                                                              |
-| ----------- | ---------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| **Stage 1** | **Initial Pre-training Data Curation**         | 图像统一 resize 为 256px，清除无效或低质图像（如损坏文件、低分辨率图、重复图、NSFW 内容），为初期训练准备稳定数据。                                  |
-| **Stage 2** | **Image Quality Enhancement**                  | 利用图像质量指标（如模糊度、亮度、饱和度、对比度、entropy、纹理复杂度）进行筛选，剔除模糊、过曝、低信息量或过度合成图像。图 11 展示了多个打分示例。                      |
-| **Stage 3** | **Image-Text Alignment Improvement**           | 优化图文对齐：数据来源包括网页提取和合成文本，结合 OpenAI Captioner、CLIP、SigLIP 和自研打分器判断图文一致性，剔除语义偏离、无效 caption 的样本。          |
-| **Stage 4** | **Text Rendering Enhancement**                 | 提升模型对文本渲染能力：增强含丰富文字的图像（如海报、幻灯片），识别并过滤带有水印、过小文本、虚假语义文字的图像。                                            |
-| **Stage 5** | **High-Resolution Refinement**                 | 训练转向高分辨率（640px 和 1328px）；删除低分辨率图像，保证细节质量与审美；特别强调 resolution filter 和质量打分策略。                          |
-| **Stage 6** | **Category Balancing & Targeted Augmentation** | 分类重构并进行少样本增强：将图像按五大类重新划分（Nature, People, Design, Synthetic, Text Rendering），并在弱类上进行合成图像扩充，增强多样性与健壮性。 |
-| **Stage 7** | **Balanced Multi-Scale Training**              | 最终模型训练阶段，仅保留高质量图像，使用分类层级结构平衡 token 频率，采用多尺度结构保证泛化能力与细节保真度的融合。                                        |
+| 类别 | 占比 | 说明 |
+|------|------|------|
+| **Nature** | ~55% | 自然场景、物体、食物等日常内容 |
+| **Design** | ~27.41% | 海报、UI界面、PPT、艺术作品 |
+| **People** | ~13.21% | 人像、体育、活动等人物场景 |
+| **Synthetic** | ~5% | 专门增强文本渲染的合成数据 |
 
+### 🔧 七阶段数据清洗流程
 
-根据你提供的图文内容，以下是对 Qwen-Image 论文中 **数据标注（Data Annotation）** 和 **数据生成（Data Synthesis）** 两部分的总结：
+像淘金一样，团队通过严格的七阶段流程筛选高质量数据：
 
+1. **Stage 1**: 初始预处理 - 统一尺寸，清除损坏文件
+2. **Stage 2**: 质量增强 - 基于模糊度、对比度等指标筛选
+3. **Stage 3**: 图文对齐 - 确保图像与文本描述的一致性
+4. **Stage 4**: 文本渲染增强 - 重点保留富含文字的图像
+5. **Stage 5**: 高分辨率优化 - 转向640px和1328px训练
+6. **Stage 6**: 类别平衡 - 少样本类别增强，保证多样性
+7. **Stage 7**: 多尺度平衡训练 - 最终质量把关
 
+### 🎨 智能数据合成
 
-### 🧷 数据标注（3.3 Data Annotation）
+为了提升文本渲染能力，团队设计了三种合成策略：
 
-| 项目          | 内容                                                                                       |
-| ----------- | ---------------------------------------------------------------------------------------- |
-| **使用模型**    | 使用能力强的图像描述模型，如 **Qwen2.5‑VL**，对图像进行 **图文描述+结构化属性元信息提取**。                                 |
-| **标注输出内容**  | - 图像描述（caption）<br>- 对象属性（如类型、风格）<br>- 场景关系（如位置、环境）<br>- 可见文字转写<br>- 图像异常元素（如水印、二维码、马赛克） |
-| **结构化输出**   | 采用统一结构格式（如 JSON）输出，便于大规模处理与模型使用。                                                         |
-| **与传统方法对比** | 不再把 caption 和 metadata 抽取作为独立任务，而是统一设计成一个 joint annotation pipeline，一次性输出全部信息。           |
-| **后处理优化**   | 进一步结合专家规则与轻量分类器进行内容过滤，如水印检测、暴力色情内容过滤等。                                                   |
-| **目标**      | 在提高标注效率的同时，提升训练数据质量与结构化丰富度，为后续训练打下高质量基础。                                                 |
+**Pure Rendering（纯净渲染）**：
+- 在简单背景上渲染高质量文本
+- 专注字符识别的清晰度
 
+**Compositional Rendering（场景合成）**：
+- 将文本自然地嵌入真实场景
+- 如便签贴在风景照上的效果
 
+**Complex Rendering（复杂模板）**：
+- 处理幻灯片、UI等复杂布局
+- 支持多行、多字体、多颜色文本
 
-### 🧱 数据生成（3.4 Data Synthesis）
+## 训练策略：Producer-Consumer 的分布式智慧
 
-设计了三种文本合成策略，用于提升模型的文本渲染能力，解决真实图像中文本稀缺问题：
+### 🏭 生产者-消费者框架
 
-| 渲染策略                                    | 说明                                                                                                            | 示例                                               |
-| --------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
-| **Pure Rendering**<br>（纯净背景渲染）          | - 从高质量语料中抽取句子，渲染到**单一背景**（如纯色）上；<br>- 采用动态字体布局算法控制字体大小与位置；<br>- 筛除渲染失败或不可读字符；<br>✅ 强调字符识别与生成的清晰度。             | 例如：一段中文文本在浅灰背景上清晰展示                              |
-| **Compositional Rendering**<br>（真实场景合成） | - 将文本合成到现实物体（如纸张、木板、广告牌）上，并嵌入真实背景中；<br>- 使用 Qwen-VL Captioner 生成**视觉语义对齐的描述**；<br>✅ 提升模型对自然场景中的文本理解和还原能力。     | 例如：“I love you too” 被合成到便签纸上，并贴在风景背景中            |
-| **Complex Rendering**<br>（复杂结构模板）       | - 针对复杂布局（如幻灯片、UI 模板）进行语法填充；<br>- 保持布局结构完整，替换占位文本；<br>- 覆盖多行、多字体、多颜色、空间对齐等挑战性任务；<br>✅ 提升模型对复杂指令与多格式文本的理解与执行能力。 | 示例图中显示幻灯片布局中自动替换中文内容，并用 Qwen-VL Captioner 描述整个场景 |
+团队设计了高效的分布式训练架构：
 
+**Producer（生产者）**：
+- 负责数据预处理和VAE编码
+- 动态缓存不同分辨率的latent数据
 
-## training
-### Pre-training（预训练）
+**Consumer（消费者）**：
+- GPU集群专注模型训练
+- 通过高效RPC调用获取预处理数据
 
-| 模块       | 内容                                                                                                                                |
-| -------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **目标**   | 使用流匹配（flow matching）目标来稳定地训练 Qwen-Image，同时保持与最大似然目标的等价性                                                                           |
-| **方法核心** | 基于变分自编码器（VAE）与 **Rectified Flow** 框架，预测**从随机噪声到原始图像 latent** 的速度向量                                                                |
-| **数据定义** | - `x₀`: 原始图像 latent<br>- `x₁`: 来自标准正态分布的随机噪声<br>- `xₜ`: 线性插值（用于训练）<br>- `vₜ`: `x₀ − x₁`，作为目标速度<br>- `h`: MLLM 生成的 guidance latent |
-| **损失函数** | 使用 MSE 计算预测速度和真实速度之间的差异：<br> $ \mathcal{L} = \mathbb{E} \left[\|v_θ(x_t, t, h) - v_t\|^2$                                         |
+这种设计让数据处理和模型训练解耦，大大提升了训练效率。
+
+### 🔄 Flow Matching 优化
+
+采用 Flow Matching 替代传统DDPM：
+```
+损失函数: L = E[||v_θ(x_t, t, h) - v_t||²]
+其中: v_t = x₀ - x₁ (从噪声到图像的速度向量)
+```
+
+这种方法提供了更稳定的训练过程和更好的编辑一致性。
+
+## 实战应用：数据流与Tensor变化
+
+让我们跟随一张 512×512 图像的编辑之旅：
+
+### 🚀 推理流程
+```
+1. 输入预处理
+   原图: [B, 3, 512, 512] → VAE编码 → [B, 16, 1, 64, 64]
+   
+2. Latent打包  
+   [B, 16, 64, 64] → 2×2打包 → [B, 1024, 64]
+   
+3. 文本编码
+   "添加小猫" → Qwen2.5-VL → [B, seq_len, 3584]
+   
+4. 扩散过程 (50步迭代)
+   嘈杂latent + 原图latent → MMDiT → 去噪预测
+   
+5. 结果生成
+   最终latent → VAE解码 → [B, 3, 512, 512] 编辑结果
+```
+
+### 🔧 关键技术细节
+
+**多尺寸支持**：
+- 支持 384×384 到 3072×3072 像素范围
+- 相对位置编码RoPE实现尺寸泛化
+- 动态调度器适配不同分辨率
+
+**批量处理**：
+- 支持多张图像批量编辑
+- 每张图像独立处理，互不影响
+- 显存占用随批量大小线性增长
+
+**精度控制**：
+- CFG (Classifier-Free Guidance) 指导生成质量
+- 可调节的引导强度控制编辑程度
+- 范数归一化保持数值稳定
+
+## 性能表现：突破性的中文渲染
+
+### 🏆 核心优势
+
+1. **卓越文本渲染**：
+   - 在英文等字母语言上表现优秀
+   - 在中文等象形文字上取得突破性进展
+   - 支持复杂字体结构和多行布局
+
+2. **强化一致性保持**：
+   - 未修改区域完美保持原样
+   - 语义理解与视觉细节平衡
+   - 编辑边界自然融合
+
+3. **跨基准测试领先**：
+   - 多个benchmark表现突出
+   - 特别在复杂指令理解上优势明显
+
+### ⚠️ 当前限制
+
+- 技术报告未详细披露模型规模和推理效率
+- 与主流模型（Midjourney、DALL-E等）对比数据有限
+- 超高分辨率处理仍需额外优化
+
+## 创新总结：不只是CLIP的替代
+
+Qwen-Image-Edit 的最大创新在于**完全抛弃了传统CLIP**，转而使用更强大的 Qwen2.5-VL-7B 作为多模态编码器。这带来了：
+
+- 🧠 **更丰富的语义理解**：3584维度 vs CLIP的512/768维
+- 🌐 **原生多语言支持**：特别是中文等复杂语言
+- 🎯 **精准指令遵循**：经过Instruct调优的指令理解能力
+
+## 未来展望
+
+Qwen-Image-Edit 代表了图像编辑领域的一次重大突破，特别是在：
+- 复杂文本渲染的原生支持
+- 多模态信息的深度融合  
+- 渐进式训练的有效性验证
+
+随着模型的不断优化和开源生态的发展，我们有理由相信，这将开启图像编辑的新纪元——一个人人都能精确控制视觉创作的时代。
 
 ---
 
-#### Producer-Consumer Framework（生产者-消费者框架）
+## 参考资料
 
-| 项目             | 内容                                                                                        |
-| -------------- | ----------------------------------------------------------------------------------------- |
-| **目的**         | 提高大规模训练效率，解耦 **数据预处理** 和 **模型训练**，支持 GPU 集群扩展                                             |
-| **Producer 端** | - 图像/文字对先经过预定义过滤<br>- 用 MLLM（如 Qwen2.5‑VL）和 VAE 提取 latent<br>- 按 resolution 分类缓存，存储于共享缓存中 |
-| **Consumer 端** | - 位于 GPU 集中集群<br>- 仅负责模型训练，使用高效 RPC 调度拉取已预处理数据                                            |
-| **优势**         | - 训练过程不中断即可动态更新数据管道<br>- 避免等待，提高吞吐量和并行度                                                   |
+- [Qwen-Image Technical Report](https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen-Image/Qwen_Image.pdf)
+- [arXiv:2508.02324] Qwen-Image Technical Report  
+- [Qwen-Image-Edit Blog](https://qwenlm.github.io/blog/qwen-image-edit/)
+- [GitHub Repository](https://github.com/QwenLM/Qwen-Image)
+- [Alibaba Cloud API Documentation](https://www.alibabacloud.com/help/en/model-studio/qwen-image-edit-api)
+- [Diffusers Implementation](https://github.com/huggingface/diffusers/tree/main/src/diffusers/pipelines/qwenimage)
 
----
-
-#### Distributed Training Optimization（分布式训练优化）
-
-| 策略          | 说明                                                                                            |
-| ----------- | --------------------------------------------------------------------------------------------- |
-| **并行策略**    | 使用 **混合并行**（Hybrid Parallelism）：结合 **数据并行** 和 **张量并行**（Tensor Parallelism）                    |
-| **技术实现**    | - 使用 Megatron‑LM 和 **Transformer Engine**（支持动态切换并行粒度）<br>- **head-wise 并行**：每个注意力头并行处理，减少通信成本 |
-| **优化器与检查点** | - 分布式优化器<br>- 激活检查点（checkpointing）减少显存使用<br>⚠️ 注意：激活检查点可能降低训练速度                               |
-
-
-##### activation checkpoint 技术
-下面是对 **Activation Checkpointing** 的总结
-
-> Activation Checkpointing 是一种节省显存的训练策略，通过只保存部分中间激活值，其余在反向传播时**动态重算**，从而节省 GPU 内存。
-
-
-
-✅ 普通训练流程（全部保存激活）
-
-```
-Forward:
-x ─▶ [L1] ─▶ [L2] ─▶ [L3] ─▶ [L4] ─▶ loss
-         ↑     ↑     ↑     ↑
-       保存  保存  保存  保存
-
-Backward:
-利用全部保存的激活值进行反向传播
-```
-
-* 所有层的激活都保存在显存中
-* 反向传播不需要重算，但显存占用高
-
-
-Activation Checkpointing
-
-```
-Forward:
-x ─▶ [L1] ─▶ [L2] ─▶ [L3] ─▶ [L4] ─▶ loss
-         ↑           ↑
-     ✅ checkpoint  ✅ checkpoint
-     （仅保存部分）
-
-Backward:
-需要反传 L3 → 找不到激活 → 从 L1 checkpoint 开始重算 L2 → L3
-```
-
-* 只保存了 L1、L4 的激活值
-* 反向传播时，从最近的 checkpoint 重算缺失激活
-* 显存占用大幅下降
-
-
-
-优缺点对比表
-
-| 项目   | 普通训练 | Activation Checkpointing |
-| ---- | ---- | ------------------------ |
-| 显存使用 | 高    | 低（显著减少激活缓存）              |
-| 计算速度 | 快    | 略慢（需重算）                  |
-| 适用场景 | 小模型  | 大模型 / 内存受限训练             |
-
----
-
-
-```python
-from torch.utils.checkpoint import checkpoint
-
-def layer_block(x):
-    x = layer1(x)
-    x = layer2(x)
-    return x
-
-# 使用 checkpoint 包裹需要重算的部分
-out = checkpoint(layer_block, input_tensor)
-```
-
-> **Activation Checkpointing 就是“只存关键点、需要时重算”，显著节省显存，适合大模型训练。**
-
-### 训练
-训练部分涉及到了 reinforcement learning 这个我还不熟悉 要再学习学习
+![Qwen-Image Architecture](../../../images/image-172.png)
