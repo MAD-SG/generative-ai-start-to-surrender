@@ -1,7 +1,7 @@
 # The Qwen-Image Journey: From Text-to-Image to Precise Editing
 
 - **发布时间**: 2025 年 8 月 4 日
-- **作者团队**: Qwen Team  
+- **作者团队**: Qwen Team
 - **技术报告**: [Qwen-Image Technical Report](https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen-Image/Qwen_Image.pdf)
 - **arXiv 论文**: [2508.02324] Qwen-Image Technical Report
 - **项目主页**: [Qwen-Image-Edit: Image Editing with Higher Quality and Efficiency](https://qwenlm.github.io/blog/qwen-image-edit/)
@@ -142,10 +142,10 @@ MMDiT 是整个系统的"艺术大师"：
 ### 🔄 Flow Matching 优化
 
 采用 Flow Matching 替代传统DDPM：
-```
-损失函数: L = E[||v_θ(x_t, t, h) - v_t||²]
-其中: v_t = x₀ - x₁ (从噪声到图像的速度向量)
-```
+
+损失函数: $L = E[||v_θ(x_t, t, h) - v_t||²]$
+其中: $v_t = x₀ - x₁$ (从噪声到图像的速度向量)
+
 
 这种方法提供了更稳定的训练过程和更好的编辑一致性。
 
@@ -157,16 +157,16 @@ MMDiT 是整个系统的"艺术大师"：
 ```
 1. 输入预处理
    原图: [B, 3, 512, 512] → VAE编码 → [B, 16, 1, 64, 64]
-   
-2. Latent打包  
+
+2. Latent打包
    [B, 16, 64, 64] → 2×2打包 → [B, 1024, 64]
-   
+
 3. 文本编码
    "添加小猫" → Qwen2.5-VL → [B, seq_len, 3584]
-   
+
 4. 扩散过程 (50步迭代)
    嘈杂latent + 原图latent → MMDiT → 去噪预测
-   
+
 5. 结果生成
    最终latent → VAE解码 → [B, 3, 512, 512] 编辑结果
 ```
@@ -224,7 +224,7 @@ Qwen-Image-Edit 的最大创新在于**完全抛弃了传统CLIP**，转而使�
 
 Qwen-Image-Edit 代表了图像编辑领域的一次重大突破，特别是在：
 - 复杂文本渲染的原生支持
-- 多模态信息的深度融合  
+- 多模态信息的深度融合
 - 渐进式训练的有效性验证
 
 随着模型的不断优化和开源生态的发展，我们有理由相信，这将开启图像编辑的新纪元——一个人人都能精确控制视觉创作的时代。
@@ -234,7 +234,7 @@ Qwen-Image-Edit 代表了图像编辑领域的一次重大突破，特别是在�
 ## 参考资料
 
 - [Qwen-Image Technical Report](https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen-Image/Qwen_Image.pdf)
-- [arXiv:2508.02324] Qwen-Image Technical Report  
+- [arXiv:2508.02324] Qwen-Image Technical Report
 - [Qwen-Image-Edit Blog](https://qwenlm.github.io/blog/qwen-image-edit/)
 - [GitHub Repository](https://github.com/QwenLM/Qwen-Image)
 - [Alibaba Cloud API Documentation](https://www.alibabacloud.com/help/en/model-studio/qwen-image-edit-api)
