@@ -16,11 +16,54 @@
 
 Generative models have revolutionized machine learning by enabling the creation of realistic data, from images to audio. Among these, **Denoising Diffusion Probabilistic Models (DDPM)** stand out for their simplicity, stability, and high-quality outputs. In this blog, we’ll break down the theory behind DDPMs, their training process, and the intuition that makes them work.
 
----
 
 ### What is a Diffusion Model?
 
 Diffusion models are inspired by non-equilibrium thermodynamics. The core idea is simple: gradually destroy data by adding noise (forward process), then learn to reverse this process to generate new data (reverse process). DDPMs formalize this intuition into a probabilistic framework.
+
+#### Explain in distribution aspect
+
+At initial state, we have a very complex distribution $p_{data}$.
+
+When doing the diffusion forward process (adding noise), we are actually do convolution with Guassian kernels such that the distribution becomes **infinite mixture of Gaussian distribution)
+$$q(x_t)=\int q(x_t|x_0) p_{data} d x_{0}$$
+
+We make the noise being small such that the distribution changes is small.
+
+And gradually, the distribution is becomes more smoothly and finally converges to normal gaussian distribution.
+
+
+* The goal is to learn a mapping from a **simple distribution (e.g., Gaussian)** → **complex real distribution (p_{\text{data}})**.
+* Directly learning this **large distributional transformation** requires capturing extremely high-dimensional, non-linear, non-Gaussian relationships, making **stable convergence nearly impossible**.
+* It's like trying to "turn white noise into a clear cat photo in one step" - too difficult.
+
+---
+
+
+* We break this large jump into **many tiny reversible steps**:
+
+$$
+p_{\text{data}}(x_0) \leftrightarrow q(x_t) \leftrightarrow \mathcal{N}(0, I)
+$$
+
+* Each small step only needs to learn "how to remove a bit of noise," making it locally linear, stable, and differentiable.
+* Ultimately, this "nearly continuous" path forms a **smooth, computable manifold path** in distribution space,
+  similar to an **integrable stochastic differential equation (SDE) or ODE flow**.
+
+
+Diffusion models approximate a **probability flow**:
+
+$$
+\frac{dx}{dt} = f_\theta(x, t)
+$$
+This describes how to gradually flow from a Gaussian to the data distribution over time.
+Because this flow is continuous, we can:
+
+* **Train** using stochastic processes (SDE);
+* **Generate samples** using deterministic ODEs;
+* Obtain **computable likelihood estimates (score matching)**.
+
+
 
 ### The Forward Process: Gradually Adding Noise
 
